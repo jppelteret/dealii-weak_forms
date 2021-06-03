@@ -1,0 +1,25 @@
+
+DEAL::Mesh refinement step 0
+DEAL::  Initial residual: 1.53143098
+DEAL::  Residual: 1.08745544
+DEAL::  Residual: 0.966748363
+DEAL::  Residual: 0.859602183
+DEAL::  Residual: 0.766461814
+DEAL::  Residual: 0.685475492
+DEAL::
+DEAL::Mesh refinement step 1
+DEAL::  Initial residual: 0.868959175
+DEAL::  Residual: 0.762124542
+DEAL::  Residual: 0.677791504
+DEAL::  Residual: 0.605761751
+DEAL::  Residual: 0.542748446
+DEAL::  Residual: 0.487039582
+DEAL::
+DEAL::Mesh refinement step 2
+DEAL::  Initial residual: 0.426444887
+DEAL::  Residual: 0.382731115
+DEAL::  Residual: 0.343864524
+DEAL::  Residual: 0.309180478
+DEAL::  Residual: 0.278147181
+DEAL::  Residual: 0.250327369
+DEAL::

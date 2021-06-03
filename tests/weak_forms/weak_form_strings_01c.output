@@ -1,0 +1,49 @@
+
+DEAL::Dim: 2
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{T}
+DEAL:string::Trial solution: D{T}
+DEAL:string::Solution: {T}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Value
+DEAL:string::Test function: d{T}
+DEAL:string::Trial solution: D{T}
+DEAL:string::Solution: {T}
+DEAL:string::Solution (t1): {T}_1
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Gradient
+DEAL:string::Test function: Grad(d{T})
+DEAL:string::Trial solution: Grad(D{T})
+DEAL:string::Solution: Grad({T})
+DEAL:string::Solution (t1): Grad({T}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Divergence
+DEAL:string::Test function: Div(d{T})
+DEAL:string::Trial solution: Div(D{T})
+DEAL:string::Solution: Div({T})
+DEAL:string::Solution (t1): Div({T}_1)
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\mathbf{T}}
+DEAL:LaTeX::Trial solution: \Delta{\mathbf{T}}
+DEAL:LaTeX::Solution: {\mathbf{T}}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Value
+DEAL:LaTeX::Test function: \delta{\mathbf{T}}
+DEAL:LaTeX::Trial solution: \Delta{\mathbf{T}}
+DEAL:LaTeX::Solution: {\mathbf{T}}
+DEAL:LaTeX::Solution (t1): {\mathbf{T}}_{t-1}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Gradient
+DEAL:LaTeX::Test function: \nabla\left(\delta{\mathbf{T}}\right)
+DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\mathbf{T}}\right)
+DEAL:LaTeX::Solution: \nabla\left({\mathbf{T}}\right)
+DEAL:LaTeX::Solution (t1): \nabla\left({\mathbf{T}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Divergence
+DEAL:LaTeX::Test function: \nabla \cdot\left(\delta{\mathbf{T}}\right)
+DEAL:LaTeX::Trial solution: \nabla \cdot\left(\Delta{\mathbf{T}}\right)
+DEAL:LaTeX::Solution: \nabla \cdot\left({\mathbf{T}}\right)
+DEAL:LaTeX::Solution (t1): \nabla \cdot\left({\mathbf{T}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL::OK

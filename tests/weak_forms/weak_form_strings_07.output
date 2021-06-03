@@ -1,0 +1,40 @@
+
+DEAL::Dim: 2
+DEAL:string::Scalar: s
+DEAL:string::Vector: <v>
+DEAL:string::Tensor (rank 2): <<T2>>
+DEAL:string::Tensor (rank 3): <<<T3>>>
+DEAL:string::Tensor (rank 4): <<<<T4>>>>
+DEAL:string::SymmetricTensor (rank 2): <<S2>>
+DEAL:string::SymmetricTensor (rank 4): <<<<S4>>>>
+DEAL:string::
+DEAL:LaTeX::Scalar: {s}
+DEAL:LaTeX::Vector: \mathrm{v}
+DEAL:LaTeX::Tensor (rank 2): \mathbf{T}
+DEAL:LaTeX::Tensor (rank 3): \mathfrak{P}
+DEAL:LaTeX::Tensor (rank 4): \mathcal{K}
+DEAL:LaTeX::SymmetricTensor (rank 2): \mathbf{T}
+DEAL:LaTeX::SymmetricTensor (rank 4): \mathcal{K}
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::Scalar: s
+DEAL:string::Vector: <v>
+DEAL:string::Tensor (rank 2): <<T2>>
+DEAL:string::Tensor (rank 3): <<<T3>>>
+DEAL:string::Tensor (rank 4): <<<<T4>>>>
+DEAL:string::SymmetricTensor (rank 2): <<S2>>
+DEAL:string::SymmetricTensor (rank 4): <<<<S4>>>>
+DEAL:string::
+DEAL:LaTeX::Scalar: {s}
+DEAL:LaTeX::Vector: \mathrm{v}
+DEAL:LaTeX::Tensor (rank 2): \mathbf{T}
+DEAL:LaTeX::Tensor (rank 3): \mathfrak{P}
+DEAL:LaTeX::Tensor (rank 4): \mathcal{K}
+DEAL:LaTeX::SymmetricTensor (rank 2): \mathbf{T}
+DEAL:LaTeX::SymmetricTensor (rank 4): \mathcal{K}
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK

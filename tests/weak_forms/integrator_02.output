@@ -1,0 +1,14 @@
+
+DEAL::Dim: 2
+DEAL::Volume: 0.500000 in material 1
+DEAL::Volume: 0.500000 in material 2
+DEAL::Area: 2.00000 on boundary 20
+DEAL::Area: 2.00000 on boundary 21
+DEAL::OK
+DEAL::Dim: 3
+DEAL::Volume: 0.500000 in material 1
+DEAL::Volume: 0.500000 in material 2
+DEAL::Area: 3.00000 on boundary 20
+DEAL::Area: 3.00000 on boundary 21
+DEAL::OK
+DEAL::OK

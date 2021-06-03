@@ -1,0 +1,107 @@
+
+DEAL:Scalar::Dim: 2
+DEAL:Scalar::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Number of components: 5
+DEAL:Scalar::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11
+DEAL:Scalar::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1
+DEAL:Scalar::OK
+DEAL:Scalar::Dim: 3
+DEAL:Scalar::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Number of components: 9
+DEAL:Scalar::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_22
+DEAL:Scalar::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1 __DEAL_II__Field_Div({S})_2
+DEAL:Scalar::OK
+DEAL:Scalar::OK
+DEAL:Vector::Dim: 2
+DEAL:Vector::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Number of components: 5
+DEAL:Vector::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11
+DEAL:Vector::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1
+DEAL:Vector::OK
+DEAL:Vector::Dim: 3
+DEAL:Vector::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Number of components: 9
+DEAL:Vector::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_22
+DEAL:Vector::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1 __DEAL_II__Field_Div({S})_2
+DEAL:Vector::OK
+DEAL:Vector::OK
+DEAL:Tensor::Dim: 2
+DEAL:Tensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Number of components: 5
+DEAL:Tensor::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11
+DEAL:Tensor::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1
+DEAL:Tensor::OK
+DEAL:Tensor::Dim: 3
+DEAL:Tensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Number of components: 9
+DEAL:Tensor::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_22
+DEAL:Tensor::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1 __DEAL_II__Field_Div({S})_2
+DEAL:Tensor::OK
+DEAL:Tensor::OK
+DEAL::OK

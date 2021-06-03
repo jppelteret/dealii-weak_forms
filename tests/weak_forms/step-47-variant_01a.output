@@ -1,0 +1,13 @@
+
+DEAL::Iteration: 0   Error in the L2 norm           :     0.00878095254
+DEAL::Iteration: 0   Error in the H1 seminorm       : 0.0709546283
+DEAL::Iteration: 0   Error in the broken H2 seminorm: 1.64542318
+DEAL::Iteration: 1   Error in the L2 norm           :     0.00351500115
+DEAL::Iteration: 1   Error in the H1 seminorm       : 0.0217417832
+DEAL::Iteration: 1   Error in the broken H2 seminorm: 0.812149762
+DEAL::Iteration: 2   Error in the L2 norm           :     0.00110393693
+DEAL::Iteration: 2   Error in the H1 seminorm       : 0.00610666908
+DEAL::Iteration: 2   Error in the broken H2 seminorm: 0.401516745
+DEAL::Iteration: 3   Error in the L2 norm           :     0.000308433373
+DEAL::Iteration: 3   Error in the H1 seminorm       : 0.00162277406
+DEAL::Iteration: 3   Error in the broken H2 seminorm: 0.199356254

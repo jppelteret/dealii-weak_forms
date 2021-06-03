@@ -1,0 +1,14 @@
+
+DEAL:Dim 2::Weak form assembly (bilinear form, scalar coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(d{s}, c, D{s})#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\delta{s}\,\left[{c}\,\Delta{s}\right]\right]\textrm{dV}
+DEAL:Dim 2::OK
+DEAL:Dim 3::Weak form assembly (bilinear form, scalar coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(d{s}, c, D{s})#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\delta{s}\,\left[{c}\,\Delta{s}\right]\right]\textrm{dV}
+DEAL:Dim 3::OK
+DEAL::OK

@@ -1,0 +1,142 @@
+
+DEAL:Scalar::Dim: 2
+DEAL:Scalar::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Number of components: 5
+DEAL:Scalar::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Scalar::Field index  1: Div({S}) -> Vector(3)
+DEAL:Scalar::OK
+DEAL:Scalar::Dim: 3
+DEAL:Scalar::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({S}, Div({S}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Scalar::Number of components: 9
+DEAL:Scalar::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Scalar::Field index  1: Div({S}) -> Vector(6)
+DEAL:Scalar::OK
+DEAL:Scalar::OK
+DEAL:Vector::Dim: 2
+DEAL:Vector::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Number of components: 5
+DEAL:Vector::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Vector::Field index  1: Div({S}) -> Vector(3)
+DEAL:Vector::OK
+DEAL:Vector::Dim: 3
+DEAL:Vector::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({S}, Div({S}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Vector::Number of components: 9
+DEAL:Vector::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Vector::Field index  1: Div({S}) -> Vector(6)
+DEAL:Vector::OK
+DEAL:Vector::OK
+DEAL:Tensor::Dim: 2
+DEAL:Tensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Number of components: 5
+DEAL:Tensor::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Tensor::Field index  1: Div({S}) -> Vector(3)
+DEAL:Tensor::OK
+DEAL:Tensor::Dim: 3
+DEAL:Tensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({S}, Div({S}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:Tensor::Number of components: 9
+DEAL:Tensor::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:Tensor::Field index  1: Div({S}) -> Vector(6)
+DEAL:Tensor::OK
+DEAL:Tensor::OK
+DEAL:SymmetricTensor::Dim: 2
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({S}, Div({S}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({S}, Div({S}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Number of components: 5
+DEAL:SymmetricTensor::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:SymmetricTensor::Field index  1: Div({S}) -> Vector(3)
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::Dim: 3
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({S}, Div({S}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({S}, Div({S}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({S}, Div({S}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:SymmetricTensor::Number of components: 9
+DEAL:SymmetricTensor::Field index  0: {S} -> SymmetricTensor<2>(0)
+DEAL:SymmetricTensor::Field index  1: Div({S}) -> Vector(6)
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::OK
+DEAL::OK

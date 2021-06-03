@@ -1,0 +1,18 @@
+
+DEAL::
+
+DEAL::Weak form (ascii):
+0 = #(Grad(d{s}), d(e(Grad({s})))/dGrad({s}))#dV + #(Grad(d{s}), d2(e(Grad({s})))/(dGrad({s}) x dGrad({s})), Grad(D{s}))#dV - #(d{s}, s)#dV
+DEAL::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{s}\right) \cdot \frac{\mathrm{d}{\Psi}\left(\nabla\left({s}\right)\right)}{\mathrm{d}\nabla\left({s}\right)}\right]\textrm{dV} + \int\left[\nabla\left(\delta{s}\right) \cdot \frac{\mathrm{d}^{2}{\Psi}\left(\nabla\left({s}\right)\right)}{\mathrm{d}\nabla\left({s}\right) \otimes \mathrm{d}\nabla\left({s}\right)} \cdot \nabla\left(\Delta{s}\right)\right]\textrm{dV} - \int\left[\delta{s}\,{s}\right]\textrm{dV}
+DEAL::
+
+DEAL::Cycle 0: 0.222990236
+DEAL::Cycle 1: 0.243319667
+DEAL::Cycle 2: 0.248356137
+DEAL::Cycle 3: 0.249593370
+DEAL::Cycle 4: 0.249860288
+DEAL::Cycle 5: 0.249960525
+DEAL::Cycle 6: 0.249988377
+DEAL::Cycle 7: 0.249996730
+DEAL::OK

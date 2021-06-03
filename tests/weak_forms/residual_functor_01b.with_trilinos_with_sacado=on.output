@@ -1,0 +1,94 @@
+
+DEAL:Scalar::Dim: 3
+DEAL:Scalar::Residual (ascii):
+<R>({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Scalar::Number of components: 130
+DEAL:Scalar::Field index  0: {v} -> Vector(0)
+DEAL:Scalar::Field index  1: Grad({v}) -> Tensor<2>(3)
+DEAL:Scalar::Field index  2: symm_Grad({v}) -> SymmetricTensor<2>(12)
+DEAL:Scalar::Field index  3: Div({v}) -> Scalar(18)
+DEAL:Scalar::Field index  4: Curl({v}) -> Vector(19)
+DEAL:Scalar::Field index  5: Hessian({v}) -> Tensor<3>(22)
+DEAL:Scalar::Field index  6: 3rd_Derivative({v}) -> Tensor<4>(49)
+DEAL:Scalar::OK
+DEAL:Scalar::OK
+DEAL:Vector::Dim: 3
+DEAL:Vector::Residual (ascii):
+<R>({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Vector::Number of components: 130
+DEAL:Vector::Field index  0: {v} -> Vector(0)
+DEAL:Vector::Field index  1: Grad({v}) -> Tensor<2>(3)
+DEAL:Vector::Field index  2: symm_Grad({v}) -> SymmetricTensor<2>(12)
+DEAL:Vector::Field index  3: Div({v}) -> Scalar(18)
+DEAL:Vector::Field index  4: Curl({v}) -> Vector(19)
+DEAL:Vector::Field index  5: Hessian({v}) -> Tensor<3>(22)
+DEAL:Vector::Field index  6: 3rd_Derivative({v}) -> Tensor<4>(49)
+DEAL:Vector::OK
+DEAL:Vector::OK
+DEAL:Tensor::Dim: 3
+DEAL:Tensor::Residual (ascii):
+<R>({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:Tensor::Number of components: 130
+DEAL:Tensor::Field index  0: {v} -> Vector(0)
+DEAL:Tensor::Field index  1: Grad({v}) -> Tensor<2>(3)
+DEAL:Tensor::Field index  2: symm_Grad({v}) -> SymmetricTensor<2>(12)
+DEAL:Tensor::Field index  3: Div({v}) -> Scalar(18)
+DEAL:Tensor::Field index  4: Curl({v}) -> Vector(19)
+DEAL:Tensor::Field index  5: Hessian({v}) -> Tensor<3>(22)
+DEAL:Tensor::Field index  6: 3rd_Derivative({v}) -> Tensor<4>(49)
+DEAL:Tensor::OK
+DEAL:Tensor::OK
+DEAL:SymmetricTensor::Dim: 3
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({v}, Grad({v}), symm_Grad({v}), Div({v}), Curl({v}), Hessian({v}), 3rd_Derivative({v}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{v}}, \nabla\left({\mathbf{v}}\right), \nabla^{S}\left({\mathbf{v}}\right), \nabla \cdot\left({\mathbf{v}}\right), \nabla \times\left({\mathbf{v}}\right), \nabla\nabla\left({\mathbf{v}}\right), \nabla\nabla\nabla\left({\mathbf{v}}\right)\right)
+DEAL:SymmetricTensor::Number of components: 130
+DEAL:SymmetricTensor::Field index  0: {v} -> Vector(0)
+DEAL:SymmetricTensor::Field index  1: Grad({v}) -> Tensor<2>(3)
+DEAL:SymmetricTensor::Field index  2: symm_Grad({v}) -> SymmetricTensor<2>(12)
+DEAL:SymmetricTensor::Field index  3: Div({v}) -> Scalar(18)
+DEAL:SymmetricTensor::Field index  4: Curl({v}) -> Vector(19)
+DEAL:SymmetricTensor::Field index  5: Hessian({v}) -> Tensor<3>(22)
+DEAL:SymmetricTensor::Field index  6: 3rd_Derivative({v}) -> Tensor<4>(49)
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::OK
+DEAL::OK

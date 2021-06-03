@@ -1,0 +1,166 @@
+
+DEAL:Scalar::Dim: 2
+DEAL:Scalar::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Number of components: 16
+DEAL:Scalar::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Scalar::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1
+DEAL:Scalar::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11
+DEAL:Scalar::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Scalar::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111
+DEAL:Scalar::OK
+DEAL:Scalar::Dim: 3
+DEAL:Scalar::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Scalar::Number of components: 41
+DEAL:Scalar::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Scalar::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1 __DEAL_II__Field_Grad({s})_2
+DEAL:Scalar::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_02 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11 __DEAL_II__Field_Hessian({s})_12 __DEAL_II__Field_Hessian({s})_20 __DEAL_II__Field_Hessian({s})_21 __DEAL_II__Field_Hessian({s})_22
+DEAL:Scalar::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Scalar::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_002 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_012 __DEAL_II__Field_3rd_Derivative({s})_020 __DEAL_II__Field_3rd_Derivative({s})_021 __DEAL_II__Field_3rd_Derivative({s})_022 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_102 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111 __DEAL_II__Field_3rd_Derivative({s})_112 __DEAL_II__Field_3rd_Derivative({s})_120 __DEAL_II__Field_3rd_Derivative({s})_121 __DEAL_II__Field_3rd_Derivative({s})_122 __DEAL_II__Field_3rd_Derivative({s})_200 __DEAL_II__Field_3rd_Derivative({s})_201 __DEAL_II__Field_3rd_Derivative({s})_202 __DEAL_II__Field_3rd_Derivative({s})_210 __DEAL_II__Field_3rd_Derivative({s})_211 __DEAL_II__Field_3rd_Derivative({s})_212 __DEAL_II__Field_3rd_Derivative({s})_220 __DEAL_II__Field_3rd_Derivative({s})_221 __DEAL_II__Field_3rd_Derivative({s})_222
+DEAL:Scalar::OK
+DEAL:Scalar::OK
+DEAL:Vector::Dim: 2
+DEAL:Vector::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Number of components: 16
+DEAL:Vector::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Vector::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1
+DEAL:Vector::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11
+DEAL:Vector::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Vector::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111
+DEAL:Vector::OK
+DEAL:Vector::Dim: 3
+DEAL:Vector::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Vector::Number of components: 41
+DEAL:Vector::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Vector::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1 __DEAL_II__Field_Grad({s})_2
+DEAL:Vector::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_02 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11 __DEAL_II__Field_Hessian({s})_12 __DEAL_II__Field_Hessian({s})_20 __DEAL_II__Field_Hessian({s})_21 __DEAL_II__Field_Hessian({s})_22
+DEAL:Vector::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Vector::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_002 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_012 __DEAL_II__Field_3rd_Derivative({s})_020 __DEAL_II__Field_3rd_Derivative({s})_021 __DEAL_II__Field_3rd_Derivative({s})_022 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_102 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111 __DEAL_II__Field_3rd_Derivative({s})_112 __DEAL_II__Field_3rd_Derivative({s})_120 __DEAL_II__Field_3rd_Derivative({s})_121 __DEAL_II__Field_3rd_Derivative({s})_122 __DEAL_II__Field_3rd_Derivative({s})_200 __DEAL_II__Field_3rd_Derivative({s})_201 __DEAL_II__Field_3rd_Derivative({s})_202 __DEAL_II__Field_3rd_Derivative({s})_210 __DEAL_II__Field_3rd_Derivative({s})_211 __DEAL_II__Field_3rd_Derivative({s})_212 __DEAL_II__Field_3rd_Derivative({s})_220 __DEAL_II__Field_3rd_Derivative({s})_221 __DEAL_II__Field_3rd_Derivative({s})_222
+DEAL:Vector::OK
+DEAL:Vector::OK
+DEAL:Tensor::Dim: 2
+DEAL:Tensor::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Number of components: 16
+DEAL:Tensor::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Tensor::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1
+DEAL:Tensor::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11
+DEAL:Tensor::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Tensor::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111
+DEAL:Tensor::OK
+DEAL:Tensor::Dim: 3
+DEAL:Tensor::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:Tensor::Number of components: 41
+DEAL:Tensor::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:Tensor::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1 __DEAL_II__Field_Grad({s})_2
+DEAL:Tensor::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_02 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11 __DEAL_II__Field_Hessian({s})_12 __DEAL_II__Field_Hessian({s})_20 __DEAL_II__Field_Hessian({s})_21 __DEAL_II__Field_Hessian({s})_22
+DEAL:Tensor::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:Tensor::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_002 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_012 __DEAL_II__Field_3rd_Derivative({s})_020 __DEAL_II__Field_3rd_Derivative({s})_021 __DEAL_II__Field_3rd_Derivative({s})_022 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_102 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111 __DEAL_II__Field_3rd_Derivative({s})_112 __DEAL_II__Field_3rd_Derivative({s})_120 __DEAL_II__Field_3rd_Derivative({s})_121 __DEAL_II__Field_3rd_Derivative({s})_122 __DEAL_II__Field_3rd_Derivative({s})_200 __DEAL_II__Field_3rd_Derivative({s})_201 __DEAL_II__Field_3rd_Derivative({s})_202 __DEAL_II__Field_3rd_Derivative({s})_210 __DEAL_II__Field_3rd_Derivative({s})_211 __DEAL_II__Field_3rd_Derivative({s})_212 __DEAL_II__Field_3rd_Derivative({s})_220 __DEAL_II__Field_3rd_Derivative({s})_221 __DEAL_II__Field_3rd_Derivative({s})_222
+DEAL:Tensor::OK
+DEAL:Tensor::OK
+DEAL:SymmetricTensor::Dim: 2
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Number of components: 16
+DEAL:SymmetricTensor::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:SymmetricTensor::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1
+DEAL:SymmetricTensor::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11
+DEAL:SymmetricTensor::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:SymmetricTensor::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::Dim: 3
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:SymmetricTensor::Number of components: 41
+DEAL:SymmetricTensor::Field index  0: {s} -> __DEAL_II__Field_{s}
+DEAL:SymmetricTensor::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1 __DEAL_II__Field_Grad({s})_2
+DEAL:SymmetricTensor::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_02 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11 __DEAL_II__Field_Hessian({s})_12 __DEAL_II__Field_Hessian({s})_20 __DEAL_II__Field_Hessian({s})_21 __DEAL_II__Field_Hessian({s})_22
+DEAL:SymmetricTensor::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
+DEAL:SymmetricTensor::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_002 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_012 __DEAL_II__Field_3rd_Derivative({s})_020 __DEAL_II__Field_3rd_Derivative({s})_021 __DEAL_II__Field_3rd_Derivative({s})_022 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_102 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111 __DEAL_II__Field_3rd_Derivative({s})_112 __DEAL_II__Field_3rd_Derivative({s})_120 __DEAL_II__Field_3rd_Derivative({s})_121 __DEAL_II__Field_3rd_Derivative({s})_122 __DEAL_II__Field_3rd_Derivative({s})_200 __DEAL_II__Field_3rd_Derivative({s})_201 __DEAL_II__Field_3rd_Derivative({s})_202 __DEAL_II__Field_3rd_Derivative({s})_210 __DEAL_II__Field_3rd_Derivative({s})_211 __DEAL_II__Field_3rd_Derivative({s})_212 __DEAL_II__Field_3rd_Derivative({s})_220 __DEAL_II__Field_3rd_Derivative({s})_221 __DEAL_II__Field_3rd_Derivative({s})_222
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::OK
+DEAL::OK

@@ -1,0 +1,11 @@
+
+DEAL::Dim: 3
+DEAL:string::(v): e({S})
+DEAL:string::(v,d): e({S}, Div({S}))
+DEAL:string::
+DEAL:LaTeX::(v): {\Psi}\left({\mathbf{S}}\right)
+DEAL:LaTeX::(v,d): {\Psi}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK
