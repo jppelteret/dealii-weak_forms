@@ -1,0 +1,85 @@
+
+DEAL::Dim: 2
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{u}
+DEAL:string::Trial solution: D{u}
+DEAL:string::Solution: {u}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Value
+DEAL:string::Test function: d{u}
+DEAL:string::Trial solution: D{u}
+DEAL:string::Solution: {u}
+DEAL:string::Solution (t1): {u}_1
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Gradient
+DEAL:string::Test function: Grad(d{u})
+DEAL:string::Trial solution: Grad(D{u})
+DEAL:string::Solution: Grad({u})
+DEAL:string::Solution (t1): Grad({u}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Symmetric gradient
+DEAL:string::Test function: symm_Grad(d{u})
+DEAL:string::Trial solution: symm_Grad(D{u})
+DEAL:string::Solution: symm_Grad({u})
+DEAL:string::Solution (t1): symm_Grad({u}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Divergence
+DEAL:string::Test function: Div(d{u})
+DEAL:string::Trial solution: Div(D{u})
+DEAL:string::Solution: Div({u})
+DEAL:string::Solution (t1): Div({u}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Hessian
+DEAL:string::Test function: Hessian(d{u})
+DEAL:string::Trial solution: Hessian(D{u})
+DEAL:string::Solution: Hessian({u})
+DEAL:string::Solution (t1): Hessian({u}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Third derivative
+DEAL:string::Test function: 3rd_Derivative(d{u})
+DEAL:string::Trial solution: 3rd_Derivative(D{u})
+DEAL:string::Solution: 3rd_Derivative({u})
+DEAL:string::Solution (t1): 3rd_Derivative({u}_1)
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\mathbf{u}}
+DEAL:LaTeX::Trial solution: \Delta{\mathbf{u}}
+DEAL:LaTeX::Solution: {\mathbf{u}}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Value
+DEAL:LaTeX::Test function: \delta{\mathbf{u}}
+DEAL:LaTeX::Trial solution: \Delta{\mathbf{u}}
+DEAL:LaTeX::Solution: {\mathbf{u}}
+DEAL:LaTeX::Solution (t1): {\mathbf{u}}_{t-1}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Gradient
+DEAL:LaTeX::Test function: \nabla\left(\delta{\mathbf{u}}\right)
+DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\mathbf{u}}\right)
+DEAL:LaTeX::Solution: \nabla\left({\mathbf{u}}\right)
+DEAL:LaTeX::Solution (t1): \nabla\left({\mathbf{u}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Symmetric gradient
+DEAL:LaTeX::Test function: \nabla^{S}\left(\delta{\mathbf{u}}\right)
+DEAL:LaTeX::Trial solution: \nabla^{S}\left(\Delta{\mathbf{u}}\right)
+DEAL:LaTeX::Solution: \nabla^{S}\left({\mathbf{u}}\right)
+DEAL:LaTeX::Solution (t1): \nabla^{S}\left({\mathbf{u}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Divergence
+DEAL:LaTeX::Test function: \nabla \cdot\left(\delta{\mathbf{u}}\right)
+DEAL:LaTeX::Trial solution: \nabla \cdot\left(\Delta{\mathbf{u}}\right)
+DEAL:LaTeX::Solution: \nabla \cdot\left({\mathbf{u}}\right)
+DEAL:LaTeX::Solution (t1): \nabla \cdot\left({\mathbf{u}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Hessian
+DEAL:LaTeX::Test function: \nabla\nabla\left(\delta{\mathbf{u}}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\left(\Delta{\mathbf{u}}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\left({\mathbf{u}}\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\left({\mathbf{u}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Third derivative
+DEAL:LaTeX::Test function: \nabla\nabla\nabla\left(\delta{\mathbf{u}}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\nabla\left(\Delta{\mathbf{u}}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\nabla\left({\mathbf{u}}\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\nabla\left({\mathbf{u}}_{t-1}\right)
+DEAL:LaTeX::
+DEAL::OK

@@ -1,0 +1,24 @@
+
+DEAL:Dim 2::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(Div(d{S}), c, Div(D{S}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla \cdot\left(\delta{\mathbf{S}}\right) \colon \left[{c}\,\nabla \cdot\left(\Delta{\mathbf{S}}\right)\right]\right]\textrm{dV}
+DEAL:Dim 2::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(Div(d{S}), <<C>>, Div(D{S}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla \cdot\left(\delta{\mathbf{S}}\right) \colon \mathbf{C} \colon \nabla \cdot\left(\Delta{\mathbf{S}}\right)\right]\textrm{dV}
+DEAL:Dim 2::OK
+DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(Div(d{S}), c, Div(D{S}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla \cdot\left(\delta{\mathbf{S}}\right) \colon \left[{c}\,\nabla \cdot\left(\Delta{\mathbf{S}}\right)\right]\right]\textrm{dV}
+DEAL:Dim 3::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(Div(d{S}), <<C>>, Div(D{S}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla \cdot\left(\delta{\mathbf{S}}\right) \colon \mathbf{C} \colon \nabla \cdot\left(\Delta{\mathbf{S}}\right)\right]\textrm{dV}
+DEAL:Dim 3::OK
+DEAL::OK

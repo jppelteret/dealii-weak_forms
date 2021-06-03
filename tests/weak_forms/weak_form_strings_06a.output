@@ -1,0 +1,17 @@
+
+DEAL::Dim: 3
+DEAL:string::(v): e({s})
+DEAL:string::(v,g): e({s}, Grad({s}))
+DEAL:string::(v,g,l): e({s}, Grad({s}), Laplacian({s}))
+DEAL:string::(v,g,l,h): e({s}, Grad({s}), Laplacian({s}), Hessian({s}))
+DEAL:string::(v,g,l,h,d3): e({s}, Grad({s}), Laplacian({s}), Hessian({s}), 3rd_Derivative({s}))
+DEAL:string::
+DEAL:LaTeX::(v): {\Psi}\left({s}\right)
+DEAL:LaTeX::(v,g): {\Psi}\left({s}, \nabla\left({s}\right)\right)
+DEAL:LaTeX::(v,g,l): {\Psi}\left({s}, \nabla\left({s}\right), \nabla^{2}\left({s}\right)\right)
+DEAL:LaTeX::(v,g,l,h): {\Psi}\left({s}, \nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\left({s}\right)\right)
+DEAL:LaTeX::(v,g,l,h,d3): {\Psi}\left({s}, \nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK

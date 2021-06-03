@@ -1,0 +1,150 @@
+
+DEAL:Scalar::Dim: 2
+DEAL:Scalar::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Number of components: 14
+DEAL:Scalar::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Scalar::Field index  1: Grad({T}) -> Tensor<3>(4)
+DEAL:Scalar::Field index  2: Div({T}) -> Vector(12)
+DEAL:Scalar::OK
+DEAL:Scalar::Dim: 3
+DEAL:Scalar::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Residual view (ascii):
+<R>_[d{s}]({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Residual functor (ascii):
+<R>_[d{s}]({T}, Grad({T}), Div({T}))
+DEAL:Scalar::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{s}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Scalar::Number of components: 39
+DEAL:Scalar::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Scalar::Field index  1: Grad({T}) -> Tensor<3>(9)
+DEAL:Scalar::Field index  2: Div({T}) -> Vector(36)
+DEAL:Scalar::OK
+DEAL:Scalar::OK
+DEAL:Vector::Dim: 2
+DEAL:Vector::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Number of components: 14
+DEAL:Vector::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Vector::Field index  1: Grad({T}) -> Tensor<3>(4)
+DEAL:Vector::Field index  2: Div({T}) -> Vector(12)
+DEAL:Vector::OK
+DEAL:Vector::Dim: 3
+DEAL:Vector::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Residual view (ascii):
+<R>_[d{v}]({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Residual functor (ascii):
+<R>_[d{v}]({T}, Grad({T}), Div({T}))
+DEAL:Vector::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{v}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Vector::Number of components: 39
+DEAL:Vector::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Vector::Field index  1: Grad({T}) -> Tensor<3>(9)
+DEAL:Vector::Field index  2: Div({T}) -> Vector(36)
+DEAL:Vector::OK
+DEAL:Vector::OK
+DEAL:Tensor::Dim: 2
+DEAL:Tensor::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Number of components: 14
+DEAL:Tensor::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Tensor::Field index  1: Grad({T}) -> Tensor<3>(4)
+DEAL:Tensor::Field index  2: Div({T}) -> Vector(12)
+DEAL:Tensor::OK
+DEAL:Tensor::Dim: 3
+DEAL:Tensor::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Residual view (ascii):
+<R>_[d{T}]({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Residual functor (ascii):
+<R>_[d{T}]({T}, Grad({T}), Div({T}))
+DEAL:Tensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{T}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:Tensor::Number of components: 39
+DEAL:Tensor::Field index  0: {T} -> Tensor<2>(0)
+DEAL:Tensor::Field index  1: Grad({T}) -> Tensor<3>(9)
+DEAL:Tensor::Field index  2: Div({T}) -> Vector(36)
+DEAL:Tensor::OK
+DEAL:Tensor::OK
+DEAL:SymmetricTensor::Dim: 2
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Number of components: 14
+DEAL:SymmetricTensor::Field index  0: {T} -> Tensor<2>(0)
+DEAL:SymmetricTensor::Field index  1: Grad({T}) -> Tensor<3>(4)
+DEAL:SymmetricTensor::Field index  2: Div({T}) -> Vector(12)
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::Dim: 3
+DEAL:SymmetricTensor::Residual (ascii):
+<R>({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual (LaTeX):
+\mathrm{R}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Residual view (ascii):
+<R>_[d{S}]({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual view (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Residual functor (ascii):
+<R>_[d{S}]({T}, Grad({T}), Div({T}))
+DEAL:SymmetricTensor::Residual functor (LaTeX):
+{\mathrm{R}}_{\delta{\mathbf{S}}}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL:SymmetricTensor::Number of components: 39
+DEAL:SymmetricTensor::Field index  0: {T} -> Tensor<2>(0)
+DEAL:SymmetricTensor::Field index  1: Grad({T}) -> Tensor<3>(9)
+DEAL:SymmetricTensor::Field index  2: Div({T}) -> Vector(36)
+DEAL:SymmetricTensor::OK
+DEAL:SymmetricTensor::OK
+DEAL::OK

@@ -1,0 +1,73 @@
+
+DEAL::Dim: 2
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{s}
+DEAL:string::Trial solution: D{s}
+DEAL:string::Solution: {s}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Value
+DEAL:string::Test function: d{s}
+DEAL:string::Trial solution: D{s}
+DEAL:string::Solution: {s}
+DEAL:string::Solution (t1): {s}_1
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Gradient
+DEAL:string::Test function: Grad(d{s})
+DEAL:string::Trial solution: Grad(D{s})
+DEAL:string::Solution: Grad({s})
+DEAL:string::Solution (t1): Grad({s}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Laplacian
+DEAL:string::Test function: Laplacian(d{s})
+DEAL:string::Trial solution: Laplacian(D{s})
+DEAL:string::Solution: Laplacian({s})
+DEAL:string::Solution (t1): Laplacian({s}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Hessian
+DEAL:string::Test function: Hessian(d{s})
+DEAL:string::Trial solution: Hessian(D{s})
+DEAL:string::Solution: Hessian({s})
+DEAL:string::Solution (t1): Hessian({s}_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Third derivative
+DEAL:string::Test function: 3rd_Derivative(d{s})
+DEAL:string::Trial solution: 3rd_Derivative(D{s})
+DEAL:string::Solution: 3rd_Derivative({s})
+DEAL:string::Solution (t1): 3rd_Derivative({s}_1)
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{s}
+DEAL:LaTeX::Trial solution: \Delta{s}
+DEAL:LaTeX::Solution: {s}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Value
+DEAL:LaTeX::Test function: \delta{s}
+DEAL:LaTeX::Trial solution: \Delta{s}
+DEAL:LaTeX::Solution: {s}
+DEAL:LaTeX::Solution (t1): {s}_{t-1}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Gradient
+DEAL:LaTeX::Test function: \nabla\left(\delta{s}\right)
+DEAL:LaTeX::Trial solution: \nabla\left(\Delta{s}\right)
+DEAL:LaTeX::Solution: \nabla\left({s}\right)
+DEAL:LaTeX::Solution (t1): \nabla\left({s}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Laplacian
+DEAL:LaTeX::Test function: \nabla^{2}\left(\delta{s}\right)
+DEAL:LaTeX::Trial solution: \nabla^{2}\left(\Delta{s}\right)
+DEAL:LaTeX::Solution: \nabla^{2}\left({s}\right)
+DEAL:LaTeX::Solution (t1): \nabla^{2}\left({s}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Hessian
+DEAL:LaTeX::Test function: \nabla\nabla\left(\delta{s}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\left(\Delta{s}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\left({s}\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\left({s}_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Third derivative
+DEAL:LaTeX::Test function: \nabla\nabla\nabla\left(\delta{s}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\nabla\left(\Delta{s}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\nabla\left({s}\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\nabla\left({s}_{t-1}\right)
+DEAL:LaTeX::
+DEAL::OK

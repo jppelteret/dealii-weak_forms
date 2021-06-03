@@ -1,0 +1,24 @@
+
+DEAL:Dim 2::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(3rd_Derivative(d{U}), c, 3rd_Derivative(D{U}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\nabla\left(\delta{\varphi}\right) \vdots \left[{c}\,\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 2::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(3rd_Derivative(d{U}), C, 3rd_Derivative(D{U}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\nabla\left(\delta{\varphi}\right) \vdots \left[{C}\,\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 2::OK
+DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(3rd_Derivative(d{U}), c, 3rd_Derivative(D{U}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\nabla\left(\delta{\varphi}\right) \vdots \left[{c}\,\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 3::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(3rd_Derivative(d{U}), C, 3rd_Derivative(D{U}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\nabla\left(\delta{\varphi}\right) \vdots \left[{C}\,\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 3::OK
+DEAL::OK

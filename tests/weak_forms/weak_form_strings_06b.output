@@ -1,0 +1,21 @@
+
+DEAL::Dim: 3
+DEAL:string::(v): e({u})
+DEAL:string::(v,g): e({u}, Grad({u}))
+DEAL:string::(v,g,sg): e({u}, Grad({u}), symm_Grad({u}))
+DEAL:string::(v,g,sg,d): e({u}, Grad({u}), symm_Grad({u}), Div({u}))
+DEAL:string::(v,g,sg,d,c): e({u}, Grad({u}), symm_Grad({u}), Div({u}), Curl({u}))
+DEAL:string::(v,g,sg,d,c,h): e({u}, Grad({u}), symm_Grad({u}), Div({u}), Curl({u}), Hessian({u}))
+DEAL:string::(v,g,sg,d,c,h,d3): e({u}, Grad({u}), symm_Grad({u}), Div({u}), Curl({u}), Hessian({u}), 3rd_Derivative({u}))
+DEAL:string::
+DEAL:LaTeX::(v): {\Psi}\left({\mathbf{u}}\right)
+DEAL:LaTeX::(v,g): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::(v,g,sg): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right), \nabla^{S}\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::(v,g,sg,d): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right), \nabla^{S}\left({\mathbf{u}}\right), \nabla \cdot\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::(v,g,sg,d,c): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right), \nabla^{S}\left({\mathbf{u}}\right), \nabla \cdot\left({\mathbf{u}}\right), \nabla \times\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::(v,g,sg,d,c,h): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right), \nabla^{S}\left({\mathbf{u}}\right), \nabla \cdot\left({\mathbf{u}}\right), \nabla \times\left({\mathbf{u}}\right), \nabla\nabla\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::(v,g,sg,d,c,h,d3): {\Psi}\left({\mathbf{u}}, \nabla\left({\mathbf{u}}\right), \nabla^{S}\left({\mathbf{u}}\right), \nabla \cdot\left({\mathbf{u}}\right), \nabla \times\left({\mathbf{u}}\right), \nabla\nabla\left({\mathbf{u}}\right), \nabla\nabla\nabla\left({\mathbf{u}}\right)\right)
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK

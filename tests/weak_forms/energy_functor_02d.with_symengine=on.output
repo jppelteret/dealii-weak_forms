@@ -1,0 +1,28 @@
+
+DEAL::Dim: 2
+DEAL::Energy (ascii):
+e({S}, Div({S}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL::Energy functor (ascii):
+e({S}, Div({S}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL::Number of components: 5
+DEAL::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11
+DEAL::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1
+DEAL::OK
+DEAL::Dim: 3
+DEAL::Energy (ascii):
+e({S}, Div({S}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL::Energy functor (ascii):
+e({S}, Div({S}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{S}}, \nabla \cdot\left({\mathbf{S}}\right)\right)
+DEAL::Number of components: 9
+DEAL::Field index  0: {S} -> __DEAL_II__Field_{S}_00 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_01 __DEAL_II__Field_{S}_11 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_02 __DEAL_II__Field_{S}_12 __DEAL_II__Field_{S}_22
+DEAL::Field index  1: Div({S}) -> __DEAL_II__Field_Div({S})_0 __DEAL_II__Field_Div({S})_1 __DEAL_II__Field_Div({S})_2
+DEAL::OK
+DEAL::OK

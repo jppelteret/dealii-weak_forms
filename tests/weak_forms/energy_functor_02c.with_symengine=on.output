@@ -1,0 +1,30 @@
+
+DEAL::Dim: 2
+DEAL::Energy (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Energy functor (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Number of components: 14
+DEAL::Field index  0: {T} -> __DEAL_II__Field_{T}_00 __DEAL_II__Field_{T}_01 __DEAL_II__Field_{T}_10 __DEAL_II__Field_{T}_11
+DEAL::Field index  1: Grad({T}) -> __DEAL_II__Field_Grad({T})_000 __DEAL_II__Field_Grad({T})_001 __DEAL_II__Field_Grad({T})_010 __DEAL_II__Field_Grad({T})_011 __DEAL_II__Field_Grad({T})_100 __DEAL_II__Field_Grad({T})_101 __DEAL_II__Field_Grad({T})_110 __DEAL_II__Field_Grad({T})_111
+DEAL::Field index  2: Div({T}) -> __DEAL_II__Field_Div({T})_0 __DEAL_II__Field_Div({T})_1
+DEAL::OK
+DEAL::Dim: 3
+DEAL::Energy (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Energy functor (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Number of components: 39
+DEAL::Field index  0: {T} -> __DEAL_II__Field_{T}_00 __DEAL_II__Field_{T}_01 __DEAL_II__Field_{T}_02 __DEAL_II__Field_{T}_10 __DEAL_II__Field_{T}_11 __DEAL_II__Field_{T}_12 __DEAL_II__Field_{T}_20 __DEAL_II__Field_{T}_21 __DEAL_II__Field_{T}_22
+DEAL::Field index  1: Grad({T}) -> __DEAL_II__Field_Grad({T})_000 __DEAL_II__Field_Grad({T})_001 __DEAL_II__Field_Grad({T})_002 __DEAL_II__Field_Grad({T})_010 __DEAL_II__Field_Grad({T})_011 __DEAL_II__Field_Grad({T})_012 __DEAL_II__Field_Grad({T})_020 __DEAL_II__Field_Grad({T})_021 __DEAL_II__Field_Grad({T})_022 __DEAL_II__Field_Grad({T})_100 __DEAL_II__Field_Grad({T})_101 __DEAL_II__Field_Grad({T})_102 __DEAL_II__Field_Grad({T})_110 __DEAL_II__Field_Grad({T})_111 __DEAL_II__Field_Grad({T})_112 __DEAL_II__Field_Grad({T})_120 __DEAL_II__Field_Grad({T})_121 __DEAL_II__Field_Grad({T})_122 __DEAL_II__Field_Grad({T})_200 __DEAL_II__Field_Grad({T})_201 __DEAL_II__Field_Grad({T})_202 __DEAL_II__Field_Grad({T})_210 __DEAL_II__Field_Grad({T})_211 __DEAL_II__Field_Grad({T})_212 __DEAL_II__Field_Grad({T})_220 __DEAL_II__Field_Grad({T})_221 __DEAL_II__Field_Grad({T})_222
+DEAL::Field index  2: Div({T}) -> __DEAL_II__Field_Div({T})_0 __DEAL_II__Field_Div({T})_1 __DEAL_II__Field_Div({T})_2
+DEAL::OK
+DEAL::OK

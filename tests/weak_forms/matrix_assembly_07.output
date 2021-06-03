@@ -1,0 +1,24 @@
+
+DEAL:Dim 2::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(Hessian(d{U}), c, Hessian(D{U}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\left(\delta{\varphi}\right) \colon \left[{c}\,\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 2::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(Hessian(d{U}), <<<<C>>>>, Hessian(D{U}))#dV
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\left(\delta{\varphi}\right) \colon \mathcal{C} \colon \nabla\nabla\left(\Delta{\varphi}\right)\right]\textrm{dV}
+DEAL:Dim 2::OK
+DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(Hessian(d{U}), c, Hessian(D{U}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\left(\delta{\varphi}\right) \colon \left[{c}\,\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+DEAL:Dim 3::Weak form assembly (bilinear form, tensor valued coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(Hessian(d{U}), <<<<C>>>>, Hessian(D{U}))#dV
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\left[\nabla\nabla\left(\delta{\varphi}\right) \colon \mathcal{C} \colon \nabla\nabla\left(\Delta{\varphi}\right)\right]\textrm{dV}
+DEAL:Dim 3::OK
+DEAL::OK

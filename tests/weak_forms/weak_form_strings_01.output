@@ -1,0 +1,76 @@
+
+DEAL::Dim: 2
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Value
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::Solution (t1): U_1
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Gradient
+DEAL:string::Test function: Grad(d{U})
+DEAL:string::Trial solution: Grad(D{U})
+DEAL:string::Solution: Grad(U)
+DEAL:string::Solution (t1): Grad(U_1)
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Value
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::Solution (t1): \varphi_{t-1}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Gradient
+DEAL:LaTeX::Test function: \nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Value
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::Solution (t1): U_1
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Gradient
+DEAL:string::Test function: Grad(d{U})
+DEAL:string::Trial solution: Grad(D{U})
+DEAL:string::Solution: Grad(U)
+DEAL:string::Solution (t1): Grad(U_1)
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Value
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::Solution (t1): \varphi_{t-1}
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Gradient
+DEAL:LaTeX::Test function: \nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK

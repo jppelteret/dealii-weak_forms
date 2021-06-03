@@ -1,0 +1,30 @@
+
+DEAL::Dim: 2
+DEAL::Energy (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Energy functor (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Number of components: 14
+DEAL::Field index  0: {T} -> Tensor<2>(0)
+DEAL::Field index  1: Grad({T}) -> Tensor<3>(4)
+DEAL::Field index  2: Div({T}) -> Vector(12)
+DEAL::OK
+DEAL::Dim: 3
+DEAL::Energy (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Energy functor (ascii):
+e({T}, Grad({T}), Div({T}))
+DEAL::Energy functor (LaTeX):
+{\Psi}\left({\mathbf{T}}, \nabla\left({\mathbf{T}}\right), \nabla \cdot\left({\mathbf{T}}\right)\right)
+DEAL::Number of components: 39
+DEAL::Field index  0: {T} -> Tensor<2>(0)
+DEAL::Field index  1: Grad({T}) -> Tensor<3>(9)
+DEAL::Field index  2: Div({T}) -> Vector(36)
+DEAL::OK
+DEAL::OK

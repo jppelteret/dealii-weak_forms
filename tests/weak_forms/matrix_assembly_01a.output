@@ -1,0 +1,24 @@
+
+DEAL:Dim 2::Weak form assembly (bilinear form, scalar coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(d{U}, c, D{U})#dV(V=1)
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\limits_{V=1}\left[\delta{\varphi}\,\left[{c}\,\Delta{\varphi}\right]\right]\textrm{dV}
+DEAL:Dim 2::Weak form assembly (bilinear form, position dependent scalar coefficient)
+DEAL:Dim 2::Weak form (ascii):
+0 = #(d{U}, c(X), D{U})#dV(V=1)
+DEAL:Dim 2::Weak form (LaTeX):
+0 = \int\limits_{V=1}\left[\delta{\varphi}\,\left[{c\left(\mathbf{X}\right)}\,\Delta{\varphi}\right]\right]\textrm{dV}
+DEAL:Dim 2::OK
+DEAL:Dim 3::Weak form assembly (bilinear form, scalar coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(d{U}, c, D{U})#dV(V=1)
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\limits_{V=1}\left[\delta{\varphi}\,\left[{c}\,\Delta{\varphi}\right]\right]\textrm{dV}
+DEAL:Dim 3::Weak form assembly (bilinear form, position dependent scalar coefficient)
+DEAL:Dim 3::Weak form (ascii):
+0 = #(d{U}, c(X), D{U})#dV(V=1)
+DEAL:Dim 3::Weak form (LaTeX):
+0 = \int\limits_{V=1}\left[\delta{\varphi}\,\left[{c\left(\mathbf{X}\right)}\,\Delta{\varphi}\right]\right]\textrm{dV}
+DEAL:Dim 3::OK
+DEAL::OK

@@ -1,0 +1,67 @@
+
+DEAL:Symbolic op::has_test_function_op()
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::has_trial_solution_op()
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::has_field_solution_op()
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Symbolic op::false
+DEAL:Negation::has_test_function_op()
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::has_trial_solution_op()
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::has_field_solution_op()
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Negation::true
+DEAL:Square root::has_field_solution_op()
+DEAL:Square root::true
+DEAL:Determinant::has_field_solution_op()
+DEAL:Determinant::true
+DEAL:Determinant::true
+DEAL:Invert::has_field_solution_op()
+DEAL:Invert::true
+DEAL:Invert::true
+DEAL:Transpose::has_test_function_op()
+DEAL:Transpose::true
+DEAL:Transpose::true
+DEAL:Transpose::has_trial_solution_op()
+DEAL:Transpose::true
+DEAL:Transpose::true
+DEAL:Transpose::has_field_solution_op()
+DEAL:Transpose::true
+DEAL:Transpose::true
+DEAL:Symmetrize::has_test_function_op()
+DEAL:Symmetrize::true
+DEAL:Symmetrize::true
+DEAL:Symmetrize::has_trial_solution_op()
+DEAL:Symmetrize::true
+DEAL:Symmetrize::true
+DEAL:Symmetrize::has_field_solution_op()
+DEAL:Symmetrize::true
+DEAL:Symmetrize::true
+DEAL:Compound::has_test_function_op()
+DEAL:Compound::true
+DEAL:Compound::has_trial_solution_op()
+DEAL:Compound::true
+DEAL:Compound::has_field_solution_op()
+DEAL:Compound::true
+DEAL:Compound::true
+DEAL:Compound::true
+DEAL:Compound::true
+DEAL::OK

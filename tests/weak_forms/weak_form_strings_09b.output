@@ -1,0 +1,38 @@
+
+DEAL::Dim: 2
+DEAL:Tensor2::Weak form (ascii):
+0 = #(Grad(d{u}), <<[0,0;0,0]>>, Div(D{u}))#dV + #(Grad(d{u}), <<[0,0;0,0]>>)#dA
+DEAL:Tensor2::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\begin{bmatrix}0&0\\0&0\end{bmatrix}} \cdot \nabla \cdot\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\begin{bmatrix}0&0\\0&0\end{bmatrix}}\right]\textrm{dA}
+DEAL:Tensor2::OK
+DEAL:Tensor3::Weak form (ascii):
+0 = #(Grad(d{u}), <<<[0,0;0,0;0,0;0,0]>>>, D{u})#dV + #(Hessian(d{u}), <<<[0,0;0,0;0,0;0,0]>>>)#dA
+DEAL:Tensor3::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathfrak{\begin{bmatrix}0&0\\0&0\\0&0\\0&0\end{bmatrix}} \cdot \Delta{\mathbf{u}}\right]\textrm{dV} + \int\left[\nabla\nabla\left(\delta{\mathbf{u}}\right) \vdots \mathfrak{\begin{bmatrix}0&0\\0&0\\0&0\\0&0\end{bmatrix}}\right]\textrm{dA}
+DEAL:Tensor3::OK
+DEAL:Tensor4::Weak form (ascii):
+0 = #(d{S}, <<<<[0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0]>>>>, D{S})#dV
+DEAL:Tensor4::Weak form (LaTeX):
+0 = \int\left[\delta{\mathbf{S}} \colon \mathcal{\begin{bmatrix}0&0&0&0\\0&0&0&0\\0&0&0&0\\0&0&0&0\end{bmatrix}} \colon \Delta{\mathbf{S}}\right]\textrm{dV}
+DEAL:Tensor4::OK
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:Tensor2::Weak form (ascii):
+0 = #(Grad(d{u}), <<[0,0,0;0,0,0;0,0,0]>>, Div(D{u}))#dV + #(Grad(d{u}), <<[0,0,0;0,0,0;0,0,0]>>)#dA
+DEAL:Tensor2::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\begin{bmatrix}0&0&0\\0&0&0\\0&0&0\end{bmatrix}} \cdot \nabla \cdot\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\begin{bmatrix}0&0&0\\0&0&0\\0&0&0\end{bmatrix}}\right]\textrm{dA}
+DEAL:Tensor2::OK
+DEAL:Tensor3::Weak form (ascii):
+0 = #(Grad(d{u}), <<<[0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0]>>>, D{u})#dV + #(Hessian(d{u}), <<<[0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0]>>>)#dA
+DEAL:Tensor3::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathfrak{\begin{bmatrix}0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\end{bmatrix}} \cdot \Delta{\mathbf{u}}\right]\textrm{dV} + \int\left[\nabla\nabla\left(\delta{\mathbf{u}}\right) \vdots \mathfrak{\begin{bmatrix}0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\\0&0&0\end{bmatrix}}\right]\textrm{dA}
+DEAL:Tensor3::OK
+DEAL:Tensor4::Weak form (ascii):
+0 = #(d{S}, <<<<[0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0;0,0,0,0,0,0,0,0,0]>>>>, D{S})#dV
+DEAL:Tensor4::Weak form (LaTeX):
+0 = \int\left[\delta{\mathbf{S}} \colon \mathcal{\begin{bmatrix}0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\\0&0&0&0&0&0&0&0&0\end{bmatrix}} \colon \Delta{\mathbf{S}}\right]\textrm{dV}
+DEAL:Tensor4::OK
+DEAL::OK
+DEAL::
+DEAL::OK

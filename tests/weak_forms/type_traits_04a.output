@@ -1,0 +1,54 @@
+
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:true
+DEAL::Integral op:OK
+DEAL::Symbolic integral op:true
+DEAL::Symbolic integral op:true
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:false
+DEAL::Symbolic integral op:OK
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:true
+DEAL::Unary integral op:true
+DEAL::Unary integral op:true
+DEAL::Unary integral op:true
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:false
+DEAL::Unary integral op:OK
+DEAL::Binary integral op:false
+DEAL::Binary integral op:false
+DEAL::Binary integral op:false
+DEAL::Binary integral op:false
+DEAL::Binary integral op:false
+DEAL::Binary integral op:false
+DEAL::Binary integral op:true
+DEAL::Binary integral op:true
+DEAL::Binary integral op:true
+DEAL::Binary integral op:true
+DEAL::Binary integral op:true
+DEAL::Binary integral op:true
+DEAL::Binary integral op:OK
+DEAL::OK

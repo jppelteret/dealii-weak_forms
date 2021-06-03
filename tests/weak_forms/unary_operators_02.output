@@ -1,0 +1,27 @@
+
+DEAL:Dim 2:Negation::Test function: Cell
+DEAL:Dim 2:Negation::OK
+DEAL:Dim 2:Negation::Trial solution: Cell
+DEAL:Dim 2:Negation::OK
+DEAL:Dim 2:Transpose::Test function: Cell
+DEAL:Dim 2:Transpose::OK
+DEAL:Dim 2:Transpose::Trial solution: Cell
+DEAL:Dim 2:Transpose::OK
+DEAL:Dim 2:Symmetrize::Test function: Cell
+DEAL:Dim 2:Symmetrize::OK
+DEAL:Dim 2:Symmetrize::Trial solution: Cell
+DEAL:Dim 2:Symmetrize::OK
+DEAL:Dim 2:Negation::Test function: Face
+DEAL:Dim 2:Negation::OK
+DEAL:Dim 2:Negation::Trial solution: Face
+DEAL:Dim 2:Negation::OK
+DEAL:Dim 2:Transpose::Test function: Face
+DEAL:Dim 2:Transpose::OK
+DEAL:Dim 2:Transpose::Trial solution: Face
+DEAL:Dim 2:Transpose::OK
+DEAL:Dim 2:Symmetrize::Test function: Face
+DEAL:Dim 2:Symmetrize::OK
+DEAL:Dim 2:Symmetrize::Trial solution: Face
+DEAL:Dim 2:Symmetrize::OK
+DEAL:Dim 2::OK
+DEAL::OK
