@@ -18,8 +18,6 @@
 
 #include <deal.II/base/config.h>
 
-#include <weak_forms/config.h>
-
 #include <deal.II/fe/fe_values.h>
 
 #include <deal.II/lac/affine_constraints.h>
@@ -31,6 +29,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/assembler_base.h>
+#include <weak_forms/config.h>
 
 
 
@@ -39,7 +38,6 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
-
   template <int dim,
             int spacedim           = dim,
             typename ScalarType    = double,
@@ -746,13 +744,41 @@ namespace WeakForms
               "Internal face cell matrix/vector contributions have not yet been implemented."));
         }
 
-      auto copier = [&constraints, system_matrix, system_vector](
-                      const CopyData &copy_data) {
+      // Symmetry of the global system
+      const bool &global_system_symmetry_flag =
+        this->global_system_symmetry_flag;
+
+      auto copier = [&constraints,
+                     system_matrix,
+                     system_vector,
+                     &global_system_symmetry_flag](const CopyData &copy_data) {
         const FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
         const Vector<ScalarType> &    cell_vector = copy_data.vectors[0];
         const std::vector<types::global_dof_index> &local_dof_indices =
           copy_data.local_dof_indices[0];
 
+        // Copy the upper half (i.e. contributions below the diagonal) into the
+        // lower half if the global system is marked as symmetric.
+        if (global_system_symmetry_flag == true)
+          {
+            // Hmm... a bit nasty, but it makes sense to do the global
+            // symmetrization only once if possible. To (unnecessarily)
+            // symmetrize each form contribution after assembling only it's
+            // lower diagonal part would be a little wasteful.
+            FullMatrix<ScalarType> &symmetrized_cell_matrix =
+              const_cast<FullMatrix<ScalarType> &>(cell_matrix);
+            // symmetrized_cell_matrix.symmetrize();
+
+            using DoFRange_t =
+              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
+            const DoFRange_t dof_range_j(0, local_dof_indices.size());
+            for (const auto j : dof_range_j)
+              {
+                const DoFRange_t dof_range_i(j + 1, local_dof_indices.size());
+                for (const auto i : dof_range_i)
+                  symmetrized_cell_matrix(i, j) = cell_matrix(j, i);
+              }
+          }
 
         if (system_matrix && system_vector)
           {
