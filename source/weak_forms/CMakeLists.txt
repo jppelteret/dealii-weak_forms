@@ -16,14 +16,15 @@
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
 SET(_src
-    assembler.cc
+    assembler_base.cc
+    assembler_matrix_based.cc
     symbolic_decorations.cc
     utilities.cc
   )
 
 SET(_inst
-    assembler.inst.in
-    assembler.inst1.in
+    assembler_base.inst.in
+    assembler_matrix_based.inst.in
   )
 
 FILE(GLOB _header

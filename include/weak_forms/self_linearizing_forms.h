@@ -23,7 +23,7 @@
 // #include <boost/core/demangle.hpp>
 
 // TODO: Are all of these needed?
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_base.h>
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/differentiation.h>
 #include <weak_forms/energy_functor.h>
