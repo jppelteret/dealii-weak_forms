@@ -67,7 +67,8 @@
 #include <weak_forms/unary_integral_operators.h>
 
 // Assembly
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_matrix_based.h>
+// #include <weak_forms/assembler_matrix_free.h>
 
 
 #endif // dealii_weakforms_weakforms_h

@@ -13,8 +13,17 @@
 //
 // ---------------------------------------------------------------------
 
+#include <weak_forms/assembler_matrix_based.h>
 
-for (number : REAL_AND_COMPLEX_SCALARS; dim : SPACE_DIMENSIONS; spacedim : SPACE_DIMENSIONS; vec : BOOL)
-  {
 
-  }
+WEAK_FORMS_NAMESPACE_OPEN
+
+
+namespace WeakForms
+{} // namespace WeakForms
+
+/* --- Explicit instantiations --- */
+#include "assembler_matrix_based.inst"
+
+
+WEAK_FORMS_NAMESPACE_CLOSE

@@ -22,9 +22,6 @@ for (number : REAL_AND_COMPLEX_SCALARS; dim : SPACE_DIMENSIONS;
     \{
 
       template <>
-      class AssemblerBase<dim, spacedim, number, vec>;
-
-      template <>
       class MatrixBasedAssembler<dim, spacedim, number, vec>;
 
     \}

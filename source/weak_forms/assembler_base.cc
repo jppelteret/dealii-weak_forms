@@ -13,7 +13,7 @@
 //
 // ---------------------------------------------------------------------
 
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_base.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -23,13 +23,7 @@ namespace WeakForms
 {} // namespace WeakForms
 
 /* --- Explicit instantiations --- */
-#include "assembler.inst"
-// #  ifdef DEAL_II_WITH_ADOLC
-// #    include "assembler.inst1"
-// #  endif
-// #  ifdef DEAL_II_TRILINOS_WITH_SACADO
-// #    include "assembler.inst2"
-// #  endif
+#include "assembler_base.inst"
 
 
 WEAK_FORMS_NAMESPACE_CLOSE
