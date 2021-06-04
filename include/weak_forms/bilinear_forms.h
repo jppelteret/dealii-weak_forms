@@ -59,6 +59,7 @@ namespace WeakForms
       : test_space_op(test_space_op)
       , functor_op(functor_op)
       , trial_space_op(trial_space_op)
+      , local_contribution_symmetry_flag(false)
     {}
 
     std::string
@@ -110,6 +111,22 @@ namespace WeakForms
                  functor_op.as_latex(decorator) + symb_mult_ft +
                  trial_space_op.as_latex(decorator) + rbrace;
         }
+    }
+
+    bool
+    is_symmetric() const
+    {
+      return local_contribution_symmetry_flag;
+    }
+
+    // Indicate that the contribution that comes from this form is symmetric.
+    //
+    // Note: We return this object to facilitate operation chaining.
+    BilinearForm &
+    symmetrize()
+    {
+      local_contribution_symmetry_flag = true;
+      return *this;
     }
 
     // ===== Section: Integration =====
@@ -200,6 +217,8 @@ namespace WeakForms
     const TestSpaceOp  test_space_op;
     const Functor      functor_op;
     const TrialSpaceOp trial_space_op;
+    bool local_contribution_symmetry_flag; // Indicate whether or not this local
+                                           // contribution is a symmetric one
   };
 
 } // namespace WeakForms

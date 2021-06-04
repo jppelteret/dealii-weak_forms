@@ -40,6 +40,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 - Standard
   - Linear
   - Bilinear
+    - Symmetry flag for local contributions
   - Feature points
     - Form operators involve slots for per-dof calculations and per-quadrature point calculations
       - Can use the per-quadrature point slot as much as possible to minimise number of operations
@@ -143,7 +144,8 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 
 ## Assemblers
 - Matrix-based (using `mesh_loop`)
-  - [TODO] Symmetry flag 
+  - Symmetry flag for global system
+  - [TODO] Ignore DoFs that aren't in DoF group
   - Vectorisation
   - Pre-computation and result caching
 - [TODO] Matrix-free

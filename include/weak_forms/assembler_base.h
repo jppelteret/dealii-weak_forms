@@ -412,7 +412,8 @@ namespace WeakForms
       const std::vector<std::vector<ValueTypeTest>> & shapes_test,
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
-      const std::vector<double> &                     JxW)
+      const std::vector<double> &                     JxW,
+      const bool                                      symmetric_contribution)
     {
       Assert(shapes_test.size() == fe_values_dofs.dofs_per_cell,
              ExcDimensionMismatch(shapes_test.size(),
@@ -445,10 +446,13 @@ namespace WeakForms
       //     for (j : dof_indices)
       //       cell_matrix(i,j) += shapes_test[i][q] * values_functor[q] *
       //       shapes_trial[j][q]) * JxW[q]
-      // TODO: Account for symmetry, if desired.
-      for (const unsigned int q : fe_values_q_points.quadrature_point_indices())
+      const auto qp_range = fe_values_q_points.quadrature_point_indices();
+      const auto dof_range_j =
+        (symmetric_contribution ? fe_values_dofs.dof_indices() :
+                                  fe_values_dofs.dof_indices());
+      for (const unsigned int q : qp_range)
         {
-          for (const unsigned int j : fe_values_dofs.dof_indices())
+          for (const unsigned int j : dof_range_j)
             {
               using ContractionType_FS =
                 FullContraction<ValueTypeFunctor, ValueTypeTrial>;
@@ -458,7 +462,13 @@ namespace WeakForms
               using ContractionType_FS_t = typename std::decay<decltype(
                 functor_x_shape_trial_x_JxW)>::type;
 
-              for (const unsigned int i : fe_values_dofs.dof_indices())
+              // Assemble only the diagonal plus upper half of the matrix if
+              // the symmetry flag is set.
+              const auto dof_range_i =
+                (symmetric_contribution ?
+                   fe_values_dofs.dof_indices_ending_at(j) :
+                   fe_values_dofs.dof_indices());
+              for (const unsigned int i : dof_range_i)
                 {
                   using ContractionType_SFS_JxW =
                     FullContraction<ValueTypeTest, ContractionType_FS_t>;
@@ -497,7 +507,8 @@ namespace WeakForms
       const std::vector<std::vector<ValueTypeTest>> & shapes_test,
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
-      const std::vector<double> &                     JxW)
+      const std::vector<double> &                     JxW,
+      const bool                                      symmetric_contribution)
     {
       assemble_cell_matrix_contribution<Sign>(cell_matrix,
                                               fe_values,
@@ -505,7 +516,8 @@ namespace WeakForms
                                               shapes_test,
                                               values_functor,
                                               shapes_trial,
-                                              JxW);
+                                              JxW,
+                                              symmetric_contribution);
     }
 
 
@@ -723,7 +735,8 @@ namespace WeakForms
       const AlignedVector<VectorizedValueTypeTest> & shapes_test,
       const VectorizedValueTypeFunctor &             values_functor,
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
-      const VectorizedArray<double, width> &         JxW)
+      const VectorizedArray<double, width> &         JxW,
+      const bool                                     symmetric_contribution)
     {
       // This is the equivalent of
       // for (q : q_points) --> vectorized
@@ -731,8 +744,10 @@ namespace WeakForms
       //     for (j : dof_indices)
       //       cell_matrix(i,j) += shapes_test[i][q] * values_functor[q] *
       //       shapes_trial[j][q]) * JxW[q]
-      // TODO: Account for symmetry, if desired.
-      for (const unsigned int j : fe_values_dofs.dof_indices())
+      const auto dof_range_j =
+        (symmetric_contribution ? fe_values_dofs.dof_indices() :
+                                  fe_values_dofs.dof_indices());
+      for (const unsigned int j : dof_range_j)
         {
           using ContractionType_FS = FullContraction<VectorizedValueTypeFunctor,
                                                      VectorizedValueTypeTrial>;
@@ -741,7 +756,12 @@ namespace WeakForms
           using ContractionType_FS_t =
             typename std::decay<decltype(functor_x_shape_trial_x_JxW)>::type;
 
-          for (const unsigned int i : fe_values_dofs.dof_indices())
+          // Assemble only the diagonal plus upper half of the matrix if
+          // the symmetry flag is set.
+          const auto dof_range_i =
+            (symmetric_contribution ? fe_values_dofs.dof_indices_ending_at(j) :
+                                      fe_values_dofs.dof_indices());
+          for (const unsigned int i : dof_range_i)
             {
               using ContractionType_SFS_JxW =
                 FullContraction<VectorizedValueTypeTest, ContractionType_FS_t>;
@@ -1742,6 +1762,24 @@ namespace WeakForms
       return output;
     }
 
+    bool
+    is_symmetric() const
+    {
+      return global_system_symmetry_flag;
+    }
+
+    void
+    set_global_system_symmetry_flag(const bool flag)
+    {
+      global_system_symmetry_flag = flag;
+    }
+
+    void
+    symmetrize()
+    {
+      set_global_system_symmetry_flag(true);
+    }
+
 
     // template <typename VectorType,
     //           typename DoFHandlerType,
@@ -1812,13 +1850,24 @@ namespace WeakForms
     // }
 
   protected:
+    /**
+     * A flag to indicate whether or not the global system is to be assembled
+     * in symmetric form, or not.
+     *
+     * If so, then we only ever assemble the upper half plus diagonal
+     * contributions from any form, and then mirror the upper half contribution
+     * into the lower half of the local matrix.
+     */
+    bool global_system_symmetry_flag;
+
     explicit AssemblerBase()
       : cell_update_flags(update_default)
       // , cell_solution_update_flags(update_default)
       , boundary_face_update_flags(update_default)
       // , boundary_face_solution_update_flags(update_default)
       , interface_face_update_flags(update_default)
-    // , interface_face_solution_update_flags(update_default)
+      // , interface_face_solution_update_flags(update_default)
+      , global_system_symmetry_flag(false)
     {}
 
 
@@ -1907,6 +1956,16 @@ namespace WeakForms
       using ValueTypeTrial =
         typename TrialSpaceOp::template value_type<ScalarType>;
 
+      // Contribution symmetry
+      // We consider the case that the user adjust the symmetry at any point
+      // before the actual operation. We therefore capture the local symmetry
+      // flag by copy, but the global symmetry flag refers back to that stored
+      // in the assembler itself.
+      const bool local_contribution_symmetry_flag =
+        false; // form.local_contribution_symmetry_flag()
+      const bool &global_system_symmetry_flag =
+        this->global_system_symmetry_flag;
+
       // Now, compose all of this into a bespoke operation for this
       // contribution.
       //
@@ -1915,7 +1974,12 @@ namespace WeakForms
       // with operator+= , e.g.
       //   MatrixBasedAssembler<dim, spacedim> assembler;
       //   assembler += bilinear_form(test_val, coeff_func, trial_val).dV();
-      auto f = [volume_integral, test_space_op, functor, trial_space_op](
+      auto f = [volume_integral,
+                test_space_op,
+                functor,
+                trial_space_op,
+                local_contribution_symmetry_flag,
+                &global_system_symmetry_flag](
                  FullMatrix<ScalarType> &                cell_matrix,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
@@ -1930,6 +1994,26 @@ namespace WeakForms
 
         const unsigned int n_dofs_per_cell = fe_values.dofs_per_cell;
         const unsigned int n_q_points      = fe_values.n_quadrature_points;
+
+        // Decide whether or not to assemble in symmetry mode, i.e. Only
+        // assemble the lower half of the matrix plus the diagonal.
+        const bool symmetric_contribution =
+          local_contribution_symmetry_flag | global_system_symmetry_flag;
+
+        // If the local contribution is symmetric, but the global system is not,
+        // then we need to write our contributions into an intermediate data
+        // structure.
+        // TODO[JPP]: Put this somewhere reuseable, e.g. ScratchData?
+        const bool use_scratch_cell_matrix =
+          local_contribution_symmetry_flag && !global_system_symmetry_flag;
+        FullMatrix<ScalarType> scratch_cell_matrix;
+        if (use_scratch_cell_matrix)
+          scratch_cell_matrix.reinit({cell_matrix.m(), cell_matrix.n()});
+
+        // Decide whether or not to contribute directly into the overall system
+        // matrix, or own own scratch data.
+        auto &assembly_cell_matrix =
+          (use_scratch_cell_matrix ? scratch_cell_matrix : cell_matrix);
 
         // Get the shape function data (value, gradients, curls, etc.)
         // for all quadrature points at all DoFs. We construct it in this
@@ -2032,12 +2116,13 @@ namespace WeakForms
 
                 // Do the assembly for the current batch of quadrature points
                 internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
-                  Sign>(cell_matrix,
+                  Sign>(assembly_cell_matrix,
                         fe_values,
                         shapes_test,
                         values_functor,
                         shapes_trial,
-                        JxW);
+                        JxW,
+                        symmetric_contribution);
               }
           }
         else
@@ -2052,12 +2137,38 @@ namespace WeakForms
                                                      solution_names);
 
             // Assemble for all DoFs and quadrature points
-            internal::assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                                              fe_values,
-                                                              shapes_test,
-                                                              values_functor,
-                                                              shapes_trial,
-                                                              JxW);
+            internal::assemble_cell_matrix_contribution<Sign>(
+              assembly_cell_matrix,
+              fe_values,
+              shapes_test,
+              values_functor,
+              shapes_trial,
+              JxW,
+              symmetric_contribution);
+          }
+
+        if (use_scratch_cell_matrix)
+          {
+            Assert(!global_system_symmetry_flag,
+                   ExcMessage("Expect global symmetry flag to be false."));
+            Assert(&assembly_cell_matrix == &scratch_cell_matrix,
+                   ExcMessage(
+                     "Expected to be working with scratch cell matrix object"));
+
+            // Symmetrize this contribution
+            for (const unsigned int i : fe_values.dof_indices())
+              {
+                // Accumulate into diagonal
+                cell_matrix(i, i) += scratch_cell_matrix(i, i);
+                for (const unsigned int j :
+                     fe_values.dof_indices_starting_at(i + 1))
+                  {
+                    // Accumulate into lower and upper halves from the lower
+                    // half contribution that we've just assembled.
+                    cell_matrix(i, j) += scratch_cell_matrix(j, i);
+                    cell_matrix(j, i) += scratch_cell_matrix(j, i);
+                  }
+              }
           }
       };
       cell_matrix_operations.emplace_back(f);
