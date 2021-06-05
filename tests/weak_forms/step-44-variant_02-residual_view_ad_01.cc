@@ -101,7 +101,7 @@ namespace Step44
         return Physics::Elasticity::StandardTensors<dim>::I;
       });
 
-    const SymmetricTensorFunctor<4, spacedim> H_geo_symb(
+    const TensorFunctor<4, spacedim> H_geo_symb(
       "H^{geo}",
       "\\mathcal{H}^{geo}"); // Geometric contribution to elasticity tensor
     const auto H_geo = H_geo_symb.template value<double, dim>(
@@ -119,7 +119,6 @@ namespace Step44
     const auto dF = grad_test_u;
     const auto DF = grad_trial_u;
     const auto dE = symmetrize(transpose(F) * dF);
-    const auto DE = symmetrize(transpose(F) * DF);
 
     // Residual
     const auto residual_func =
@@ -237,7 +236,7 @@ namespace Step44
     assembler +=
       residual_form(residual_u)
         .dV() + // Will only produce material stiffness contribution
-      bilinear_form(dE, H_geo, DE).dV() + // Geometric stiffness contribution
+      bilinear_form(dF, H_geo, DF).dV() + // Geometric stiffness contribution
       residual_form(residual_p).dV() +
       residual_form(residual_J).dV() +
       energy_functional_form(external_energy).dA(traction_boundary_id);

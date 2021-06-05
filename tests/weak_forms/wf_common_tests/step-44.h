@@ -764,50 +764,30 @@ namespace Step44
     {
       return Physics::Transformations::Contravariant::pull_back(get_tau(), F);
     }
+    // Material stiffness
     SymmetricTensor<4, dim>
     get_H() const
     {
       return Physics::Transformations::Contravariant::pull_back(get_Jc(), F);
     }
     // Geometric stiffnesses
-    // NOTE: This is not actually correct, but it will
-    // work fine for the tests that use H_geo or H_tot.
-    // The convergence of the problem will deteriorate
-    // because of this term. See get_HH() for how the
-    // geometric stress really comes into the stiffness
-    // matrix (which cannot be represented as a
-    // SymmetricTensor<4, dim>).
-    SymmetricTensor<4, dim>
+    Tensor<4, dim>
     get_H_geo() const
     {
-      // Geometric stress contribution
       const SymmetricTensor<2, dim> S = get_S();
       const SymmetricTensor<2, dim> Id =
         Physics::Elasticity::StandardTensors<dim>::I;
-      return outer_product(S, Id);
 
-      // const SymmetricTensor<2, dim> S = get_S();
-      // const SymmetricTensor<2, dim> Id =
-      //   Physics::Elasticity::StandardTensors<dim>::I;
+      Tensor<4, dim> H_geo;
+      for (unsigned int i = 0; i < dim; ++i)
+        for (unsigned int J = 0; J < dim; ++J)
+          for (unsigned int k = 0; k < dim; ++k)
+            for (unsigned int L = 0; L < dim; ++L)
+              {
+                H_geo[i][J][k][L] += Id[i][k] * S[J][L];
+              }
 
-      // SymmetricTensor<4, dim> H_geo;
-
-      // for (unsigned int I=0; I<dim; ++I)
-      //   for (unsigned int J=I; J<dim; ++J)
-      //     for (unsigned int K=0; K<dim; ++K)
-      //       for (unsigned int L=K; L<dim; ++L)
-      //         // H_geo[I][J][K][L] = S[I][K]*Id[J][L];
-      //         // H_geo[I][J][K][L] = Id[I][K]*S[J][L];
-      //         // H_geo[I][J][K][L] = Id[I][L]*S[J][K];
-      //         H_geo[I][J][K][L] = 0.5*(Id[I][K]*S[J][L] + Id[I][L]*S[J][K]);
-
-      // return H_geo;
-    }
-    // Sum of the material and geometric stiffnesses
-    SymmetricTensor<4, dim>
-    get_H_mat_geo() const
-    {
-      return get_H() + get_H_geo();
+      return H_geo;
     }
 
     // Mixed configuration
