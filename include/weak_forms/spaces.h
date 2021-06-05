@@ -31,6 +31,7 @@
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -270,6 +271,12 @@ namespace WeakForms
     virtual Space *
     clone() const = 0;
 
+    types::field_index
+    get_field_index() const
+    {
+      return field_index;
+    }
+
     // ----  Ascii ----
 
     std::string
@@ -311,8 +318,11 @@ namespace WeakForms
     friend WeakForms::SelfLinearization::internal::ConvertTo;
 
     // Create a subspace
-    Space(const std::string &field_ascii, const std::string &field_latex)
-      : field_ascii(field_ascii)
+    Space(const types::field_index field_index,
+          const std::string &      field_ascii,
+          const std::string &      field_latex)
+      : field_index(field_index)
+      , field_ascii(field_ascii)
       , field_latex(field_latex != "" ? field_latex : field_ascii)
     {}
 
@@ -331,8 +341,9 @@ namespace WeakForms
     }
 
   private:
-    const std::string field_ascii;
-    const std::string field_latex;
+    const types::field_index field_index;
+    const std::string        field_ascii;
+    const std::string        field_latex;
   };
 
 
@@ -343,7 +354,7 @@ namespace WeakForms
   public:
     // Full space
     TestFunction()
-      : TestFunction("", "")
+      : TestFunction(numbers::invalid_field_index, "", "")
     {}
 
     TestFunction(const TestFunction &) = default;
@@ -425,14 +436,18 @@ namespace WeakForms
     SubSpaceViews::Scalar<TestFunction>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
     {
-      const TestFunction subspace(extractor.field_ascii, extractor.field_latex);
+      const TestFunction subspace(extractor.field_index,
+                                  extractor.field_ascii,
+                                  extractor.field_latex);
       return SubSpaceViews::Scalar<TestFunction>(subspace, extractor.extractor);
     }
 
     SubSpaceViews::Vector<TestFunction>
     operator[](const SubSpaceExtractors::Vector &extractor) const
     {
-      const TestFunction subspace(extractor.field_ascii, extractor.field_latex);
+      const TestFunction subspace(extractor.field_index,
+                                  extractor.field_ascii,
+                                  extractor.field_latex);
       return SubSpaceViews::Vector<TestFunction>(subspace, extractor.extractor);
     }
 
@@ -440,7 +455,9 @@ namespace WeakForms
     SubSpaceViews::Tensor<rank, TestFunction>
     operator[](const SubSpaceExtractors::Tensor<rank> &extractor) const
     {
-      const TestFunction subspace(extractor.field_ascii, extractor.field_latex);
+      const TestFunction subspace(extractor.field_index,
+                                  extractor.field_ascii,
+                                  extractor.field_latex);
       return SubSpaceViews::Tensor<rank, TestFunction>(subspace,
                                                        extractor.extractor);
     }
@@ -449,15 +466,19 @@ namespace WeakForms
     SubSpaceViews::SymmetricTensor<rank, TestFunction>
     operator[](const SubSpaceExtractors::SymmetricTensor<rank> &extractor) const
     {
-      const TestFunction subspace(extractor.field_ascii, extractor.field_latex);
+      const TestFunction subspace(extractor.field_index,
+                                  extractor.field_ascii,
+                                  extractor.field_latex);
       return SubSpaceViews::SymmetricTensor<rank, TestFunction>(
         subspace, extractor.extractor);
     }
 
   protected:
     // Subspace
-    TestFunction(const std::string &field_ascii, const std::string &field_latex)
-      : Space<dim, spacedim>(field_ascii, field_latex)
+    TestFunction(const types::field_index field_index,
+                 const std::string &      field_ascii,
+                 const std::string &      field_latex)
+      : Space<dim, spacedim>(field_index, field_ascii, field_latex)
     {}
   };
 
@@ -469,7 +490,7 @@ namespace WeakForms
   public:
     // Full space
     TrialSolution()
-      : TrialSolution("", "")
+      : TrialSolution(numbers::invalid_field_index, "", "")
     {}
 
     TrialSolution(const TrialSolution &) = default;
@@ -551,7 +572,8 @@ namespace WeakForms
     SubSpaceViews::Scalar<TrialSolution>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
     {
-      const TrialSolution subspace(extractor.field_ascii,
+      const TrialSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Scalar<TrialSolution>(subspace,
                                                   extractor.extractor);
@@ -560,7 +582,8 @@ namespace WeakForms
     SubSpaceViews::Vector<TrialSolution>
     operator[](const SubSpaceExtractors::Vector &extractor) const
     {
-      const TrialSolution subspace(extractor.field_ascii,
+      const TrialSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Vector<TrialSolution>(subspace,
                                                   extractor.extractor);
@@ -570,7 +593,8 @@ namespace WeakForms
     SubSpaceViews::Tensor<rank, TrialSolution>
     operator[](const SubSpaceExtractors::Tensor<rank> &extractor) const
     {
-      const TrialSolution subspace(extractor.field_ascii,
+      const TrialSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Tensor<rank, TrialSolution>(subspace,
                                                         extractor.extractor);
@@ -580,7 +604,8 @@ namespace WeakForms
     SubSpaceViews::SymmetricTensor<rank, TrialSolution>
     operator[](const SubSpaceExtractors::SymmetricTensor<rank> &extractor) const
     {
-      const TrialSolution subspace(extractor.field_ascii,
+      const TrialSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::SymmetricTensor<rank, TrialSolution>(
         subspace, extractor.extractor);
@@ -588,9 +613,10 @@ namespace WeakForms
 
   protected:
     // Subspace
-    TrialSolution(const std::string &field_ascii,
-                  const std::string &field_latex)
-      : Space<dim, spacedim>(field_ascii, field_latex)
+    TrialSolution(const types::field_index field_index,
+                  const std::string &      field_ascii,
+                  const std::string &      field_latex)
+      : Space<dim, spacedim>(field_index, field_ascii, field_latex)
     {}
   };
 
@@ -602,7 +628,7 @@ namespace WeakForms
   public:
     // Full space
     FieldSolution()
-      : FieldSolution("", "")
+      : FieldSolution(numbers::invalid_field_index, "", "")
     {}
 
     FieldSolution(const FieldSolution &) = default;
@@ -677,7 +703,8 @@ namespace WeakForms
     SubSpaceViews::Scalar<FieldSolution>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
     {
-      const FieldSolution subspace(extractor.field_ascii,
+      const FieldSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Scalar<FieldSolution>(subspace,
                                                   extractor.extractor);
@@ -686,7 +713,8 @@ namespace WeakForms
     SubSpaceViews::Vector<FieldSolution>
     operator[](const SubSpaceExtractors::Vector &extractor) const
     {
-      const FieldSolution subspace(extractor.field_ascii,
+      const FieldSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Vector<FieldSolution>(subspace,
                                                   extractor.extractor);
@@ -696,7 +724,8 @@ namespace WeakForms
     SubSpaceViews::Tensor<rank, FieldSolution>
     operator[](const SubSpaceExtractors::Tensor<rank> &extractor) const
     {
-      const FieldSolution subspace(extractor.field_ascii,
+      const FieldSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::Tensor<rank, FieldSolution>(subspace,
                                                         extractor.extractor);
@@ -706,7 +735,8 @@ namespace WeakForms
     SubSpaceViews::SymmetricTensor<rank, FieldSolution>
     operator[](const SubSpaceExtractors::SymmetricTensor<rank> &extractor) const
     {
-      const FieldSolution subspace(extractor.field_ascii,
+      const FieldSolution subspace(extractor.field_index,
+                                   extractor.field_ascii,
                                    extractor.field_latex);
       return SubSpaceViews::SymmetricTensor<rank, FieldSolution>(
         subspace, extractor.extractor);
@@ -714,9 +744,10 @@ namespace WeakForms
 
   protected:
     // Subspace
-    FieldSolution(const std::string &field_ascii,
-                  const std::string &field_latex)
-      : Space<dim, spacedim>(field_ascii, field_latex)
+    FieldSolution(const types::field_index field_index,
+                  const std::string &      field_ascii,
+                  const std::string &      field_latex)
+      : Space<dim, spacedim>(field_index, field_ascii, field_latex)
     {}
   };
 
