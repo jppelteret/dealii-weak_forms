@@ -44,8 +44,8 @@ run()
   GridGenerator::subdivided_hyper_cube(triangulation, 4, 0.0, 1.0);
 
   // Colour some cells, boundaries and manifolds
-  const types::material_id mat_id_1 = 1;
-  const types::material_id mat_id_2 = 2;
+  const dealii::types::material_id mat_id_1 = 1;
+  const dealii::types::material_id mat_id_2 = 2;
   for (auto &cell : triangulation.active_cell_iterators())
     {
       if (cell->center()[0] < 0.5)
@@ -54,9 +54,9 @@ run()
         cell->set_material_id(mat_id_2);
     }
 
-  const types::material_id b_id_1 = 20;
-  const types::material_id b_id_2 = 21;
-  const types::material_id m_id   = 10;
+  const dealii::types::material_id b_id_1 = 20;
+  const dealii::types::material_id b_id_2 = 21;
+  const dealii::types::material_id m_id   = 10;
   for (auto &cell : triangulation.active_cell_iterators())
     {
       for (const unsigned int face : GeometryInfo<dim>::face_indices())

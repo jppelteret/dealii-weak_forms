@@ -38,8 +38,8 @@ namespace WeakForms
     {
       static const int rank = 0;
 
-      Scalar(const FEValuesExtractors::Scalar &extractor,
-             const types::field_index          field_index,
+      Scalar(const types::field_index          field_index,
+             const FEValuesExtractors::Scalar &extractor,
              const std::string &               field_ascii,
              const std::string &               field_latex)
         : extractor(extractor)
@@ -51,14 +51,14 @@ namespace WeakForms
       Scalar(const FEValuesExtractors::Scalar &extractor,
              const std::string &               field_ascii,
              const std::string &               field_latex)
-        : Scalar(extractor,
-                 numbers::invalid_field_index,
+        : Scalar(numbers::invalid_field_index,
+                 extractor,
                  field_ascii,
                  field_latex)
       {}
 
-      Scalar(const unsigned int       component,
-             const types::field_index field_index,
+      Scalar(const types::field_index field_index,
+             const unsigned int       component,
              const std::string &      field_ascii,
              const std::string &      field_latex)
         : extractor(component)
@@ -70,8 +70,8 @@ namespace WeakForms
       Scalar(const unsigned int component,
              const std::string &field_ascii,
              const std::string &field_latex)
-        : Scalar(component,
-                 numbers::invalid_field_index,
+        : Scalar(numbers::invalid_field_index,
+                 component,
                  field_ascii,
                  field_latex)
       {}
@@ -86,8 +86,8 @@ namespace WeakForms
     {
       static const int rank = 1;
 
-      Vector(const FEValuesExtractors::Vector &extractor,
-             const types::field_index          field_index,
+      Vector(const types::field_index          field_index,
+             const FEValuesExtractors::Vector &extractor,
              const std::string &               field_ascii,
              const std::string &               field_latex)
         : extractor(extractor)
@@ -99,14 +99,14 @@ namespace WeakForms
       Vector(const FEValuesExtractors::Vector &extractor,
              const std::string &               field_ascii,
              const std::string &               field_latex)
-        : Vector(extractor,
-                 numbers::invalid_field_index,
+        : Vector(numbers::invalid_field_index,
+                 extractor,
                  field_ascii,
                  field_latex)
       {}
 
-      Vector(const unsigned int       first_component,
-             const types::field_index field_index,
+      Vector(const types::field_index field_index,
+             const unsigned int       first_component,
              const std::string &      field_ascii,
              const std::string &      field_latex)
         : extractor(first_component)
@@ -118,8 +118,8 @@ namespace WeakForms
       Vector(const unsigned int first_component,
              const std::string &field_ascii,
              const std::string &field_latex)
-        : Vector(first_component,
-                 numbers::invalid_field_index,
+        : Vector(numbers::invalid_field_index,
+                 first_component,
                  field_ascii,
                  field_latex)
       {}
@@ -135,8 +135,8 @@ namespace WeakForms
     {
       static const int rank = rank_;
 
-      Tensor(const FEValuesExtractors::Tensor<rank> &extractor,
-             const types::field_index                field_index,
+      Tensor(const types::field_index                field_index,
+             const FEValuesExtractors::Tensor<rank> &extractor,
              const std::string &                     field_ascii,
              const std::string &                     field_latex)
         : extractor(extractor)
@@ -148,14 +148,14 @@ namespace WeakForms
       Tensor(const FEValuesExtractors::Tensor<rank> &extractor,
              const std::string &                     field_ascii,
              const std::string &                     field_latex)
-        : Tensor(extractor,
-                 numbers::invalid_field_index,
+        : Tensor(numbers::invalid_field_index,
+                 extractor,
                  field_ascii,
                  field_latex)
       {}
 
-      Tensor(const unsigned int       first_component,
-             const types::field_index field_index,
+      Tensor(const types::field_index field_index,
+             const unsigned int       first_component,
              const std::string &      field_ascii,
              const std::string &      field_latex)
         : extractor(first_component)
@@ -167,8 +167,8 @@ namespace WeakForms
       Tensor(const unsigned int first_component,
              const std::string &field_ascii,
              const std::string &field_latex)
-        : Tensor(first_component,
-                 numbers::invalid_field_index,
+        : Tensor(numbers::invalid_field_index,
+                 first_component,
                  field_ascii,
                  field_latex)
       {}
@@ -185,8 +185,8 @@ namespace WeakForms
       static const int rank = rank_;
 
       SymmetricTensor(
-        const FEValuesExtractors::SymmetricTensor<rank> &extractor,
         const types::field_index                         field_index,
+        const FEValuesExtractors::SymmetricTensor<rank> &extractor,
         const std::string &                              field_ascii,
         const std::string &                              field_latex)
         : extractor(extractor)
@@ -199,14 +199,14 @@ namespace WeakForms
         const FEValuesExtractors::SymmetricTensor<rank> &extractor,
         const std::string &                              field_ascii,
         const std::string &                              field_latex)
-        : SymmetricTensor(extractor,
-                          numbers::invalid_field_index,
+        : SymmetricTensor(numbers::invalid_field_index,
+                          extractor,
                           field_ascii,
                           field_latex)
       {}
 
-      SymmetricTensor(const unsigned int       first_component,
-                      const types::field_index field_index,
+      SymmetricTensor(const types::field_index field_index,
+                      const unsigned int       first_component,
                       const std::string &      field_ascii,
                       const std::string &      field_latex)
         : extractor(first_component)
@@ -218,8 +218,8 @@ namespace WeakForms
       SymmetricTensor(const unsigned int first_component,
                       const std::string &field_ascii,
                       const std::string &field_latex)
-        : SymmetricTensor(first_component,
-                          numbers::invalid_field_index,
+        : SymmetricTensor(numbers::invalid_field_index,
+                          first_component,
                           field_ascii,
                           field_latex)
       {}

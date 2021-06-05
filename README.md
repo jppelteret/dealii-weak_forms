@@ -145,7 +145,8 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 ## Assemblers
 - Matrix-based (using `mesh_loop`)
   - Symmetry flag for global system
-  - [TODO] Ignore DoFs that aren't in DoF group
+    - Exclusion of bilinear form contributions based on field index
+  - Ignore DoFs that aren't in DoF group
   - Vectorisation
   - Pre-computation and result caching
 - [TODO] Matrix-free

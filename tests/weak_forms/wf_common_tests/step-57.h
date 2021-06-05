@@ -355,7 +355,7 @@ namespace Step57
     KellyErrorEstimator<dim>::estimate(
       dof_handler,
       QGauss<dim - 1>(degree + 1),
-      std::map<types::boundary_id, const Function<dim> *>(),
+      std::map<dealii::types::boundary_id, const Function<dim> *>(),
       present_solution,
       estimated_error_per_cell,
       fe.component_mask(velocity));

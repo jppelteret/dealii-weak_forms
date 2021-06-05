@@ -538,7 +538,7 @@ namespace Step72
     KellyErrorEstimator<dim>::estimate(
       dof_handler,
       QGauss<dim - 1>(fe.degree + 1),
-      std::map<types::boundary_id, const Function<dim> *>(),
+      std::map<dealii::types::boundary_id, const Function<dim> *>(),
       current_solution,
       estimated_error_per_cell);
 

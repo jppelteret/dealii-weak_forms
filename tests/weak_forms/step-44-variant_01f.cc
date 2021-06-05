@@ -60,12 +60,15 @@ namespace Step44
     const TrialSolution<dim, spacedim> trial;
     const FieldSolution<dim, spacedim> field_solution;
     const SubSpaceExtractors::Vector   subspace_extractor_u(0,
+                                                          0,
                                                           "u",
                                                           "\\mathbf{u}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_p(spacedim,
+    const SubSpaceExtractors::Scalar   subspace_extractor_p(1,
+                                                          spacedim,
                                                           "p_tilde",
                                                           "\\tilde{p}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_J(spacedim + 1,
+    const SubSpaceExtractors::Scalar   subspace_extractor_J(2,
+                                                          spacedim + 1,
                                                           "J_tilde",
                                                           "\\tilde{J}");
 
@@ -171,9 +174,9 @@ namespace Step44
       });
 
     // Boundary conditions
-    const types::boundary_id traction_boundary_id = 6;
-    const ScalarFunctor      p_symb("p", "p"); // Applied pressure
-    const Normal<spacedim>   normal{};
+    const dealii::types::boundary_id traction_boundary_id = 6;
+    const ScalarFunctor              p_symb("p", "p"); // Applied pressure
+    const Normal<spacedim>           normal{};
 
     const auto p = p_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &, const unsigned int) {

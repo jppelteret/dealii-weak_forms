@@ -122,9 +122,9 @@ namespace WeakForms
 
     template <int dim, template <int, int> class DoFHandlerType>
     ReturnType
-    dV(const Quadrature<dim> &              cell_quadrature,
-       const DoFHandlerType<dim, spacedim> &dof_handler,
-       const std::set<types::material_id> & subdomains)
+    dV(const Quadrature<dim> &                     cell_quadrature,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const std::set<dealii::types::material_id> &subdomains)
     {
       const auto filtered_iterator_range =
         filter_iterators(dof_handler.active_cell_iterators(),
@@ -153,14 +153,16 @@ namespace WeakForms
     dA(const Quadrature<dim - 1> &          face_quadrature,
        const DoFHandlerType<dim, spacedim> &dof_handler)
     {
-      return dA(face_quadrature, dof_handler, std::set<types::boundary_id>{});
+      return dA(face_quadrature,
+                dof_handler,
+                std::set<dealii::types::boundary_id>{});
     }
 
     template <int dim, template <int, int> class DoFHandlerType>
     ReturnType
-    dA(const Quadrature<dim - 1> &          face_quadrature,
-       const DoFHandlerType<dim, spacedim> &dof_handler,
-       const std::set<types::boundary_id> & boundaries)
+    dA(const Quadrature<dim - 1> &                 face_quadrature,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const std::set<dealii::types::boundary_id> &boundaries)
     {
       // if (boundaries.size() > 1)
       //   {
@@ -305,10 +307,10 @@ namespace WeakForms
               template <int, int> class DoFHandlerType,
               typename BaseIterator>
     ReturnType
-    dA(const Quadrature<dim - 1> &          face_quadrature,
-       const DoFHandlerType<dim, spacedim> &dof_handler,
-       const UpdateFlags                    update_flags_face,
-       const std::set<types::boundary_id> & boundaries,
+    dA(const Quadrature<dim - 1> &                 face_quadrature,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const UpdateFlags                           update_flags_face,
+       const std::set<dealii::types::boundary_id> &boundaries,
        const IteratorRange<FilteredIterator<BaseIterator>>
          filtered_iterator_range)
     {

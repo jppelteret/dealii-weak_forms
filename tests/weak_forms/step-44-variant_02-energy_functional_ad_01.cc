@@ -148,7 +148,7 @@ namespace Step44
         UpdateFlags::update_normal_vectors);
 
     // Boundary conditions
-    const types::boundary_id traction_boundary_id = 6;
+    const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;
