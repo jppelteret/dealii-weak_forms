@@ -754,7 +754,7 @@ namespace WeakForms
                      &global_system_symmetry_flag](const CopyData &copy_data) {
         const FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
         const Vector<ScalarType> &    cell_vector = copy_data.vectors[0];
-        const std::vector<types::global_dof_index> &local_dof_indices =
+        const std::vector<dealii::types::global_dof_index> &local_dof_indices =
           copy_data.local_dof_indices[0];
 
         // Copy the upper half (i.e. contributions below the diagonal) into the

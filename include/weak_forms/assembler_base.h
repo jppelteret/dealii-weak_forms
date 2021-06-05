@@ -1031,12 +1031,12 @@ namespace WeakForms
                             std::is_same<typename std::decay<VectorType>::type,
                                          std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const FullMatrix<ScalarType> &              cell_matrix,
-      const Vector<ScalarType> &                  cell_vector,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      MatrixType *const                           system_matrix,
-      VectorType *const                           system_vector)
+      const AffineConstraints<ScalarType> &               constraints,
+      const FullMatrix<ScalarType> &                      cell_matrix,
+      const Vector<ScalarType> &                          cell_vector,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      MatrixType *const                                   system_matrix,
+      VectorType *const                                   system_vector)
     {
       (void)constraints;
       (void)cell_matrix;
@@ -1055,12 +1055,12 @@ namespace WeakForms
                             !std::is_same<typename std::decay<VectorType>::type,
                                           std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const FullMatrix<ScalarType> &              cell_matrix,
-      const Vector<ScalarType> &                  cell_vector,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      MatrixType *const                           system_matrix,
-      VectorType *const                           system_vector)
+      const AffineConstraints<ScalarType> &               constraints,
+      const FullMatrix<ScalarType> &                      cell_matrix,
+      const Vector<ScalarType> &                          cell_vector,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      MatrixType *const                                   system_matrix,
+      VectorType *const                                   system_vector)
     {
       Assert(system_matrix, ExcInternalError());
       Assert(system_vector, ExcInternalError());
@@ -1075,10 +1075,10 @@ namespace WeakForms
     typename std::enable_if<std::is_same<typename std::decay<MatrixType>::type,
                                          std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const FullMatrix<ScalarType> &              cell_matrix,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      MatrixType *const                           system_matrix)
+      const AffineConstraints<ScalarType> &               constraints,
+      const FullMatrix<ScalarType> &                      cell_matrix,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      MatrixType *const                                   system_matrix)
     {
       (void)constraints;
       (void)cell_matrix;
@@ -1093,10 +1093,10 @@ namespace WeakForms
     typename std::enable_if<!std::is_same<typename std::decay<MatrixType>::type,
                                           std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const FullMatrix<ScalarType> &              cell_matrix,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      MatrixType *const                           system_matrix)
+      const AffineConstraints<ScalarType> &               constraints,
+      const FullMatrix<ScalarType> &                      cell_matrix,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      MatrixType *const                                   system_matrix)
     {
       Assert(system_matrix, ExcInternalError());
       constraints.distribute_local_to_global(cell_matrix,
@@ -1108,10 +1108,10 @@ namespace WeakForms
     typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
                                          std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const Vector<ScalarType> &                  cell_vector,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      VectorType *const                           system_vector)
+      const AffineConstraints<ScalarType> &               constraints,
+      const Vector<ScalarType> &                          cell_vector,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      VectorType *const                                   system_vector)
     {
       (void)constraints;
       (void)cell_vector;
@@ -1126,10 +1126,10 @@ namespace WeakForms
     typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
                                           std::nullptr_t>::value>::type
     distribute_local_to_global(
-      const AffineConstraints<ScalarType> &       constraints,
-      const Vector<ScalarType> &                  cell_vector,
-      const std::vector<types::global_dof_index> &local_dof_indices,
-      VectorType *const                           system_vector)
+      const AffineConstraints<ScalarType> &               constraints,
+      const Vector<ScalarType> &                          cell_vector,
+      const std::vector<dealii::types::global_dof_index> &local_dof_indices,
+      VectorType *const                                   system_vector)
     {
       Assert(system_vector, ExcInternalError());
       constraints.distribute_local_to_global(cell_vector,

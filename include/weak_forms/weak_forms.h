@@ -26,6 +26,7 @@
 // #include <weak_forms/operators.h> // ? TODO: Remove
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 // Functors and spaces to be used inside of weak forms
 #include <weak_forms/cache_functors.h>

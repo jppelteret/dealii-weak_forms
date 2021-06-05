@@ -108,10 +108,10 @@ namespace WeakForms
 
 
 
-  class VolumeIntegral : public Integral<types::material_id>
+  class VolumeIntegral : public Integral<dealii::types::material_id>
   {
   public:
-    using subdomain_t = types::material_id;
+    using subdomain_t = dealii::types::material_id;
 
     VolumeIntegral(const std::set<subdomain_t> &subregions)
       : Integral<subdomain_t>(subregions)
@@ -161,10 +161,10 @@ namespace WeakForms
 
 
 
-  class BoundaryIntegral : public Integral<types::boundary_id>
+  class BoundaryIntegral : public Integral<dealii::types::boundary_id>
   {
   public:
-    using subdomain_t = types::boundary_id;
+    using subdomain_t = dealii::types::boundary_id;
 
     BoundaryIntegral(const std::set<subdomain_t> &boundaries)
       : Integral<subdomain_t>(boundaries)
@@ -218,10 +218,10 @@ namespace WeakForms
 
 
 
-  class InterfaceIntegral : public Integral<types::manifold_id>
+  class InterfaceIntegral : public Integral<dealii::types::manifold_id>
   {
   public:
-    using subdomain_t = types::manifold_id;
+    using subdomain_t = dealii::types::manifold_id;
 
     InterfaceIntegral(const std::set<subdomain_t> interfaces)
       : Integral<subdomain_t>(interfaces)
