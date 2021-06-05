@@ -61,7 +61,7 @@ run()
 
   Triangulation<dim, spacedim> triangulation;
   GridGenerator::subdivided_hyper_cube(triangulation, 4, 0.0, 1.0);
-  const types::material_id mat_id_subregion = 1;
+  const dealii::types::material_id mat_id_subregion = 1;
   for (auto &cell : triangulation.active_cell_iterators())
     {
       if (cell->center()[0] > 0.5 && cell->center()[1] > 0.5)

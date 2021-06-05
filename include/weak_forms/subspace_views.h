@@ -28,6 +28,7 @@
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -293,6 +294,12 @@ namespace WeakForms
 
       virtual SubSpaceViewBase *
       clone() const = 0;
+
+      types::field_index
+      get_field_index() const
+      {
+        return space.get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const

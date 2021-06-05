@@ -169,9 +169,9 @@ namespace Step44
       });
 
     // Boundary conditions
-    const types::boundary_id traction_boundary_id = 6;
-    const ScalarFunctor      p_symb("p", "p"); // Applied pressure
-    const Normal<spacedim>   normal{};
+    const dealii::types::boundary_id traction_boundary_id = 6;
+    const ScalarFunctor              p_symb("p", "p"); // Applied pressure
+    const Normal<spacedim>           normal{};
 
     const auto p = p_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &, const unsigned int) {

@@ -770,6 +770,13 @@ namespace Step44
       return Physics::Transformations::Contravariant::pull_back(get_Jc(), F);
     }
     // Geometric stiffnesses
+    // NOTE: This is not actually correct, but it will
+    // work fine for the tests that use H_geo or H_tot.
+    // The convergence of the problem will deteriorate
+    // because of this term. See get_HH() for how the
+    // geometric stress really comes into the stiffness
+    // matrix (which cannot be represented as a
+    // SymmetricTensor<4, dim>).
     SymmetricTensor<4, dim>
     get_H_geo() const
     {
@@ -778,6 +785,23 @@ namespace Step44
       const SymmetricTensor<2, dim> Id =
         Physics::Elasticity::StandardTensors<dim>::I;
       return outer_product(S, Id);
+
+      // const SymmetricTensor<2, dim> S = get_S();
+      // const SymmetricTensor<2, dim> Id =
+      //   Physics::Elasticity::StandardTensors<dim>::I;
+
+      // SymmetricTensor<4, dim> H_geo;
+
+      // for (unsigned int I=0; I<dim; ++I)
+      //   for (unsigned int J=I; J<dim; ++J)
+      //     for (unsigned int K=0; K<dim; ++K)
+      //       for (unsigned int L=K; L<dim; ++L)
+      //         // H_geo[I][J][K][L] = S[I][K]*Id[J][L];
+      //         // H_geo[I][J][K][L] = Id[I][K]*S[J][L];
+      //         // H_geo[I][J][K][L] = Id[I][L]*S[J][K];
+      //         H_geo[I][J][K][L] = 0.5*(Id[I][K]*S[J][L] + Id[I][L]*S[J][K]);
+
+      // return H_geo;
     }
     // Sum of the material and geometric stiffnesses
     SymmetricTensor<4, dim>

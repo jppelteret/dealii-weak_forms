@@ -79,6 +79,89 @@ namespace WeakForms
 {
   namespace internal
   {
+    /**
+     * @brief A data structure to help extract the underlying test function
+     * or trial solution operation from a composite operation.
+     */
+    template <typename OpType, typename T = void>
+    struct TestTrialSpaceHelper;
+
+    template <typename SymbolicOpTestTrial>
+    struct TestTrialSpaceHelper<
+      SymbolicOpTestTrial,
+      typename std::enable_if<
+        is_test_function_or_trial_solution_op<SymbolicOpTestTrial>::value &&
+        !is_unary_op<SymbolicOpTestTrial>::value &&
+        !is_binary_op<SymbolicOpTestTrial>::value>::type>
+    {
+      static const SymbolicOpTestTrial &
+      extract(const SymbolicOpTestTrial &op)
+      {
+        return op;
+      }
+    };
+
+    template <typename UnaryOpTestTrial>
+    struct TestTrialSpaceHelper<
+      UnaryOpTestTrial,
+      typename std::enable_if<
+        is_unary_op<UnaryOpTestTrial>::value &&
+        has_test_function_or_trial_solution_op<UnaryOpTestTrial>::value>::type>
+    {
+      static const auto &
+      extract(const UnaryOpTestTrial &op)
+      {
+        const auto &operand = op.get_operand();
+        using OpType        = typename std::decay<decltype(operand)>::type;
+        return TestTrialSpaceHelper<OpType>::extract(operand);
+      }
+    };
+
+    template <typename BinaryOpTestTrial>
+    struct TestTrialSpaceHelper<
+      BinaryOpTestTrial,
+      typename std::enable_if<
+        is_binary_op<BinaryOpTestTrial>::value &&
+        is_or_has_test_function_or_trial_solution_op<
+          typename BinaryOpTestTrial::LhsOpType>::value>::type>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<
+          typename BinaryOpTestTrial::RhsOpType>::value,
+        "Expected RhsOp not to be or have a test function or trial solution.");
+
+      static const auto &
+      extract(const BinaryOpTestTrial &op)
+      {
+        const auto &operand = op.get_lhs_operand();
+        return TestTrialSpaceHelper<
+          typename BinaryOpTestTrial::LhsOpType>::extract(operand);
+      }
+    };
+
+    template <typename BinaryOpTestTrial>
+    struct TestTrialSpaceHelper<
+      BinaryOpTestTrial,
+      typename std::enable_if<
+        is_binary_op<BinaryOpTestTrial>::value &&
+        is_or_has_test_function_or_trial_solution_op<
+          typename BinaryOpTestTrial::RhsOpType>::value>::type>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<
+          typename BinaryOpTestTrial::LhsOpType>::value,
+        "Expected LhsOp not to be or have a test function or trial solution.");
+
+      static const auto &
+      extract(const BinaryOpTestTrial &op)
+      {
+        const auto &operand = op.get_rhs_operand();
+        return TestTrialSpaceHelper<
+          typename BinaryOpTestTrial::RhsOpType>::extract(operand);
+      }
+    };
+
+
     enum class AccumulationSign
     {
       plus,
@@ -1966,6 +2049,63 @@ namespace WeakForms
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
 
+      // Skip this contribution if we enforce symmetry at a global level,
+      // and we are able to concretely establish that this contribution
+      // would occur in a "block" that is below the diagonal.
+      // Note: Each of these TestSpaceOp/TrialSpaceOp might be composite
+      // operations, so we have to do some digging to get to the underlying
+      // bare symbolic op.
+      const auto &underlying_test_space_op =
+        internal::TestTrialSpaceHelper<TestSpaceOp>::extract(test_space_op);
+      const auto &underlying_trial_space_op =
+        internal::TestTrialSpaceHelper<TrialSpaceOp>::extract(trial_space_op);
+      if (underlying_test_space_op.get_field_index() ==
+          numbers::invalid_field_index)
+        {
+          Assert(
+            underlying_trial_space_op.get_field_index() ==
+              numbers::invalid_field_index,
+            ExcMessage(
+              "The test functions operate on the full space, so the trial solutions must do the same."));
+        }
+      if (underlying_trial_space_op.get_field_index() ==
+          numbers::invalid_field_index)
+        {
+          Assert(
+            underlying_test_space_op.get_field_index() ==
+              numbers::invalid_field_index,
+            ExcMessage(
+              "The trial solution operate on the full space, so the test functions must do the same."));
+        }
+
+      // This lambda function will essentially ensure that we visit only the
+      // diagonal and upper "blocks" of the system. Symmetrising the local
+      // contribution results in the (symmetric) system equivalent to
+      // having visited all of the blocks.
+      const auto skip_contribution_due_to_global_symmetry =
+        [underlying_test_space_op,
+         underlying_trial_space_op](const bool global_system_symmetry_flag) {
+          if (global_system_symmetry_flag)
+            {
+              // Note: If both are marked "numbers::invalid_field_index", then
+              // we'll unconditionally add both contributions.
+              if (underlying_test_space_op.get_field_index() >
+                  underlying_trial_space_op.get_field_index())
+                {
+                  Assert(
+                    underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
+                      underlying_trial_space_op.as_ascii(SymbolicDecorations()),
+                    ExcMessage(
+                      "Test and trial spaces have the different field indices, "
+                      "but the same name. The field indices set through the subspace "
+                      "extractors have likely been set up incorrectly."));
+                  return true;
+                }
+            }
+
+          return false;
+        };
+
       // Now, compose all of this into a bespoke operation for this
       // contribution.
       //
@@ -1979,11 +2119,20 @@ namespace WeakForms
                 functor,
                 trial_space_op,
                 local_contribution_symmetry_flag,
-                &global_system_symmetry_flag](
+                &global_system_symmetry_flag,
+                skip_contribution_due_to_global_symmetry](
                  FullMatrix<ScalarType> &                cell_matrix,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
                  const FEValuesBase<dim, spacedim> &     fe_values) {
+        // Early exit: Don't form the cell contribution if it will add below
+        // the diagonal.
+        if (skip_contribution_due_to_global_symmetry(
+              global_system_symmetry_flag))
+          {
+            return;
+          }
+
         // Skip this cell if it doesn't match the criteria set for the
         // integration domain.
         if (!volume_integral.get_integral_operation().integrate_on_cell(

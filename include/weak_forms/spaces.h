@@ -817,6 +817,12 @@ namespace WeakForms
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
 
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
+
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -891,6 +897,12 @@ namespace WeakForms
       static const int rank = value_type<double>::rank;
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::gradient;
+
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -968,6 +980,12 @@ namespace WeakForms
 
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::symmetric_gradient;
+
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1047,6 +1065,12 @@ namespace WeakForms
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::divergence;
 
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
+
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1121,6 +1145,12 @@ namespace WeakForms
       static const int rank = value_type<double>::rank;
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::curl;
+
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1200,6 +1230,12 @@ namespace WeakForms
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::laplacian;
 
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
+
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1276,6 +1312,12 @@ namespace WeakForms
       // scalar or tensor, so we can't fetch the rank from it.
 
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::hessian;
+
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1355,6 +1397,12 @@ namespace WeakForms
 
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::third_derivative;
+
+      types::field_index
+      get_field_index() const
+      {
+        return get_operand().get_field_index();
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const

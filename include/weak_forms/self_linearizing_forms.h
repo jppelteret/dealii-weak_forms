@@ -128,6 +128,7 @@ namespace WeakForms
           // solution view
           const auto &field_solution_ss_op = symbolic_op.get_operand();
           const SubSpaceExtractor_t extractor(
+            field_solution_ss_op.get_field_index(),
             field_solution_ss_op.get_extractor(),
             field_solution_ss_op.get_space().get_field_ascii_raw(),
             field_solution_ss_op.get_space().get_field_latex_raw());
@@ -176,6 +177,7 @@ namespace WeakForms
           // solution view
           const auto &field_solution_ss_op = symbolic_op.get_operand();
           const SubSpaceExtractor_t extractor(
+            field_solution_ss_op.get_field_index(),
             field_solution_ss_op.get_extractor(),
             field_solution_ss_op.get_space().get_field_ascii_raw(),
             field_solution_ss_op.get_space().get_field_latex_raw());
@@ -226,6 +228,7 @@ namespace WeakForms
           // solution view
           const auto &field_solution_ss_op = symbolic_op.get_operand();
           const SubSpaceExtractor_t extractor(
+            field_solution_ss_op.get_field_index(),
             field_solution_ss_op.get_extractor(),
             field_solution_ss_op.get_space().get_field_ascii_raw(),
             field_solution_ss_op.get_space().get_field_latex_raw());
@@ -276,6 +279,7 @@ namespace WeakForms
           // solution view
           const auto &field_solution_ss_op = symbolic_op.get_operand();
           const SubSpaceExtractor_t extractor(
+            field_solution_ss_op.get_field_index(),
             field_solution_ss_op.get_extractor(),
             field_solution_ss_op.get_space().get_field_ascii_raw(),
             field_solution_ss_op.get_space().get_field_latex_raw());
