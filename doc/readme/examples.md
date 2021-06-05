@@ -9,8 +9,9 @@ Summary
 - step-57:
   - Fluid mechanics (Incompressible stationary Navier-Stokes equations)
   - Nonlinear term
-- step-12: DG
-- step-47: DG
+- [TODO] step-12: DG
+- [TODO] step-47: DG
+- [TODO] step-74: DG
 
 ## Step-44
 
