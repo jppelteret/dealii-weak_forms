@@ -109,9 +109,11 @@ namespace Step44
       "I", "\\mathbf{I}"); // Identity tensor
     const SymmetricTensorFunctor<2, spacedim> S_symb(
       "S", "\\mathbf{S}"); // Piola Kirchhoff stress
-    const SymmetricTensorFunctor<4, spacedim> H_tot_symb(
-      "H^{tot}", "\\mathcal{H}^{tot}"); // Total elasticity tensor (mat + geo
-                                        // contributions)
+    const SymmetricTensorFunctor<4, spacedim> H_mat_symb(
+      "H^{mat}", "\\mathcal{H}^{mat}"); // Elasticity tensor: Material stiffness
+    const TensorFunctor<4, spacedim> H_geo_symb(
+      "H^{geo}",
+      "\\mathcal{H}^{geo}"); // Elasticity tensor: Geometric stiffness
 
     const auto det_F = det_F_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
@@ -164,14 +166,23 @@ namespace Step44
           qph.get_data(cell);
         return lqph[q_point]->get_S();
       });
-    const auto H_tot = H_tot_symb.template value<double, dim>(
+    const auto H_mat = H_mat_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point) {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
           qph.get_data(cell);
-        return lqph[q_point]->get_H_mat_geo();
+        return lqph[q_point]->get_H();
+      });
+    const auto H_geo = H_geo_symb.template value<double, dim>(
+      [this](const FEValuesBase<dim, spacedim> &fe_values,
+             const unsigned int                 q_point) {
+        const auto &cell = fe_values.get_cell();
+        const auto &qph  = this->quadrature_point_history;
+        const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
+          qph.get_data(cell);
+        return lqph[q_point]->get_H_geo();
       });
 
     // Boundary conditions
@@ -196,17 +207,11 @@ namespace Step44
     const auto dE = symmetrize(transpose(F) * dF);
     const auto DE = symmetrize(transpose(F) * DF);
 
-    // Note: This is also valid, but produces a tensor in the LaTeX output
-    // const auto F = grad_u + Physics::Elasticity::StandardTensors<dim>::I;
-
-    // Standard approach to incorporating geometric stiffness
-    // const SymmetricTensor<2, dim> DdE_IJ = symmetrize(transpose(Grad_Nx_u_J)
-    // * Grad_Nx_u_I); data.cell_matrix(I, J) += (DdE_IJ * S) * JxW;
-
     // Assembly
     MatrixBasedAssembler<dim> assembler;
     assembler +=
-      bilinear_form(dE, H_tot, DE).symmetrize().dV()                     // K_uu
+      bilinear_form(dE, H_mat, DE).symmetrize().dV()   // K_uu (mat)
+      + bilinear_form(dF, H_geo, DF).symmetrize().dV() // K_uu (geo)
       + bilinear_form(dE, det_F * C_inv, trial_p).symmetrize().dV()      // K_up
       + bilinear_form(test_p, det_F * C_inv, DE).symmetrize().dV()       // K_pu
       - bilinear_form(test_p, 1.0, trial_J).symmetrize().dV()            // K_pJ

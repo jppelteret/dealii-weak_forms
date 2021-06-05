@@ -103,9 +103,11 @@ namespace Step44
       "I", "\\mathbf{I}"); // Identity tensor
     const SymmetricTensorFunctor<2, spacedim> S_symb(
       "S", "\\mathbf{S}"); // Piola Kirchhoff stress
-    const SymmetricTensorFunctor<4, spacedim> H_tot_symb(
-      "H^{tot}", "\\mathcal{H}^{tot}"); // Total elasticity tensor (mat + geo
-                                        // contributions)
+    const SymmetricTensorFunctor<4, spacedim> H_mat_symb(
+      "H^{mat}", "\\mathcal{H}^{mat}"); // Elasticity tensor: Material stiffness
+    const TensorFunctor<4, spacedim> H_geo_symb(
+      "H^{geo}",
+      "\\mathcal{H}^{geo}"); // Elasticity tensor: Geometric stiffness
 
     const auto det_F = det_F_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
@@ -158,14 +160,23 @@ namespace Step44
           qph.get_data(cell);
         return lqph[q_point]->get_S();
       });
-    const auto H_tot = H_tot_symb.template value<double, dim>(
+    const auto H_mat = H_mat_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point) {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
           qph.get_data(cell);
-        return lqph[q_point]->get_H_mat_geo();
+        return lqph[q_point]->get_H();
+      });
+    const auto H_geo = H_geo_symb.template value<double, dim>(
+      [this](const FEValuesBase<dim, spacedim> &fe_values,
+             const unsigned int                 q_point) {
+        const auto &cell = fe_values.get_cell();
+        const auto &qph  = this->quadrature_point_history;
+        const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
+          qph.get_data(cell);
+        return lqph[q_point]->get_H_geo();
       });
 
     // Boundary conditions
@@ -193,17 +204,35 @@ namespace Step44
     // Note: This is also valid, but produces a tensor in the LaTeX output
     // const auto F = grad_u + Physics::Elasticity::StandardTensors<dim>::I;
 
-    // Standard approach to incorporating geometric stiffness
-    // const SymmetricTensor<2, dim> DdE_IJ = symmetrize(transpose(Grad_Nx_u_J)
-    // * Grad_Nx_u_I); data.cell_matrix(I, J) += (DdE_IJ * S) * JxW;
+    // ~~~ Dealing with the geometric stiffness contribution ~~~
+    // This is the standard approach to incorporating geometric stiffness
+    // into the local system contribution:
+    //
+    // const SymmetricTensor<2, dim> DdE_IJ
+    //   = symmetrize(transpose(Grad_Nx_u_J) * Grad_Nx_u_I);
+    // cell_matrix(I, J) += (DdE_IJ * S) * JxW;
+    //
+    // This cannot be replicated directly with the weak forms concept,
+    // so the best that we can do is split the material and geometric
+    // stiffnesses additively and then use different forms for each.
+    // Since the geometric stiffness involves a (non-symmetric) Tensor,
+    // its less efficient to compute than the material stiffness.
+    // What's even more inefficient is that we have two contributions!
+    // It would be better to either
+    // 1. Combine the two stiffness, as would be done with the two-point
+    // formulation (see test step-44-variant_01d). This involves pushing
+    // two indices of the material stiffness forward. Or,
+    // 2. Implement a special operator that would successfully compute
+    //    DdE_IJ. This is not so easy in the current framework.
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;
-    assembler += bilinear_form(dE, H_tot, DE).dV()                     // K_uu
-                 + bilinear_form(dE, det_F * C_inv, trial_p).dV()      // K_up
-                 + bilinear_form(test_p, det_F * C_inv, DE).dV()       // K_pu
-                 - bilinear_form(test_p, 1.0, trial_J).dV()            // K_pJ
-                 - bilinear_form(test_J, 1.0, trial_p).dV()            // K_Jp
+    assembler += bilinear_form(dE, H_mat, DE).dV()                // K_uu (mat)
+                 + bilinear_form(dF, H_geo, DF).dV()              // K_uu (geo)
+                 + bilinear_form(dE, det_F * C_inv, trial_p).dV() // K_up
+                 + bilinear_form(test_p, det_F * C_inv, DE).dV()  // K_pu
+                 - bilinear_form(test_p, 1.0, trial_J).dV()       // K_pJ
+                 - bilinear_form(test_J, 1.0, trial_p).dV()       // K_Jp
                  + bilinear_form(test_J, d2Psi_vol_dJ2, trial_J).dV(); // K_JJ
     assembler += linear_form(dE, S).dV()                               // r_u
                  + linear_form(test_p, det_F - J_tilde).dV()           // r_p
