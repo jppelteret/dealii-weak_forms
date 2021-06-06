@@ -72,6 +72,21 @@ namespace WeakForms
       //  * Retrive the second derivative of the operand.
       //  */
       // second_derivative, // get_jacobian_2nd_derivatives
+
+      // --- Interface operations ---
+      /**
+       * Jump of an operand across an interface
+       */
+      // jump,
+      /**
+       * Average of an operand across an interface
+       */
+      // average,
+      // jump_gradient,
+      // average_gradient,
+      // jump_hessian,
+      // average_hessian,
+      // jump_third_derivative,
     };
 
 

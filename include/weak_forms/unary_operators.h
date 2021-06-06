@@ -53,6 +53,23 @@ namespace WeakForms
        * Compute the square root of a scalar
        */
       square_root,
+      // exp
+      // log
+      // sin
+      // cos
+      // tan
+      // asin
+      // acos
+      // atan
+      // sinh
+      // cosh
+      // tanh
+      // asinh
+      // acosh
+      // atanh
+      // erf
+      // erfc
+      // abs
 
       // --- Tensor operations ---
       /**
@@ -71,11 +88,6 @@ namespace WeakForms
        * Symmetrize a tensor
        */
       symmetrize,
-
-      // --- Tensor contractions ---
-      // scalar product,
-      // double contract,
-      // contract,
 
       // --- Interface operations ---
       /**

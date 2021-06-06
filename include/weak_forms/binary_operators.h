@@ -68,10 +68,17 @@ namespace WeakForms
        * It is expected that the second operand is a scalar (rank-0) type.
        */
       divide,
+
+      // --- Scalar operations ---
       /**
        * Raise one operand to the power of a second operand.
        */
       power
+      // atan2
+      // max
+      // min
+
+      // --- Tensor operations ---
       /**
        * Cross product (between two vector operands)
        */
@@ -80,6 +87,11 @@ namespace WeakForms
        * Outer product (between two tensor operands)
        */
       // outer_product
+
+      // --- Tensor contractions ---
+      // scalar product,
+      // double contract,
+      // contract,
     };
 
 

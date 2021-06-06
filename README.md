@@ -69,6 +69,13 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - laplacian
     - hessian
     - third_derivative
+    - [TODO] jump
+    - [TODO] average
+    - [TODO] jump_gradient
+    - [TODO] average_gradient
+    - [TODO] jump_hessian
+    - [TODO] average_hessian
+    - [TODO] jump_third_derivative
   - Vector
     - value
     - gradient
@@ -77,6 +84,13 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - curl
     - hessian
     - third_derivative
+    - [TODO] jump
+    - [TODO] average
+    - [TODO] jump_gradient
+    - [TODO] average_gradient
+    - [TODO] jump_hessian
+    - [TODO] average_hessian
+    - [TODO] jump_third_derivative
   - Tensor
     - value
     - gradient
@@ -90,6 +104,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
       -  negation
     -  Scalar operations
        - square root
+       - [TODO] Other math functions
     - Tensor operations
       - determinant
       - invert
@@ -100,7 +115,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
       - [TODO] scalar product
       - [TODO] double contract
       - [TODO] general contraction
-    - Interface operations
+    - Interface operations (evaluating a function across an interface)
       - [TODO] jump
       - [TODO] average 
   - Binary
@@ -111,6 +126,13 @@ Author: Jean-Paul Pelteret, 2020 - 2021
       - Tensor
     -  Scalar operations
        - power
+       - [TODO] Other math functions
+     - Tensor operations
+       - [TODO] Cross product
+       - [TODO] Outer product
+       - [TODO] Scalar product
+       - [TODO] Contract
+       - [TODO] Double contract
   - Implicit conversions to functors
     - Arithmetic types
     - Tensor
