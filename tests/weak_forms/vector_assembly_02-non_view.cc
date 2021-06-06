@@ -38,7 +38,7 @@
 
 #include <deal.II/numerics/vector_tools.h>
 
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_matrix_based.h>
 #include <weak_forms/binary_operators.h>
 #include <weak_forms/cell_face_subface_operators.h>
 #include <weak_forms/functors.h>
@@ -116,9 +116,10 @@ run(const unsigned int n_subdivisions)
     FEFaceValues<dim, spacedim> fe_face_values(fe, qf_face, update_flags_face);
     FEValuesExtractors::Scalar  field(0);
 
-    const unsigned int                   dofs_per_cell = fe.dofs_per_cell;
-    Vector<double>                       cell_rhs(dofs_per_cell);
-    std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+    const unsigned int dofs_per_cell = fe.dofs_per_cell;
+    Vector<double>     cell_rhs(dofs_per_cell);
+    std::vector<dealii::types::global_dof_index> local_dof_indices(
+      dofs_per_cell);
 
     for (auto &cell : dof_handler.active_cell_iterators())
       {
