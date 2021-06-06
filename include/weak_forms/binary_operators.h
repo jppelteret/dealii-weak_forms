@@ -812,6 +812,78 @@ namespace WeakForms
     };
 
 
+
+/**
+ * A macro to implement the common parts of a binary op class.
+ * It is expected that the unary op derives from a
+ * BinaryOpBase<UnaryOp<LhsOp, RhsOp, BinaryOpCode>> .
+ * What remains to be implemented are the public functions:
+ *  - as_ascii()
+ *  - as_latex()
+ *  - operator()
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCode)          \
+private:                                                                   \
+  using Base   = BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCode>>;       \
+  using Traits = BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCode>>; \
+                                                                           \
+public:                                                                    \
+  using LhsOpType = typename Traits::LhsOpType;                            \
+  using RhsOpType = typename Traits::RhsOpType;                            \
+                                                                           \
+  template <typename ScalarType>                                           \
+  using value_type = typename Traits::template value_type<ScalarType>;     \
+  template <typename ScalarType>                                           \
+  using return_type = typename Traits::template return_type<ScalarType>;   \
+                                                                           \
+  using Base::dimension;                                                   \
+  using Base::op_code;                                                     \
+  using Base::rank;                                                        \
+  using Base::space_dimension;                                             \
+  using Base::get_update_flags;                                            \
+  using Base::operator();                                                  \
+                                                                           \
+  explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)    \
+    : Base(*this)                                                          \
+    , lhs_operand(lhs_operand)                                             \
+    , rhs_operand(rhs_operand)                                             \
+  {}                                                                       \
+                                                                           \
+  /**                                                                      \
+   * Required to support operands that access objects with a limited       \
+   * lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor           \
+   */                                                                      \
+  BinaryOp(const BinaryOp &rhs)                                            \
+    : Base(*this)                                                          \
+    , lhs_operand(rhs.lhs_operand)                                         \
+    , rhs_operand(rhs.rhs_operand)                                         \
+  {}                                                                       \
+                                                                           \
+  /**                                                                      \
+   * Needs to be exposed for the base class to use                         \
+   */                                                                      \
+  const LhsOp &get_lhs_operand() const                                     \
+  {                                                                        \
+    return lhs_operand;                                                    \
+  }                                                                        \
+                                                                           \
+  /**                                                                      \
+   * Needs to be exposed for the base class to use                         \
+   */                                                                      \
+  const RhsOp &get_rhs_operand() const                                     \
+  {                                                                        \
+    return rhs_operand;                                                    \
+  }                                                                        \
+                                                                           \
+private:                                                                   \
+  const LhsOp lhs_operand;                                                 \
+  const RhsOp rhs_operand;
+
+
+
     /**
      * Addition operator for integrands of symbolic integrals
      */
@@ -828,38 +900,9 @@ namespace WeakForms
                                                                  RhsOp>::value,
         "It is not permissible to add incompatible spaces together.");
 
-      using This   = BinaryOp<LhsOp, RhsOp, BinaryOpCodes::add>;
-      using Base   = BinaryOpBase<This>;
-      using Traits = BinaryOpTypeTraits<This>;
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::add)
 
     public:
-      using LhsOpType = typename Traits::LhsOpType;
-      using RhsOpType = typename Traits::RhsOpType;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
-        : Base(*this)
-        , lhs_operand(lhs_operand)
-        , rhs_operand(rhs_operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      BinaryOp(const BinaryOp &rhs)
-        : Base(*this)
-        , lhs_operand(rhs.lhs_operand)
-        , rhs_operand(rhs.rhs_operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -875,11 +918,6 @@ namespace WeakForms
                                                rhs_operand.as_latex(decorator));
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -888,24 +926,6 @@ namespace WeakForms
       {
         return lhs_value + rhs_value;
       }
-
-      // Needs to be exposed for the base class to use
-      const LhsOp &
-      get_lhs_operand() const
-      {
-        return lhs_operand;
-      }
-
-      // Needs to be exposed for the base class to use
-      const RhsOp &
-      get_rhs_operand() const
-      {
-        return rhs_operand;
-      }
-
-    private:
-      const LhsOp lhs_operand;
-      const RhsOp rhs_operand;
     };
 
 
@@ -926,38 +946,9 @@ namespace WeakForms
                                                                  RhsOp>::value,
         "It is not permissible to subtract incompatible spaces from one another.");
 
-      using This   = BinaryOp<LhsOp, RhsOp, BinaryOpCodes::subtract>;
-      using Base   = BinaryOpBase<This>;
-      using Traits = BinaryOpTypeTraits<This>;
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::subtract)
 
     public:
-      using LhsOpType = typename Traits::LhsOpType;
-      using RhsOpType = typename Traits::RhsOpType;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
-        : Base(*this)
-        , lhs_operand(lhs_operand)
-        , rhs_operand(rhs_operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      BinaryOp(const BinaryOp &rhs)
-        : Base(*this)
-        , lhs_operand(rhs.lhs_operand)
-        , rhs_operand(rhs.rhs_operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -973,11 +964,6 @@ namespace WeakForms
                                                rhs_operand.as_latex(decorator));
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -986,24 +972,6 @@ namespace WeakForms
       {
         return lhs_value - rhs_value;
       }
-
-      // Needs to be exposed for the base class to use
-      const LhsOp &
-      get_lhs_operand() const
-      {
-        return lhs_operand;
-      }
-
-      // Needs to be exposed for the base class to use
-      const RhsOp &
-      get_rhs_operand() const
-      {
-        return rhs_operand;
-      }
-
-    private:
-      const LhsOp lhs_operand;
-      const RhsOp rhs_operand;
     };
 
 
@@ -1019,38 +987,9 @@ namespace WeakForms
                                            !is_integral_op<RhsOp>::value>::type>
       : public BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::multiply>>
     {
-      using This   = BinaryOp<LhsOp, RhsOp, BinaryOpCodes::multiply>;
-      using Base   = BinaryOpBase<This>;
-      using Traits = BinaryOpTypeTraits<This>;
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::multiply)
 
     public:
-      using LhsOpType = typename Traits::LhsOpType;
-      using RhsOpType = typename Traits::RhsOpType;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
-        : Base(*this)
-        , lhs_operand(lhs_operand)
-        , rhs_operand(rhs_operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      BinaryOp(const BinaryOp &rhs)
-        : Base(*this)
-        , lhs_operand(rhs.lhs_operand)
-        , rhs_operand(rhs.rhs_operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1069,11 +1008,6 @@ namespace WeakForms
                                                symb_mult +
                                                rhs_operand.as_latex(decorator));
       }
-
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
 
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1123,24 +1057,6 @@ namespace WeakForms
 
         return out;
       }
-
-      // Needs to be exposed for the base class to use
-      const LhsOp &
-      get_lhs_operand() const
-      {
-        return lhs_operand;
-      }
-
-      // Needs to be exposed for the base class to use
-      const RhsOp &
-      get_rhs_operand() const
-      {
-        return rhs_operand;
-      }
-
-    private:
-      const LhsOp lhs_operand;
-      const RhsOp rhs_operand;
     };
 
 
@@ -1156,38 +1072,9 @@ namespace WeakForms
                                            !is_integral_op<RhsOp>::value>::type>
       : public BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::divide>>
     {
-      using This   = BinaryOp<LhsOp, RhsOp, BinaryOpCodes::divide>;
-      using Base   = BinaryOpBase<This>;
-      using Traits = BinaryOpTypeTraits<This>;
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::divide)
 
     public:
-      using LhsOpType = typename Traits::LhsOpType;
-      using RhsOpType = typename Traits::RhsOpType;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
-        : Base(*this)
-        , lhs_operand(lhs_operand)
-        , rhs_operand(rhs_operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      BinaryOp(const BinaryOp &rhs)
-        : Base(*this)
-        , lhs_operand(rhs.lhs_operand)
-        , rhs_operand(rhs.rhs_operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1201,11 +1088,6 @@ namespace WeakForms
         return Utilities::LaTeX::decorate_fraction(
           lhs_operand.as_latex(decorator), rhs_operand.as_latex(decorator));
       }
-
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
 
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1235,24 +1117,6 @@ namespace WeakForms
 
         return out;
       }
-
-      // Needs to be exposed for the base class to use
-      const LhsOp &
-      get_lhs_operand() const
-      {
-        return lhs_operand;
-      }
-
-      // Needs to be exposed for the base class to use
-      const RhsOp &
-      get_rhs_operand() const
-      {
-        return rhs_operand;
-      }
-
-    private:
-      const LhsOp lhs_operand;
-      const RhsOp rhs_operand;
     };
 
 
@@ -1268,38 +1132,9 @@ namespace WeakForms
                                            !is_integral_op<RhsOp>::value>::type>
       : public BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::power>>
     {
-      using This   = BinaryOp<LhsOp, RhsOp, BinaryOpCodes::power>;
-      using Base   = BinaryOpBase<This>;
-      using Traits = BinaryOpTypeTraits<This>;
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::power)
 
     public:
-      using LhsOpType = typename Traits::LhsOpType;
-      using RhsOpType = typename Traits::RhsOpType;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
-        : Base(*this)
-        , lhs_operand(lhs_operand)
-        , rhs_operand(rhs_operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      BinaryOp(const BinaryOp &rhs)
-        : Base(*this)
-        , lhs_operand(rhs.lhs_operand)
-        , rhs_operand(rhs.rhs_operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1314,11 +1149,6 @@ namespace WeakForms
           lhs_operand.as_latex(decorator), rhs_operand.as_latex(decorator));
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -1327,25 +1157,10 @@ namespace WeakForms
       {
         return internal::pow_impl(lhs_value, rhs_value);
       }
-
-      // Needs to be exposed for the base class to use
-      const LhsOp &
-      get_lhs_operand() const
-      {
-        return lhs_operand;
-      }
-
-      // Needs to be exposed for the base class to use
-      const RhsOp &
-      get_rhs_operand() const
-      {
-        return rhs_operand;
-      }
-
-    private:
-      const LhsOp lhs_operand;
-      const RhsOp rhs_operand;
     };
+
+
+#undef DEAL_II_BINARY_OP_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
