@@ -155,6 +155,7 @@ namespace Step44
     assembler +=
       energy_functional_form(internal_energy).dV() +
       energy_functional_form(external_energy).dA(traction_boundary_id);
+    // assembler.symmetrize(); // Check this one without symmetrisation
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
