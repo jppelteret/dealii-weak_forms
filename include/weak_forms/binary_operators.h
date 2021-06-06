@@ -69,7 +69,7 @@ namespace WeakForms
        */
       divide,
       /**
-       * Multiply the operand by a constant factor.
+       * Raise one operand to the power of a second operand.
        */
       power
       /**

@@ -9,6 +9,9 @@ Summary
 - step-57:
   - Fluid mechanics (Incompressible stationary Navier-Stokes equations)
   - Nonlinear term
+- step-72:
+  - A nonlinear elliptic problem (the minimal surface equation)
+  - Field-dependent material coefficient (and trial solution in bilinear form)
 - [TODO] step-12: DG
 - [TODO] step-47: DG
 - [TODO] step-74: DG
