@@ -944,11 +944,15 @@ namespace WeakForms
         const auto trial_solution =
           internal::ConvertTo::trial_solution(field_solution_2);
 
-        const auto bilinear_form = WeakForms::bilinear_form(
-          test_function,
-          get_functor_second_derivative<AssemblerScalar_t, I, J>(
-            field_solution_1, field_solution_2),
-          trial_solution);
+        // Since we derive from a potential, we can expect the contributions
+        // to the linear system to be symmetric.
+        const auto bilinear_form =
+          WeakForms::bilinear_form(
+            test_function,
+            get_functor_second_derivative<AssemblerScalar_t, I, J>(
+              field_solution_1, field_solution_2),
+            trial_solution)
+            .symmetrize();
         const auto integrated_bilinear_form =
           WeakForms::value(integral_operation, bilinear_form);
 

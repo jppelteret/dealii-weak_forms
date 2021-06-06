@@ -128,6 +128,7 @@ namespace Step44
     MatrixBasedAssembler<dim> assembler;
     assembler += energy_functional_form(internal_energy).dV();        // psi
     assembler -= linear_form(test_u, N * p).dA(traction_boundary_id); // f_u
+    // assembler.symmetrize(); // Check this one without symmetrisation
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
