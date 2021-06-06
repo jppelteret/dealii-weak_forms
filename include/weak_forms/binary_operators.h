@@ -311,12 +311,8 @@ namespace WeakForms
           !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value>::
           type>
       {
-        // static const unsigned int n_components = 0;
-
         template <typename T>
         using return_type = std::vector<T>;
-
-        // using extractor_type = void;
       };
 
       template <typename LhsOpType, typename RhsOpType>
@@ -328,12 +324,8 @@ namespace WeakForms
           !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value>::
           type>
       {
-        // static const unsigned int n_components = LhsOpType::n_components;
-
         template <typename T>
         using return_type = std::vector<std::vector<T>>;
-
-        // using extractor_type = typename LhsOpType::extractor_type;
       };
 
       template <typename LhsOpType, typename RhsOpType>
@@ -345,12 +337,8 @@ namespace WeakForms
           !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value>::
           type>
       {
-        // static const unsigned int n_components = RhsOpType::n_components;
-
         template <typename T>
         using return_type = std::vector<std::vector<T>>;
-
-        // using extractor_type = typename RhsOpType::extractor_type;
       };
 
       template <typename LhsOpType, typename RhsOpType>
@@ -372,224 +360,138 @@ namespace WeakForms
         //               "LhsOp and RhsOp do not have the same extractor
         //               type.");
 
-        // static const unsigned int n_components = LhsOpType::n_components;
-
         template <typename T>
         using return_type = std::vector<std::vector<T>>;
-
-        // using extractor_type = typename LhsOpType::extractor_type;
       };
     } // namespace internal
+
+
+/**
+ * A macro to implement the common parts of a binary op type trait class.
+ * Note that this should used at the very end of the class definition, as
+ * the @p return_type relies on the @p value_type to be defined.
+ *
+ * What remains to be defined are:
+ * - static const enum BinaryOpCodes op_code
+ * - static const int rank
+ * - template <typename ScalarType> using value_type = ...;
+ */
+#define DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)                \
+  /**                                                                          \
+   *                                                                           \
+   */                                                                          \
+  using LhsOpType = LhsOp;                                                     \
+  /**                                                                          \
+   *                                                                           \
+   */                                                                          \
+  using RhsOpType = RhsOp;                                                     \
+                                                                               \
+  static_assert(                                                               \
+    LhsOp::dimension == RhsOp::dimension,                                      \
+    "Binary operator requires that operators have the same dimension.");       \
+                                                                               \
+  static_assert(                                                               \
+    LhsOp::space_dimension == RhsOp::space_dimension,                          \
+    "Binary operator requires that operators have the same space dimension."); \
+                                                                               \
+  /**                                                                          \
+   * Dimension in which this object operates.                                  \
+   */                                                                          \
+  static const unsigned int dimension = LhsOp::dimension;                      \
+                                                                               \
+  /**                                                                          \
+   * Dimension of the space in which this object operates.                     \
+   */                                                                          \
+  static const unsigned int space_dimension = LhsOp::space_dimension;          \
+                                                                               \
+  /**                                                                          \
+   *                                                                           \
+   */                                                                          \
+  template <typename ScalarType>                                               \
+  using return_type =                                                          \
+    typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::     \
+      template return_type<value_type<ScalarType>>;
+
 
 
     template <typename LhsOp, typename RhsOp>
     struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::add>>
     {
-      using LhsOpType = LhsOp;
-      using RhsOpType = RhsOp;
-
       static const enum BinaryOpCodes op_code = BinaryOpCodes::add;
-
-      static_assert(
-        LhsOp::dimension == RhsOp::dimension,
-        "Addition requires that operators have the same dimension.");
-
-      static_assert(
-        LhsOp::space_dimension == RhsOp::space_dimension,
-        "Addition requires that operators have the same space dimension.");
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = LhsOp::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = LhsOp::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::binary_op_test_trial_traits<LhsOp, RhsOp>::n_components;
 
       static_assert(LhsOp::rank == RhsOp::rank,
                     "Addition requires that operators have the same rank.");
-      static const int rank = LhsOp::rank;
 
-      // using extractor_type =
-      //   typename internal::binary_op_test_trial_traits<LhsOp,
-      //                                                  RhsOp>::extractor_type;
+      static const int rank = LhsOp::rank;
 
       template <typename ScalarType>
       using value_type = decltype(
         std::declval<typename LhsOp::template value_type<ScalarType>>() +
         std::declval<typename RhsOp::template value_type<ScalarType>>());
 
-      template <typename ScalarType>
-      using return_type =
-        typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::
-          template return_type<value_type<ScalarType>>;
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
     };
+
+
 
     template <typename LhsOp, typename RhsOp>
     struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::subtract>>
     {
-      using LhsOpType = LhsOp;
-      using RhsOpType = RhsOp;
-
       static const enum BinaryOpCodes op_code = BinaryOpCodes::subtract;
-
-      static_assert(
-        LhsOp::dimension == RhsOp::dimension,
-        "Subtraction requires that operators have the same dimension.");
-
-      static_assert(
-        LhsOp::space_dimension == RhsOp::space_dimension,
-        "Subtraction requires that operators have the same space dimension.");
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = LhsOp::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = LhsOp::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::binary_op_test_trial_traits<LhsOp, RhsOp>::n_components;
 
       static_assert(LhsOp::rank == RhsOp::rank,
                     "Subtraction requires that operators have the same rank.");
-      static const int rank = LhsOp::rank;
 
-      // using extractor_type =
-      //   typename internal::binary_op_test_trial_traits<LhsOp,
-      //                                                  RhsOp>::extractor_type;
+      static const int rank = LhsOp::rank;
 
       template <typename ScalarType>
       using value_type = decltype(
         std::declval<typename LhsOp::template value_type<ScalarType>>() -
         std::declval<typename RhsOp::template value_type<ScalarType>>());
 
-      template <typename ScalarType>
-      using return_type =
-        typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::
-          template return_type<value_type<ScalarType>>;
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
     };
+
+
 
     template <typename LhsOp, typename RhsOp>
     struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::multiply>>
     {
-      using LhsOpType = LhsOp;
-      using RhsOpType = RhsOp;
-
       static const enum BinaryOpCodes op_code = BinaryOpCodes::multiply;
-
-      static_assert(
-        LhsOp::dimension == RhsOp::dimension,
-        "Multiplication requires that operators have the same dimension.");
-
-      static_assert(
-        LhsOp::space_dimension == RhsOp::space_dimension,
-        "Multiplication requires that operators have the same space dimension.");
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = LhsOp::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = LhsOp::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::binary_op_test_trial_traits<LhsOp, RhsOp>::n_components;
-
-      // static const int rank =
-      //   WeakForms::Utilities::FullIndexContraction<LhsOp,
-      //   RhsOp>::result_rank;
-
-      // using extractor_type =
-      //   typename internal::binary_op_test_trial_traits<LhsOp,
-      //                                                  RhsOp>::extractor_type;
 
       template <typename ScalarType>
       using value_type = decltype(
         std::declval<typename LhsOp::template value_type<ScalarType>>() *
         std::declval<typename RhsOp::template value_type<ScalarType>>());
 
-      template <typename ScalarType>
-      using return_type =
-        typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::
-          template return_type<value_type<ScalarType>>;
-
       static const int rank =
         WeakForms::Utilities::ValueHelper<value_type<double>>::rank;
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
     };
+
+
 
     template <typename LhsOp, typename RhsOp>
     struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::divide>>
     {
-      using LhsOpType = LhsOp;
-      using RhsOpType = RhsOp;
-
       static const enum BinaryOpCodes op_code = BinaryOpCodes::divide;
-
-      static_assert(
-        LhsOp::dimension == RhsOp::dimension,
-        "Division requires that operators have the same dimension.");
-
-      static_assert(
-        LhsOp::space_dimension == RhsOp::space_dimension,
-        "Division requires that operators have the same space dimension.");
 
       static_assert(
         RhsOp::rank == 0,
         "Division requires that the RHS operand is of rank-0 (i.e. scalar valued).");
 
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = LhsOp::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = LhsOp::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::binary_op_test_trial_traits<LhsOp, RhsOp>::n_components;
-
       static const int rank = LhsOp::rank;
-
-      // using extractor_type =
-      //   typename internal::binary_op_test_trial_traits<LhsOp,
-      //                                                  RhsOp>::extractor_type;
 
       template <typename ScalarType>
       using value_type = decltype(
         std::declval<typename LhsOp::template value_type<ScalarType>>() /
         std::declval<typename RhsOp::template value_type<ScalarType>>());
 
-      template <typename ScalarType>
-      using return_type =
-        typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::
-          template return_type<value_type<ScalarType>>;
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
     };
+
+
 
     // Using a namespace inside a decltype
     // https://stackoverflow.com/q/50456521
@@ -599,33 +501,21 @@ namespace WeakForms
     // for operations supported by VectorizedArray
     namespace internal
     {
-      // using std::pow;
-
       template <typename T1, typename T2>
       auto
       pow_impl(const T1 &t1, const T2 &t2)
-      // -> decltype(pow(std::declval<T1>(),std::declval<T2>()))
       {
         using std::pow;
-        // using dealii::pow; // Expose definition for VectorizedArray
         return pow(t1, t2);
       }
     } // namespace internal
 
+
+
     template <typename LhsOp, typename RhsOp>
     struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::power>>
     {
-      using LhsOpType = LhsOp;
-      using RhsOpType = RhsOp;
-
       static const enum BinaryOpCodes op_code = BinaryOpCodes::power;
-
-      static_assert(LhsOp::dimension == RhsOp::dimension,
-                    "Power requires that operators have the same dimension.");
-
-      static_assert(
-        LhsOp::space_dimension == RhsOp::space_dimension,
-        "Power requires that operators have the same space dimension.");
 
       static_assert(
         LhsOp::rank == 0,
@@ -635,38 +525,18 @@ namespace WeakForms
         RhsOp::rank == 0,
         "Power requires that the RHS operand is of rank-0 (i.e. scalar valued).");
 
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = LhsOp::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = LhsOp::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::binary_op_test_trial_traits<LhsOp, RhsOp>::n_components;
-
       static const int rank = 0;
-
-      // using extractor_type =
-      //   typename internal::binary_op_test_trial_traits<LhsOp,
-      //                                                  RhsOp>::extractor_type;
 
       template <typename ScalarType>
       using value_type = decltype(internal::pow_impl(
         std::declval<typename LhsOp::template value_type<ScalarType>>(),
         std::declval<typename RhsOp::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type =
-        typename internal::binary_op_test_trial_traits<LhsOpType, RhsOpType>::
-          template return_type<value_type<ScalarType>>;
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
     };
+
+
+#undef DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL
 
 
     template <typename Derived>
@@ -966,9 +836,6 @@ namespace WeakForms
       using LhsOpType = typename Traits::LhsOpType;
       using RhsOpType = typename Traits::RhsOpType;
 
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
       template <typename ScalarType>
@@ -1067,10 +934,6 @@ namespace WeakForms
       using LhsOpType = typename Traits::LhsOpType;
       using RhsOpType = typename Traits::RhsOpType;
 
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
       template <typename ScalarType>
@@ -1163,10 +1026,6 @@ namespace WeakForms
     public:
       using LhsOpType = typename Traits::LhsOpType;
       using RhsOpType = typename Traits::RhsOpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
 
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
@@ -1305,9 +1164,6 @@ namespace WeakForms
       using LhsOpType = typename Traits::LhsOpType;
       using RhsOpType = typename Traits::RhsOpType;
 
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
       template <typename ScalarType>
@@ -1420,9 +1276,6 @@ namespace WeakForms
       using LhsOpType = typename Traits::LhsOpType;
       using RhsOpType = typename Traits::RhsOpType;
 
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
       template <typename ScalarType>
@@ -1472,8 +1325,7 @@ namespace WeakForms
         const typename LhsOp::template value_type<ScalarType> &lhs_value,
         const typename RhsOp::template value_type<ScalarType> &rhs_value) const
       {
-        using namespace std;
-        return pow(lhs_value, rhs_value);
+        return internal::pow_impl(lhs_value, rhs_value);
       }
 
       // Needs to be exposed for the base class to use
