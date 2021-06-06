@@ -187,12 +187,8 @@ namespace WeakForms
         typename std::enable_if<
           !is_or_has_test_function_or_trial_solution_op<OpType>::value>::type>
       {
-        // static const unsigned int n_components = 0;
-
         template <typename T>
         using return_type = std::vector<T>;
-
-        // using extractor_type = void;
       };
 
       template <typename OpType>
@@ -201,287 +197,170 @@ namespace WeakForms
         typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<OpType>::value>::type>
       {
-        // static const unsigned int n_components = OpType::n_components;
-
         template <typename T>
         using return_type = std::vector<std::vector<T>>;
-
-        // using extractor_type = typename OpType::extractor_type;
       };
 
     } // namespace internal
 
+
+
+/**
+ * A macro to implement the common parts of a unary op type trait class.
+ * Note that this should used at the very end of the class definition, as
+ * the @p return_type relies on the @p value_type to be defined.
+ */
+#define DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)                 \
+  /**                                                                \
+   *                                                                 \
+   */                                                                \
+  using OpType = Op;                                                 \
+                                                                     \
+  /**                                                                \
+   * Dimension in which this object operates.                        \
+   */                                                                \
+  static const unsigned int dimension = Op::dimension;               \
+                                                                     \
+  /**                                                                \
+   * Dimension of the space in which this object operates.           \
+   */                                                                \
+  static const unsigned int space_dimension = Op::space_dimension;   \
+                                                                     \
+  /**                                                                \
+   *                                                                 \
+   */                                                                \
+  template <typename ScalarType>                                     \
+  using return_type = typename internal::unary_op_test_trial_traits< \
+    OpType>::template return_type<value_type<ScalarType>>;
+
+
+
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::negate>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::unary_op_test_trial_traits<OpType>::n_components;
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::negate;
       static const int               rank    = Op::rank;
-
-      // using extractor_type =
-      //   typename
-      //   internal::unary_op_test_trial_traits<OpType>::extractor_type;
 
       template <typename ScalarType>
       using value_type =
         decltype(-std::declval<typename Op::template value_type<ScalarType>>());
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
 
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::square_root>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::unary_op_test_trial_traits<OpType>::n_components;
-      // static_assert(n_components == 1, "Incorrect number of components");
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::square_root;
 
       static_assert(Op::rank == 0,
                     "Invalid operator rank"); // Can only act on scalars
       static const int rank = 0;              // Square root is scalar valued
 
-      // using extractor_type =
-      //   typename
-      //   internal::unary_op_test_trial_traits<OpType>::extractor_type;
-      // static_assert(std::is_same<extractor_type,FEValuesExtractors::Scalar>::value,
-      // "Incorrect extractor type.");
-
       template <typename ScalarType>
       using value_type = decltype(
         sqrt(std::declval<typename Op::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
 
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::determinant>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::unary_op_test_trial_traits<OpType>::n_components;
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::determinant;
       static_assert(Op::rank == 2,
                     "Invalid operator rank"); // Can only act on rank-2 tensors
       static const int rank = 0;              // Determinant is scalar valued
 
-      // using extractor_type =
-      //   typename
-      //   internal::unary_op_test_trial_traits<OpType>::extractor_type;
-
       template <typename ScalarType>
       using value_type = decltype(determinant(
         std::declval<typename Op::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
 
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::invert>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::unary_op_test_trial_traits<OpType>::n_components;
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::invert;
-      static const int               rank    = Op::rank;
 
-      // using extractor_type =
-      //   typename
-      //   internal::unary_op_test_trial_traits<OpType>::extractor_type;
+      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid rank");
+      static const int rank = Op::rank;
 
       template <typename ScalarType>
       using value_type = decltype(
         invert(std::declval<typename Op::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
 
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::transpose>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
-      /**
-       * Number of independent components associated with this field.
-       */
-      // static const unsigned int n_components =
-      //   internal::unary_op_test_trial_traits<OpType>::n_components;
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::transpose;
 
-      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid rank");
+      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid operator rank");
       static const int rank = Op::rank;
-
-      // using extractor_type =
-      //   typename
-      //   internal::unary_op_test_trial_traits<OpType>::extractor_type;
 
       template <typename ScalarType>
       using value_type = decltype(transpose(
         std::declval<typename Op::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
-
-      // static_assert(n_components ==
-      // value_type<double>::n_independent_components, "Incorrect number of
-      // components");
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
 
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::symmetrize>>
     {
-      using OpType = Op;
-
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = Op::dimension;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = Op::space_dimension;
-
       static const enum UnaryOpCodes op_code = UnaryOpCodes::symmetrize;
 
-      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid rank");
+      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid operator rank");
       static const int rank = Op::rank;
-
-      // This operation is a modifier for the extractor, so we cannot
-      // rely on the type that comes from the underlying Op.
-      // static_assert(
-      //   std::is_same<
-      //     typename
-      //     internal::unary_op_test_trial_traits<OpType>::extractor_type,
-      //     FEValuesExtractors::Tensor<rank>>::value ||
-      //     std::is_same<typename internal::unary_op_test_trial_traits<
-      //                    OpType>::extractor_type,
-      //                  FEValuesExtractors::SymmetricTensor<rank>>::value>::value,
-      //   "Expected a Tensor or SymmetricTensor extractor.");
-      // using extractor_type = FEValuesExtractors::SymmetricTensor<rank>;
 
       template <typename ScalarType>
       using value_type = decltype(symmetrize(
         std::declval<typename Op::template value_type<ScalarType>>()));
 
-      template <typename ScalarType>
-      using return_type = typename internal::unary_op_test_trial_traits<
-        OpType>::template return_type<value_type<ScalarType>>;
-
-      /**
-       * Number of independent components associated with this field.
-       *
-       * Since this operation is a modifier for the extractor, we cannot
-       * rely on the component data that comes from the underlying Op.
-       */
-      // static const unsigned int n_components =
-      //   value_type<double>::n_independent_components;
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
+
+
+#undef DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL
 
 
     template <typename Derived>
     class UnaryOpBase
     {
+      using Traits = UnaryOpTypeTraits<Derived>;
+
     public:
-      using OpType = typename UnaryOpTypeTraits<Derived>::OpType;
+      using OpType = typename Traits::OpType;
+
+      static const int               dimension       = Traits::dimension;
+      static const int               space_dimension = Traits::space_dimension;
+      static const int               rank            = Traits::rank;
+      static const enum UnaryOpCodes op_code         = Traits::op_code;
 
       template <typename ScalarType>
-      using value_type =
-        typename UnaryOpTypeTraits<Derived>::template value_type<ScalarType>;
+      using value_type = typename Traits::template value_type<ScalarType>;
       template <typename ScalarType>
-      using return_type =
-        typename UnaryOpTypeTraits<Derived>::template return_type<ScalarType>;
-
-      static const enum UnaryOpCodes op_code =
-        UnaryOpTypeTraits<Derived>::op_code;
-
-      static const int dimension = UnaryOpTypeTraits<Derived>::dimension;
-      static const int space_dimension =
-        UnaryOpTypeTraits<Derived>::space_dimension;
-      static const int rank = UnaryOpTypeTraits<Derived>::rank;
+      using return_type = typename Traits::template return_type<ScalarType>;
 
       UnaryOpBase(const Derived &derived)
         : derived(derived)
@@ -631,27 +510,65 @@ namespace WeakForms
           solution_names);
       }
 
-      // protected:
-
-      //   // Operator for test function / trial solution
-      //   // TODO[JPP]: Is this even required?
-      //   template <typename ScalarType, int dim, int spacedim>
-      //   auto
-      //   operator()(const FEValuesBase<dim, spacedim> &fe_values,
-      //              const unsigned int                 dof_index) const ->
-      //     typename std::enable_if<
-      //       is_or_has_test_function_or_trial_solution_op<OpType>::value &&
-      //         !is_or_has_evaluated_with_scratch_data<OpType>::value,
-      //       value_type<ScalarType>>::type
-      //   {
-      //     return internal::UnaryOpEvaluator<OpType>::template
-      //     apply<ScalarType>(
-      //       *this, derived.get_operand(), fe_values, dof_index);
-      //   }
-
     private:
       const Derived &derived;
     };
+
+
+
+/**
+ * A macro to implement the common parts of a unary op class.
+ * It is expected that the unary op derives from a
+ * UnaryOpBase<UnaryOp<Op, UnaryOpCode>> .
+ * What remains to be implemented are the public functions:
+ *  - as_ascii()
+ *  - as_latex()
+ *  - operator()
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCode)                    \
+private:                                                                 \
+  using Base   = UnaryOpBase<UnaryOp<Op, UnaryOpCode>>;                  \
+  using Traits = UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCode>>;            \
+                                                                         \
+public:                                                                  \
+  using OpType = typename Traits::OpType;                                \
+                                                                         \
+  template <typename ScalarType>                                         \
+  using value_type = typename Traits::template value_type<ScalarType>;   \
+  template <typename ScalarType>                                         \
+  using return_type = typename Traits::template return_type<ScalarType>; \
+                                                                         \
+  using Base::dimension;                                                 \
+  using Base::op_code;                                                   \
+  using Base::rank;                                                      \
+  using Base::space_dimension;                                           \
+  using Base::get_update_flags;                                          \
+  using Base::operator();                                                \
+                                                                         \
+  explicit UnaryOp(const Op &operand)                                    \
+    : Base(*this)                                                        \
+    , operand(operand)                                                   \
+  {}                                                                     \
+                                                                         \
+  /**                                                                    \
+   * Required to support operands that access objects with a limited     \
+   * lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor         \
+   */                                                                    \
+  UnaryOp(const UnaryOp &rhs)                                            \
+    : Base(*this)                                                        \
+    , operand(rhs.operand)                                               \
+  {}                                                                     \
+                                                                         \
+  const Op &get_operand() const                                          \
+  {                                                                      \
+    return operand;                                                      \
+  }                                                                      \
+                                                                         \
+private:                                                                 \
+  const Op operand;
 
 
 
@@ -666,39 +583,9 @@ namespace WeakForms
                   typename std::enable_if<!is_integral_op<Op>::value>::type>
       : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::negate>>
     {
-      using This   = UnaryOp<Op, UnaryOpCodes::negate>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::negate)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -711,11 +598,6 @@ namespace WeakForms
         return "-" + operand.as_latex(decorator);
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -723,19 +605,11 @@ namespace WeakForms
       {
         return -value;
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
     /* ------------------------- Scalar operations ------------------------- */
+
 
     /**
      * Square root operator for integrands of symbolic integrals
@@ -754,39 +628,9 @@ namespace WeakForms
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
         "The square root operation is not permitted for test functions or trial solutions.");
 
-      using This   = UnaryOp<Op, UnaryOpCodes::square_root>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::square_root)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -800,11 +644,6 @@ namespace WeakForms
           Utilities::LaTeX::decorate_latex_op("sqrt"), operand);
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -813,15 +652,6 @@ namespace WeakForms
         using namespace std;
         return sqrt(value);
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
@@ -844,44 +674,9 @@ namespace WeakForms
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
         "The determinant operation is not permitted for test functions or trial solutions.");
 
-      using This   = UnaryOp<Op, UnaryOpCodes::determinant>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
-
-      // Can't do this, as we can't universally extract the space dimension?
-      // static_assert(std::is_same<typename Op::template
-      // value_type<ScalarType>>::value, "The determinant operator can only act
-      // on Tensors and SymmetricTensors.");
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::determinant)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -896,11 +691,6 @@ namespace WeakForms
           Utilities::LaTeX::decorate_text("det"), operand);
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -908,15 +698,6 @@ namespace WeakForms
       {
         return determinant(value);
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
@@ -936,44 +717,9 @@ namespace WeakForms
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
         "The inverse operation is not permitted for test functions or trial solutions.");
 
-      using This   = UnaryOp<Op, UnaryOpCodes::invert>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
-
-      // Can't do this, as we can't universally extract the space dimension?
-      // static_assert(std::is_same<typename Op::template
-      // value_type<ScalarType>>::value, "The determinant operator can only act
-      // on Tensors and SymmetricTensors.");
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::invert)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -989,11 +735,6 @@ namespace WeakForms
                                                                     "-1");
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -1001,15 +742,6 @@ namespace WeakForms
       {
         return invert(value);
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
@@ -1023,44 +755,9 @@ namespace WeakForms
                   typename std::enable_if<!is_integral_op<Op>::value>::type>
       : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::transpose>>
     {
-      // Can't do this, as we can't universally extract the space dimension?
-      // static_assert(std::is_same<typename Op::template
-      // value_type<ScalarType>>::value, "The determinant operator can only act
-      // on Tensors and SymmetricTensors.");
-
-      using This   = UnaryOp<Op, UnaryOpCodes::transpose>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::transpose)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1076,11 +773,6 @@ namespace WeakForms
                                                                     "T");
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -1088,15 +780,6 @@ namespace WeakForms
       {
         return transpose(value);
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
@@ -1110,44 +793,9 @@ namespace WeakForms
                   typename std::enable_if<!is_integral_op<Op>::value>::type>
       : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::symmetrize>>
     {
-      // Can't do this, as we can't universally extract the space dimension?
-      // static_assert(std::is_same<typename Op::template
-      // value_type<ScalarType>>::value, "The determinant operator can only act
-      // on Tensors and SymmetricTensors.");
-
-      using This   = UnaryOp<Op, UnaryOpCodes::symmetrize>;
-      using Base   = UnaryOpBase<This>;
-      using Traits = UnaryOpTypeTraits<This>;
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::symmetrize)
 
     public:
-      using OpType = typename Traits::OpType;
-
-      // static const unsigned int n_components = Traits::n_components;
-
-      // using extractor_type = typename Traits::extractor_type;
-
-      template <typename ScalarType>
-      using value_type = typename Traits::template value_type<ScalarType>;
-      template <typename ScalarType>
-      using return_type = typename Traits::template return_type<ScalarType>;
-
-      using Base::dimension;
-      using Base::op_code;
-      using Base::rank;
-      using Base::space_dimension;
-
-      explicit UnaryOp(const Op &operand)
-        : Base(*this)
-        , operand(operand)
-      {}
-
-      // Required to support operands that access objects with a limited
-      // lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor
-      UnaryOp(const UnaryOp &rhs)
-        : Base(*this)
-        , operand(rhs.operand)
-      {}
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -1163,11 +811,6 @@ namespace WeakForms
                                                                     "S");
       }
 
-      // =======
-
-      using Base::get_update_flags;
-      using Base::operator();
-
       template <typename ScalarType>
       value_type<ScalarType>
       operator()(
@@ -1175,20 +818,13 @@ namespace WeakForms
       {
         return symmetrize(value);
       }
-
-      const Op &
-      get_operand() const
-      {
-        return operand;
-      }
-
-    private:
-      const Op operand;
     };
 
 
     /* ------------------------ Tensor contractions ------------------------ */
 
+
+#undef DEAL_II_UNARY_OP_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms

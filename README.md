@@ -136,6 +136,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - Subdomains: Boundary ID
   - [TODO] Interface
     - [TODO] Subdomains: Manifold ID
+    - [TODO] Inter-cell interfaces for DG
   - [TODO] Custom predicates for the above
 - User-defined function integrators
   - Position independent/dependent
@@ -159,10 +160,10 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 # Examples
 Some examples and output can be found [here](doc/readme/examples.md).
 
-# Similar projects
+# Similar projects that inspired this work
 - deal.II
   - [CFL form language for deal.II](https://github.com/masterleinad/CFL) by Daniel Arndt and Guido Kanschat
-- Other finite element and finite volume codes that inspired this work
+- Other finite element and finite volume codes
   - [FEniCS](https://fenicsproject.org/): [Unified Form Language](https://github.com/FEniCS/ufl)
   - [NGSolve](https://ngsolve.org/): [Symbolic Integrators](https://docu.ngsolve.org/latest/how_to/symbolic_integrators.html)
   - [OpenFOAM](https://openfoam.com/): [Equation representation](https://cfd.direct/openfoam/user-guide/v6-programming-language-openfoam/)

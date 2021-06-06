@@ -35,7 +35,7 @@
 
 #include <deal.II/meshworker/scratch_data.h>
 
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_matrix_based.h>
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/spaces.h>
@@ -117,7 +117,8 @@ run()
 
     const unsigned int dofs_per_cell = fe.dofs_per_cell;
     FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
-    std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+    std::vector<dealii::types::global_dof_index> local_dof_indices(
+      dofs_per_cell);
 
     for (auto &cell : dof_handler.active_cell_iterators())
       {
@@ -150,7 +151,8 @@ run()
 
     const unsigned int dofs_per_cell = fe.dofs_per_cell;
     FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
-    std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
+    std::vector<dealii::types::global_dof_index> local_dof_indices(
+      dofs_per_cell);
 
     MeshWorker::ScratchData<dim, spacedim> scratch_data(fe,
                                                         qf_cell,

@@ -39,7 +39,7 @@
 
 #include <deal.II/meshworker/scratch_data.h>
 
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_matrix_based.h>
 #include <weak_forms/binary_operators.h>
 #include <weak_forms/cell_face_subface_operators.h>
 #include <weak_forms/functors.h>

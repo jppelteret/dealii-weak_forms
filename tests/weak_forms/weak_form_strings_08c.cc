@@ -18,7 +18,7 @@
 // - Functor helpers: Symmetric Tensor
 
 
-#include <weak_forms/assembler.h>
+#include <weak_forms/assembler_matrix_based.h>
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/linear_forms.h>

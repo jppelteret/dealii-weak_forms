@@ -95,7 +95,7 @@ namespace Step72
                               this->dof_handler,
                               this->quadrature_formula);
 
-    std::map<types::global_dof_index, double> boundary_values;
+    std::map<dealii::types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(this->dof_handler,
                                              0,
                                              Functions::ZeroFunction<dim>(),
