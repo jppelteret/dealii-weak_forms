@@ -1504,6 +1504,47 @@ protected:                                                                   \
     /* ------------ Finite element spaces: Solution fields ------------ */
 
 
+#define DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(               \
+  SymbolicOpBaseType, SubSpaceViewsType, solution_index, SymbolicOpCode)       \
+private:                                                                       \
+  using Base_t = SymbolicOpBaseType<SubSpaceViewsType, solution_index>;        \
+  using View_t = SubSpaceViewsType;                                            \
+  using SymbolicOpExtractor_t =                                                \
+    typename internal::SymbolicOpExtractor<SubSpaceViewsType, SymbolicOpCode>; \
+  using typename Base_t::Op;                                                   \
+                                                                               \
+public:                                                                        \
+  /**                                                                          \
+   * Dimension in which this object operates.                                  \
+   */                                                                          \
+  static const unsigned int dimension = View_t::dimension;                     \
+                                                                               \
+  /**                                                                          \
+   * Dimension of the subspace in which this object operates.                  \
+   */                                                                          \
+  static const unsigned int space_dimension = View_t::space_dimension;         \
+                                                                               \
+  template <typename ScalarType>                                               \
+  using value_type = typename Base_t::template value_type<ScalarType>;         \
+                                                                               \
+  template <typename ScalarType>                                               \
+  using return_type = typename Base_t::template qp_value_type<ScalarType>;     \
+                                                                               \
+  explicit SymbolicOp(const Op &operand)                                       \
+    : Base_t(operand)                                                          \
+  {}                                                                           \
+                                                                               \
+protected:                                                                     \
+  /**                                                                          \
+   * The extractor corresponding to the view itself                            \
+   */                                                                          \
+  using view_extractor_type = typename View_t::extractor_type;                 \
+                                                                               \
+  const view_extractor_type &get_extractor() const                             \
+  {                                                                            \
+    return this->get_operand().get_extractor();                                \
+  }
+
 
     /**
      * Extract the solution values from the discretised solution field subspace.
@@ -1519,34 +1560,13 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpValueBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpValueBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::value>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpValueBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::value)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution values at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1560,18 +1580,6 @@ protected:                                                                   \
         return scratch_data
           .template get_values<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -1592,34 +1600,13 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpGradientBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpGradientBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::gradient>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpGradientBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::gradient)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution gradients at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1633,18 +1620,6 @@ protected:                                                                   \
         return scratch_data
           .template get_gradients<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -1666,12 +1641,11 @@ protected:                                                                   \
       : public SymbolicOpSymmetricGradientBase<SubSpaceViewsType,
                                                solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpSymmetricGradientBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t = typename internal::SymbolicOpExtractor<
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpSymmetricGradientBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::symmetric_gradient>;
-      using typename Base_t::Op;
+        solution_index,
+        SymbolicOpCodes::symmetric_gradient)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1682,26 +1656,6 @@ protected:                                                                   \
         "The selected subspace view does not support the symmetric gradient operation.");
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1715,18 +1669,6 @@ protected:                                                                   \
         return scratch_data
           .template get_symmetric_gradients<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -1747,12 +1689,11 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpDivergenceBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpDivergenceBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::divergence>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpDivergenceBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::divergence)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1771,26 +1712,6 @@ protected:                                                                   \
         "The selected subspace view does not support the divergence operation.");
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution divergences at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1804,18 +1725,6 @@ protected:                                                                   \
         return scratch_data
           .template get_divergences<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -1835,12 +1744,11 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpCurlBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpCurlBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::curl>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpCurlBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::curl)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1850,33 +1758,13 @@ protected:                                                                   \
           SubSpaceViews::Vector<typename SubSpaceViewsType::SpaceType>>::value,
         "The selected subspace view does not support the curl operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
       // In dim==2, the curl operation returns a interestingly dimensioned
       // tensor that is not easily compatible with this framework.
       static_assert(
         dimension == 3,
         "The curl operation for the selected subspace view is only implemented in 3d.");
 
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
+    public:
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1889,18 +1777,6 @@ protected:                                                                   \
 
         return scratch_data.template get_curls<view_extractor_type, ScalarType>(
           solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -1921,12 +1797,11 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpLaplacianBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpLaplacianBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::laplacian>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpLaplacianBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::laplacian)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1937,26 +1812,6 @@ protected:                                                                   \
         "The selected subspace view does not support the Laplacian operation.");
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution Laplacian at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -1970,18 +1825,6 @@ protected:                                                                   \
         return scratch_data
           .template get_laplacians<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -2002,12 +1845,11 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpHessianBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpHessianBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t =
-        typename internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                               SymbolicOpCodes::hessian>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpHessianBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::hessian)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2021,26 +1863,6 @@ protected:                                                                   \
         "The selected subspace view does not support the Hessian operation.");
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -2054,18 +1876,6 @@ protected:                                                                   \
         return scratch_data
           .template get_hessians<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
-      }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
       }
     };
 
@@ -2086,12 +1896,11 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpThirdDerivativeBase<SubSpaceViewsType, solution_index>
     {
-      using View_t = SubSpaceViewsType;
-      using Base_t = SymbolicOpThirdDerivativeBase<View_t, solution_index>;
-      using SymbolicOpExtractor_t = typename internal::SymbolicOpExtractor<
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::third_derivative>;
-      using typename Base_t::Op;
+        solution_index,
+        SymbolicOpCodes::third_derivative)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2105,26 +1914,6 @@ protected:                                                                   \
         "The selected subspace view does not support the third derivative operation.");
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution third derivatives at all quadrature points
       template <typename ScalarType>
       const return_type<ScalarType> &
@@ -2139,19 +1928,11 @@ protected:                                                                   \
           .template get_third_derivatives<view_extractor_type, ScalarType>(
             solution_names[solution_index], get_extractor());
       }
-
-    protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
     };
+
+
+#undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL
+
 
   } // namespace Operators
 } // namespace WeakForms
