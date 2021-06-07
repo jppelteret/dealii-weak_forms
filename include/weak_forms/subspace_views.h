@@ -1047,6 +1047,91 @@ namespace WeakForms
     /* ---- Finite element spaces: Test functions and trial solutions ---- */
 
 
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for test functions and trial solution subspaces.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<SubSpaceViewsType> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(                 \
+  SymbolicOpBaseType, SubSpaceViewsType, SymbolicOpCode)                     \
+private:                                                                     \
+  using Base_t  = SymbolicOpBaseType<SubSpaceViewsType>;                     \
+  using View_t  = SubSpaceViewsType;                                         \
+  using Space_t = typename View_t::SpaceType;                                \
+  using SymbolicOpExtractor_t =                                              \
+    internal::SymbolicOpExtractor<SubSpaceViewsType, SymbolicOpCode>;        \
+  using typename Base_t::Op;                                                 \
+                                                                             \
+public:                                                                      \
+  /**                                                                        \
+   * Dimension in which this object operates.                                \
+   */                                                                        \
+  static const unsigned int dimension = View_t::dimension;                   \
+                                                                             \
+  /**                                                                        \
+   * Dimension of the subspace in which this object operates.                \
+   */                                                                        \
+  static const unsigned int space_dimension = View_t::space_dimension;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using value_type = typename Base_t::template value_type<ScalarType>;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
+                                                                             \
+  explicit SymbolicOp(const Op &operand)                                     \
+    : Base_t(operand)                                                        \
+  {}                                                                         \
+                                                                             \
+  /**                                                                        \
+   * Return all shape function values all quadrature points.                 \
+   *                                                                         \
+   * The outer index is the shape function, and the inner index              \
+   * is the quadrature point.                                                \
+   *                                                                         \
+   * @tparam ScalarType                                                      \
+   * @param fe_values_dofs                                                   \
+   * @param fe_values_op                                                     \
+   * @return return_type<ScalarType>                                         \
+   */                                                                        \
+  template <typename ScalarType>                                             \
+  return_type<ScalarType> operator()(                                        \
+    const FEValuesBase<dimension, space_dimension> &fe_values_dofs,          \
+    const FEValuesBase<dimension, space_dimension> &fe_values_op) const      \
+  {                                                                          \
+    return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);               \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        out[dof_index].reserve(fe_values_op.n_quadrature_points);            \
+                                                                             \
+        for (const auto q_point : fe_values_op.quadrature_point_indices())   \
+          out[dof_index].emplace_back(this->template operator()<ScalarType>( \
+            fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+protected:                                                                   \
+  /**                                                                        \
+   * The extractor corresponding to the view itself                          \
+   */                                                                        \
+  using view_extractor_type = typename View_t::extractor_type;               \
+                                                                             \
+  const view_extractor_type &get_extractor() const                           \
+  {                                                                          \
+    return this->get_operand().get_extractor();                              \
+  }
+
+
     /**
      * Extract the shape function values from a finite element subspace.
      *
@@ -1063,81 +1148,12 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpValueBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpValueBase<SubSpaceViewsType>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::value>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpValueBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::value)
 
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1171,13 +1187,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpGradientBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpGradientBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::gradient>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpGradientBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::gradient)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1188,73 +1201,7 @@ namespace WeakForms
                        SubSpaceViews::Tensor<View_t::rank, Space_t>>::value,
         "The selected subspace view does not support the gradient operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1289,13 +1236,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpSymmetricGradientBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpSymmetricGradientBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::symmetric_gradient>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpSymmetricGradientBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::symmetric_gradient)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1303,73 +1247,7 @@ namespace WeakForms
         std::is_same<View_t, SubSpaceViews::Vector<Space_t>>::value,
         "The selected subspace view does not support the symmetric gradient operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1404,13 +1282,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpDivergenceBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpDivergenceBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::divergence>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpDivergenceBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::divergence)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1423,73 +1298,7 @@ namespace WeakForms
             SubSpaceViews::SymmetricTensor<View_t::rank, Space_t>>::value,
         "The selected subspace view does not support the divergence operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1523,12 +1332,9 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpCurlBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpCurlBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType, SymbolicOpCodes::curl>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(SymbolicOpCurlBase,
+                                                          SubSpaceViewsType,
+                                                          SymbolicOpCodes::curl)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1536,79 +1342,7 @@ namespace WeakForms
         std::is_same<View_t, SubSpaceViews::Vector<Space_t>>::value,
         "The selected subspace view does not support the curls operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      // In dim==2, the curl operation returns a interestingly dimensioned
-      // tensor that is not easily compatible with this framework.
-      static_assert(
-        dimension == 3,
-        "The curl operation for the selected subspace view is only implemented in 3d.");
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1642,13 +1376,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpLaplacianBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpLaplacianBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::laplacian>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpLaplacianBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::laplacian)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1656,73 +1387,7 @@ namespace WeakForms
         std::is_same<View_t, SubSpaceViews::Scalar<Space_t>>::value,
         "The selected subspace view does not support the Laplacian operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1756,13 +1421,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpHessianBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpHessianBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::hessian>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpHessianBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::hessian)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1771,73 +1433,7 @@ namespace WeakForms
           std::is_same<View_t, SubSpaceViews::Vector<Space_t>>::value,
         "The selected subspace view does not support the Hessian operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1872,13 +1468,10 @@ namespace WeakForms
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpThirdDerivativeBase<SubSpaceViewsType>
     {
-      using View_t  = SubSpaceViewsType;
-      using Space_t = typename View_t::SpaceType;
-      using Base_t  = SymbolicOpThirdDerivativeBase<View_t>;
-      using SymbolicOpExtractor_t =
-        internal::SymbolicOpExtractor<SubSpaceViewsType,
-                                      SymbolicOpCodes::third_derivative>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::third_derivative)
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1887,73 +1480,7 @@ namespace WeakForms
           std::is_same<View_t, SubSpaceViews::Vector<Space_t>>::value,
         "The selected subspace view does not support the third derivative operation.");
 
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = View_t::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = View_t::space_dimension;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(
-        const FEValuesBase<dimension, space_dimension> &fe_values_dofs,
-        const FEValuesBase<dimension, space_dimension> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
-
     protected:
-      /**
-       * The extractor corresponding to the view itself
-       */
-      using view_extractor_type = typename View_t::extractor_type;
-
-      const view_extractor_type &
-      get_extractor() const
-      {
-        return this->get_operand().get_extractor();
-      }
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1970,6 +1497,8 @@ namespace WeakForms
       }
     };
 
+
+#undef DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL
 
 
     /* ------------ Finite element spaces: Solution fields ------------ */
