@@ -1208,6 +1208,82 @@ private:                                                                       \
 
     /* ---- Finite element spaces: Test functions and trial solutions ---- */
 
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for test functions and trial solution spaces.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<Space<dim, spacedim>> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpBaseType, \
+                                                         dim,                \
+                                                         spacedim)           \
+private:                                                                     \
+  using Base_t = SymbolicOpBaseType<Space<dim, spacedim>>;                   \
+  using typename Base_t::Op;                                                 \
+                                                                             \
+public:                                                                      \
+  /**                                                                        \
+   * Dimension in which this object operates.                                \
+   */                                                                        \
+  static const unsigned int dimension = dim;                                 \
+                                                                             \
+  /**                                                                        \
+   * Dimension of the space in which this object operates.                   \
+   */                                                                        \
+  static const unsigned int space_dimension = spacedim;                      \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using value_type = typename Base_t::template value_type<ScalarType>;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
+                                                                             \
+  /**                                                                        \
+   * Return all shape function values all quadrature points.                 \
+   *                                                                         \
+   * The outer index is the shape function, and the inner index              \
+   * is the quadrature point.                                                \
+   *                                                                         \
+   * @tparam ScalarType                                                      \
+   * @param fe_values_dofs                                                   \
+   * @param fe_values_op                                                     \
+   * @return return_type<ScalarType>                                         \
+   */                                                                        \
+  template <typename ScalarType>                                             \
+  return_type<ScalarType> operator()(                                        \
+    const FEValuesBase<dim, spacedim> &fe_values_dofs,                       \
+    const FEValuesBase<dim, spacedim> &fe_values_op) const                   \
+  {                                                                          \
+    return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);               \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        out[dof_index].reserve(fe_values_op.n_quadrature_points);            \
+                                                                             \
+        for (const auto q_point : fe_values_op.quadrature_point_indices())   \
+          out[dof_index].emplace_back(this->template operator()<ScalarType>( \
+            fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+protected:                                                                   \
+  /**                                                                        \
+   * Only want this to be a base class providing common implementation       \
+   * for test functions / trial solutions.                                   \
+   */                                                                        \
+  explicit SymbolicOp(const Op &operand)                                     \
+    : Base_t(operand)                                                        \
+  {}
+
+
 
     /**
      * Extract the shape function values from a finite element space.
@@ -1219,66 +1295,11 @@ private:                                                                       \
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::value>
       : public SymbolicOpValueBase<Space<dim, spacedim>>
     {
-      using Base_t = SymbolicOpValueBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpValueBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1307,65 +1328,11 @@ private:                                                                       \
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::gradient>
       : public SymbolicOpGradientBase<Space<dim, spacedim>>
     {
-      using Base_t = SymbolicOpGradientBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpGradientBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1394,66 +1361,11 @@ private:                                                                       \
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::laplacian>
       : public SymbolicOpLaplacianBase<Space<dim, spacedim>>
     {
-      using Base_t = SymbolicOpLaplacianBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1482,66 +1394,11 @@ private:                                                                       \
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::hessian>
       : public SymbolicOpHessianBase<Space<dim, spacedim>>
     {
-      using Base_t = SymbolicOpHessianBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpHessianBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1571,66 +1428,12 @@ private:                                                                       \
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::third_derivative>
       : public SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>
     {
-      using Base_t = SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
+        dim,
+        spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1670,6 +1473,9 @@ private:                                                                       \
 
           explicit SymbolicOp(const Op &operand): Base_t(operand){}
       };
+
+
+#undef DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL
 
 
 
