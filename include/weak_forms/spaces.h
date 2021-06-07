@@ -1481,6 +1481,45 @@ protected:                                                                   \
 
     /* ------------ Finite element spaces: Solution fields ------------ */
 
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for field solutions.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<FieldSolution<dim, spacedim>, solution_index> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpBaseType, \
+                                                       dim,                \
+                                                       spacedim,           \
+                                                       solution_index)     \
+private:                                                                   \
+  using Base_t =                                                           \
+    SymbolicOpBaseType<FieldSolution<dim, spacedim>, solution_index>;      \
+  using typename Base_t::Op;                                               \
+                                                                           \
+public:                                                                    \
+  /**                                                                      \
+   * Dimension in which this object operates.                              \
+   */                                                                      \
+  static const unsigned int dimension = dim;                               \
+                                                                           \
+  /**                                                                      \
+   * Dimension of the space in which this object operates.                 \
+   */                                                                      \
+  static const unsigned int space_dimension = spacedim;                    \
+                                                                           \
+  template <typename ScalarType>                                           \
+  using value_type = typename Base_t::template value_type<ScalarType>;     \
+                                                                           \
+  template <typename ScalarType>                                           \
+  using return_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                           \
+  explicit SymbolicOp(const Op &operand)                                   \
+    : Base_t(operand)                                                      \
+  {}
+
 
     /**
      * Extract the solution values from the discretized solution field.
@@ -1495,31 +1534,12 @@ protected:                                                                   \
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpValueBase<FieldSolution<dim, spacedim>, solution_index>
     {
-      using Base_t =
-        SymbolicOpValueBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpValueBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution values at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -1556,31 +1576,12 @@ protected:                                                                   \
       : public SymbolicOpGradientBase<FieldSolution<dim, spacedim>,
                                       solution_index>
     {
-      using Base_t =
-        SymbolicOpGradientBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpGradientBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution gradients at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -1617,31 +1618,12 @@ protected:                                                                   \
       : public SymbolicOpLaplacianBase<FieldSolution<dim, spacedim>,
                                        solution_index>
     {
-      using Base_t =
-        SymbolicOpLaplacianBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution Laplacians at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -1678,31 +1660,12 @@ protected:                                                                   \
       : public SymbolicOpHessianBase<FieldSolution<dim, spacedim>,
                                      solution_index>
     {
-      using Base_t =
-        SymbolicOpHessianBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpHessianBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution Hessians at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -1740,31 +1703,13 @@ protected:                                                                   \
       : public SymbolicOpThirdDerivativeBase<FieldSolution<dim, spacedim>,
                                              solution_index>
     {
-      using Base_t = SymbolicOpThirdDerivativeBase<FieldSolution<dim, spacedim>,
-                                                   solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
+        dim,
+        spacedim,
+        solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution third derivatives at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -1784,6 +1729,8 @@ protected:                                                                   \
         return return_type<ScalarType>();
       }
     };
+
+#undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
