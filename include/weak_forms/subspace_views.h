@@ -905,6 +905,13 @@ namespace WeakForms
   {
     namespace internal
     {
+      /**
+       * A struct that holds the type of extractor that corresponds to the
+       * return type of a specific operation that is performed on a space.
+       *
+       * @tparam SubSpaceViewsType The space on which the operation is performed.
+       * @tparam SymbolicOpCodes The operation that is to be performed.
+       */
       template <typename SubSpaceViewsType, enum SymbolicOpCodes>
       struct SymbolicOpExtractor;
 
@@ -915,9 +922,6 @@ namespace WeakForms
                                  SymbolicOpCodes::value>
       {
         using type = FEValuesExtractors::Scalar;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components = 1;
       };
 
       template <typename SpaceType>
@@ -925,10 +929,6 @@ namespace WeakForms
                                  SymbolicOpCodes::gradient>
       {
         using type = FEValuesExtractors::Vector;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<1, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -936,10 +936,6 @@ namespace WeakForms
                                  SymbolicOpCodes::hessian>
       {
         using type = FEValuesExtractors::Tensor<2>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<2, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -947,9 +943,6 @@ namespace WeakForms
                                  SymbolicOpCodes::laplacian>
       {
         using type = FEValuesExtractors::Scalar;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components = 1;
       };
 
       template <typename SpaceType>
@@ -957,10 +950,6 @@ namespace WeakForms
                                  SymbolicOpCodes::third_derivative>
       {
         using type = FEValuesExtractors::Tensor<3>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<3, spacedim>::n_independent_components;
       };
 
 
@@ -970,10 +959,6 @@ namespace WeakForms
                                  SymbolicOpCodes::value>
       {
         using type = FEValuesExtractors::Vector;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<1, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -981,10 +966,6 @@ namespace WeakForms
                                  SymbolicOpCodes::gradient>
       {
         using type = FEValuesExtractors::Tensor<2>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<2, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -992,10 +973,6 @@ namespace WeakForms
                                  SymbolicOpCodes::symmetric_gradient>
       {
         using type = FEValuesExtractors::SymmetricTensor<2>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   SymmetricTensor<2, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1003,9 +980,6 @@ namespace WeakForms
                                  SymbolicOpCodes::divergence>
       {
         using type = FEValuesExtractors::Scalar;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components = 1;
       };
 
       template <typename SpaceType>
@@ -1013,10 +987,6 @@ namespace WeakForms
                                  SymbolicOpCodes::curl>
       {
         using type = FEValuesExtractors::Vector;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<1, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1024,10 +994,6 @@ namespace WeakForms
                                  SymbolicOpCodes::hessian>
       {
         using type = FEValuesExtractors::Tensor<3>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<3, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1035,10 +1001,6 @@ namespace WeakForms
                                  SymbolicOpCodes::third_derivative>
       {
         using type = FEValuesExtractors::Tensor<4>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<4, spacedim>::n_independent_components;
       };
 
 
@@ -1048,10 +1010,6 @@ namespace WeakForms
                                  SymbolicOpCodes::value>
       {
         using type = FEValuesExtractors::Tensor<2>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<2, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1059,10 +1017,6 @@ namespace WeakForms
                                  SymbolicOpCodes::divergence>
       {
         using type = FEValuesExtractors::Vector;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<1, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1070,10 +1024,6 @@ namespace WeakForms
                                  SymbolicOpCodes::gradient>
       {
         using type = FEValuesExtractors::Tensor<3>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<3, spacedim>::n_independent_components;
       };
 
 
@@ -1083,10 +1033,6 @@ namespace WeakForms
                                  SymbolicOpCodes::value>
       {
         using type = FEValuesExtractors::SymmetricTensor<2>;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   SymmetricTensor<2, spacedim>::n_independent_components;
       };
 
       template <typename SpaceType>
@@ -1094,10 +1040,6 @@ namespace WeakForms
                                  SymbolicOpCodes::divergence>
       {
         using type = FEValuesExtractors::Vector;
-
-        // template <int spacedim>
-        // static constexpr unsigned int n_components =
-        //   Tensor<1, spacedim>::n_independent_components;
       };
     } // namespace internal
 
@@ -1108,7 +1050,8 @@ namespace WeakForms
     /**
      * Extract the shape function values from a finite element subspace.
      *
-     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a test space or trial space
      */
     template <typename SubSpaceViewsType>
@@ -1119,8 +1062,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpValueBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::value>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1129,10 +1070,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::value>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::value>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1145,18 +1082,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1168,22 +1093,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -1260,8 +1170,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpGradientBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::gradient>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1270,10 +1178,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::gradient>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::gradient>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1295,23 +1199,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1323,22 +1210,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -1416,8 +1288,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpSymmetricGradientBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::symmetric_gradient>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1426,10 +1296,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::symmetric_gradient>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::symmetric_gradient>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1448,23 +1314,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1476,22 +1325,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -1569,8 +1403,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpDivergenceBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::divergence>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1579,10 +1411,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::divergence>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::divergence>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1606,23 +1434,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1634,22 +1445,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -1726,8 +1522,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpCurlBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::curl>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1735,10 +1529,6 @@ namespace WeakForms
       using SymbolicOpExtractor_t =
         internal::SymbolicOpExtractor<SubSpaceViewsType, SymbolicOpCodes::curl>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::curl>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1763,23 +1553,6 @@ namespace WeakForms
         dimension == 3,
         "The curl operation for the selected subspace view is only implemented in 3d.");
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1791,22 +1564,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -1883,8 +1641,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpLaplacianBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::laplacian>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -1893,10 +1649,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::laplacian>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::laplacian>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1915,23 +1667,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -1943,22 +1678,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -2035,8 +1755,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpHessianBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::hessian>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -2045,10 +1763,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::hessian>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::hessian>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2068,23 +1782,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2096,22 +1793,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -2189,8 +1871,6 @@ namespace WeakForms
         is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpThirdDerivativeBase<SubSpaceViewsType>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<SubSpaceViewsType,
-    // SymbolicOpCodes::third_derivative>>
     {
       using View_t  = SubSpaceViewsType;
       using Space_t = typename View_t::SpaceType;
@@ -2199,10 +1879,6 @@ namespace WeakForms
         internal::SymbolicOpExtractor<SubSpaceViewsType,
                                       SymbolicOpCodes::third_derivative>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<View_t, SymbolicOpCodes::third_derivative>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2222,23 +1898,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2250,22 +1909,7 @@ namespace WeakForms
 
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
-
-      // using ShapeFunctionBase_t::operator();
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       /**
        * Return all shape function values all quadrature points.
@@ -2364,23 +2008,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2390,18 +2017,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution values at all quadrature points
       template <typename ScalarType>
@@ -2466,23 +2081,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2492,21 +2090,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // using Base_t::as_ascii;
-      // using Base_t::as_latex;
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution gradients at all quadrature points
       template <typename ScalarType>
@@ -2580,23 +2163,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2606,18 +2172,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
@@ -2698,23 +2252,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      /**
-      //  * The extractor corresponding to the operation performed on the
-      subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2724,18 +2261,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution divergences at all quadrature points
       template <typename ScalarType>
@@ -2807,23 +2332,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       // In dim==2, the curl operation returns a interestingly dimensioned
       // tensor that is not easily compatible with this framework.
       static_assert(
@@ -2839,18 +2347,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
@@ -2922,23 +2418,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -2948,18 +2427,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution Laplacian at all quadrature points
       template <typename ScalarType>
@@ -3035,23 +2502,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -3061,18 +2511,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution symmetric gradients at all quadrature points
       template <typename ScalarType>
@@ -3148,23 +2586,6 @@ namespace WeakForms
        */
       static const unsigned int space_dimension = View_t::space_dimension;
 
-      // /**
-      //  * Number of independent components associated with this field.
-      //  */
-      // static const unsigned int n_components =
-      //   SymbolicOpExtractor_t::template n_components<space_dimension>;
-
-      // /**
-      //  * The extractor corresponding to the view itself
-      //  */
-      // using view_extractor_type = typename View_t::extractor_type;
-
-      // /**
-      //  * The extractor corresponding to the operation performed on the
-      //  subspace
-      //  */
-      // using extractor_type = typename SymbolicOpExtractor_t::type;
-
       template <typename ScalarType>
       using value_type = typename Base_t::template value_type<ScalarType>;
 
@@ -3174,18 +2595,6 @@ namespace WeakForms
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
       {}
-
-      // const view_extractor_type &
-      // get_extractor() const
-      // {
-      //   return this->get_operand().get_extractor();
-      // }
-
-      // extractor_type
-      // get_op_extractor(const unsigned int first_component = 0) const
-      // {
-      //   return extractor_type(first_component);
-      // }
 
       // Return solution third derivatives at all quadrature points
       template <typename ScalarType>

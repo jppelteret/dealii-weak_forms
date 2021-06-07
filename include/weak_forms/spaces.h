@@ -754,20 +754,6 @@ namespace WeakForms
 
 
 
-  // namespace Linear
-  // {
-  //   template <int dim, int spacedim = dim>
-  //   using TestFunction = WeakForms::TestFunction<dim, spacedim>;
-
-  //   template <int dim, int spacedim = dim>
-  //   using TrialSolution = WeakForms::TrialSolution<dim, spacedim>;
-
-  //   template <int dim, int spacedim = dim>
-  //   using Solution = WeakForms::Solution<dim, spacedim>;
-  // } // namespace Linear
-
-
-
   namespace NonLinear
   {
     template <int dim, int spacedim = dim>
@@ -845,7 +831,7 @@ private:                                                                       \
 
 
     /* ---- Mix-in classes ---- */
-    // TODO[JPP]: Use CRTP here?
+
     template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpValueBase
     {
@@ -1222,105 +1208,6 @@ private:                                                                       \
 
     /* ---- Finite element spaces: Test functions and trial solutions ---- */
 
-    // // A little bit of CRTP, with a workaround to deal with templates
-    // // in the derived class.
-    // // See https://stackoverflow.com/a/45801893
-    // template <typename Derived>
-    // struct SymbolicOpShapeFunctionTraits;
-
-    // template <typename Derived>
-    // class SymbolicOpShapeFunctionBase
-    // {
-    //   protected:
-
-    //   SymbolicOpShapeFunctionBase(const Derived &derived)
-    //     : derived(derived)
-    //   {}
-
-    //   class AccessKey
-    //   {
-    //     friend class SymbolicOpShapeFunctionBase<Derived>;
-    //     AccessKey(){}
-    //   };
-
-    //   public:
-    //   /**
-    //    * Dimension in which this object operates.
-    //    */
-    //   static const unsigned int dimension = Derived::dimension;
-
-    //   /**
-    //    * Dimension of the space in which this object operates.
-    //    */
-    //   static const unsigned int space_dimension = Derived::space_dimension;
-
-    //   template <typename ScalarType>
-    //   using value_type = typename Derived::template value_type<ScalarType>;
-
-    //   template <typename ScalarType>
-    //   using qp_value_type = typename Derived::template
-    //   qp_value_type<ScalarType>;
-
-    //   template <typename ScalarType>
-    //   using return_type = typename Derived::template
-    //   dof_value_type<ScalarType>;
-
-    //   /**
-    //    * Return all shape function values all quadrature points.
-    //    *
-    //    * The outer index is the shape function, and the inner index
-    //    * is the quadrature point.
-    //    *
-    //    * @tparam ScalarType
-    //    * @param fe_values_dofs
-    //    * @param fe_values_op
-    //    * @return return_type<ScalarType>
-    //    */
-    //   template <typename ScalarType>
-    //   return_type<ScalarType>
-    //   operator()(const FEValuesBase<dimension, space_dimension>
-    //   &fe_values_dofs,
-    //              const FEValuesBase<dimension, space_dimension>
-    //              &fe_values_op) const
-    //   {
-    //     return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-    //     for (const auto dof_index : fe_values_dofs.dof_indices())
-    //     {
-    //       out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-    //       for (const auto q_point : fe_values_op.quadrature_point_indices())
-    //         out[dof_index].emplace_back(derived.template
-    //         operator()<ScalarType>(fe_values_op,
-    //                                                                             dof_index,
-    //                                                                             q_point,
-    //                                                                             AccessKey()));
-    //     }
-
-    //     return out;
-    //   }
-
-    // private:
-    //   const Derived &derived;
-
-    // TODO[JPP]: Put this in public section of derived classes
-    // // Return single entry
-    // template <typename ScalarType>
-    // const value_type<ScalarType> &
-    // operator()(const FEValuesBase<dim, spacedim> &fe_values,
-    //            const unsigned int                 dof_index,
-    //            const unsigned int                 q_point,
-    //            const AccessKey) const
-    // {
-    //   Assert(dof_index < fe_values.dofs_per_cell,
-    //          ExcIndexRange(dof_index, 0, fe_values.dofs_per_cell));
-    //   Assert(q_point < fe_values.n_quadrature_points,
-    //          ExcIndexRange(q_point, 0, fe_values.n_quadrature_points));
-
-    //   return fe_values.shape_value(dof_index, q_point);
-    // }
-    // };
-
 
     /**
      * Extract the shape function values from a finite element space.
@@ -1331,15 +1218,9 @@ private:                                                                       \
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::value>
       : public SymbolicOpValueBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::value>>
     {
       using Base_t = SymbolicOpValueBase<Space<dim, spacedim>>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::value>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1360,8 +1241,6 @@ private:                                                                       \
 
       template <typename ScalarType>
       using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
 
       /**
        * Return all shape function values all quadrature points.
@@ -1398,7 +1277,6 @@ private:                                                                       \
       // for test functions / trial solutions.
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
 
       // Return single entry
@@ -1428,16 +1306,9 @@ private:                                                                       \
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::gradient>
       : public SymbolicOpGradientBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::gradient>>
     {
       using Base_t = SymbolicOpGradientBase<Space<dim, spacedim>>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::gradient>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1457,8 +1328,6 @@ private:                                                                       \
 
       template <typename ScalarType>
       using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
 
       /**
        * Return all shape function values all quadrature points.
@@ -1495,7 +1364,6 @@ private:                                                                       \
       // for test functions / trial solutions.
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
 
       // Return single entry
@@ -1525,16 +1393,9 @@ private:                                                                       \
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::laplacian>
       : public SymbolicOpLaplacianBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::laplacian>>
     {
       using Base_t = SymbolicOpLaplacianBase<Space<dim, spacedim>>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::laplacian>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1555,8 +1416,6 @@ private:                                                                       \
 
       template <typename ScalarType>
       using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
 
       /**
        * Return all shape function values all quadrature points.
@@ -1593,7 +1452,6 @@ private:                                                                       \
       // for test functions / trial solutions.
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
 
       // Return single entry
@@ -1623,16 +1481,9 @@ private:                                                                       \
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::hessian>
       : public SymbolicOpHessianBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::hessian>>
     {
       using Base_t = SymbolicOpHessianBase<Space<dim, spacedim>>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::hessian>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1653,8 +1504,6 @@ private:                                                                       \
 
       template <typename ScalarType>
       using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
 
       /**
        * Return all shape function values all quadrature points.
@@ -1691,7 +1540,6 @@ private:                                                                       \
       // for test functions / trial solutions.
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
 
       // Return single entry
@@ -1722,16 +1570,9 @@ private:                                                                       \
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::third_derivative>
       : public SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::third_derivative>>
     {
       using Base_t = SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>;
       using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::third_derivative>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
 
     public:
       /**
@@ -1752,8 +1593,6 @@ private:                                                                       \
 
       template <typename ScalarType>
       using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
 
       /**
        * Return all shape function values all quadrature points.
@@ -1790,7 +1629,6 @@ private:                                                                       \
       // for test functions / trial solutions.
       explicit SymbolicOp(const Op &operand)
         : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
       {}
 
       // Return single entry
@@ -1893,12 +1731,6 @@ private:                                                                       \
             "to retrieve its value."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a "get_function_values_from_local_dof_values()"
-        // // function fe_values.get_function_values(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
 
@@ -1959,11 +1791,7 @@ private:                                                                       \
             "Use a weak form subspace extractor to isolate a component of the field solution before trying "
             "to retrieve its gradient."));
 
-        return_type<ScalarType> out; //(fe_values.n_quadrature_points);
-        // Need to implement a
-        // "get_function_gradients_from_local_dof_values()" function
-        // fe_values.get_function_gradients(solution_local_dof_values, out);
-        return out;
+        return return_type<ScalarType>();
       }
     };
 
@@ -2025,12 +1853,6 @@ private:                                                                       \
             "to retrieve its Laplacian."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // // "get_function_laplacians_from_local_dof_values()" function
-        // // fe_values.get_function_laplacians(solution_local_dof_values, out);
-        // return out;
       }
     };
 
@@ -2092,14 +1914,6 @@ private:                                                                       \
             "to retrieve its Hessian."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // "get_function_hessians_from_local_dof_values()"
-        // // function
-        // fe_values.get_function_hessians(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
 
@@ -2162,14 +1976,6 @@ private:                                                                       \
             "to retrieve its third derivative."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // // "get_function_third_derivatives_from_local_dof_values()" function
-        // //
-        // fe_values.get_function_third_derivatives(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
 
