@@ -790,39 +790,74 @@ namespace WeakForms
 {
   namespace Operators
   {
+    /**
+     *
+     * @note Add at end due to reliance on @p value_type
+     */
+#define DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(ClassName, Op_, solution_index_) \
+public:                                                                        \
+  /**                                                                          \
+   *                                                                           \
+   */                                                                          \
+  using Op = Op_;                                                              \
+  /**                                                                          \
+   * Value at all quadrature points                                            \
+   */                                                                          \
+  template <typename ScalarType>                                               \
+  using qp_value_type = std::vector<value_type<ScalarType>>;                   \
+  /**                                                                          \
+   * Value for all DoFs at all quadrature points                               \
+   */                                                                          \
+  template <typename ScalarType>                                               \
+  using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
+  /**                                                                          \
+   * The index in the solution history that this field solution                \
+   * corresponds to. The default value (0) indicates that it relates           \
+   * to the current solution.                                                  \
+   */                                                                          \
+  static const types::solution_index solution_index = solution_index_;         \
+                                                                               \
+  types::field_index get_field_index() const                                   \
+  {                                                                            \
+    return get_operand().get_field_index();                                    \
+  }                                                                            \
+                                                                               \
+protected:                                                                     \
+  /**                                                                          \
+   * Allow access to get_operand()                                             \
+   */                                                                          \
+  friend WeakForms::SelfLinearization::internal::ConvertTo;                    \
+  /**                                                                          \
+   * Only want this to be a base class                                         \
+   */                                                                          \
+  explicit ClassName(const Op &operand)                                        \
+    : operand(operand.clone())                                                 \
+  {}                                                                           \
+                                                                               \
+  const Op &get_operand() const                                                \
+  {                                                                            \
+    Assert(operand, ExcNotInitialized());                                      \
+    return *operand;                                                           \
+  }                                                                            \
+                                                                               \
+private:                                                                       \
+  const std::shared_ptr<Op> operand;
+
+
     /* ---- Mix-in classes ---- */
     // TODO[JPP]: Use CRTP here?
     template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpValueBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template value_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = Op::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template value_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -852,24 +887,9 @@ namespace WeakForms
         return UpdateFlags::update_values;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpValueBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpValueBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -877,33 +897,12 @@ namespace WeakForms
     class SymbolicOpGradientBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template gradient_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::gradient;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -933,24 +932,9 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpGradientBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpGradientBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -958,35 +942,14 @@ namespace WeakForms
     class SymbolicOpSymmetricGradientBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type =
-        typename Op::template symmetric_gradient_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::symmetric_gradient;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type =
+        typename Op_::template symmetric_gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1016,24 +979,9 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpSymmetricGradientBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpSymmetricGradientBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -1041,36 +989,14 @@ namespace WeakForms
     class SymbolicOpDivergenceBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template divergence_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      // static const int rank = value_type<double>::rank;
-      static const int rank =
-        Op_::rank; // The value_type<> might be a scalar or tensor, so we
-                   // can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::divergence;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template divergence_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1100,24 +1026,9 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpDivergenceBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpDivergenceBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -1125,33 +1036,13 @@ namespace WeakForms
     class SymbolicOpCurlBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template curl_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::curl;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template curl_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+      static_assert(rank == 1, "Invalid rank for curl operation");
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1181,24 +1072,9 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpCurlBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpCurlBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -1206,36 +1082,14 @@ namespace WeakForms
     class SymbolicOpLaplacianBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template laplacian_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      // static const int rank = value_type<double>::rank;
-      static const int rank =
-        Op_::rank; // The value_type<> might be a scalar or tensor, so we
-                   // can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::laplacian;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template laplacian_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1265,24 +1119,9 @@ namespace WeakForms
         return UpdateFlags::update_hessians;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpLaplacianBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -1290,35 +1129,12 @@ namespace WeakForms
     class SymbolicOpHessianBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template hessian_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-      // static const int rank = Op_::rank; // The value_type<> might be a
-      // scalar or tensor, so we can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::hessian;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template hessian_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1348,24 +1164,9 @@ namespace WeakForms
         return UpdateFlags::update_hessians;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpHessianBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpHessianBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
@@ -1373,37 +1174,14 @@ namespace WeakForms
     class SymbolicOpThirdDerivativeBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type =
-        typename Op::template third_derivative_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const types::solution_index solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-      // static const int rank = Op_::rank; // The value_type<> might be a
-      // scalar or tensor, so we can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::third_derivative;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type =
+        typename Op_::template third_derivative_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1433,25 +1211,13 @@ namespace WeakForms
         return UpdateFlags::update_3rd_derivatives;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpThirdDerivativeBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpThirdDerivativeBase,
+                                            Op_,
+                                            solution_index_)
     };
+
+
+#undef DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL
 
 
     /* ---- Finite element spaces: Test functions and trial solutions ---- */
