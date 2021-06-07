@@ -369,38 +369,125 @@ namespace WeakForms
     };
 
 
+    namespace internal
+    {
+      template <typename ExtractorType>
+      struct ExtractorToView;
+
+      template <>
+      struct ExtractorToView<FEValuesExtractors::Scalar>
+      {
+        static const int rank = 0;
+
+        template <int dim, int spacedim>
+        using type = FEValuesViews::Scalar<dim, spacedim>;
+      };
+
+      template <>
+      struct ExtractorToView<FEValuesExtractors::Vector>
+      {
+        static const int rank = 1;
+
+        template <int dim, int spacedim>
+        using type = FEValuesViews::Vector<dim, spacedim>;
+      };
+
+      template <int rank_>
+      struct ExtractorToView<FEValuesExtractors::Tensor<rank_>>
+      {
+        static const int rank = rank_;
+
+        template <int dim, int spacedim>
+        using type = FEValuesViews::Tensor<rank_, dim, spacedim>;
+      };
+
+      template <int rank_>
+      struct ExtractorToView<FEValuesExtractors::SymmetricTensor<rank_>>
+      {
+        static const int rank = rank_;
+
+        template <int dim, int spacedim>
+        using type = FEValuesViews::SymmetricTensor<rank_, dim, spacedim>;
+      };
+    } // namespace internal
+
+
+/**
+ * A macro to implement the common parts of a subspace view class.
+ * It is expected that the unary op derives from a
+ * SubSpaceViewBase<SpaceType, FEValuesExtractors::<TYPE>> .
+ *
+ * What remains to be defined are:
+ * - static const int rank
+ *
+ * @note The @p ClassName should match the type that is used in the
+ * FEValuesExtractors and FEValuesViews namespaces.
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(ClassName,                      \
+                                          SpaceType_,                     \
+                                          FEValuesExtractorType)          \
+private:                                                                  \
+  using Base_t = SubSpaceViewBase<SpaceType_, FEValuesExtractorType>;     \
+                                                                          \
+public:                                                                   \
+  /**                                                                     \
+   *                                                                      \
+   */                                                                     \
+  using SpaceType = SpaceType_;                                           \
+                                                                          \
+  /**                                                                     \
+   *                                                                      \
+   */                                                                     \
+  using extractor_type = typename Base_t::extractor_type;                 \
+                                                                          \
+  /**                                                                     \
+   * Dimension in which this object operates.                             \
+   */                                                                     \
+  static const unsigned int dimension = SpaceType::dimension;             \
+                                                                          \
+  /**                                                                     \
+   * Dimension of the subspace in which this object operates.             \
+   */                                                                     \
+  static const unsigned int space_dimension = SpaceType::space_dimension; \
+  /**                                                                     \
+   * Rank of subspace                                                     \
+   */                                                                     \
+  static const int rank =                                                 \
+    internal::ExtractorToView<FEValuesExtractorType>::rank;               \
+                                                                          \
+  /**                                                                     \
+   *                                                                      \
+   */                                                                     \
+  using FEValuesViewsType = typename internal::ExtractorToView<           \
+    FEValuesExtractorType>::template type<dimension, space_dimension>;    \
+                                                                          \
+  explicit ClassName(const SpaceType &            space,                  \
+                     const FEValuesExtractorType &extractor)              \
+    : Base_t(space, extractor)                                            \
+  {}                                                                      \
+                                                                          \
+  ClassName(const ClassName &) = default;                                 \
+                                                                          \
+  virtual ClassName *clone() const override                               \
+  {                                                                       \
+    return new ClassName(*this);                                          \
+  }
+
+
     template <typename SpaceType_>
     class Scalar final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Scalar>
     {
-      using Base_t = SubSpaceViewBase<SpaceType_, FEValuesExtractors::Scalar>;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = SpaceType_::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = SpaceType_::space_dimension;
-
-      /**
-       * Rank of subspace
-       */
-      static const int rank = 0;
-
-      static_assert(rank == SpaceType_::rank,
+      DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Scalar,
+                                        SpaceType_,
+                                        FEValuesExtractors::Scalar)
+      static_assert(rank == SpaceType::rank,
                     "Unexpected rank in parent space.");
 
-      using SpaceType = SpaceType_;
-
-      using extractor_type = typename Base_t::extractor_type;
-
-      using FEValuesViewsType =
-        FEValuesViews::Scalar<dimension, space_dimension>;
-
+    public:
       template <typename ScalarType>
       using value_type =
         typename FEValuesViewsType::template solution_value_type<ScalarType>;
@@ -422,19 +509,6 @@ namespace WeakForms
       using third_derivative_type =
         typename FEValuesViewsType::template solution_third_derivative_type<
           ScalarType>;
-
-      explicit Scalar(const SpaceType &                 space,
-                      const FEValuesExtractors::Scalar &extractor)
-        : Base_t(space, extractor)
-      {}
-
-      Scalar(const Scalar &) = default;
-
-      virtual Scalar *
-      clone() const override
-      {
-        return new Scalar(*this);
-      }
 
       // Operators: Test functions, trial solutions, and field solutions
 
@@ -526,31 +600,11 @@ namespace WeakForms
     class Vector final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Vector>
     {
-      using Base_t = SubSpaceViewBase<SpaceType_, FEValuesExtractors::Vector>;
+      DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Vector,
+                                        SpaceType_,
+                                        FEValuesExtractors::Vector)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = SpaceType_::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = SpaceType_::space_dimension;
-
-      /**
-       * Rank of subspace
-       */
-      static const int rank = 1;
-
-      using SpaceType = SpaceType_;
-
-      using extractor_type = typename Base_t::extractor_type;
-
-      using FEValuesViewsType =
-        FEValuesViews::Vector<dimension, space_dimension>;
-
       template <typename ScalarType>
       using value_type =
         typename FEValuesViewsType::template solution_value_type<ScalarType>;
@@ -581,19 +635,6 @@ namespace WeakForms
       using third_derivative_type =
         typename FEValuesViewsType::template solution_third_derivative_type<
           ScalarType>;
-
-      explicit Vector(const SpaceType &                 space,
-                      const FEValuesExtractors::Vector &extractor)
-        : Base_t(space, extractor)
-      {}
-
-      Vector(const Vector &) = default;
-
-      virtual Vector *
-      clone() const override
-      {
-        return new Vector(*this);
-      }
 
       // Operators: Test functions, trial solutions, and field solutions
 
@@ -717,31 +758,11 @@ namespace WeakForms
     class Tensor final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Tensor<rank_>>
     {
-      using Base_t =
-        SubSpaceViewBase<SpaceType_, FEValuesExtractors::Tensor<rank_>>;
+      DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Tensor,
+                                        SpaceType_,
+                                        FEValuesExtractors::Tensor<rank_>)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = SpaceType_::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = SpaceType_::space_dimension;
-
-      /**
-       * Rank of subspace
-       */
-      static const int rank = rank_;
-
-      using SpaceType = SpaceType_;
-
-      using extractor_type = typename Base_t::extractor_type;
-
-      using FEValuesViewsType = FEValuesViews::Tensor<rank_, space_dimension>;
-
       template <typename ScalarType>
       using value_type =
         typename FEValuesViewsType::template solution_value_type<ScalarType>;
@@ -754,19 +775,6 @@ namespace WeakForms
       using divergence_type =
         typename FEValuesViewsType::template solution_divergence_type<
           ScalarType>;
-
-      explicit Tensor(const SpaceType &                        space,
-                      const FEValuesExtractors::Tensor<rank_> &extractor)
-        : Base_t(space, extractor)
-      {}
-
-      Tensor(const Tensor &) = default;
-
-      virtual Tensor *
-      clone() const override
-      {
-        return new Tensor(*this);
-      }
 
       // Operators: Test functions, trial solutions, and field solutions
 
@@ -827,33 +835,12 @@ namespace WeakForms
       : public SubSpaceViewBase<SpaceType_,
                                 FEValuesExtractors::SymmetricTensor<rank_>>
     {
-      using Base_t =
-        SubSpaceViewBase<SpaceType_,
-                         FEValuesExtractors::SymmetricTensor<rank_>>;
+      DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(
+        SymmetricTensor,
+        SpaceType_,
+        FEValuesExtractors::SymmetricTensor<rank_>)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = SpaceType_::dimension;
-
-      /**
-       * Dimension of the subspace in which this object operates.
-       */
-      static const unsigned int space_dimension = SpaceType_::space_dimension;
-
-      /**
-       * Rank of subspace
-       */
-      static const int rank = rank_;
-
-      using SpaceType = SpaceType_;
-
-      using extractor_type = typename Base_t::extractor_type;
-
-      using FEValuesViewsType =
-        FEValuesViews::SymmetricTensor<rank_, space_dimension>;
-
       template <typename ScalarType>
       using value_type =
         typename FEValuesViewsType::template solution_value_type<ScalarType>;
@@ -862,20 +849,6 @@ namespace WeakForms
       using divergence_type =
         typename FEValuesViewsType::template solution_divergence_type<
           ScalarType>;
-
-      explicit SymmetricTensor(
-        const SpaceType &                                 space,
-        const FEValuesExtractors::SymmetricTensor<rank_> &extractor)
-        : Base_t(space, extractor)
-      {}
-
-      SymmetricTensor(const SymmetricTensor &) = default;
-
-      virtual SymmetricTensor *
-      clone() const override
-      {
-        return new SymmetricTensor(*this);
-      }
 
       // Operators: Test functions, trial solutions, and field solutions
 
@@ -913,6 +886,8 @@ namespace WeakForms
         return WeakForms::divergence<solution_index>(*this);
       }
     };
+
+#undef DEAL_II_SUBSPACE_VIEW_COMMON_IMPL
 
   } // namespace SubSpaceViews
 
