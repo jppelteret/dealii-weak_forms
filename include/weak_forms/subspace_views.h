@@ -402,24 +402,26 @@ namespace WeakForms
         FEValuesViews::Scalar<dimension, space_dimension>;
 
       template <typename ScalarType>
-      using OutputType =
-        typename FEValuesViewsType::template OutputType<ScalarType>;
+      using value_type =
+        typename FEValuesViewsType::template solution_value_type<ScalarType>;
 
       template <typename ScalarType>
-      using value_type = typename OutputType<ScalarType>::value_type;
+      using gradient_type =
+        typename FEValuesViewsType::template solution_gradient_type<ScalarType>;
 
       template <typename ScalarType>
-      using gradient_type = typename OutputType<ScalarType>::gradient_type;
+      using hessian_type =
+        typename FEValuesViewsType::template solution_hessian_type<ScalarType>;
 
       template <typename ScalarType>
-      using hessian_type = typename OutputType<ScalarType>::hessian_type;
-
-      template <typename ScalarType>
-      using laplacian_type = typename OutputType<ScalarType>::laplacian_type;
+      using laplacian_type =
+        typename FEValuesViewsType::template solution_laplacian_type<
+          ScalarType>;
 
       template <typename ScalarType>
       using third_derivative_type =
-        typename OutputType<ScalarType>::third_derivative_type;
+        typename FEValuesViewsType::template solution_third_derivative_type<
+          ScalarType>;
 
       explicit Scalar(const SpaceType &                 space,
                       const FEValuesExtractors::Scalar &extractor)
@@ -550,31 +552,35 @@ namespace WeakForms
         FEValuesViews::Vector<dimension, space_dimension>;
 
       template <typename ScalarType>
-      using OutputType =
-        typename FEValuesViewsType::template OutputType<ScalarType>;
+      using value_type =
+        typename FEValuesViewsType::template solution_value_type<ScalarType>;
 
       template <typename ScalarType>
-      using value_type = typename OutputType<ScalarType>::value_type;
-
-      template <typename ScalarType>
-      using gradient_type = typename OutputType<ScalarType>::gradient_type;
+      using gradient_type =
+        typename FEValuesViewsType::template solution_gradient_type<ScalarType>;
 
       template <typename ScalarType>
       using symmetric_gradient_type =
-        typename OutputType<ScalarType>::symmetric_gradient_type;
+        typename FEValuesViewsType::template solution_symmetric_gradient_type<
+          ScalarType>;
 
       template <typename ScalarType>
-      using divergence_type = typename OutputType<ScalarType>::divergence_type;
+      using divergence_type =
+        typename FEValuesViewsType::template solution_divergence_type<
+          ScalarType>;
 
       template <typename ScalarType>
-      using curl_type = typename OutputType<ScalarType>::curl_type;
+      using curl_type =
+        typename FEValuesViewsType::template solution_curl_type<ScalarType>;
 
       template <typename ScalarType>
-      using hessian_type = typename OutputType<ScalarType>::hessian_type;
+      using hessian_type =
+        typename FEValuesViewsType::template solution_hessian_type<ScalarType>;
 
       template <typename ScalarType>
       using third_derivative_type =
-        typename OutputType<ScalarType>::third_derivative_type;
+        typename FEValuesViewsType::template solution_third_derivative_type<
+          ScalarType>;
 
       explicit Vector(const SpaceType &                 space,
                       const FEValuesExtractors::Vector &extractor)
@@ -737,17 +743,17 @@ namespace WeakForms
       using FEValuesViewsType = FEValuesViews::Tensor<rank_, space_dimension>;
 
       template <typename ScalarType>
-      using OutputType =
-        typename FEValuesViewsType::template OutputType<ScalarType>;
+      using value_type =
+        typename FEValuesViewsType::template solution_value_type<ScalarType>;
 
       template <typename ScalarType>
-      using value_type = typename OutputType<ScalarType>::value_type;
+      using gradient_type =
+        typename FEValuesViewsType::template solution_gradient_type<ScalarType>;
 
       template <typename ScalarType>
-      using gradient_type = typename OutputType<ScalarType>::gradient_type;
-
-      template <typename ScalarType>
-      using divergence_type = typename OutputType<ScalarType>::divergence_type;
+      using divergence_type =
+        typename FEValuesViewsType::template solution_divergence_type<
+          ScalarType>;
 
       explicit Tensor(const SpaceType &                        space,
                       const FEValuesExtractors::Tensor<rank_> &extractor)
@@ -849,14 +855,13 @@ namespace WeakForms
         FEValuesViews::SymmetricTensor<rank_, space_dimension>;
 
       template <typename ScalarType>
-      using OutputType =
-        typename FEValuesViewsType::template OutputType<ScalarType>;
+      using value_type =
+        typename FEValuesViewsType::template solution_value_type<ScalarType>;
 
       template <typename ScalarType>
-      using value_type = typename OutputType<ScalarType>::value_type;
-
-      template <typename ScalarType>
-      using divergence_type = typename OutputType<ScalarType>::divergence_type;
+      using divergence_type =
+        typename FEValuesViewsType::template solution_divergence_type<
+          ScalarType>;
 
       explicit SymmetricTensor(
         const SpaceType &                                 space,
