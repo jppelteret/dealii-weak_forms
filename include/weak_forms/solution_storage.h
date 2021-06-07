@@ -24,6 +24,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/types.h>
 
 #include <string>
 
@@ -106,7 +107,7 @@ namespace WeakForms
     const std::vector<ptr_type>    solution_vectors;
 
     const std::string &
-    get_solution_name(const std::size_t index) const
+    get_solution_name(const types::solution_index index) const
     {
       Assert(index < solution_names.size(),
              ExcIndexRange(index, 0, solution_names.size()));
@@ -115,7 +116,7 @@ namespace WeakForms
 
     // TEMP: Move to private section?
     const VectorType &
-    get_solution_vector(const std::size_t index) const
+    get_solution_vector(const types::solution_index index) const
     {
       Assert(index < solution_vectors.size(),
              ExcIndexRange(index, 0, solution_vectors.size()));

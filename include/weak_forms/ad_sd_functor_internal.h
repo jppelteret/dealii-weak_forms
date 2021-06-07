@@ -27,6 +27,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
 #include <weak_forms/spaces.h>
+#include <weak_forms/types.h>
 #include <weak_forms/utilities.h>
 
 #include <string>
@@ -269,7 +270,7 @@ namespace WeakForms
         template <template <class> class SubSpaceViewsType,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index>
+                  types::solution_index                      solution_index>
         struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
           SubSpaceViewsType<SpaceType>,
           OpCode,
@@ -286,7 +287,7 @@ namespace WeakForms
                   int rank,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index>
+                  types::solution_index                      solution_index>
         struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
           SubSpaceViewsType<rank, SpaceType>,
           OpCode,

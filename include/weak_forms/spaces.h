@@ -161,16 +161,16 @@ namespace WeakForms
   {
     // Used to work around the restriction that template arguments
     // for template type parameter must be a type
-    template <std::size_t solution_index_>
+    template <types::solution_index solution_index_>
     struct SolutionIndex
     {
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
     };
   } // namespace internal
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::value,
@@ -180,7 +180,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::gradient,
@@ -190,7 +190,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::laplacian,
@@ -200,7 +200,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::hessian,
@@ -210,7 +210,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::third_derivative,
@@ -639,35 +639,35 @@ namespace WeakForms
       return new FieldSolution(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     value() const
     {
       return WeakForms::value<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     gradient() const
     {
       return WeakForms::gradient<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     laplacian() const
     {
       return WeakForms::laplacian<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     hessian() const
     {
       return WeakForms::hessian<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     third_derivative() const
     {
@@ -791,7 +791,7 @@ namespace WeakForms
   {
     /* ---- Mix-in classes ---- */
     // TODO[JPP]: Use CRTP here?
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpValueBase
     {
     public:
@@ -811,7 +811,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = Op::rank;
 
@@ -872,7 +872,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpGradientBase
     {
     public:
@@ -892,7 +892,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = value_type<double>::rank;
 
@@ -953,7 +953,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpSymmetricGradientBase
     {
     public:
@@ -974,7 +974,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = value_type<double>::rank;
 
@@ -1036,7 +1036,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpDivergenceBase
     {
     public:
@@ -1056,7 +1056,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       // static const int rank = value_type<double>::rank;
       static const int rank =
@@ -1120,7 +1120,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpCurlBase
     {
     public:
@@ -1140,7 +1140,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = value_type<double>::rank;
 
@@ -1201,7 +1201,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpLaplacianBase
     {
     public:
@@ -1221,7 +1221,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       // static const int rank = value_type<double>::rank;
       static const int rank =
@@ -1285,7 +1285,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpHessianBase
     {
     public:
@@ -1305,7 +1305,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = value_type<double>::rank;
       // static const int rank = Op_::rank; // The value_type<> might be a
@@ -1368,7 +1368,7 @@ namespace WeakForms
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpThirdDerivativeBase
     {
     public:
@@ -1389,7 +1389,7 @@ namespace WeakForms
       // The index in the solution history that this field solution
       // corresponds to. The default value (0) indicates that it relates
       // to the current solution.
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
 
       static const int rank = value_type<double>::rank;
       // static const int rank = Op_::rank; // The value_type<> might be a
@@ -2077,7 +2077,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::value,
                      void,
@@ -2143,7 +2143,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::gradient,
                      void,
@@ -2208,7 +2208,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::laplacian,
                      void,
@@ -2275,7 +2275,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::hessian,
                      void,
@@ -2345,7 +2345,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::third_derivative,
                      void,
@@ -2596,7 +2596,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::value,
@@ -2619,7 +2619,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::gradient,
@@ -2642,7 +2642,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::laplacian,
@@ -2665,7 +2665,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::hessian,
@@ -2688,7 +2688,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::third_derivative,

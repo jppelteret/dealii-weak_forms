@@ -94,7 +94,7 @@ namespace WeakForms
         template <template <class> class SubSpaceViewsType,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index,
+                  types::solution_index                      solution_index,
                   typename = typename std::enable_if<
                     is_field_solution<SpaceType>::value>::type>
         static auto
@@ -143,7 +143,7 @@ namespace WeakForms
         template <template <class> class SubSpaceViewsType,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index,
+                  types::solution_index                      solution_index,
                   typename = typename std::enable_if<
                     is_field_solution<SpaceType>::value>::type>
         static auto
@@ -193,7 +193,7 @@ namespace WeakForms
                   int rank,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index,
+                  types::solution_index                      solution_index,
                   typename = typename std::enable_if<
                     is_field_solution_op<SpaceType>::value>::type>
         static auto
@@ -244,7 +244,7 @@ namespace WeakForms
                   int rank,
                   typename SpaceType,
                   enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  std::size_t                                solution_index,
+                  types::solution_index                      solution_index,
                   typename = typename std::enable_if<
                     is_field_solution_op<SpaceType>::value>::type>
         static auto

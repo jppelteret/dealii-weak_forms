@@ -136,7 +136,7 @@ namespace WeakForms
   /* ------------- Finite element subspaces: Field solutions ------------- */
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -148,7 +148,7 @@ namespace WeakForms
   value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -161,7 +161,7 @@ namespace WeakForms
   value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -173,7 +173,7 @@ namespace WeakForms
   gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -187,7 +187,7 @@ namespace WeakForms
     const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -200,7 +200,7 @@ namespace WeakForms
     const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -212,7 +212,7 @@ namespace WeakForms
   divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -226,7 +226,7 @@ namespace WeakForms
     const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -238,7 +238,7 @@ namespace WeakForms
   curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -250,7 +250,7 @@ namespace WeakForms
   laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -262,7 +262,7 @@ namespace WeakForms
   hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-  template <std::size_t solution_index = 0,
+  template <types::solution_index solution_index = 0,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -469,8 +469,8 @@ namespace WeakForms
       // Operators: Field solutions only
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
@@ -479,8 +479,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
@@ -489,8 +489,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       laplacian() const
@@ -499,8 +499,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       hessian() const
@@ -509,8 +509,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       third_derivative() const
@@ -636,8 +636,8 @@ namespace WeakForms
       // Operators: Field solutions only
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
@@ -646,8 +646,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
@@ -656,8 +656,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       symmetric_gradient() const
@@ -666,8 +666,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
@@ -676,8 +676,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       curl() const
@@ -686,8 +686,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       hessian() const
@@ -696,8 +696,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       third_derivative() const
@@ -785,8 +785,8 @@ namespace WeakForms
       // Operators: Field solutions only
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
@@ -795,8 +795,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
@@ -805,8 +805,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
@@ -889,8 +889,8 @@ namespace WeakForms
       // Operators: Field solutions only
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
@@ -899,8 +899,8 @@ namespace WeakForms
       }
 
       template <
-        std::size_t solution_index = 0,
-        typename T                 = SpaceType_,
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
         typename = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
@@ -2358,7 +2358,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::value,
                      typename std::enable_if<is_field_solution<
@@ -2460,7 +2460,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::gradient,
                      typename std::enable_if<is_field_solution<
@@ -2565,7 +2565,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::symmetric_gradient,
                      typename std::enable_if<is_field_solution<
@@ -2676,7 +2676,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::divergence,
                      typename std::enable_if<is_field_solution<
@@ -2793,7 +2793,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::curl,
                      typename std::enable_if<is_field_solution<
@@ -2908,7 +2908,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::laplacian,
                      typename std::enable_if<is_field_solution<
@@ -3018,7 +3018,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::hessian,
                      typename std::enable_if<is_field_solution<
@@ -3131,7 +3131,7 @@ namespace WeakForms
      * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
      * @tparam SpaceType A space type, specifically a solution field
      */
-    template <typename SubSpaceViewsType, std::size_t solution_index>
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
     class SymbolicOp<SubSpaceViewsType,
                      SymbolicOpCodes::third_derivative,
                      typename std::enable_if<is_field_solution<
@@ -3691,7 +3691,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -3725,7 +3725,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -3760,7 +3760,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -3794,7 +3794,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -3835,7 +3835,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -3905,7 +3905,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -3943,7 +3943,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <int, class> class SubSpaceViewsType,
             int rank,
             int dim,
@@ -3979,7 +3979,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -4046,7 +4046,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -4110,7 +4110,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -4169,7 +4169,7 @@ namespace WeakForms
    * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
-  template <std::size_t solution_index,
+  template <types::solution_index solution_index,
             template <class> class SubSpaceViewsType,
             int dim,
             int spacedim>
@@ -4384,7 +4384,7 @@ namespace WeakForms
   template <int                             dim,
             int                             spacedim,
             enum Operators::SymbolicOpCodes OpCode,
-            std::size_t                     solution_index>
+            types::solution_index           solution_index>
   struct is_field_solution_op<
     Operators::SymbolicOp<SubSpaceViews::Scalar<FieldSolution<dim, spacedim>>,
                           OpCode,
@@ -4408,7 +4408,7 @@ namespace WeakForms
   template <int                             dim,
             int                             spacedim,
             enum Operators::SymbolicOpCodes OpCode,
-            std::size_t                     solution_index>
+            types::solution_index           solution_index>
   struct is_field_solution_op<
     Operators::SymbolicOp<SubSpaceViews::Vector<FieldSolution<dim, spacedim>>,
                           OpCode,
@@ -4439,7 +4439,7 @@ namespace WeakForms
             int                             dim,
             int                             spacedim,
             enum Operators::SymbolicOpCodes OpCode,
-            std::size_t                     solution_index>
+            types::solution_index           solution_index>
   struct is_field_solution_op<Operators::SymbolicOp<
     SubSpaceViews::Tensor<rank, FieldSolution<dim, spacedim>>,
     OpCode,
@@ -4469,7 +4469,7 @@ namespace WeakForms
             int                             dim,
             int                             spacedim,
             enum Operators::SymbolicOpCodes OpCode,
-            std::size_t                     solution_index>
+            types::solution_index           solution_index>
   struct is_field_solution_op<Operators::SymbolicOp<
     SubSpaceViews::SymmetricTensor<rank, FieldSolution<dim, spacedim>>,
     OpCode,
