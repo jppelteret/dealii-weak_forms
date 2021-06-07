@@ -14,20 +14,24 @@ INCLUDE_DIRECTORIES(include)
 #   )
 FILE(GLOB_RECURSE TARGET_LIB_INC 
   "${CMAKE_SOURCE_DIR}/include/*.h"
+  "${CMAKE_SOURCE_DIR}/include/weak_forms/*.h"
 )
 
 FILE(GLOB_RECURSE TARGET_LIB_SRC  
   "${CMAKE_SOURCE_DIR}/source/*.cc"
+  "${CMAKE_SOURCE_DIR}/source/weak_forms/*.cc"
   )
 
 # Declare all include files:
 FILE(GLOB_RECURSE TARGET_ALL_INC  
   "${CMAKE_SOURCE_DIR}/include/*.h"
+  "${CMAKE_SOURCE_DIR}/include/weak_forms/*.h"
   )
 
 # Declare all source files:
 FILE(GLOB_RECURSE TARGET_ALL_SRC  
   "${CMAKE_SOURCE_DIR}/source/*.cc"
+  "${CMAKE_SOURCE_DIR}/source/weak_forms/*.cc"
   )
 
 # Declare all test files:
@@ -55,6 +59,10 @@ IF(NOT ${deal.II_FOUND})
     "You may want to either pass a flag -DDEAL_II_DIR=/path/to/deal.II to cmake\n"
     "or set an environment variable \"DEAL_II_DIR\" that contains this path."
     )
+ELSE()
+  MESSAGE(STATUS 
+  "Found deal.II ${DEAL_II_VERSION} installation at location: ${DEAL_II_DIR}"
+  )
 ENDIF()
 
 SET(CLEAN_UP_FILES
