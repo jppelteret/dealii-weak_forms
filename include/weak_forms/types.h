@@ -26,14 +26,19 @@ namespace WeakForms
   namespace types
   {
     using field_index = unsigned int;
-  }
+
+    using solution_index = unsigned int;
+  } // namespace types
 
 
   namespace numbers
   {
     const types::field_index invalid_field_index =
       static_cast<types::field_index>(-1);
-  }
+
+    const types::solution_index invalid_solution_index =
+      static_cast<types::field_index>(-1);
+  } // namespace numbers
 
 } // namespace WeakForms
 

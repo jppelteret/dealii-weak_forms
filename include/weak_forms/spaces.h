@@ -161,16 +161,16 @@ namespace WeakForms
   {
     // Used to work around the restriction that template arguments
     // for template type parameter must be a type
-    template <std::size_t solution_index_>
+    template <types::solution_index solution_index_>
     struct SolutionIndex
     {
-      static const std::size_t solution_index = solution_index_;
+      static const types::solution_index solution_index = solution_index_;
     };
   } // namespace internal
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::value,
@@ -180,7 +180,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::gradient,
@@ -190,7 +190,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::laplacian,
@@ -200,7 +200,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::hessian,
@@ -210,7 +210,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index = 0, int dim, int spacedim>
+  template <types::solution_index solution_index = 0, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::third_derivative,
@@ -247,24 +247,25 @@ namespace WeakForms
     using FEValuesViewsType = FEValuesViews::Scalar<dimension, space_dimension>;
 
     template <typename ScalarType>
-    using OutputType =
-      typename FEValuesViewsType::template OutputType<ScalarType>;
+    using value_type =
+      typename FEValuesViewsType::template solution_value_type<ScalarType>;
 
     template <typename ScalarType>
-    using value_type = typename OutputType<ScalarType>::value_type;
+    using gradient_type =
+      typename FEValuesViewsType::template solution_gradient_type<ScalarType>;
 
     template <typename ScalarType>
-    using gradient_type = typename OutputType<ScalarType>::gradient_type;
+    using hessian_type =
+      typename FEValuesViewsType::template solution_hessian_type<ScalarType>;
 
     template <typename ScalarType>
-    using hessian_type = typename OutputType<ScalarType>::hessian_type;
-
-    template <typename ScalarType>
-    using laplacian_type = typename OutputType<ScalarType>::laplacian_type;
+    using laplacian_type =
+      typename FEValuesViewsType::template solution_laplacian_type<ScalarType>;
 
     template <typename ScalarType>
     using third_derivative_type =
-      typename OutputType<ScalarType>::third_derivative_type;
+      typename FEValuesViewsType::template solution_third_derivative_type<
+        ScalarType>;
 
     virtual ~Space() = default;
 
@@ -639,35 +640,35 @@ namespace WeakForms
       return new FieldSolution(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     value() const
     {
       return WeakForms::value<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     gradient() const
     {
       return WeakForms::gradient<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     laplacian() const
     {
       return WeakForms::laplacian<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     hessian() const
     {
       return WeakForms::hessian<solution_index>(*this);
     }
 
-    template <std::size_t solution_index = 0>
+    template <types::solution_index solution_index = 0>
     auto
     third_derivative() const
     {
@@ -753,20 +754,6 @@ namespace WeakForms
 
 
 
-  // namespace Linear
-  // {
-  //   template <int dim, int spacedim = dim>
-  //   using TestFunction = WeakForms::TestFunction<dim, spacedim>;
-
-  //   template <int dim, int spacedim = dim>
-  //   using TrialSolution = WeakForms::TrialSolution<dim, spacedim>;
-
-  //   template <int dim, int spacedim = dim>
-  //   using Solution = WeakForms::Solution<dim, spacedim>;
-  // } // namespace Linear
-
-
-
   namespace NonLinear
   {
     template <int dim, int spacedim = dim>
@@ -789,39 +776,74 @@ namespace WeakForms
 {
   namespace Operators
   {
+    /**
+     *
+     * @note Add at end due to reliance on @p value_type
+     */
+#define DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(ClassName, Op_, solution_index_) \
+public:                                                                        \
+  /**                                                                          \
+   *                                                                           \
+   */                                                                          \
+  using Op = Op_;                                                              \
+  /**                                                                          \
+   * Value at all quadrature points                                            \
+   */                                                                          \
+  template <typename ScalarType>                                               \
+  using qp_value_type = std::vector<value_type<ScalarType>>;                   \
+  /**                                                                          \
+   * Value for all DoFs at all quadrature points                               \
+   */                                                                          \
+  template <typename ScalarType>                                               \
+  using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
+  /**                                                                          \
+   * The index in the solution history that this field solution                \
+   * corresponds to. The default value (0) indicates that it relates           \
+   * to the current solution.                                                  \
+   */                                                                          \
+  static const types::solution_index solution_index = solution_index_;         \
+                                                                               \
+  types::field_index get_field_index() const                                   \
+  {                                                                            \
+    return get_operand().get_field_index();                                    \
+  }                                                                            \
+                                                                               \
+protected:                                                                     \
+  /**                                                                          \
+   * Allow access to get_operand()                                             \
+   */                                                                          \
+  friend WeakForms::SelfLinearization::internal::ConvertTo;                    \
+  /**                                                                          \
+   * Only want this to be a base class                                         \
+   */                                                                          \
+  explicit ClassName(const Op &operand)                                        \
+    : operand(operand.clone())                                                 \
+  {}                                                                           \
+                                                                               \
+  const Op &get_operand() const                                                \
+  {                                                                            \
+    Assert(operand, ExcNotInitialized());                                      \
+    return *operand;                                                           \
+  }                                                                            \
+                                                                               \
+private:                                                                       \
+  const std::shared_ptr<Op> operand;
+
+
     /* ---- Mix-in classes ---- */
-    // TODO[JPP]: Use CRTP here?
-    template <typename Op_, std::size_t solution_index_ = 0>
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpValueBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template value_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = Op::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template value_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -851,58 +873,22 @@ namespace WeakForms
         return UpdateFlags::update_values;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpValueBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpValueBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpGradientBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template gradient_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::gradient;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -932,60 +918,24 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpGradientBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpGradientBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpSymmetricGradientBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type =
-        typename Op::template symmetric_gradient_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::symmetric_gradient;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type =
+        typename Op_::template symmetric_gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1015,61 +965,24 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpSymmetricGradientBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpSymmetricGradientBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpDivergenceBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template divergence_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      // static const int rank = value_type<double>::rank;
-      static const int rank =
-        Op_::rank; // The value_type<> might be a scalar or tensor, so we
-                   // can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::divergence;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template divergence_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1099,58 +1012,23 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpDivergenceBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpDivergenceBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpCurlBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template curl_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::curl;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template curl_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+      static_assert(rank == 1, "Invalid rank for curl operation");
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1180,61 +1058,24 @@ namespace WeakForms
         return UpdateFlags::update_gradients;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpCurlBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpCurlBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpLaplacianBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template laplacian_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      // static const int rank = value_type<double>::rank;
-      static const int rank =
-        Op_::rank; // The value_type<> might be a scalar or tensor, so we
-                   // can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::laplacian;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      // The value_type<> might be a scalar or tensor, so we can't fetch the
+      // rank from it.
+      static const int rank = Op_::rank;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template laplacian_type<ScalarType>;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1264,60 +1105,22 @@ namespace WeakForms
         return UpdateFlags::update_hessians;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpLaplacianBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpHessianBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type = typename Op::template hessian_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-      // static const int rank = Op_::rank; // The value_type<> might be a
-      // scalar or tensor, so we can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::hessian;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type = typename Op_::template hessian_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1347,62 +1150,24 @@ namespace WeakForms
         return UpdateFlags::update_hessians;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpHessianBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpHessianBase,
+                                            Op_,
+                                            solution_index_)
     };
 
 
-    template <typename Op_, std::size_t solution_index_ = 0>
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpThirdDerivativeBase
     {
     public:
-      using Op = Op_;
-
-      template <typename ScalarType>
-      using value_type =
-        typename Op::template third_derivative_type<ScalarType>;
-
-      // Value at all quadrature points
-      template <typename ScalarType>
-      using qp_value_type = std::vector<value_type<ScalarType>>;
-
-      // Value for all DoFs at all quadrature points
-      template <typename ScalarType>
-      using dof_value_type = std::vector<qp_value_type<ScalarType>>;
-
-      // The index in the solution history that this field solution
-      // corresponds to. The default value (0) indicates that it relates
-      // to the current solution.
-      static const std::size_t solution_index = solution_index_;
-
-      static const int rank = value_type<double>::rank;
-      // static const int rank = Op_::rank; // The value_type<> might be a
-      // scalar or tensor, so we can't fetch the rank from it.
-
       static const enum SymbolicOpCodes op_code =
         SymbolicOpCodes::third_derivative;
 
-      types::field_index
-      get_field_index() const
-      {
-        return get_operand().get_field_index();
-      }
+      template <typename ScalarType>
+      using value_type =
+        typename Op_::template third_derivative_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1432,127 +1197,92 @@ namespace WeakForms
         return UpdateFlags::update_3rd_derivatives;
       }
 
-    protected:
-      // Allow access to get_operand()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
-
-      // Only want this to be a base class
-      explicit SymbolicOpThirdDerivativeBase(const Op &operand)
-        : operand(operand.clone())
-      {}
-
-      const Op &
-      get_operand() const
-      {
-        Assert(operand, ExcNotInitialized());
-        return *operand;
-      }
-
-    private:
-      const std::shared_ptr<Op> operand;
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpThirdDerivativeBase,
+                                            Op_,
+                                            solution_index_)
     };
+
+
+#undef DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL
 
 
     /* ---- Finite element spaces: Test functions and trial solutions ---- */
 
-    // // A little bit of CRTP, with a workaround to deal with templates
-    // // in the derived class.
-    // // See https://stackoverflow.com/a/45801893
-    // template <typename Derived>
-    // struct SymbolicOpShapeFunctionTraits;
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for test functions and trial solution spaces.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<Space<dim, spacedim>> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpBaseType, \
+                                                         dim,                \
+                                                         spacedim)           \
+private:                                                                     \
+  using Base_t = SymbolicOpBaseType<Space<dim, spacedim>>;                   \
+  using typename Base_t::Op;                                                 \
+                                                                             \
+public:                                                                      \
+  /**                                                                        \
+   * Dimension in which this object operates.                                \
+   */                                                                        \
+  static const unsigned int dimension = dim;                                 \
+                                                                             \
+  /**                                                                        \
+   * Dimension of the space in which this object operates.                   \
+   */                                                                        \
+  static const unsigned int space_dimension = spacedim;                      \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using value_type = typename Base_t::template value_type<ScalarType>;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
+                                                                             \
+  /**                                                                        \
+   * Return all shape function values all quadrature points.                 \
+   *                                                                         \
+   * The outer index is the shape function, and the inner index              \
+   * is the quadrature point.                                                \
+   *                                                                         \
+   * @tparam ScalarType                                                      \
+   * @param fe_values_dofs                                                   \
+   * @param fe_values_op                                                     \
+   * @return return_type<ScalarType>                                         \
+   */                                                                        \
+  template <typename ScalarType>                                             \
+  return_type<ScalarType> operator()(                                        \
+    const FEValuesBase<dim, spacedim> &fe_values_dofs,                       \
+    const FEValuesBase<dim, spacedim> &fe_values_op) const                   \
+  {                                                                          \
+    return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);               \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        out[dof_index].reserve(fe_values_op.n_quadrature_points);            \
+                                                                             \
+        for (const auto q_point : fe_values_op.quadrature_point_indices())   \
+          out[dof_index].emplace_back(this->template operator()<ScalarType>( \
+            fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+protected:                                                                   \
+  /**                                                                        \
+   * Only want this to be a base class providing common implementation       \
+   * for test functions / trial solutions.                                   \
+   */                                                                        \
+  explicit SymbolicOp(const Op &operand)                                     \
+    : Base_t(operand)                                                        \
+  {}
 
-    // template <typename Derived>
-    // class SymbolicOpShapeFunctionBase
-    // {
-    //   protected:
-
-    //   SymbolicOpShapeFunctionBase(const Derived &derived)
-    //     : derived(derived)
-    //   {}
-
-    //   class AccessKey
-    //   {
-    //     friend class SymbolicOpShapeFunctionBase<Derived>;
-    //     AccessKey(){}
-    //   };
-
-    //   public:
-    //   /**
-    //    * Dimension in which this object operates.
-    //    */
-    //   static const unsigned int dimension = Derived::dimension;
-
-    //   /**
-    //    * Dimension of the space in which this object operates.
-    //    */
-    //   static const unsigned int space_dimension = Derived::space_dimension;
-
-    //   template <typename ScalarType>
-    //   using value_type = typename Derived::template value_type<ScalarType>;
-
-    //   template <typename ScalarType>
-    //   using qp_value_type = typename Derived::template
-    //   qp_value_type<ScalarType>;
-
-    //   template <typename ScalarType>
-    //   using return_type = typename Derived::template
-    //   dof_value_type<ScalarType>;
-
-    //   /**
-    //    * Return all shape function values all quadrature points.
-    //    *
-    //    * The outer index is the shape function, and the inner index
-    //    * is the quadrature point.
-    //    *
-    //    * @tparam ScalarType
-    //    * @param fe_values_dofs
-    //    * @param fe_values_op
-    //    * @return return_type<ScalarType>
-    //    */
-    //   template <typename ScalarType>
-    //   return_type<ScalarType>
-    //   operator()(const FEValuesBase<dimension, space_dimension>
-    //   &fe_values_dofs,
-    //              const FEValuesBase<dimension, space_dimension>
-    //              &fe_values_op) const
-    //   {
-    //     return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-    //     for (const auto dof_index : fe_values_dofs.dof_indices())
-    //     {
-    //       out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-    //       for (const auto q_point : fe_values_op.quadrature_point_indices())
-    //         out[dof_index].emplace_back(derived.template
-    //         operator()<ScalarType>(fe_values_op,
-    //                                                                             dof_index,
-    //                                                                             q_point,
-    //                                                                             AccessKey()));
-    //     }
-
-    //     return out;
-    //   }
-
-    // private:
-    //   const Derived &derived;
-
-    // TODO[JPP]: Put this in public section of derived classes
-    // // Return single entry
-    // template <typename ScalarType>
-    // const value_type<ScalarType> &
-    // operator()(const FEValuesBase<dim, spacedim> &fe_values,
-    //            const unsigned int                 dof_index,
-    //            const unsigned int                 q_point,
-    //            const AccessKey) const
-    // {
-    //   Assert(dof_index < fe_values.dofs_per_cell,
-    //          ExcIndexRange(dof_index, 0, fe_values.dofs_per_cell));
-    //   Assert(q_point < fe_values.n_quadrature_points,
-    //          ExcIndexRange(q_point, 0, fe_values.n_quadrature_points));
-
-    //   return fe_values.shape_value(dof_index, q_point);
-    // }
-    // };
 
 
     /**
@@ -1564,76 +1294,12 @@ namespace WeakForms
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::value>
       : public SymbolicOpValueBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::value>>
     {
-      using Base_t = SymbolicOpValueBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::value>;
-      // using ShapeFunctionBase_t = SymbolicOpShapeFunctionBase<This>;
-      // using AccessKey = typename ShapeFunctionBase_t::AccessKey;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpValueBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1661,76 +1327,12 @@ namespace WeakForms
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::gradient>
       : public SymbolicOpGradientBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::gradient>>
     {
-      using Base_t = SymbolicOpGradientBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::gradient>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpGradientBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1758,77 +1360,12 @@ namespace WeakForms
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::laplacian>
       : public SymbolicOpLaplacianBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::laplacian>>
     {
-      using Base_t = SymbolicOpLaplacianBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::laplacian>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       value_type<ScalarType>
@@ -1856,77 +1393,12 @@ namespace WeakForms
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::hessian>
       : public SymbolicOpHessianBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::hessian>>
     {
-      using Base_t = SymbolicOpHessianBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::hessian>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(SymbolicOpHessianBase,
+                                                       dim,
+                                                       spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -1955,77 +1427,13 @@ namespace WeakForms
     template <int dim, int spacedim>
     class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::third_derivative>
       : public SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>
-    // , public SymbolicOpShapeFunctionBase<SymbolicOp<Space<dim, spacedim>,
-    // SymbolicOpCodes::third_derivative>>
     {
-      using Base_t = SymbolicOpThirdDerivativeBase<Space<dim, spacedim>>;
-      using typename Base_t::Op;
-
-      // using This = SymbolicOp<Space<dim, spacedim>,
-      // SymbolicOpCodes::third_derivative>; using ShapeFunctionBase_t =
-      // SymbolicOpShapeFunctionBase<This>; using AccessKey = typename
-      // ShapeFunctionBase_t::AccessKey;
-
-    public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template dof_value_type<ScalarType>;
-
-      // using ShapeFunctionBase_t::operator();
-
-      /**
-       * Return all shape function values all quadrature points.
-       *
-       * The outer index is the shape function, and the inner index
-       * is the quadrature point.
-       *
-       * @tparam ScalarType
-       * @param fe_values_dofs
-       * @param fe_values_op
-       * @return return_type<ScalarType>
-       */
-      template <typename ScalarType>
-      return_type<ScalarType>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const
-      {
-        return_type<ScalarType> out(fe_values_dofs.dofs_per_cell);
-
-        for (const auto dof_index : fe_values_dofs.dof_indices())
-          {
-            out[dof_index].reserve(fe_values_op.n_quadrature_points);
-
-            for (const auto q_point : fe_values_op.quadrature_point_indices())
-              out[dof_index].emplace_back(this->template operator()<ScalarType>(
-                fe_values_op, dof_index, q_point));
-          }
-
-        return out;
-      }
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
+        dim,
+        spacedim)
 
     protected:
-      // Only want this to be a base class providing common implementation
-      // for test functions / trial solutions.
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      // , ShapeFunctionBase_t(*this)
-      {}
-
       // Return single entry
       template <typename ScalarType>
       const value_type<ScalarType> &
@@ -2067,8 +1475,50 @@ namespace WeakForms
       };
 
 
+#undef DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_COMMON_IMPL
+
+
 
     /* ------------ Finite element spaces: Solution fields ------------ */
+
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for field solutions.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<FieldSolution<dim, spacedim>, solution_index> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpBaseType, \
+                                                       dim,                \
+                                                       spacedim,           \
+                                                       solution_index)     \
+private:                                                                   \
+  using Base_t =                                                           \
+    SymbolicOpBaseType<FieldSolution<dim, spacedim>, solution_index>;      \
+  using typename Base_t::Op;                                               \
+                                                                           \
+public:                                                                    \
+  /**                                                                      \
+   * Dimension in which this object operates.                              \
+   */                                                                      \
+  static const unsigned int dimension = dim;                               \
+                                                                           \
+  /**                                                                      \
+   * Dimension of the space in which this object operates.                 \
+   */                                                                      \
+  static const unsigned int space_dimension = spacedim;                    \
+                                                                           \
+  template <typename ScalarType>                                           \
+  using value_type = typename Base_t::template value_type<ScalarType>;     \
+                                                                           \
+  template <typename ScalarType>                                           \
+  using return_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                           \
+  explicit SymbolicOp(const Op &operand)                                   \
+    : Base_t(operand)                                                      \
+  {}
 
 
     /**
@@ -2077,38 +1527,19 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::value,
                      void,
                      WeakForms::internal::SolutionIndex<solution_index>>
       : public SymbolicOpValueBase<FieldSolution<dim, spacedim>, solution_index>
     {
-      using Base_t =
-        SymbolicOpValueBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpValueBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution values at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -2126,12 +1557,6 @@ namespace WeakForms
             "to retrieve its value."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a "get_function_values_from_local_dof_values()"
-        // // function fe_values.get_function_values(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
 
@@ -2143,7 +1568,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::gradient,
                      void,
@@ -2151,31 +1576,12 @@ namespace WeakForms
       : public SymbolicOpGradientBase<FieldSolution<dim, spacedim>,
                                       solution_index>
     {
-      using Base_t =
-        SymbolicOpGradientBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpGradientBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution gradients at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -2192,11 +1598,7 @@ namespace WeakForms
             "Use a weak form subspace extractor to isolate a component of the field solution before trying "
             "to retrieve its gradient."));
 
-        return_type<ScalarType> out; //(fe_values.n_quadrature_points);
-        // Need to implement a
-        // "get_function_gradients_from_local_dof_values()" function
-        // fe_values.get_function_gradients(solution_local_dof_values, out);
-        return out;
+        return return_type<ScalarType>();
       }
     };
 
@@ -2208,7 +1610,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::laplacian,
                      void,
@@ -2216,31 +1618,12 @@ namespace WeakForms
       : public SymbolicOpLaplacianBase<FieldSolution<dim, spacedim>,
                                        solution_index>
     {
-      using Base_t =
-        SymbolicOpLaplacianBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpLaplacianBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution Laplacians at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -2258,12 +1641,6 @@ namespace WeakForms
             "to retrieve its Laplacian."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // // "get_function_laplacians_from_local_dof_values()" function
-        // // fe_values.get_function_laplacians(solution_local_dof_values, out);
-        // return out;
       }
     };
 
@@ -2275,7 +1652,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::hessian,
                      void,
@@ -2283,31 +1660,12 @@ namespace WeakForms
       : public SymbolicOpHessianBase<FieldSolution<dim, spacedim>,
                                      solution_index>
     {
-      using Base_t =
-        SymbolicOpHessianBase<FieldSolution<dim, spacedim>, solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpHessianBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution Hessians at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -2325,14 +1683,6 @@ namespace WeakForms
             "to retrieve its Hessian."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // "get_function_hessians_from_local_dof_values()"
-        // // function
-        // fe_values.get_function_hessians(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
 
@@ -2345,7 +1695,7 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <std::size_t solution_index, int dim, int spacedim>
+    template <types::solution_index solution_index, int dim, int spacedim>
     class SymbolicOp<FieldSolution<dim, spacedim>,
                      SymbolicOpCodes::third_derivative,
                      void,
@@ -2353,31 +1703,13 @@ namespace WeakForms
       : public SymbolicOpThirdDerivativeBase<FieldSolution<dim, spacedim>,
                                              solution_index>
     {
-      using Base_t = SymbolicOpThirdDerivativeBase<FieldSolution<dim, spacedim>,
-                                                   solution_index>;
-      using typename Base_t::Op;
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(
+        SymbolicOpThirdDerivativeBase,
+        dim,
+        spacedim,
+        solution_index)
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      template <typename ScalarType>
-      using value_type = typename Base_t::template value_type<ScalarType>;
-
-      template <typename ScalarType>
-      using return_type = typename Base_t::template qp_value_type<ScalarType>;
-
-      explicit SymbolicOp(const Op &operand)
-        : Base_t(operand)
-      {}
-
       // Return solution third derivatives at all quadrature points
       template <typename ScalarType>
       return_type<ScalarType>
@@ -2395,16 +1727,10 @@ namespace WeakForms
             "to retrieve its third derivative."));
 
         return return_type<ScalarType>();
-
-        // return_type<ScalarType> out(fe_values.n_quadrature_points);
-        // // Need to implement a
-        // // "get_function_third_derivatives_from_local_dof_values()" function
-        // //
-        // fe_values.get_function_third_derivatives(solution_local_dof_values,
-        // // out);
-        // return out;
       }
     };
+
+#undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
@@ -2596,7 +1922,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::value,
@@ -2619,7 +1945,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::gradient,
@@ -2642,7 +1968,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::laplacian,
@@ -2665,7 +1991,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::hessian,
@@ -2688,7 +2014,7 @@ namespace WeakForms
 
 
 
-  template <std::size_t solution_index, int dim, int spacedim>
+  template <types::solution_index solution_index, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::FieldSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::third_derivative,
