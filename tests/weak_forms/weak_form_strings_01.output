@@ -17,6 +17,24 @@ DEAL:string::Trial solution: Grad(D{U})
 DEAL:string::Solution: Grad(U)
 DEAL:string::Solution (t1): Grad(U_1)
 DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Laplacian
+DEAL:string::Test function: Laplacian(d{U})
+DEAL:string::Trial solution: Laplacian(D{U})
+DEAL:string::Solution: Laplacian(U)
+DEAL:string::Solution (t1): Laplacian(U_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Hessian
+DEAL:string::Test function: Hessian(d{U})
+DEAL:string::Trial solution: Hessian(D{U})
+DEAL:string::Solution: Hessian(U)
+DEAL:string::Solution (t1): Hessian(U_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Third derivative
+DEAL:string::Test function: 3rd_Derivative(d{U})
+DEAL:string::Trial solution: 3rd_Derivative(D{U})
+DEAL:string::Solution: 3rd_Derivative(U)
+DEAL:string::Solution (t1): 3rd_Derivative(U_1)
+DEAL:string::
 DEAL:LaTeX::SPACE CREATION
 DEAL:LaTeX::Test function: \delta{\varphi}
 DEAL:LaTeX::Trial solution: \Delta{\varphi}
@@ -33,6 +51,24 @@ DEAL:LaTeX::Test function: \nabla\left(\delta{\varphi}\right)
 DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\varphi}\right)
 DEAL:LaTeX::Solution: \nabla\left(\varphi\right)
 DEAL:LaTeX::Solution (t1): \nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Laplacian
+DEAL:LaTeX::Test function: \nabla^{2}\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla^{2}\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla^{2}\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla^{2}\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Hessian
+DEAL:LaTeX::Test function: \nabla\nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Third derivative
+DEAL:LaTeX::Test function: \nabla\nabla\nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\nabla\left(\varphi_{t-1}\right)
 DEAL:LaTeX::
 DEAL::OK
 DEAL::
@@ -54,6 +90,24 @@ DEAL:string::Trial solution: Grad(D{U})
 DEAL:string::Solution: Grad(U)
 DEAL:string::Solution (t1): Grad(U_1)
 DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Laplacian
+DEAL:string::Test function: Laplacian(d{U})
+DEAL:string::Trial solution: Laplacian(D{U})
+DEAL:string::Solution: Laplacian(U)
+DEAL:string::Solution (t1): Laplacian(U_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Hessian
+DEAL:string::Test function: Hessian(d{U})
+DEAL:string::Trial solution: Hessian(D{U})
+DEAL:string::Solution: Hessian(U)
+DEAL:string::Solution (t1): Hessian(U_1)
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Third derivative
+DEAL:string::Test function: 3rd_Derivative(d{U})
+DEAL:string::Trial solution: 3rd_Derivative(D{U})
+DEAL:string::Solution: 3rd_Derivative(U)
+DEAL:string::Solution (t1): 3rd_Derivative(U_1)
+DEAL:string::
 DEAL:LaTeX::SPACE CREATION
 DEAL:LaTeX::Test function: \delta{\varphi}
 DEAL:LaTeX::Trial solution: \Delta{\varphi}
@@ -70,6 +124,24 @@ DEAL:LaTeX::Test function: \nabla\left(\delta{\varphi}\right)
 DEAL:LaTeX::Trial solution: \nabla\left(\Delta{\varphi}\right)
 DEAL:LaTeX::Solution: \nabla\left(\varphi\right)
 DEAL:LaTeX::Solution (t1): \nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Laplacian
+DEAL:LaTeX::Test function: \nabla^{2}\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla^{2}\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla^{2}\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla^{2}\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Hessian
+DEAL:LaTeX::Test function: \nabla\nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\left(\varphi_{t-1}\right)
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Third derivative
+DEAL:LaTeX::Test function: \nabla\nabla\nabla\left(\delta{\varphi}\right)
+DEAL:LaTeX::Trial solution: \nabla\nabla\nabla\left(\Delta{\varphi}\right)
+DEAL:LaTeX::Solution: \nabla\nabla\nabla\left(\varphi\right)
+DEAL:LaTeX::Solution (t1): \nabla\nabla\nabla\left(\varphi_{t-1}\right)
 DEAL:LaTeX::
 DEAL::OK
 DEAL::
