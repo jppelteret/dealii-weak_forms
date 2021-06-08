@@ -5,26 +5,66 @@ DEAL:string::Test function: d{U}
 DEAL:string::Trial solution: D{U}
 DEAL:string::Solution: U
 DEAL:string::
-DEAL:string::SPACE FUNCTIONS: Jump value
+DEAL:string::SPACE FUNCTIONS: Jump in values
 DEAL:string::Test function: [[d{U}]]
 DEAL:string::Trial solution: [[D{U}]]
 DEAL:string::
-DEAL:string::SPACE FUNCTIONS: Average value
+DEAL:string::SPACE FUNCTIONS: Jump in gradients
+DEAL:string::Test function: [[Grad(d{U})]]
+DEAL:string::Trial solution: [[Grad(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump in hessians
+DEAL:string::Test function: [[Hessian(d{U})]]
+DEAL:string::Trial solution: [[Hessian(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump in third derivatives
+DEAL:string::Test function: [[3rd_Derivative(d{U})]]
+DEAL:string::Trial solution: [[3rd_Derivative(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of values
 DEAL:string::Test function: {{d{U}}}
 DEAL:string::Trial solution: {{D{U}}}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of gradients
+DEAL:string::Test function: {{Grad(d{U})}}
+DEAL:string::Trial solution: {{Grad(D{U})}}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of hessians
+DEAL:string::Test function: {{Hessian(d{U})}}
+DEAL:string::Trial solution: {{Hessian(D{U})}}
 DEAL:string::
 DEAL:LaTeX::SPACE CREATION
 DEAL:LaTeX::Test function: \delta{\varphi}
 DEAL:LaTeX::Trial solution: \Delta{\varphi}
 DEAL:LaTeX::Solution: \varphi
 DEAL:LaTeX::
-DEAL:LaTeX::SPACE FUNCTIONS: Jump value
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in values
 DEAL:LaTeX::Test function: \left[\!\left[\delta{\varphi}\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\Delta{\varphi}\right]\!\right]
 DEAL:LaTeX::
-DEAL:LaTeX::SPACE FUNCTIONS: Average value
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in gradients
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in hessians
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in third derivatives
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of values
 DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\delta{\varphi}\right\rbrace\!\right\rbrace
 DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\Delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of gradients
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of hessians
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::
 DEAL::OK
 DEAL::
@@ -34,26 +74,66 @@ DEAL:string::Test function: d{U}
 DEAL:string::Trial solution: D{U}
 DEAL:string::Solution: U
 DEAL:string::
-DEAL:string::SPACE FUNCTIONS: Jump value
+DEAL:string::SPACE FUNCTIONS: Jump in values
 DEAL:string::Test function: [[d{U}]]
 DEAL:string::Trial solution: [[D{U}]]
 DEAL:string::
-DEAL:string::SPACE FUNCTIONS: Average value
+DEAL:string::SPACE FUNCTIONS: Jump in gradients
+DEAL:string::Test function: [[Grad(d{U})]]
+DEAL:string::Trial solution: [[Grad(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump in hessians
+DEAL:string::Test function: [[Hessian(d{U})]]
+DEAL:string::Trial solution: [[Hessian(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump in third derivatives
+DEAL:string::Test function: [[3rd_Derivative(d{U})]]
+DEAL:string::Trial solution: [[3rd_Derivative(D{U})]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of values
 DEAL:string::Test function: {{d{U}}}
 DEAL:string::Trial solution: {{D{U}}}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of gradients
+DEAL:string::Test function: {{Grad(d{U})}}
+DEAL:string::Trial solution: {{Grad(D{U})}}
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average of hessians
+DEAL:string::Test function: {{Hessian(d{U})}}
+DEAL:string::Trial solution: {{Hessian(D{U})}}
 DEAL:string::
 DEAL:LaTeX::SPACE CREATION
 DEAL:LaTeX::Test function: \delta{\varphi}
 DEAL:LaTeX::Trial solution: \Delta{\varphi}
 DEAL:LaTeX::Solution: \varphi
 DEAL:LaTeX::
-DEAL:LaTeX::SPACE FUNCTIONS: Jump value
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in values
 DEAL:LaTeX::Test function: \left[\!\left[\delta{\varphi}\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\Delta{\varphi}\right]\!\right]
 DEAL:LaTeX::
-DEAL:LaTeX::SPACE FUNCTIONS: Average value
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in gradients
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in hessians
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump in third derivatives
+DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\nabla\left(\delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\nabla\left(\Delta{\varphi}\right)\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of values
 DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\delta{\varphi}\right\rbrace\!\right\rbrace
 DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\Delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of gradients
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average of hessians
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::
 DEAL::OK
 DEAL::

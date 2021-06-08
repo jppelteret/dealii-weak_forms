@@ -78,15 +78,16 @@ namespace WeakForms
        * Jump of an operand across an interface
        */
       jump_in_values,
+      jump_in_gradients,
+      jump_in_hessians,
+      jump_in_third_derivatives,
       /**
        * Average of an operand across an interface
        */
       average_of_values,
-      // jump_gradient,
-      // average_gradient,
-      // jump_hessian,
-      // average_hessian,
-      // jump_third_derivative,
+      average_of_gradients,
+      average_of_hessians,
+      // average_of_third_derivatives
     };
 
 

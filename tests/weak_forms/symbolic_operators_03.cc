@@ -15,8 +15,8 @@
 
 
 // Check that symbolic operators work on interfaces
-// - Trial function, test function, field solution (scalar-valued finite
-// element)
+// - Trial function, test function
+// - [field solution (scalar-valued finite element)] -- NOT IMPLEMENTED YET
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -74,89 +74,100 @@ run()
                        local_dof_values.begin(),
                        local_dof_values.end());
 
-  const auto test =
-    [](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
-       const std::string &                     type) {
-      const unsigned int dof_index =
-        fe_interface_values.n_current_interface_dofs() - 1;
-      const unsigned int q_point = fe_interface_values.n_quadrature_points - 1;
-      std::cout << "dof_index: " << dof_index << " ; q_point: " << q_point
+  const auto test = [](const FEInterfaceValues<dim, spacedim>
+                         &                fe_interface_values,
+                       const std::string &type) {
+    const unsigned int dof_index =
+      fe_interface_values.n_current_interface_dofs() - 1;
+    const unsigned int q_point = fe_interface_values.n_quadrature_points - 1;
+    std::cout << "dof_index: " << dof_index << " ; q_point: " << q_point
+              << std::endl;
+
+    {
+      const std::string title = "Test function: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
+
+      using namespace WeakForms;
+      const TestFunction<dim, spacedim> test;
+
+      std::cout << "Jump in values: "
+                << (test.jump_in_values().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (test.jump_in_gradients().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (test.jump_in_hessians().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout
+        << "Jump in third derivatives: "
+        << (test.jump_in_third_derivatives().template operator()<NumberType>(
+             fe_interface_values))[dof_index][q_point]
+        << std::endl;
+
+      std::cout << "Average of values: "
+                << (test.average_of_values().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (test.average_of_gradients().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (test.average_of_hessians().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
                 << std::endl;
 
-      {
-        const std::string title = "Test function: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+      deallog << "OK" << std::endl;
+    }
 
-        using namespace WeakForms;
-        const TestFunction<dim, spacedim> test;
+    {
+      const std::string title = "Trial solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        std::cout << "Jump value: "
-                  << (test.jump_in_values().template operator()<NumberType>(
-                       fe_interface_values))[dof_index][q_point]
-                  << std::endl;
-        std::cout << "Average value: "
-                  << (test.average_of_values().template operator()<NumberType>(
-                       fe_interface_values))[dof_index][q_point]
-                  << std::endl;
-        //  std::cout << "Gradient: "
-        //            << (test.gradient().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Laplacian: "
-        //            << (test.laplacian().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Hessian: "
-        //            << (test.hessian().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Third derivative: "
-        //            << (test.third_derivative().template
-        //            operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
+      using namespace WeakForms;
+      const TrialSolution<dim, spacedim> trial;
 
-        deallog << "OK" << std::endl;
-      }
+      std::cout << "Jump in values: "
+                << (trial.jump_in_values().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (trial.jump_in_gradients().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (trial.jump_in_hessians().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout
+        << "Jump in third derivatives: "
+        << (trial.jump_in_third_derivatives().template operator()<NumberType>(
+             fe_interface_values))[dof_index][q_point]
+        << std::endl;
 
-      {
-        const std::string title = "Trial solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+      std::cout << "Average of values: "
+                << (trial.average_of_values().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
+      std::cout
+        << "Jump in gradients: "
+        << (trial.average_of_gradients().template operator()<NumberType>(
+             fe_interface_values))[dof_index][q_point]
+        << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (trial.average_of_hessians().template operator()<NumberType>(
+                     fe_interface_values))[dof_index][q_point]
+                << std::endl;
 
-        using namespace WeakForms;
-        const TrialSolution<dim, spacedim> trial;
-
-        std::cout << "Jump value: "
-                  << (trial.jump_in_values().template operator()<NumberType>(
-                       fe_interface_values))[dof_index][q_point]
-                  << std::endl;
-        std::cout << "Average value: "
-                  << (trial.average_of_values().template operator()<NumberType>(
-                       fe_interface_values))[dof_index][q_point]
-                  << std::endl;
-        //  std::cout << "Gradient: "
-        //            << (trial.gradient().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Laplacian: "
-        //            << (trial.laplacian().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Hessian: "
-        //            << (trial.hessian().template operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-        //  std::cout << "Third derivative: "
-        //            << (trial.third_derivative().template
-        //            operator()<NumberType>(
-        //                 fe_interface_values))[dof_index][q_point]
-        //            << std::endl;
-
-        deallog << "OK" << std::endl;
-      }
-    };
+      deallog << "OK" << std::endl;
+    }
+  };
 
   // Find a boundary face
   unsigned int face = 0;

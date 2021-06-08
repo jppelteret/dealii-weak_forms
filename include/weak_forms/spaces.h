@@ -124,11 +124,50 @@ namespace WeakForms
   jump_in_values(const WeakForms::TestFunction<dim, spacedim> &operand);
 
 
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const WeakForms::TestFunction<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const WeakForms::TestFunction<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(
+    const WeakForms::TestFunction<dim, spacedim> &operand);
+
+
   template <int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::TestFunction<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::average_of_values>
   average_of_values(const WeakForms::TestFunction<dim, spacedim> &operand);
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const WeakForms::TestFunction<dim, spacedim> &operand);
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const WeakForms::TestFunction<dim, spacedim> &operand);
 
 
 
@@ -190,8 +229,49 @@ namespace WeakForms
   template <int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(
+    const WeakForms::TrialSolution<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::average_of_values>
   average_of_values(const WeakForms::TrialSolution<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand);
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand);
 
 
 
@@ -546,9 +626,39 @@ namespace WeakForms
     }
 
     auto
+    jump_in_gradients() const
+    {
+      return WeakForms::jump_in_gradients(*this);
+    }
+
+    auto
+    jump_in_hessians() const
+    {
+      return WeakForms::jump_in_hessians(*this);
+    }
+
+    auto
+    jump_in_third_derivatives() const
+    {
+      return WeakForms::jump_in_third_derivatives(*this);
+    }
+
+    auto
     average_of_values() const
     {
       return WeakForms::average_of_values(*this);
+    }
+
+    auto
+    average_of_gradients() const
+    {
+      return WeakForms::average_of_gradients(*this);
+    }
+
+    auto
+    average_of_hessians() const
+    {
+      return WeakForms::average_of_hessians(*this);
     }
 
   protected:
@@ -700,9 +810,39 @@ namespace WeakForms
     }
 
     auto
+    jump_in_gradients() const
+    {
+      return WeakForms::jump_in_gradients(*this);
+    }
+
+    auto
+    jump_in_hessians() const
+    {
+      return WeakForms::jump_in_hessians(*this);
+    }
+
+    auto
+    jump_in_third_derivatives() const
+    {
+      return WeakForms::jump_in_third_derivatives(*this);
+    }
+
+    auto
     average_of_values() const
     {
       return WeakForms::average_of_values(*this);
+    }
+
+    auto
+    average_of_gradients() const
+    {
+      return WeakForms::average_of_gradients(*this);
+    }
+
+    auto
+    average_of_hessians() const
+    {
+      return WeakForms::average_of_hessians(*this);
     }
 
   protected:
@@ -1356,6 +1496,151 @@ private:                                                                       \
 
 
     template <typename Op_, types::solution_index solution_index_ = 0>
+    class SymbolicOpJumpGradientBase
+    {
+    public:
+      static const enum SymbolicOpCodes op_code =
+        SymbolicOpCodes::jump_in_gradients;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_ascii().differential_operators;
+        return decorator.make_jump_symbol_ascii(
+          decorator.decorate_with_operator_ascii(
+            naming.gradient,
+            decorator.make_time_indexed_symbol_ascii(
+              get_operand().as_ascii(decorator), solution_index)));
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_latex().differential_operators;
+        return decorator.make_jump_symbol_latex(
+          decorator.decorate_with_operator_latex(
+            naming.gradient,
+            decorator.make_time_indexed_symbol_latex(
+              get_operand().as_latex(decorator), solution_index)));
+      }
+
+      UpdateFlags
+      get_update_flags() const
+      {
+        return UpdateFlags::update_gradients;
+      }
+
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpJumpGradientBase,
+                                            Op_,
+                                            solution_index_)
+    };
+
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
+    class SymbolicOpJumpHessianBase
+    {
+    public:
+      static const enum SymbolicOpCodes op_code =
+        SymbolicOpCodes::jump_in_hessians;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template hessian_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_ascii().differential_operators;
+        return decorator.make_jump_symbol_ascii(
+          decorator.decorate_with_operator_ascii(
+            naming.hessian,
+            decorator.make_time_indexed_symbol_ascii(
+              get_operand().as_ascii(decorator), solution_index)));
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_latex().differential_operators;
+        return decorator.make_jump_symbol_latex(
+          decorator.decorate_with_operator_latex(
+            naming.hessian,
+            decorator.make_time_indexed_symbol_latex(
+              get_operand().as_latex(decorator), solution_index)));
+      }
+
+      UpdateFlags
+      get_update_flags() const
+      {
+        return UpdateFlags::update_hessians;
+      }
+
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpJumpHessianBase,
+                                            Op_,
+                                            solution_index_)
+    };
+
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
+    class SymbolicOpJumpThirdDerivativeBase
+    {
+    public:
+      static const enum SymbolicOpCodes op_code =
+        SymbolicOpCodes::jump_in_third_derivatives;
+
+      template <typename ScalarType>
+      using value_type =
+        typename Op_::template third_derivative_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_ascii().differential_operators;
+        return decorator.make_jump_symbol_ascii(
+          decorator.decorate_with_operator_ascii(
+            naming.third_derivative,
+            decorator.make_time_indexed_symbol_ascii(
+              get_operand().as_ascii(decorator), solution_index)));
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_latex().differential_operators;
+        return decorator.make_jump_symbol_latex(
+          decorator.decorate_with_operator_latex(
+            naming.third_derivative,
+            decorator.make_time_indexed_symbol_latex(
+              get_operand().as_latex(decorator), solution_index)));
+      }
+
+      UpdateFlags
+      get_update_flags() const
+      {
+        return UpdateFlags::update_3rd_derivatives;
+      }
+
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpJumpThirdDerivativeBase,
+                                            Op_,
+                                            solution_index_)
+    };
+
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
     class SymbolicOpAverageValueBase
     {
     public:
@@ -1403,6 +1688,151 @@ private:                                                                       \
                                             Op_,
                                             solution_index_)
     };
+
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
+    class SymbolicOpAverageGradientBase
+    {
+    public:
+      static const enum SymbolicOpCodes op_code =
+        SymbolicOpCodes::average_of_gradients;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template gradient_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_ascii().differential_operators;
+        return decorator.make_average_symbol_ascii(
+          decorator.decorate_with_operator_ascii(
+            naming.gradient,
+            decorator.make_time_indexed_symbol_ascii(
+              get_operand().as_ascii(decorator), solution_index)));
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_latex().differential_operators;
+        return decorator.make_average_symbol_latex(
+          decorator.decorate_with_operator_latex(
+            naming.gradient,
+            decorator.make_time_indexed_symbol_latex(
+              get_operand().as_latex(decorator), solution_index)));
+      }
+
+      UpdateFlags
+      get_update_flags() const
+      {
+        return UpdateFlags::update_gradients;
+      }
+
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpAverageGradientBase,
+                                            Op_,
+                                            solution_index_)
+    };
+
+
+    template <typename Op_, types::solution_index solution_index_ = 0>
+    class SymbolicOpAverageHessianBase
+    {
+    public:
+      static const enum SymbolicOpCodes op_code =
+        SymbolicOpCodes::average_of_hessians;
+
+      template <typename ScalarType>
+      using value_type = typename Op_::template hessian_type<ScalarType>;
+
+      static const int rank = value_type<double>::rank;
+
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_ascii().differential_operators;
+        return decorator.make_average_symbol_ascii(
+          decorator.decorate_with_operator_ascii(
+            naming.hessian,
+            decorator.make_time_indexed_symbol_ascii(
+              get_operand().as_ascii(decorator), solution_index)));
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const auto &naming =
+          decorator.get_naming_latex().differential_operators;
+        return decorator.make_average_symbol_latex(
+          decorator.decorate_with_operator_latex(
+            naming.hessian,
+            decorator.make_time_indexed_symbol_latex(
+              get_operand().as_latex(decorator), solution_index)));
+      }
+
+      UpdateFlags
+      get_update_flags() const
+      {
+        return UpdateFlags::update_hessians;
+      }
+
+      DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpAverageHessianBase,
+                                            Op_,
+                                            solution_index_)
+    };
+
+
+    // template <typename Op_, types::solution_index solution_index_ = 0>
+    // class SymbolicOpAverageThirdDerivativeBase
+    // {
+    // public:
+    //   static const enum SymbolicOpCodes op_code =
+    //     SymbolicOpCodes::average_of_third_derivatives;
+
+    //   template <typename ScalarType>
+    //   using value_type =
+    //     typename Op_::template third_derivative_type<ScalarType>;
+
+    //   static const int rank = value_type<double>::rank;
+
+    //   std::string
+    //   as_ascii(const SymbolicDecorations &decorator) const
+    //   {
+    //     const auto &naming =
+    //       decorator.get_naming_ascii().differential_operators;
+    //     return
+    //     decorator.make_average_symbol_ascii(decorator.decorate_with_operator_ascii(
+    //       naming.third_derivative,
+    //       decorator.make_time_indexed_symbol_ascii(
+    //         get_operand().as_ascii(decorator), solution_index)));
+    //   }
+
+    //   std::string
+    //   as_latex(const SymbolicDecorations &decorator) const
+    //   {
+    //     const auto &naming =
+    //       decorator.get_naming_latex().differential_operators;
+    //     return
+    //     decorator.make_average_symbol_latex(decorator.decorate_with_operator_latex(
+    //       naming.third_derivative,
+    //       decorator.make_time_indexed_symbol_latex(
+    //         get_operand().as_latex(decorator), solution_index)));
+    //   }
+
+    //   UpdateFlags
+    //   get_update_flags() const
+    //   {
+    //     return UpdateFlags::update_3rd_derivatives;
+    //   }
+
+    //   DEAL_II_SPACE_SYMBOLIC_OP_COMMON_IMPL(SymbolicOpAverageThirdDerivativeBase,
+    //                                         Op_,
+    //                                         solution_index_)
+    // };
 
 
 
@@ -1765,7 +2195,7 @@ protected:                                                                   \
 
 
     /**
-     * Extract the shape function jump values from a finite element space.
+     * Extract the jump in shape function values from a finite element space.
      *
      * @tparam dim
      * @tparam spacedim
@@ -1805,7 +2235,129 @@ protected:                                                                   \
 
 
     /**
-     * Extract the shape function jump values from a finite element space.
+     * Extract the jump in shape function gradients from a finite element space.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <int dim, int spacedim>
+    class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::jump_in_gradients>
+      : public SymbolicOpJumpGradientBase<Space<dim, spacedim>>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+        SymbolicOpJumpGradientBase,
+        dim,
+        spacedim)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values.jump_shape_gradient(interface_dof_index,
+                                                       q_point);
+      }
+    };
+
+
+
+    /**
+     * Extract the jump in shape function Hessians from a finite element space.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <int dim, int spacedim>
+    class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::jump_in_hessians>
+      : public SymbolicOpJumpHessianBase<Space<dim, spacedim>>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+        SymbolicOpJumpHessianBase,
+        dim,
+        spacedim)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values.jump_shape_hessian(interface_dof_index,
+                                                      q_point);
+      }
+    };
+
+
+
+    /**
+     * Extract the jump in shape function third derivatives from a finite
+     * element space.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <int dim, int spacedim>
+    class SymbolicOp<Space<dim, spacedim>,
+                     SymbolicOpCodes::jump_in_third_derivatives>
+      : public SymbolicOpJumpThirdDerivativeBase<Space<dim, spacedim>>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+        SymbolicOpJumpThirdDerivativeBase,
+        dim,
+        spacedim)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values.jump_shape_3rd_derivative(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+
+    /**
+     * Extract the average of shape function values from a finite element space.
      *
      * @tparam dim
      * @tparam spacedim
@@ -1841,6 +2393,132 @@ protected:                                                                   \
                                                        q_point);
       }
     };
+
+
+
+    /**
+     * Extract the average of shape function gradients from a finite element
+     * space.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <int dim, int spacedim>
+    class SymbolicOp<Space<dim, spacedim>,
+                     SymbolicOpCodes::average_of_gradients>
+      : public SymbolicOpAverageGradientBase<Space<dim, spacedim>>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+        SymbolicOpAverageGradientBase,
+        dim,
+        spacedim)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values.average_shape_gradient(interface_dof_index,
+                                                          q_point);
+      }
+    };
+
+
+
+    /**
+     * Extract the average of shape function gradients from a finite element
+     * space.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <int dim, int spacedim>
+    class SymbolicOp<Space<dim, spacedim>, SymbolicOpCodes::average_of_hessians>
+      : public SymbolicOpAverageHessianBase<Space<dim, spacedim>>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+        SymbolicOpAverageHessianBase,
+        dim,
+        spacedim)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values.average_shape_hessian(interface_dof_index,
+                                                         q_point);
+      }
+    };
+
+
+
+    // /**
+    //  * Extract the average of shape function third derivatives from a finite
+    //  element space.
+    //  *
+    //  * @tparam dim
+    //  * @tparam spacedim
+    //  */
+    // template <int dim, int spacedim>
+    // class SymbolicOp<Space<dim, spacedim>,
+    // SymbolicOpCodes::average_of_third_derivatives>
+    //   : public SymbolicOpAverageThirdDerivativeBase<Space<dim, spacedim>>
+    // {
+    //   DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(
+    //     SymbolicOpAverageThirdDerivativeBase,
+    //     dim,
+    //     spacedim)
+
+    // protected:
+    //   // Return single entry
+    //   template <typename ScalarType>
+    //   value_type<ScalarType>
+    //   operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+    //              const unsigned int                      interface_dof_index,
+    //              const unsigned int                      q_point) const
+    //   {
+    //     Assert(interface_dof_index <
+    //              fe_interface_values.n_current_interface_dofs(),
+    //            ExcIndexRange(interface_dof_index,
+    //                          0,
+    //                          fe_interface_values.n_current_interface_dofs()));
+    //     Assert(q_point < fe_interface_values.n_quadrature_points,
+    //            ExcIndexRange(q_point,
+    //                          0,
+    //                          fe_interface_values.n_quadrature_points));
+
+    //     return
+    //     fe_interface_values.average_shape_third_derivative(interface_dof_index,
+    //                                                    q_point);
+    //   }
+    // };
 
 
 
@@ -2221,6 +2899,55 @@ namespace WeakForms
   template <int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const WeakForms::TestFunction<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TestFunction<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
+
+    return OpType(operand);
+  }
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const WeakForms::TestFunction<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TestFunction<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
+
+    return OpType(operand);
+  }
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(
+    const WeakForms::TestFunction<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TestFunction<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
+
+    return OpType(operand);
+  }
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::average_of_values>
   average_of_values(const WeakForms::TestFunction<dim, spacedim> &operand)
   {
@@ -2229,6 +2956,38 @@ namespace WeakForms
 
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
+
+    return OpType(operand);
+  }
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const WeakForms::TestFunction<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TestFunction<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
+
+    return OpType(operand);
+  }
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TestFunction<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const WeakForms::TestFunction<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TestFunction<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
 
     return OpType(operand);
   }
@@ -2347,6 +3106,58 @@ namespace WeakForms
   template <int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<
     WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TrialSolution<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
+
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TrialSolution<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
+
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(
+    const WeakForms::TrialSolution<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TrialSolution<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
+
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::average_of_values>
   average_of_values(const WeakForms::TrialSolution<dim, spacedim> &operand)
   {
@@ -2355,6 +3166,40 @@ namespace WeakForms
 
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
+
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TrialSolution<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
+
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TrialSolution<dim, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TrialSolution<dim, spacedim>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
 
     return OpType(operand);
   }
