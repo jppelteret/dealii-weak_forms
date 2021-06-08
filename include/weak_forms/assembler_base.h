@@ -1257,19 +1257,15 @@ namespace WeakForms
     using StringOperation = std::function<
       std::pair<AsciiLatexOperation, enum internal::AccumulationSign>(void)>;
 
-    using CellSolutionUpdateOperation =
-      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &solution_names)>;
-
-    using BoundaryFaceSolutionUpdateOperation =
-      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &solution_names)>;
-
     using CellADSDOperation =
       std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                          const std::vector<std::string> &solution_names)>;
 
     using BoundaryADSDOperation =
+      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                         const std::vector<std::string> &solution_names)>;
+
+    using InterfaceADSDOperation =
       std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                          const std::vector<std::string> &solution_names)>;
 
@@ -1532,10 +1528,6 @@ namespace WeakForms
       add_ascii_latex_operations<print_sign>(volume_integral);
       add_cell_operation<op_sign>(volume_integral);
 
-      // const auto &form    = volume_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
-
       return *this;
     }
 
@@ -1568,10 +1560,6 @@ namespace WeakForms
       add_ascii_latex_operations<print_sign>(boundary_integral);
       add_boundary_face_operation<op_sign>(boundary_integral);
 
-      // const auto &form    = boundary_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
-
       return *this;
     }
 
@@ -1602,10 +1590,6 @@ namespace WeakForms
       // constexpr auto sign = internal::AccumulationSign::plus;
       // add_ascii_latex_operations<sign>(boundary_integral);
       // add_cell_operation<sign>(boundary_integral);
-
-      // const auto &form    = boundary_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
 
       return *this;
     }
@@ -1686,10 +1670,6 @@ namespace WeakForms
       add_ascii_latex_operations<print_sign>(volume_integral);
       add_cell_operation<op_sign>(volume_integral);
 
-      // const auto &form    = volume_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
-
       return *this;
     }
 
@@ -1722,10 +1702,6 @@ namespace WeakForms
       add_ascii_latex_operations<print_sign>(boundary_integral);
       add_boundary_face_operation<op_sign>(boundary_integral);
 
-      // const auto &form    = boundary_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
-
       return *this;
     }
 
@@ -1755,10 +1731,6 @@ namespace WeakForms
       // constexpr auto sign = internal::AccumulationSign::minus;
       // add_ascii_latex_operations<sign>(boundary_integral);
       // add_cell_operation<sign>(boundary_integral);
-
-      // const auto &form    = boundary_integral.get_integrand();
-      // const auto &functor = form.get_functor();
-      // add_solution_update_operation(functor);
 
       return *this;
     }
@@ -1863,76 +1835,34 @@ namespace WeakForms
       set_global_system_symmetry_flag(true);
     }
 
-
-    // template <typename VectorType,
-    //           typename DoFHandlerType,
-    //           typename CellQuadratureType>
-    // void
-    // update_solution(const VectorType &        solution_vector,
-    //                 const DoFHandlerType &    dof_handler,
-    //                 const CellQuadratureType &cell_quadrature)
-    // {
-    //   static_assert(DoFHandlerType::dimension == dim,
-    //                 "Dimension is incompatible");
-    //   static_assert(DoFHandlerType::space_dimension == spacedim,
-    //                 "Space dimension is incompatible");
-
-    //   using CellIteratorType = typename DoFHandlerType::active_cell_iterator;
-    //   using ScratchData      = MeshWorker::ScratchData<dim, spacedim>;
-    //   using CopyData         = MeshWorker::CopyData<0, 0, 0>; // Empty copier
-
-    //   // Define a cell worker
-    //   const auto &cell_solution_update_operations =
-    //     this->cell_solution_update_operations;
-    //   auto cell_worker = [&cell_solution_update_operations,
-    //                       &solution_vector](const CellIteratorType &cell,
-    //                                         ScratchData &scratch_data,
-    //                                         CopyData &   copy_data) {
-    //     (void)copy_data;
-    //     const auto &fe_values          = scratch_data.reinit(cell);
-    //     copy_data                      = CopyData(fe_values.dofs_per_cell);
-    //     copy_data.local_dof_indices[0] =
-    //     scratch_data.get_local_dof_indices();
-
-    //     std::vector<ScalarType> solution_local_dof_values;
-    //     Assert(copy_data.local_dof_indices[0].size() ==
-    //     fe_values.dofs_per_cell,
-    //            ExcDimensionMismatch(copy_data.local_dof_indices[0].size(),
-    //                                 fe_values.dofs_per_cell));
-
-    //     solution_local_dof_values.resize(fe_values.dofs_per_cell);
-    //     internal::extract_solution_local_dof_values(
-    //       solution_local_dof_values,
-    //       copy_data.local_dof_indices[0],
-    //       &solution_vector);
-
-    //     for (const auto &cell_solution_update_op :
-    //          cell_solution_update_operations)
-    //       {
-    //         cell_solution_update_op(solution_local_dof_values, fe_values);
-    //       }
-
-    //     // TODO:
-    //     // boundary_matrix_operations
-    //     // interface_matrix_operations
-    //   };
-
-    //   auto dummy_copier = [](const CopyData &copy_data) { (void)copy_data; };
-
-    //   const ScratchData sample_scratch_data(dof_handler.get_fe(),
-    //                                         cell_quadrature,
-    //                                         this->get_cell_update_flags());
-    //   const CopyData    sample_copy_data(dof_handler.get_fe().dofs_per_cell);
-
-    //   MeshWorker::mesh_loop(dof_handler.active_cell_iterators(),
-    //                         cell_worker,
-    //                         dummy_copier,
-    //                         sample_scratch_data,
-    //                         sample_copy_data,
-    //                         MeshWorker::assemble_own_cells);
-    // }
-
   protected:
+    std::vector<StringOperation> as_ascii_operations;
+    std::vector<StringOperation> as_latex_operations;
+
+    // AD/SD support
+    std::vector<CellADSDOperation>     cell_ad_sd_operations;
+    std::vector<BoundaryADSDOperation> boundary_face_ad_sd_operations;
+    std::vector<InterfaceADSDOperation>
+      interface_ad_sd_operations; // TODO[JPP]: Add these contributions
+
+    // Cells
+    UpdateFlags                      cell_update_flags;
+    std::vector<CellMatrixOperation> cell_matrix_operations;
+    std::vector<CellVectorOperation> cell_vector_operations;
+
+    // Boundary faces
+    UpdateFlags boundary_face_update_flags;
+    std::vector<BoundaryMatrixOperation>
+                                         boundary_face_matrix_operations; // TODO[JPP]: Add these contributions
+    std::vector<BoundaryVectorOperation> boundary_face_vector_operations;
+
+    // Interfaces
+    UpdateFlags interface_face_update_flags;
+    std::vector<InterfaceMatrixOperation>
+      interface_face_matrix_operations; // TODO[JPP]: Add these contributions
+    std::vector<InterfaceVectorOperation>
+      interface_face_vector_operations; // TODO[JPP]: Add these contributions
+
     /**
      * A flag to indicate whether or not the global system is to be assembled
      * in symmetric form, or not.
@@ -1943,13 +1873,11 @@ namespace WeakForms
      */
     bool global_system_symmetry_flag;
 
+
     explicit AssemblerBase()
       : cell_update_flags(update_default)
-      // , cell_solution_update_flags(update_default)
       , boundary_face_update_flags(update_default)
-      // , boundary_face_solution_update_flags(update_default)
       , interface_face_update_flags(update_default)
-      // , interface_face_solution_update_flags(update_default)
       , global_system_symmetry_flag(false)
     {}
 
@@ -2767,97 +2695,17 @@ namespace WeakForms
       // implemented for linear forms.")
     }
 
-
-    // template <typename FunctorType>
-    // typename std::enable_if<!is_ad_functor_op<FunctorType>::value>::type
-    // add_solution_update_operation(FunctorType &functor)
-    // {
-    //   // Do nothing
-    //   (void)functor;
-    // }
-
-
-    // template <typename FunctorType>
-    // typename std::enable_if<is_ad_functor_op<FunctorType>::value>::type
-    // add_solution_update_operation(FunctorType &functor)
-    // {
-    //   cell_solution_update_flags |= functor.get_update_flags();
-
-    //   auto f =
-    //     [&functor](const std::vector<ScalarType> & solution_local_dof_values,
-    //                const FEValuesBase<dim, spacedim> &fe_values) {
-    //       functor.update_from_solution(fe_values, solution_local_dof_values);
-    //     };
-    //   cell_solution_update_operations.emplace_back(f);
-    // }
-
     UpdateFlags
     get_cell_update_flags() const
     {
-      return cell_update_flags /*| cell_solution_update_flags*/;
+      return cell_update_flags;
     }
 
     UpdateFlags
     get_face_update_flags() const
     {
-      return boundary_face_update_flags /*|
-                                           boundary_face_solution_update_flags*/
-             |
-             interface_face_update_flags /*|
-                                            interface_face_solution_update_flags*/
-        ;
+      return boundary_face_update_flags | interface_face_update_flags;
     }
-
-    std::vector<StringOperation> as_ascii_operations;
-    std::vector<StringOperation> as_latex_operations;
-
-    // Do I actually need this? The caching ScratchData might be enough,
-    // because it should be guarenteed that any field functors and field
-    // solutions extracted by the user directly have the same stored
-    // variable in scratch.
-    UpdateFlags                              cell_solution_update_flags;
-    std::vector<CellSolutionUpdateOperation> cell_field_solution_operations;
-    // Ditto here
-    UpdateFlags boundary_face_solution_update_flags;
-    std::vector<BoundaryFaceSolutionUpdateOperation>
-      boundary_face_field_solution_operations;
-
-    std::vector<CellADSDOperation>     cell_ad_sd_operations;
-    std::vector<BoundaryADSDOperation> boundary_face_ad_sd_operations;
-
-    UpdateFlags                      cell_update_flags;
-    std::vector<CellMatrixOperation> cell_matrix_operations;
-    std::vector<CellVectorOperation> cell_vector_operations;
-
-    UpdateFlags                          boundary_face_update_flags;
-    std::vector<BoundaryMatrixOperation> boundary_face_matrix_operations;
-    std::vector<BoundaryVectorOperation> boundary_face_vector_operations;
-
-    // UpdateFlags boundary_face_solution_update_flags;
-    // std::vector<CellSolutionUpdateOperation>
-    //   boundary_face_solution_update_operations;
-
-    UpdateFlags                           interface_face_update_flags;
-    std::vector<InterfaceMatrixOperation> interface_face_matrix_operations;
-    std::vector<InterfaceVectorOperation> interface_face_vector_operations;
-
-    // UpdateFlags interface_face_solution_update_flags;
-    // std::vector<CellSolutionUpdateOperation>
-    //   interface_face_solution_update_operations;
-
-    // --- AD/SD support ---
-
-    // An object that stores pointers to ADHelpers / SDBatchOptimizers.
-    // These items need to be kept alive for as long as the assembler
-    // is in scope, but the object that creates the AD/SD based forms
-    // may only be temporary. To we allow
-    // GeneralDataStorage ad_sd_cache;
-
-    // Expose the cache to the AD forms
-    // template <int                                   dim2,
-    //           enum Differentiation::NumberTypes ADScalarTypeCode,
-    //           typename ScalarType>
-    // friend class AutoDifferentiation::EnergyFunctional;
   };
 
 } // namespace WeakForms
