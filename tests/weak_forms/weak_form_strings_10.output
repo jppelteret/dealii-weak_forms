@@ -1,0 +1,60 @@
+
+DEAL::Dim: 2
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump value
+DEAL:string::Test function: [[d{U}]]
+DEAL:string::Trial solution: [[D{U}]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average value
+DEAL:string::Test function: {{d{U}}}
+DEAL:string::Trial solution: {{D{U}}}
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump value
+DEAL:LaTeX::Test function: \left[\!\left[\delta{\varphi}\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\Delta{\varphi}\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average value
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\Delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::SPACE CREATION
+DEAL:string::Test function: d{U}
+DEAL:string::Trial solution: D{U}
+DEAL:string::Solution: U
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Jump value
+DEAL:string::Test function: [[d{U}]]
+DEAL:string::Trial solution: [[D{U}]]
+DEAL:string::
+DEAL:string::SPACE FUNCTIONS: Average value
+DEAL:string::Test function: {{d{U}}}
+DEAL:string::Trial solution: {{D{U}}}
+DEAL:string::
+DEAL:LaTeX::SPACE CREATION
+DEAL:LaTeX::Test function: \delta{\varphi}
+DEAL:LaTeX::Trial solution: \Delta{\varphi}
+DEAL:LaTeX::Solution: \varphi
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Jump value
+DEAL:LaTeX::Test function: \left[\!\left[\delta{\varphi}\right]\!\right]
+DEAL:LaTeX::Trial solution: \left[\!\left[\Delta{\varphi}\right]\!\right]
+DEAL:LaTeX::
+DEAL:LaTeX::SPACE FUNCTIONS: Average value
+DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\Delta{\varphi}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::
+DEAL::OK
+DEAL::
+DEAL::OK

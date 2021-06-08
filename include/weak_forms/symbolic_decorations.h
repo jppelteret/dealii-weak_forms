@@ -351,6 +351,30 @@ namespace WeakForms
         return symbol + "_{t-" + dealii::Utilities::to_string(time_index) + "}";
     }
 
+    std::string
+    make_jump_symbol_ascii(const std::string &symbol) const
+    {
+      return "[[" + symbol + "]]";
+    }
+
+    std::string
+    make_jump_symbol_latex(const std::string &symbol) const
+    {
+      return Utilities::LaTeX::decorate_jump(symbol);
+    }
+
+    std::string
+    make_average_symbol_ascii(const std::string &symbol) const
+    {
+      return "{{" + symbol + "}}";
+    }
+
+    std::string
+    make_average_symbol_latex(const std::string &symbol) const
+    {
+      return Utilities::LaTeX::decorate_average(symbol);
+    }
+
     template <typename Operand>
     std::string
     symbolic_op_operand_as_ascii(const Operand &operand) const

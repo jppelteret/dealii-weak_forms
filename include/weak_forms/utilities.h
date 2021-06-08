@@ -437,10 +437,35 @@ namespace WeakForms
       static constexpr char l_square_brace[] = "\\left[";
       static constexpr char r_square_brace[] = "\\right]";
 
+      static constexpr char l_curly_brace[] = "\\left\\lbrace";
+      static constexpr char r_curly_brace[] = "\\right\\rbrace";
+
+      static constexpr char decrease_space[] = "\\!";
+
       static std::string
       decorate_latex_op(const std::string &op)
       {
         return "\\" + op;
+      }
+
+      static std::string
+      decorate_jump(const std::string &op)
+      {
+        const std::string &lbrace = l_square_brace;
+        const std::string &rbrace = r_square_brace;
+
+        return lbrace + decrease_space + lbrace + op + rbrace + decrease_space +
+               rbrace;
+      }
+
+      static std::string
+      decorate_average(const std::string &op)
+      {
+        const std::string &lbrace = l_curly_brace;
+        const std::string &rbrace = r_curly_brace;
+
+        return lbrace + decrease_space + lbrace + op + rbrace + decrease_space +
+               rbrace;
       }
 
       static std::string
