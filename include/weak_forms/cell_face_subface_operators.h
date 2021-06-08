@@ -21,37 +21,16 @@
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/tensor.h>
 
+#include <deal.II/fe/fe_interface_values.h>
 #include <deal.II/fe/fe_values.h>
 
 #include <weak_forms/config.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
+#include <weak_forms/type_traits.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
-
-
-// #ifndef DOXYGEN
-
-// Forward declarations
-// namespace WeakForms
-// {
-//   /* --------------- Cell face and cell subface operators --------------- */
-
-//   // template <int dim, int spacedim = dim>
-//   // class Normal;
-
-
-
-//   // template <int dim, int spacedim = dim>
-//   // WeakForms::Operators::SymbolicOp<Normal<dim, spacedim>,
-//   // WeakForms::Operators::SymbolicOpCodes::value>
-//   // value(const Normal<dim, spacedim> &operand);
-
-// } // namespace WeakForms
-
-// #endif // DOXYGEN
-
 
 
 namespace WeakForms
@@ -151,15 +130,6 @@ namespace WeakForms
   };
 
 
-  // Jump
-  // Average
-
-  // In tensor_operators.h
-  // Transpose
-  // Invert
-  // ....
-
-
   /* ---------------Cell, cell face and cell subface operators ---------------
    */
 
@@ -189,7 +159,7 @@ namespace WeakForms
     /* --------------- Cell face and cell subface operators --------------- */
 
     /**
-     * Extract the normals from a cell face.
+     * Extract the normals from a cell face or interface.
      */
     template <int dim, int spacedim>
     class SymbolicOp<Normal<dim, spacedim>, SymbolicOpCodes::value>
@@ -208,16 +178,13 @@ namespace WeakForms
       static const unsigned int space_dimension = spacedim;
 
       static const int rank = Op::rank;
+      static_assert(rank == 1, "Expected a rank 1 operation");
 
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
-
-      // static const int rank = 0;
-
-      // static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
 
       explicit SymbolicOp(const Op &operand)
         : operand(operand)
@@ -249,15 +216,6 @@ namespace WeakForms
         return UpdateFlags::update_normal_vectors;
       }
 
-      // // Return single entry
-      // template <typename ResultScalarType>
-      // value_type<ResultScalarType>
-      // operator()(const unsigned int q_point) const
-      // {
-      //   Assert(function, ExcNotInitialized());
-      //   return function(q_point);
-      // }
-
       /**
        * Return normals at all quadrature points
        */
@@ -271,6 +229,17 @@ namespace WeakForms
         return static_cast<const FEFaceValuesBase<dim2, spacedim> &>(
                  fe_face_values)
           .get_normal_vectors();
+      }
+
+      /**
+       * Return normals at all quadrature points
+       */
+      template <typename ResultScalarType, int dim2>
+      const return_type<ResultScalarType> &
+      operator()(
+        const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const
+      {
+        return fe_interface_values.get_normal_vectors();
       }
 
     private:
@@ -327,7 +296,18 @@ namespace WeakForms
 
 
 namespace WeakForms
-{} // namespace WeakForms
+{
+  template <int dim, int spacedim, enum Operators::SymbolicOpCodes OpCode>
+  struct is_boundary_op<Operators::SymbolicOp<Normal<dim, spacedim>, OpCode>>
+    : std::true_type
+  {};
+
+  template <int dim, int spacedim, enum Operators::SymbolicOpCodes OpCode>
+  struct is_interface_op<Operators::SymbolicOp<Normal<dim, spacedim>, OpCode>>
+    : std::true_type
+  {};
+
+} // namespace WeakForms
 
 
 #endif // DOXYGEN

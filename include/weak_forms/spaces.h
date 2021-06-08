@@ -3352,7 +3352,7 @@ namespace WeakForms
 
 
 
-  // Unary operations
+  // Symbolic operations
 
   template <int dim, int spacedim, enum Operators::SymbolicOpCodes OpCode>
   struct is_test_function_op<
@@ -3376,6 +3376,59 @@ namespace WeakForms
                           WeakForms::internal::SolutionIndex<solution_index>>>
     : std::true_type
   {};
+
+
+
+  // Interface operations
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::jump_in_values>>
+    : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::jump_in_gradients>>
+    : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::jump_in_hessians>>
+    : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<Operators::SymbolicOp<
+    Op,
+    Operators::SymbolicOpCodes::jump_in_third_derivatives>> : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::average_of_values>>
+    : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::average_of_gradients>>
+    : std::true_type
+  {};
+
+  template <typename Op>
+  struct is_interface_op<
+    Operators::SymbolicOp<Op, Operators::SymbolicOpCodes::average_of_hessians>>
+    : std::true_type
+  {};
+
+  // template <typename Op>
+  // struct is_interface_op<
+  //   Operators::SymbolicOp<Op,
+  //   Operators::SymbolicOpCodes::average_of_third_derivatives>> :
+  //   std::true_type
+  // {};
 
 } // namespace WeakForms
 
