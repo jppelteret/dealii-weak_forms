@@ -2003,6 +2003,12 @@ namespace WeakForms
     {
       static_assert(is_volume_integral_op<SymbolicOpVolumeIntegral>::value,
                     "Expected a volume integral type.");
+      static_assert(
+        !is_or_has_boundary_op<SymbolicOpVolumeIntegral>::value,
+        "A volume integral cannot operate with a boundary operator.");
+      static_assert(
+        !is_or_has_interface_op<SymbolicOpVolumeIntegral>::value,
+        "A volume integral cannot operate with a boundary operator.");
 
       // We need to update the flags that need to be set for
       // cell operations. The flags from the composite operation
@@ -2754,6 +2760,9 @@ namespace WeakForms
       static_assert(
         is_interface_integral_op<SymbolicOpInterfaceIntegral>::value,
         "Expected an interface integral type.");
+      static_assert(
+        !is_or_has_boundary_op<SymbolicOpInterfaceIntegral>::value,
+        "A interface integral cannot operate with a boundary operator.");
       // static_assert(false, "Assembler: Internal face operations not yet
       // implemented for linear forms.")
     }
