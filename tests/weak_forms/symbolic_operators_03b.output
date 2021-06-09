@@ -1,0 +1,20 @@
+
+DEAL:Dim 2::Test function: Face
+DEAL:Dim 2::OK
+DEAL:Dim 2::Trial solution: Face
+DEAL:Dim 2::OK
+DEAL:Dim 2::Test function: Interface
+DEAL:Dim 2::OK
+DEAL:Dim 2::Trial solution: Interface
+DEAL:Dim 2::OK
+DEAL:Dim 2::OK
+DEAL:Dim 3::Test function: Face
+DEAL:Dim 3::OK
+DEAL:Dim 3::Trial solution: Face
+DEAL:Dim 3::OK
+DEAL:Dim 3::Test function: Interface
+DEAL:Dim 3::OK
+DEAL:Dim 3::Trial solution: Interface
+DEAL:Dim 3::OK
+DEAL:Dim 3::OK
+DEAL::OK

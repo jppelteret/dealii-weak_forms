@@ -91,6 +91,14 @@ namespace WeakForms
   struct is_evaluated_with_scratch_data : std::false_type
   {};
 
+  template <typename T>
+  struct is_boundary_op : std::false_type
+  {};
+
+  template <typename T>
+  struct is_interface_op : std::false_type
+  {};
+
   // Ops for functors passed into linear and bilinear forms
   // TODO: Add test for this
   template <typename T, typename U = void>
@@ -239,6 +247,18 @@ namespace WeakForms
   DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(has_evaluated_with_scratch_data,
                                      is_evaluated_with_scratch_data)
 
+
+  // A trait that declares that one or more leaf operations
+  // is a operation that can only be performed on a boundary.
+  // The left itself will not be marked as one.
+  DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(has_boundary_op, is_boundary_op)
+
+
+  // A trait that declares that one or more leaf operations
+  // is a operation that can only be performed on an interface.
+  // The left itself will not be marked as one.
+  DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(has_interface_op, is_interface_op)
+
   // Integrals
   DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(has_symbolic_integral_op,
                                      is_symbolic_integral_op)
@@ -288,6 +308,14 @@ namespace WeakForms
   DEAL_II_TYPE_TRAIT_OR_COMBINER(is_or_has_evaluated_with_scratch_data,
                                  is_evaluated_with_scratch_data,
                                  has_evaluated_with_scratch_data)
+
+  DEAL_II_TYPE_TRAIT_OR_COMBINER(is_or_has_boundary_op,
+                                 is_boundary_op,
+                                 has_boundary_op)
+
+  DEAL_II_TYPE_TRAIT_OR_COMBINER(is_or_has_interface_op,
+                                 is_interface_op,
+                                 has_interface_op)
 
   // Integrals
   DEAL_II_TYPE_TRAIT_OR_COMBINER(is_or_has_symbolic_integral_op,

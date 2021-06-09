@@ -18,6 +18,7 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/fe/fe_interface_values.h>
 #include <deal.II/fe/fe_values.h>
 
 #include <deal.II/meshworker/scratch_data.h>
@@ -130,6 +131,61 @@ namespace WeakForms
     SubSpaceViewsType<SpaceType>,
     WeakForms::Operators::SymbolicOpCodes::third_derivative>
   third_derivative(const SubSpaceViewsType<SpaceType> &operand);
+
+
+
+  /* -- Finite element subspaces: Test functions and trial solutions (interface)
+   * -- */
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+  jump_in_values(const SubSpaceViewsType<SpaceType> &operand);
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand);
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand);
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand);
+
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_values>
+  average_of_values(const SubSpaceViewsType<SpaceType> &operand);
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const SubSpaceViewsType<SpaceType> &operand);
+
+
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const SubSpaceViewsType<SpaceType> &operand);
 
 
 
@@ -372,42 +428,79 @@ namespace WeakForms
     namespace internal
     {
       template <typename ExtractorType>
-      struct ExtractorToView;
+      struct FEValuesExtractorHelper;
 
       template <>
-      struct ExtractorToView<FEValuesExtractors::Scalar>
+      struct FEValuesExtractorHelper<FEValuesExtractors::Scalar>
       {
         static const int rank = 0;
 
         template <int dim, int spacedim>
-        using type = FEValuesViews::Scalar<dim, spacedim>;
+        using view_type = FEValuesViews::Scalar<dim, spacedim>;
+
+        template <int dim, int spacedim>
+        using interface_view_type = FEInterfaceViews::Scalar<dim, spacedim>;
+
+        static unsigned int
+        first_component(const FEValuesExtractors::Scalar &extractor)
+        {
+          return extractor.component;
+        }
       };
 
       template <>
-      struct ExtractorToView<FEValuesExtractors::Vector>
+      struct FEValuesExtractorHelper<FEValuesExtractors::Vector>
       {
         static const int rank = 1;
 
         template <int dim, int spacedim>
-        using type = FEValuesViews::Vector<dim, spacedim>;
+        using view_type = FEValuesViews::Vector<dim, spacedim>;
+
+        template <int dim, int spacedim>
+        using interface_view_type = FEInterfaceViews::Vector<dim, spacedim>;
+
+        static unsigned int
+        first_component(const FEValuesExtractors::Vector &extractor)
+        {
+          return extractor.first_vector_component;
+        }
       };
 
       template <int rank_>
-      struct ExtractorToView<FEValuesExtractors::Tensor<rank_>>
+      struct FEValuesExtractorHelper<FEValuesExtractors::Tensor<rank_>>
       {
         static const int rank = rank_;
 
         template <int dim, int spacedim>
-        using type = FEValuesViews::Tensor<rank_, dim, spacedim>;
+        using view_type = FEValuesViews::Tensor<rank_, dim, spacedim>;
+
+        // template <int dim, int spacedim>
+        // using interface_view_type = std::nullptr_t;
+
+        static unsigned int
+        first_component(const FEValuesExtractors::Tensor<rank_> &extractor)
+        {
+          return extractor.first_tensor_component;
+        }
       };
 
       template <int rank_>
-      struct ExtractorToView<FEValuesExtractors::SymmetricTensor<rank_>>
+      struct FEValuesExtractorHelper<FEValuesExtractors::SymmetricTensor<rank_>>
       {
         static const int rank = rank_;
 
         template <int dim, int spacedim>
-        using type = FEValuesViews::SymmetricTensor<rank_, dim, spacedim>;
+        using view_type = FEValuesViews::SymmetricTensor<rank_, dim, spacedim>;
+
+        // template <int dim, int spacedim>
+        // using interface_view_type = std::nullptr_t;
+
+        static unsigned int
+        first_component(
+          const FEValuesExtractors::SymmetricTensor<rank_> &extractor)
+        {
+          return extractor.first_tensor_component;
+        }
       };
     } // namespace internal
 
@@ -426,54 +519,54 @@ namespace WeakForms
  * @note It is intended that this should used immediately after class
  * definition is opened.
  */
-#define DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(ClassName,                      \
-                                          SpaceType_,                     \
-                                          FEValuesExtractorType)          \
-private:                                                                  \
-  using Base_t = SubSpaceViewBase<SpaceType_, FEValuesExtractorType>;     \
-                                                                          \
-public:                                                                   \
-  /**                                                                     \
-   *                                                                      \
-   */                                                                     \
-  using SpaceType = SpaceType_;                                           \
-                                                                          \
-  /**                                                                     \
-   *                                                                      \
-   */                                                                     \
-  using extractor_type = typename Base_t::extractor_type;                 \
-                                                                          \
-  /**                                                                     \
-   * Dimension in which this object operates.                             \
-   */                                                                     \
-  static const unsigned int dimension = SpaceType::dimension;             \
-                                                                          \
-  /**                                                                     \
-   * Dimension of the subspace in which this object operates.             \
-   */                                                                     \
-  static const unsigned int space_dimension = SpaceType::space_dimension; \
-  /**                                                                     \
-   * Rank of subspace                                                     \
-   */                                                                     \
-  static const int rank =                                                 \
-    internal::ExtractorToView<FEValuesExtractorType>::rank;               \
-                                                                          \
-  /**                                                                     \
-   *                                                                      \
-   */                                                                     \
-  using FEValuesViewsType = typename internal::ExtractorToView<           \
-    FEValuesExtractorType>::template type<dimension, space_dimension>;    \
-                                                                          \
-  explicit ClassName(const SpaceType &            space,                  \
-                     const FEValuesExtractorType &extractor)              \
-    : Base_t(space, extractor)                                            \
-  {}                                                                      \
-                                                                          \
-  ClassName(const ClassName &) = default;                                 \
-                                                                          \
-  virtual ClassName *clone() const override                               \
-  {                                                                       \
-    return new ClassName(*this);                                          \
+#define DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(ClassName,                        \
+                                          SpaceType_,                       \
+                                          FEValuesExtractorType)            \
+private:                                                                    \
+  using Base_t = SubSpaceViewBase<SpaceType_, FEValuesExtractorType>;       \
+                                                                            \
+public:                                                                     \
+  /**                                                                       \
+   *                                                                        \
+   */                                                                       \
+  using SpaceType = SpaceType_;                                             \
+                                                                            \
+  /**                                                                       \
+   *                                                                        \
+   */                                                                       \
+  using extractor_type = typename Base_t::extractor_type;                   \
+                                                                            \
+  /**                                                                       \
+   * Dimension in which this object operates.                               \
+   */                                                                       \
+  static const unsigned int dimension = SpaceType::dimension;               \
+                                                                            \
+  /**                                                                       \
+   * Dimension of the subspace in which this object operates.               \
+   */                                                                       \
+  static const unsigned int space_dimension = SpaceType::space_dimension;   \
+  /**                                                                       \
+   * Rank of subspace                                                       \
+   */                                                                       \
+  static const int rank =                                                   \
+    internal::FEValuesExtractorHelper<FEValuesExtractorType>::rank;         \
+                                                                            \
+  /**                                                                       \
+   *                                                                        \
+   */                                                                       \
+  using FEValuesViewsType = typename internal::FEValuesExtractorHelper<     \
+    FEValuesExtractorType>::template view_type<dimension, space_dimension>; \
+                                                                            \
+  explicit ClassName(const SpaceType &            space,                    \
+                     const FEValuesExtractorType &extractor)                \
+    : Base_t(space, extractor)                                              \
+  {}                                                                        \
+                                                                            \
+  ClassName(const ClassName &) = default;                                   \
+                                                                            \
+  virtual ClassName *clone() const override                                 \
+  {                                                                         \
+    return new ClassName(*this);                                            \
   }
 
 
@@ -592,6 +685,50 @@ public:                                                                   \
       third_derivative() const
       {
         return WeakForms::third_derivative<solution_index>(*this);
+      }
+
+      // Interface
+
+      auto
+      jump_in_values() const
+      {
+        return WeakForms::jump_in_values(*this);
+      }
+
+      auto
+      jump_in_gradients() const
+      {
+        return WeakForms::jump_in_gradients(*this);
+      }
+
+      auto
+      jump_in_hessians() const
+      {
+        return WeakForms::jump_in_hessians(*this);
+      }
+
+      auto
+      jump_in_third_derivatives() const
+      {
+        return WeakForms::jump_in_third_derivatives(*this);
+      }
+
+      auto
+      average_of_values() const
+      {
+        return WeakForms::average_of_values(*this);
+      }
+
+      auto
+      average_of_gradients() const
+      {
+        return WeakForms::average_of_gradients(*this);
+      }
+
+      auto
+      average_of_hessians() const
+      {
+        return WeakForms::average_of_hessians(*this);
       }
     };
 
@@ -751,6 +888,50 @@ public:                                                                   \
       {
         return WeakForms::third_derivative<solution_index>(*this);
       }
+
+      // Interface
+
+      auto
+      jump_in_values() const
+      {
+        return WeakForms::jump_in_values(*this);
+      }
+
+      auto
+      jump_in_gradients() const
+      {
+        return WeakForms::jump_in_gradients(*this);
+      }
+
+      auto
+      jump_in_hessians() const
+      {
+        return WeakForms::jump_in_hessians(*this);
+      }
+
+      auto
+      jump_in_third_derivatives() const
+      {
+        return WeakForms::jump_in_third_derivatives(*this);
+      }
+
+      auto
+      average_of_values() const
+      {
+        return WeakForms::average_of_values(*this);
+      }
+
+      auto
+      average_of_gradients() const
+      {
+        return WeakForms::average_of_gradients(*this);
+      }
+
+      auto
+      average_of_hessians() const
+      {
+        return WeakForms::average_of_hessians(*this);
+      }
     };
 
 
@@ -827,6 +1008,9 @@ public:                                                                   \
       {
         return WeakForms::divergence<solution_index>(*this);
       }
+
+      // Interfaces
+      // - Not yet implemented in deal.II
     };
 
 
@@ -885,6 +1069,9 @@ public:                                                                   \
       {
         return WeakForms::divergence<solution_index>(*this);
       }
+
+      // Interfaces
+      // - Not yet implemented in deal.II
     };
 
 #undef DEAL_II_SUBSPACE_VIEW_COMMON_IMPL
@@ -1499,6 +1686,425 @@ protected:                                                                   \
 
 
 #undef DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL
+
+
+    /* -- Finite element spaces: Test functions and trial solutions (interfaces)
+     * -- */
+
+
+/**
+ * A macro to implement the common parts of a symbolic op class
+ * for test functions and trial solution subspaces.
+ * It is expected that the unary op derives from a
+ * SymbolicOp[TYPE]Base<SubSpaceViewsType> .
+ *
+ * @note It is intended that this should used immediately after class
+ * definition is opened.
+ */
+#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(       \
+  SymbolicOpBaseType, SubSpaceViewsType, SymbolicOpCode)                     \
+private:                                                                     \
+  using Base_t  = SymbolicOpBaseType<SubSpaceViewsType>;                     \
+  using View_t  = SubSpaceViewsType;                                         \
+  using Space_t = typename View_t::SpaceType;                                \
+  using SymbolicOpExtractor_t =                                              \
+    internal::SymbolicOpExtractor<SubSpaceViewsType, SymbolicOpCode>;        \
+  using typename Base_t::Op;                                                 \
+                                                                             \
+public:                                                                      \
+  /**                                                                        \
+   * Dimension in which this object operates.                                \
+   */                                                                        \
+  static const unsigned int dimension = View_t::dimension;                   \
+                                                                             \
+  /**                                                                        \
+   * Dimension of the subspace in which this object operates.                \
+   */                                                                        \
+  static const unsigned int space_dimension = View_t::space_dimension;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using value_type = typename Base_t::template value_type<ScalarType>;       \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>; \
+                                                                             \
+  template <typename ScalarType>                                             \
+  using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
+                                                                             \
+  explicit SymbolicOp(const Op &operand)                                     \
+    : Base_t(operand)                                                        \
+  {}                                                                         \
+                                                                             \
+  /**                                                                        \
+   * Return all shape function values all quadrature points.                 \
+   *                                                                         \
+   * The outer index is the shape function, and the inner index              \
+   * is the quadrature point.                                                \
+   *                                                                         \
+   * @tparam ScalarType                                                      \
+   * @param fe_values_dofs                                                   \
+   * @param fe_values_op                                                     \
+   * @return return_type<ScalarType>                                         \
+   */                                                                        \
+  template <typename ScalarType, int dim, int spacedim>                      \
+  return_type<ScalarType> operator()(                                        \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values) const       \
+  {                                                                          \
+    return_type<ScalarType> out(                                             \
+      fe_interface_values.n_current_interface_dofs());                       \
+                                                                             \
+    for (const auto interface_dof_index :                                    \
+         fe_interface_values.get_interface_dof_indices())                    \
+      {                                                                      \
+        out[interface_dof_index].reserve(                                    \
+          fe_interface_values.n_quadrature_points);                          \
+                                                                             \
+        for (const auto q_point :                                            \
+             fe_interface_values.quadrature_point_indices())                 \
+          out[interface_dof_index].emplace_back(                             \
+            this->template operator()<ScalarType>(fe_interface_values,       \
+                                                  interface_dof_index,       \
+                                                  q_point));                 \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+protected:                                                                   \
+  /**                                                                        \
+   * The extractor corresponding to the view itself                          \
+   */                                                                        \
+  using view_extractor_type = typename View_t::extractor_type;               \
+                                                                             \
+  const view_extractor_type &get_extractor() const                           \
+  {                                                                          \
+    return this->get_operand().get_extractor();                              \
+  }
+
+
+    /**
+     * Extract the jump in shape function values from a finite element subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::jump_in_values,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpJumpValueBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpValueBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::jump_in_values)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].jump_value(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+    /**
+     * Extract the jump in shape function gradients from a finite element
+     * subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::jump_in_gradients,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpJumpGradientBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpGradientBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::jump_in_gradients)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].jump_gradient(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+    /**
+     * Extract the jump in shape function Hessians from a finite element
+     * subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::jump_in_hessians,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpJumpHessianBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpHessianBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::jump_in_hessians)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].jump_hessian(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+    /**
+     * Extract the jump in shape function third derivatives from a finite
+     * element subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::jump_in_third_derivatives,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpJumpThirdDerivativeBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpThirdDerivativeBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::jump_in_third_derivatives)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].jump_third_derivative(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+
+    /**
+     * Extract the average of shape function values from a finite element
+     * subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::average_of_values,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpAverageValueBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageValueBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::average_of_values)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].average_value(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+    /**
+     * Extract the average of shape function gradients from a finite element
+     * subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::average_of_gradients,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpAverageGradientBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageGradientBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::average_of_gradients)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].average_gradient(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+    /**
+     * Extract the average of shape function Hessians from a finite element
+     * subspace.
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType,
+     *         e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     */
+    template <typename SubSpaceViewsType>
+    class SymbolicOp<
+      SubSpaceViewsType,
+      SymbolicOpCodes::average_of_hessians,
+      typename std::enable_if<
+        is_test_function<typename SubSpaceViewsType::SpaceType>::value ||
+        is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
+      : public SymbolicOpAverageHessianBase<SubSpaceViewsType>
+    {
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageHessianBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::average_of_hessians)
+
+    protected:
+      // Return single entry
+      template <typename ScalarType, int dim, int spacedim>
+      value_type<ScalarType>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const unsigned int                      interface_dof_index,
+                 const unsigned int                      q_point) const
+      {
+        Assert(interface_dof_index <
+                 fe_interface_values.n_current_interface_dofs(),
+               ExcIndexRange(interface_dof_index,
+                             0,
+                             fe_interface_values.n_current_interface_dofs()));
+        Assert(q_point < fe_interface_values.n_quadrature_points,
+               ExcIndexRange(q_point,
+                             0,
+                             fe_interface_values.n_quadrature_points));
+
+        return fe_interface_values[get_extractor()].average_hessian(
+          interface_dof_index, q_point);
+      }
+    };
+
+
+#undef DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL
 
 
     /* ------------ Finite element spaces: Solution fields ------------ */
@@ -2379,6 +2985,186 @@ namespace WeakForms
 
 
 
+  /* -- Finite element subspaces: Test functions and trial solutions (interface)
+   * -- */
+
+  /**
+   * @brief Jump in values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+  jump_in_values(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_values>;
+
+    return OpType(operand);
+  }
+
+
+  /**
+   * @brief Jump in gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+  jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
+
+    return OpType(operand);
+  }
+
+
+  /**
+   * @brief Jump in Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+  jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
+
+    return OpType(operand);
+  }
+
+
+  /**
+   * @brief Jump in third derivatives variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+  jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
+
+    return OpType(operand);
+  }
+
+
+
+  /**
+   * @brief Average of values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::average_of_values>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_values>
+  average_of_values(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
+
+    return OpType(operand);
+  }
+
+
+  /**
+   * @brief Average of gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+  average_of_gradients(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
+
+    return OpType(operand);
+  }
+
+
+  /**
+   * @brief Average of Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+   *
+   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+   * @tparam SpaceType A space type, specifically a test space or trial space
+   * @param operand
+   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+   * WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+   */
+  template <template <class> class SubSpaceViewsType, typename SpaceType>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<SpaceType>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+  average_of_hessians(const SubSpaceViewsType<SpaceType> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SubSpaceViewsType<SpaceType>;
+    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
+
+    return OpType(operand);
+  }
+
+
+
   /* ------------- Finite element subspaces: Field solutions ------------- */
 
   /**
@@ -3066,7 +3852,7 @@ namespace WeakForms
 
 
 
-  // Unary operations: Subspace views
+  // Symbolic operations: Subspace views
 
   template <int dim, int spacedim, enum Operators::SymbolicOpCodes OpCode>
   struct is_test_function_op<
@@ -3175,6 +3961,12 @@ namespace WeakForms
     void,
     WeakForms::internal::SolutionIndex<solution_index>>> : std::true_type
   {};
+
+
+
+  // Interface operations
+  // - Already implemented in spaces.h as a generic trait for all jump/average
+  // operations
 
 } // namespace WeakForms
 

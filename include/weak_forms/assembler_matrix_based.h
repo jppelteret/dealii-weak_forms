@@ -541,9 +541,7 @@ namespace WeakForms
       // Define a cell worker
       const auto &cell_matrix_operations = this->cell_matrix_operations;
       const auto &cell_vector_operations = this->cell_vector_operations;
-      const auto &cell_field_solution_operations =
-        this->cell_field_solution_operations;
-      const auto &cell_ad_sd_operations = this->cell_ad_sd_operations;
+      const auto &cell_ad_sd_operations  = this->cell_ad_sd_operations;
 
       auto cell_worker =
         CellWorkerType<CellIteratorType, ScratchData, CopyData>();
@@ -551,7 +549,6 @@ namespace WeakForms
         {
           cell_worker = [&cell_matrix_operations,
                          &cell_vector_operations,
-                         &cell_field_solution_operations,
                          &cell_ad_sd_operations,
                          system_matrix,
                          system_vector,
@@ -568,17 +565,6 @@ namespace WeakForms
             if (solution_storage.n_solution_vectors() > 0)
               internal::extract_solution_local_dof_values(scratch_data,
                                                           solution_storage);
-
-            // TODO: Is this actually required? Don't the functors cache as we
-            // go along? Or is it user defined functions that I'm thinking
-            // about... First we cache all field solutions into the
-            // scratch_data. We do this because some of the user-defined
-            // functors that use the cache might expect that these and other
-            // solution fields already exist in the cache.
-            for (const auto &cell_field_solution_op :
-                 cell_field_solution_operations)
-              cell_field_solution_op(scratch_data,
-                                     solution_storage.get_solution_names());
 
             // Next we perform all operations that use AD or SD functors.
             // Although the forms are self-linearizing, they reference the
@@ -634,8 +620,6 @@ namespace WeakForms
         this->boundary_face_matrix_operations;
       const auto &boundary_face_vector_operations =
         this->boundary_face_vector_operations;
-      const auto &boundary_face_field_solution_operations =
-        this->boundary_face_field_solution_operations;
       const auto &boundary_face_ad_sd_operations =
         this->boundary_face_ad_sd_operations;
 
@@ -646,7 +630,6 @@ namespace WeakForms
         {
           boundary_worker = [&boundary_face_matrix_operations,
                              &boundary_face_vector_operations,
-                             &boundary_face_field_solution_operations,
                              &boundary_face_ad_sd_operations,
                              system_matrix,
                              system_vector,
@@ -668,17 +651,6 @@ namespace WeakForms
             if (solution_storage.n_solution_vectors() > 0)
               internal::extract_solution_local_dof_values(scratch_data,
                                                           solution_storage);
-
-            // TODO: Is this actually required? Don't the functors cache as we
-            // go along? Or is it user defined functions that I'm thinking
-            // about... First we cache all field solutions into the
-            // scratch_data. We do this because some of the user-defined
-            // functors that use the cache might expect that these and other
-            // solution fields already exist in the cache.
-            for (const auto &boundary_face_field_solution_op :
-                 boundary_face_field_solution_operations)
-              boundary_face_field_solution_op(
-                scratch_data, solution_storage.get_solution_names());
 
             // Next we perform all operations that use AD or SD functors.
             // Although the forms are self-linearizing, they reference the
