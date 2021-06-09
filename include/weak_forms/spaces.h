@@ -2169,15 +2169,18 @@ public:                                                                      \
     return_type<ScalarType> out(                                             \
       fe_interface_values.n_current_interface_dofs());                       \
                                                                              \
-    for (const auto dof_index :                                              \
+    for (const auto interface_dof_index :                                    \
          fe_interface_values.get_interface_dof_indices())                    \
       {                                                                      \
-        out[dof_index].reserve(fe_interface_values.n_quadrature_points);     \
+        out[interface_dof_index].reserve(                                    \
+          fe_interface_values.n_quadrature_points);                          \
                                                                              \
         for (const auto q_point :                                            \
              fe_interface_values.quadrature_point_indices())                 \
-          out[dof_index].emplace_back(this->template operator()<ScalarType>( \
-            fe_interface_values, dof_index, q_point));                       \
+          out[interface_dof_index].emplace_back(                             \
+            this->template operator()<ScalarType>(fe_interface_values,       \
+                                                  interface_dof_index,       \
+                                                  q_point));                 \
       }                                                                      \
                                                                              \
     return out;                                                              \
