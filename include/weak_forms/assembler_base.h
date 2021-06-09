@@ -1851,9 +1851,8 @@ namespace WeakForms
     std::vector<CellVectorOperation> cell_vector_operations;
 
     // Boundary faces
-    UpdateFlags boundary_face_update_flags;
-    std::vector<BoundaryMatrixOperation>
-                                         boundary_face_matrix_operations; // TODO[JPP]: Add these contributions
+    UpdateFlags                          boundary_face_update_flags;
+    std::vector<BoundaryMatrixOperation> boundary_face_matrix_operations;
     std::vector<BoundaryVectorOperation> boundary_face_vector_operations;
 
     // Interfaces
@@ -2273,6 +2272,337 @@ namespace WeakForms
                     "Expected a boundary integral type.");
       // static_assert(false, "Assembler: Boundary face operations not yet
       // implemented for bilinear forms.")
+
+      // static_assert(
+      //   !is_or_has_interface_op<SymbolicOpVolumeIntegral>::value,
+      //   "A volume integral cannot operate with a boundary operator.");
+
+      // We need to update the flags that need to be set for
+      // cell operations. The flags from the composite operation
+      // that composes the integrand will be bubbled down to the
+      // integral itself.
+      boundary_face_update_flags |= boundary_integral.get_update_flags();
+
+      // Extract some information about the form that we'll be
+      // constructing and integrating
+      const auto &form = boundary_integral.get_integrand();
+      static_assert(
+        is_bilinear_form<typename std::decay<decltype(form)>::type>::value,
+        "Incompatible integrand type.");
+
+      const auto &test_space_op  = form.get_test_space_operation();
+      const auto &functor        = form.get_functor();
+      const auto &trial_space_op = form.get_trial_space_operation();
+
+      using TestSpaceOp  = typename std::decay<decltype(test_space_op)>::type;
+      using Functor      = typename std::decay<decltype(functor)>::type;
+      using TrialSpaceOp = typename std::decay<decltype(trial_space_op)>::type;
+
+      // // Improve the error message that might stem from misuse of a templated
+      // function. static_assert(!is_field_solution_op<Functor>::value,
+      //               "This add_cell_operation() can only work with functors
+      //               that are not " "field solutions. This is because we do
+      //               not provide the solution vector " "to the functor to
+      //               perform is operation.");
+
+      using ValueTypeTest =
+        typename TestSpaceOp::template value_type<ScalarType>;
+      using ValueTypeFunctor =
+        typename Functor::template value_type<ScalarType>;
+      using ValueTypeTrial =
+        typename TrialSpaceOp::template value_type<ScalarType>;
+
+      // Contribution symmetry
+      // We consider the case that the user adjust the symmetry at any point
+      // before the actual operation. We therefore capture the local symmetry
+      // flag by copy, but the global symmetry flag refers back to that stored
+      // in the assembler itself.
+      const bool local_contribution_symmetry_flag =
+        false; // form.local_contribution_symmetry_flag()
+      const bool &global_system_symmetry_flag =
+        this->global_system_symmetry_flag;
+
+      // Skip this contribution if we enforce symmetry at a global level,
+      // and we are able to concretely establish that this contribution
+      // would occur in a "block" that is below the diagonal.
+      // Note: Each of these TestSpaceOp/TrialSpaceOp might be composite
+      // operations, so we have to do some digging to get to the underlying
+      // bare symbolic op.
+      const auto &underlying_test_space_op =
+        internal::TestTrialSpaceHelper<TestSpaceOp>::extract(test_space_op);
+      const auto &underlying_trial_space_op =
+        internal::TestTrialSpaceHelper<TrialSpaceOp>::extract(trial_space_op);
+      if (underlying_test_space_op.get_field_index() ==
+          numbers::invalid_field_index)
+        {
+          Assert(
+            underlying_trial_space_op.get_field_index() ==
+              numbers::invalid_field_index,
+            ExcMessage(
+              "The test functions operate on the full space, so the trial solutions must do the same."));
+        }
+      if (underlying_trial_space_op.get_field_index() ==
+          numbers::invalid_field_index)
+        {
+          Assert(
+            underlying_test_space_op.get_field_index() ==
+              numbers::invalid_field_index,
+            ExcMessage(
+              "The trial solution operate on the full space, so the test functions must do the same."));
+        }
+
+      // This lambda function will essentially ensure that we visit only the
+      // diagonal and upper "blocks" of the system. Symmetrising the local
+      // contribution results in the (symmetric) system equivalent to
+      // having visited all of the blocks.
+      const auto skip_contribution_due_to_global_symmetry =
+        [underlying_test_space_op,
+         underlying_trial_space_op](const bool global_system_symmetry_flag) {
+          if (global_system_symmetry_flag)
+            {
+              // Note: If both are marked "numbers::invalid_field_index", then
+              // we'll unconditionally add both contributions.
+              if (underlying_test_space_op.get_field_index() >
+                  underlying_trial_space_op.get_field_index())
+                {
+                  Assert(
+                    underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
+                      underlying_trial_space_op.as_ascii(SymbolicDecorations()),
+                    ExcMessage(
+                      "Test and trial spaces have the different field indices, "
+                      "but the same name. The field indices set through the subspace "
+                      "extractors have likely been set up incorrectly."));
+                  return true;
+                }
+            }
+
+          return false;
+        };
+
+      // Now, compose all of this into a bespoke operation for this
+      // contribution.
+      //
+      // Important note: All operations must be captured by copy!
+      // We do this in case someone inlines a call to bilinear_form()
+      // with operator+= , e.g.
+      //   MatrixBasedAssembler<dim, spacedim> assembler;
+      //   assembler += bilinear_form(test_val, coeff_func, trial_val).dA();
+      auto f = [boundary_integral,
+                test_space_op,
+                functor,
+                trial_space_op,
+                local_contribution_symmetry_flag,
+                &global_system_symmetry_flag,
+                skip_contribution_due_to_global_symmetry](
+                 FullMatrix<ScalarType> &                cell_matrix,
+                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<std::string> &        solution_names,
+                 const FEValuesBase<dim, spacedim> &     fe_values,
+                 const FEFaceValuesBase<dim, spacedim> & fe_face_values,
+                 const unsigned int                      face) {
+        // Early exit: Don't form the cell contribution if it will add below
+        // the diagonal.
+        if (skip_contribution_due_to_global_symmetry(
+              global_system_symmetry_flag))
+          {
+            return;
+          }
+
+        // Skip this cell face if it doesn't match the criteria set for the
+        // integration domain.
+        if (!boundary_integral.get_integral_operation().integrate_on_face(
+              fe_values.get_cell(), face))
+          {
+            return;
+          }
+
+        const unsigned int n_dofs_per_cell = fe_values.dofs_per_cell;
+        const unsigned int n_q_points      = fe_face_values.n_quadrature_points;
+
+        // Decide whether or not to assemble in symmetry mode, i.e. Only
+        // assemble the lower half of the matrix plus the diagonal.
+        const bool symmetric_contribution =
+          local_contribution_symmetry_flag | global_system_symmetry_flag;
+
+        // If the local contribution is symmetric, but the global system is not,
+        // then we need to write our contributions into an intermediate data
+        // structure.
+        // TODO[JPP]: Put this somewhere reuseable, e.g. ScratchData?
+        const bool use_scratch_cell_matrix =
+          local_contribution_symmetry_flag && !global_system_symmetry_flag;
+        FullMatrix<ScalarType> scratch_cell_matrix;
+        if (use_scratch_cell_matrix)
+          scratch_cell_matrix.reinit({cell_matrix.m(), cell_matrix.n()});
+
+        // Decide whether or not to contribute directly into the overall system
+        // matrix, or own own scratch data.
+        auto &assembly_cell_matrix =
+          (use_scratch_cell_matrix ? scratch_cell_matrix : cell_matrix);
+
+        // Get the shape function data (value, gradients, curls, etc.)
+        // for all quadrature points at all DoFs. We construct it in this
+        // manner (with the q_point indices fast) so that we can perform
+        // contractions in an optimal manner.
+        const std::vector<std::vector<ValueTypeTest>> shapes_test =
+          internal::evaluate_fe_space<ScalarType>(test_space_op,
+                                                  fe_values,
+                                                  fe_face_values,
+                                                  scratch_data,
+                                                  solution_names);
+        const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
+          internal::evaluate_fe_space<ScalarType>(trial_space_op,
+                                                  fe_values,
+                                                  fe_face_values,
+                                                  scratch_data,
+                                                  solution_names);
+
+        if (use_vectorization)
+          {
+            // Get all functor values at the quadrature points
+            const std::vector<ValueTypeFunctor> all_values_functor =
+              internal::evaluate_functor<ScalarType>(functor,
+                                                     fe_face_values,
+                                                     scratch_data,
+                                                     solution_names);
+
+            // We wish to vectorize the quadrature point data / indices.
+            // Determine the quadrature point batch size for all vectorized
+            // operations.
+            constexpr std::size_t width =
+              dealii::internal::VectorizedArrayWidthSpecifier<
+                ScalarType>::max_width;
+            using Vector_t = VectorizedArray<ScalarType, width>;
+            using VectorizedValueTypeTest =
+              typename TestSpaceOp::template value_type<Vector_t>;
+            using VectorizedValueTypeFunctor =
+              typename Functor::template value_type<Vector_t>;
+            using VectorizedValueTypeTrial =
+              typename TrialSpaceOp::template value_type<Vector_t>;
+
+            // Alias some reused names
+            const auto &all_shapes_test  = shapes_test;
+            const auto &all_shapes_trial = shapes_trial;
+
+            // To fill: the integration constant and functor values, as well as
+            // the all DoF shape function data (value, gradients, curls, etc.)
+            // for all batch quadrature points.
+            VectorizedArray<double, width>         JxW(0.0);
+            VectorizedValueTypeFunctor             values_functor{};
+            AlignedVector<VectorizedValueTypeTest> shapes_test(n_dofs_per_cell);
+            AlignedVector<VectorizedValueTypeTrial> shapes_trial(
+              n_dofs_per_cell);
+
+            using QPRange_t =
+              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
+            for (unsigned int batch_start = 0; batch_start < n_q_points;
+                 batch_start += width)
+              {
+                // Make sure that the range doesn't go out of bounds if we
+                // cannot divide up the work evenly.
+                const unsigned int batch_end =
+                  std::min(batch_start + static_cast<unsigned int>(width),
+                           n_q_points);
+                const QPRange_t q_range{batch_start, batch_end};
+
+                // Assign values for each entry in vectorized arrays.
+                for (unsigned int v = 0; v < width; v++)
+                  {
+                    // The entire vectorization lane might not be filled, so
+                    // we need an early exit for this condition.
+                    // These elements still participate in the assembly through,
+                    // so we need to make sure that their contributions
+                    // integrate to zero.
+                    if (v >= q_range.size())
+                      {
+                        internal::set_vectorized_values(JxW, v, 0.0);
+                        continue;
+                      }
+
+                    // Quadrature point index corresponding to the
+                    // vectorization index.
+                    const unsigned int q = q_range[v];
+
+                    // Copy non-vectorized data into the vectorized
+                    // counterparts.
+                    internal::set_vectorized_values(
+                      JxW,
+                      v,
+                      boundary_integral.template operator()<ScalarType>(
+                        fe_face_values, q));
+                    internal::set_vectorized_values(values_functor,
+                                                    v,
+                                                    all_values_functor[q]);
+
+                    for (const unsigned int k : fe_values.dof_indices())
+                      {
+                        internal::set_vectorized_values(shapes_test[k],
+                                                        v,
+                                                        all_shapes_test[k][q]);
+                        internal::set_vectorized_values(shapes_trial[k],
+                                                        v,
+                                                        all_shapes_trial[k][q]);
+                      }
+                  }
+
+                // Do the assembly for the current batch of quadrature points
+                internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
+                  Sign>(assembly_cell_matrix,
+                        fe_values,
+                        shapes_test,
+                        values_functor,
+                        shapes_trial,
+                        JxW,
+                        symmetric_contribution);
+              }
+          }
+        else
+          {
+            // Get all values at the quadrature points
+            const std::vector<double> &  JxW =
+              boundary_integral.template operator()<ScalarType>(fe_face_values);
+            const std::vector<ValueTypeFunctor> values_functor =
+              internal::evaluate_functor<ScalarType>(functor,
+                                                     fe_face_values,
+                                                     scratch_data,
+                                                     solution_names);
+
+            // Assemble for all DoFs and quadrature points
+            internal::assemble_cell_matrix_contribution<Sign>(
+              assembly_cell_matrix,
+              fe_values,
+              fe_face_values,
+              shapes_test,
+              values_functor,
+              shapes_trial,
+              JxW,
+              symmetric_contribution);
+          }
+
+        if (use_scratch_cell_matrix)
+          {
+            Assert(!global_system_symmetry_flag,
+                   ExcMessage("Expect global symmetry flag to be false."));
+            Assert(&assembly_cell_matrix == &scratch_cell_matrix,
+                   ExcMessage(
+                     "Expected to be working with scratch cell matrix object"));
+
+            // Symmetrize this contribution
+            for (const unsigned int i : fe_values.dof_indices())
+              {
+                // Accumulate into diagonal
+                cell_matrix(i, i) += scratch_cell_matrix(i, i);
+                for (const unsigned int j :
+                     fe_values.dof_indices_starting_at(i + 1))
+                  {
+                    // Accumulate into lower and upper halves from the lower
+                    // half contribution that we've just assembled.
+                    cell_matrix(i, j) += scratch_cell_matrix(j, i);
+                    cell_matrix(j, i) += scratch_cell_matrix(j, i);
+                  }
+              }
+          }
+      };
+      boundary_face_matrix_operations.emplace_back(f);
     }
 
 
@@ -2496,6 +2826,10 @@ namespace WeakForms
                     "Expected a boundary integral type.");
       // static_assert(false, "Assembler: Boundary face operations not yet
       // implemented for linear forms.")
+
+      // static_assert(
+      //   !is_or_has_interface_op<SymbolicOpVolumeIntegral>::value,
+      //   "A volume integral cannot operate with a boundary operator.");
 
       // We need to update the flags that need to be set for
       // cell operations. The flags from the composite operation
