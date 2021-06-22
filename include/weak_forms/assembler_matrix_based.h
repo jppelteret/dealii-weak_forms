@@ -704,16 +704,88 @@ namespace WeakForms
         this->interface_face_matrix_operations;
       const auto &interface_face_vector_operations =
         this->interface_face_vector_operations;
+      const auto &interface_face_ad_sd_operations =
+        this->interface_face_ad_sd_operations;
       auto face_worker =
         FaceWorkerType<CellIteratorType, ScratchData, CopyData>();
       if (!interface_face_matrix_operations.empty() ||
           !interface_face_vector_operations.empty())
         {
-          // interface_vector_operations
-          AssertThrow(
-            false,
-            ExcMessage(
-              "Internal face cell matrix/vector contributions have not yet been implemented."));
+          face_worker =
+            [&interface_face_matrix_operations,
+             &interface_face_vector_operations,
+             &interface_face_ad_sd_operations,
+             system_matrix,
+             system_vector,
+             solution_storage](const CellIteratorType &cell,
+                               const unsigned int      face,
+                               const unsigned int      subface,
+                               const CellIteratorType &neighbour_cell,
+                               const unsigned int      neighbour_face,
+                               const unsigned int      neighbour_subface,
+                               ScratchData &           scratch_data,
+                               CopyData &              copy_data) {
+              Assert((!cell->face(face)->at_boundary()),
+                     ExcMessage("Cell face is at the boundary."));
+
+              const FEInterfaceValues<dim> &fe_interface_values =
+                scratch_data.reinit(cell,
+                                    face,
+                                    subface,
+                                    neighbour_cell,
+                                    neighbour_face,
+                                    neighbour_subface);
+
+              // Extract the local solution vector, if it's provided.
+              if (solution_storage.n_solution_vectors() > 0)
+                internal::extract_solution_local_dof_values(scratch_data,
+                                                            solution_storage);
+
+              // Next we perform all operations that use AD or SD functors.
+              // Although the forms are self-linearizing, they reference the
+              // ADHelpers or SD BatchOptimizers that are stored in the form. So
+              // these need to be updated with this cell/QP data before their
+              // associated self-linearized forms, which require this data,
+              // can be invoked.
+              for (const auto &interface_face_ad_sd_op :
+                   interface_face_ad_sd_operations)
+                interface_face_ad_sd_op(scratch_data,
+                                        solution_storage.get_solution_names());
+
+              // Perform all operations that contribute to the local cell matrix
+              if (system_matrix)
+                {
+                  FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
+                  for (const auto &interface_face_matrix_op :
+                       interface_face_matrix_operations)
+                    {
+                      interface_face_matrix_op(
+                        cell_matrix,
+                        scratch_data,
+                        solution_storage.get_solution_names(),
+                        fe_interface_values,
+                        face,
+                        neighbour_face);
+                    }
+                }
+
+              // Perform all operations that contribute to the local cell vector
+              if (system_vector)
+                {
+                  Vector<ScalarType> &cell_vector = copy_data.vectors[0];
+                  for (const auto &interface_face_vector_op :
+                       interface_face_vector_operations)
+                    {
+                      interface_face_vector_op(
+                        cell_vector,
+                        scratch_data,
+                        solution_storage.get_solution_names(),
+                        fe_interface_values,
+                        face,
+                        neighbour_face);
+                    }
+                }
+            };
         }
 
       // Symmetry of the global system
@@ -802,13 +874,19 @@ namespace WeakForms
       // do.
       MeshWorker::AssembleFlags assembly_flags = MeshWorker::assemble_nothing;
       if (!cell_matrix_operations.empty() || !cell_vector_operations.empty())
-        assembly_flags |= MeshWorker::assemble_own_cells;
+        {
+          assembly_flags |= MeshWorker::assemble_own_cells;
+        }
       if (!boundary_face_matrix_operations.empty() ||
           !boundary_face_vector_operations.empty())
-        assembly_flags |= MeshWorker::assemble_boundary_faces;
+        {
+          assembly_flags |= MeshWorker::assemble_boundary_faces;
+        }
       if (!interface_face_matrix_operations.empty() ||
           !interface_face_vector_operations.empty())
-        assembly_flags |= MeshWorker::assemble_own_interior_faces_once;
+        {
+          assembly_flags |= MeshWorker::assemble_own_interior_faces_once;
+        }
 
       // Finally! We can perform the assembly.
       if (assembly_flags)

@@ -1309,20 +1309,20 @@ namespace WeakForms
                          const FEFaceValuesBase<dim, spacedim> & fe_face_values,
                          const unsigned int                      face)>;
 
-    using InterfaceMatrixOperation =
-      std::function<void(FullMatrix<ScalarType> &                cell_matrix,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values,
-                         const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                         const unsigned int                      face)>;
-    using InterfaceVectorOperation =
-      std::function<void(Vector<ScalarType> &                    cell_vector,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values,
-                         const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                         const unsigned int                      face)>;
+    using InterfaceMatrixOperation = std::function<
+      void(FullMatrix<ScalarType> &                cell_matrix,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<std::string> &        solution_names,
+           const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+           const unsigned int                      face,
+           const unsigned int                      neighbour_face)>;
+    using InterfaceVectorOperation = std::function<
+      void(Vector<ScalarType> &                    cell_vector,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<std::string> &        solution_names,
+           const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+           const unsigned int                      face,
+           const unsigned int                      neighbour_face)>;
 
 
     virtual ~AssemblerBase() = default;
@@ -1497,6 +1497,11 @@ namespace WeakForms
           boundary_face_update_flags |= functor.get_update_flags();
           boundary_face_ad_sd_operations.emplace_back(f);
         }
+      else if (is_interface_integral_op<SymbolicOpType>::value)
+        {
+          interface_face_update_flags |= functor.get_update_flags();
+          interface_face_ad_sd_operations.emplace_back(f);
+        }
       else
         {
           AssertThrow(false, ExcNotImplemented());
@@ -1638,6 +1643,11 @@ namespace WeakForms
         {
           boundary_face_update_flags |= functor.get_update_flags();
           boundary_face_ad_sd_operations.emplace_back(f);
+        }
+      else if (is_interface_integral_op<SymbolicOpType>::value)
+        {
+          interface_face_update_flags |= functor.get_update_flags();
+          interface_face_ad_sd_operations.emplace_back(f);
         }
       else
         {
@@ -1854,10 +1864,9 @@ namespace WeakForms
     std::vector<StringOperation> as_latex_operations;
 
     // AD/SD support
-    std::vector<CellADSDOperation>     cell_ad_sd_operations;
-    std::vector<BoundaryADSDOperation> boundary_face_ad_sd_operations;
-    std::vector<InterfaceADSDOperation>
-      interface_ad_sd_operations; // TODO[JPP]: Add these contributions
+    std::vector<CellADSDOperation>      cell_ad_sd_operations;
+    std::vector<BoundaryADSDOperation>  boundary_face_ad_sd_operations;
+    std::vector<InterfaceADSDOperation> interface_face_ad_sd_operations;
 
     // Cells
     UpdateFlags                      cell_update_flags;
@@ -1870,11 +1879,9 @@ namespace WeakForms
     std::vector<BoundaryVectorOperation> boundary_face_vector_operations;
 
     // Interfaces
-    UpdateFlags interface_face_update_flags;
-    std::vector<InterfaceMatrixOperation>
-      interface_face_matrix_operations; // TODO[JPP]: Add these contributions
-    std::vector<InterfaceVectorOperation>
-      interface_face_vector_operations; // TODO[JPP]: Add these contributions
+    UpdateFlags                           interface_face_update_flags;
+    std::vector<InterfaceMatrixOperation> interface_face_matrix_operations;
+    std::vector<InterfaceVectorOperation> interface_face_vector_operations;
 
     /**
      * A flag to indicate whether or not the global system is to be assembled
@@ -2276,8 +2283,6 @@ namespace WeakForms
       (void)boundary_integral;
       static_assert(is_boundary_integral_op<SymbolicOpBoundaryIntegral>::value,
                     "Expected a boundary integral type.");
-      // static_assert(false, "Assembler: Boundary face operations not yet
-      // implemented for bilinear forms.")
 
       // static_assert(
       //   !is_or_has_interface_op<SymbolicOpVolumeIntegral>::value,
@@ -2805,8 +2810,6 @@ namespace WeakForms
     {
       static_assert(is_boundary_integral_op<SymbolicOpBoundaryIntegral>::value,
                     "Expected a boundary integral type.");
-      // static_assert(false, "Assembler: Boundary face operations not yet
-      // implemented for linear forms.")
 
       // static_assert(
       //   !is_or_has_interface_op<SymbolicOpVolumeIntegral>::value,
