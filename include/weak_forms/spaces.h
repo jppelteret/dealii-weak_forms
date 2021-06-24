@@ -27,6 +27,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/subspace_extractors.h>
 #include <weak_forms/symbolic_decorations.h>

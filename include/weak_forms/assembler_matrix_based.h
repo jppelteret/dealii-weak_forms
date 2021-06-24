@@ -41,7 +41,7 @@ namespace WeakForms
   template <int dim,
             int spacedim           = dim,
             typename ScalarType    = double,
-            bool use_vectorization = internal::UseVectorization::value>
+            bool use_vectorization = numbers::UseVectorization::value>
   class MatrixBasedAssembler
     : public AssemblerBase<dim, spacedim, ScalarType, use_vectorization>
   {

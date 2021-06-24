@@ -24,6 +24,7 @@
 #include <deal.II/fe/fe_values_extractors.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/types.h>
 
 

@@ -42,10 +42,12 @@
 #include <weak_forms/binary_integral_operators.h>
 #include <weak_forms/binary_operators.h>
 #include <weak_forms/linear_forms.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_integral.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 #include <weak_forms/unary_integral_operators.h>
 #include <weak_forms/unary_operators.h>
 
@@ -685,122 +687,6 @@ namespace WeakForms
     // Vectorized counterparts of the above
     // ====================================
 
-#if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
-    struct UseVectorization : std::true_type
-    {};
-#else
-    struct UseVectorization : std::false_type
-    {};
-#endif
-
-    template <typename ScalarType,
-              std::size_t width,
-              typename = typename std::enable_if<
-                std::is_arithmetic<ScalarType>::value>::type>
-    void
-    set_vectorized_values(VectorizedArray<ScalarType, width> &out,
-                          const unsigned int                  v,
-                          const ScalarType &                  in)
-    {
-      Assert(v < width, ExcIndexRange(v, 0, width));
-      out[v] = in;
-    }
-
-
-    template <typename ScalarType,
-              std::size_t width,
-              typename = typename std::enable_if<
-                std::is_arithmetic<ScalarType>::value>::type>
-    void
-    set_vectorized_values(VectorizedArray<std::complex<ScalarType>, width> &out,
-                          const unsigned int                                v,
-                          const std::complex<ScalarType> &                  in)
-    {
-      set_vectorized_values(out.real, v, in.real);
-      set_vectorized_values(out.imag, v, in.imag);
-    }
-
-
-    template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
-      Tensor<0, dim, VectorizedArray<ScalarType, width>> &out,
-      const unsigned int                                  v,
-      const Tensor<0, dim, ScalarType> &                  in)
-    {
-      VectorizedArray<ScalarType, width> &out_val = out;
-      const ScalarType &                  in_val  = in;
-
-      set_vectorized_values(out_val, v, in_val);
-    }
-
-
-    template <int rank, int dim, typename ScalarType, std::size_t width>
-    void
-    set_vectorized_values(
-      Tensor<rank, dim, VectorizedArray<ScalarType, width>> &out,
-      const unsigned int                                     v,
-      const Tensor<rank, dim, ScalarType> &                  in)
-    {
-      for (unsigned int i = 0; i < out.n_independent_components; ++i)
-        {
-          const TableIndices<rank> indices(
-            out.unrolled_to_component_indices(i));
-          set_vectorized_values(out[indices], v, in[indices]);
-        }
-    }
-
-
-    template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
-      SymmetricTensor<2, dim, VectorizedArray<ScalarType, width>> &out,
-      const unsigned int                                           v,
-      const SymmetricTensor<2, dim, ScalarType> &                  in)
-    {
-      for (unsigned int i = 0; i < out.n_independent_components; ++i)
-        {
-          const TableIndices<2> indices(out.unrolled_to_component_indices(i));
-          set_vectorized_values(out[indices], v, in[indices]);
-        }
-    }
-
-
-    // TODO: Reused from differentiation/sd/symengine_tensor_operations.h
-    // Add to some common location?
-    template <int dim>
-    TableIndices<4>
-    make_rank_4_tensor_indices(const unsigned int idx_i,
-                               const unsigned int idx_j)
-    {
-      const TableIndices<2> indices_i(
-        SymmetricTensor<2, dim>::unrolled_to_component_indices(idx_i));
-      const TableIndices<2> indices_j(
-        SymmetricTensor<2, dim>::unrolled_to_component_indices(idx_j));
-      return TableIndices<4>(indices_i[0],
-                             indices_i[1],
-                             indices_j[0],
-                             indices_j[1]);
-    }
-
-
-    template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
-      SymmetricTensor<4, dim, VectorizedArray<ScalarType, width>> &out,
-      const unsigned int                                           v,
-      const SymmetricTensor<4, dim, ScalarType> &                  in)
-    {
-      for (unsigned int i = 0;
-           i < SymmetricTensor<2, dim>::n_independent_components;
-           ++i)
-        for (unsigned int j = 0;
-             j < SymmetricTensor<2, dim>::n_independent_components;
-             ++j)
-          {
-            const TableIndices<4> indices =
-              make_rank_4_tensor_indices<dim>(i, j);
-            set_vectorized_values(out[indices], v, in[indices]);
-          }
-    }
-
 
     // Valid for cell and face assembly
     template <enum AccumulationSign Sign,
@@ -856,6 +742,7 @@ namespace WeakForms
               // Reduce all QP contributions
               ScalarType integrated_contribution =
                 dealii::internal::NumberType<ScalarType>::value(0.0);
+              // DEAL_II_OPENMP_SIMD_PRAGMA
               for (unsigned int v = 0; v < width; v++)
                 integrated_contribution +=
                   vectorized_integrated_contribution[v];
@@ -903,6 +790,7 @@ namespace WeakForms
           // Reduce all QP contributions
           ScalarType integrated_contribution =
             dealii::internal::NumberType<ScalarType>::value(0.0);
+          // DEAL_II_OPENMP_SIMD_PRAGMA
           for (unsigned int v = 0; v < width; v++)
             integrated_contribution += vectorized_integrated_contribution[v];
 
@@ -2144,8 +2032,6 @@ namespace WeakForms
             AlignedVector<VectorizedValueTypeTrial> shapes_trial(
               n_dofs_per_cell);
 
-            using QPRange_t =
-              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
                  batch_start += width)
               {
@@ -2154,9 +2040,11 @@ namespace WeakForms
                 const unsigned int batch_end =
                   std::min(batch_start + static_cast<unsigned int>(width),
                            n_q_points);
-                const QPRange_t q_range{batch_start, batch_end};
+                const types::vectorized_qp_range_t q_range{batch_start,
+                                                           batch_end};
 
                 // Assign values for each entry in vectorized arrays.
+                DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     // The entire vectorization lane might not be filled, so
@@ -2166,7 +2054,7 @@ namespace WeakForms
                     // integrate to zero.
                     if (v >= q_range.size())
                       {
-                        internal::set_vectorized_values(JxW, v, 0.0);
+                        numbers::set_vectorized_values(JxW, v, 0.0);
                         continue;
                       }
 
@@ -2176,23 +2064,23 @@ namespace WeakForms
 
                     // Copy non-vectorized data into the vectorized
                     // counterparts.
-                    internal::set_vectorized_values(
+                    numbers::set_vectorized_values(
                       JxW,
                       v,
                       volume_integral.template operator()<ScalarType>(fe_values,
                                                                       q));
-                    internal::set_vectorized_values(values_functor,
-                                                    v,
-                                                    all_values_functor[q]);
+                    numbers::set_vectorized_values(values_functor,
+                                                   v,
+                                                   all_values_functor[q]);
 
                     for (const unsigned int k : fe_values.dof_indices())
                       {
-                        internal::set_vectorized_values(shapes_test[k],
-                                                        v,
-                                                        all_shapes_test[k][q]);
-                        internal::set_vectorized_values(shapes_trial[k],
-                                                        v,
-                                                        all_shapes_trial[k][q]);
+                        numbers::set_vectorized_values(shapes_test[k],
+                                                       v,
+                                                       all_shapes_test[k][q]);
+                        numbers::set_vectorized_values(shapes_trial[k],
+                                                       v,
+                                                       all_shapes_trial[k][q]);
                       }
                   }
 
@@ -2492,8 +2380,6 @@ namespace WeakForms
             AlignedVector<VectorizedValueTypeTrial> shapes_trial(
               n_dofs_per_cell);
 
-            using QPRange_t =
-              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
                  batch_start += width)
               {
@@ -2502,9 +2388,11 @@ namespace WeakForms
                 const unsigned int batch_end =
                   std::min(batch_start + static_cast<unsigned int>(width),
                            n_q_points);
-                const QPRange_t q_range{batch_start, batch_end};
+                const types::vectorized_qp_range_t q_range{batch_start,
+                                                           batch_end};
 
                 // Assign values for each entry in vectorized arrays.
+                DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     // The entire vectorization lane might not be filled, so
@@ -2514,7 +2402,7 @@ namespace WeakForms
                     // integrate to zero.
                     if (v >= q_range.size())
                       {
-                        internal::set_vectorized_values(JxW, v, 0.0);
+                        numbers::set_vectorized_values(JxW, v, 0.0);
                         continue;
                       }
 
@@ -2524,23 +2412,23 @@ namespace WeakForms
 
                     // Copy non-vectorized data into the vectorized
                     // counterparts.
-                    internal::set_vectorized_values(
+                    numbers::set_vectorized_values(
                       JxW,
                       v,
                       boundary_integral.template operator()<ScalarType>(
                         fe_face_values, q));
-                    internal::set_vectorized_values(values_functor,
-                                                    v,
-                                                    all_values_functor[q]);
+                    numbers::set_vectorized_values(values_functor,
+                                                   v,
+                                                   all_values_functor[q]);
 
                     for (const unsigned int k : fe_values.dof_indices())
                       {
-                        internal::set_vectorized_values(shapes_test[k],
-                                                        v,
-                                                        all_shapes_test[k][q]);
-                        internal::set_vectorized_values(shapes_trial[k],
-                                                        v,
-                                                        all_shapes_trial[k][q]);
+                        numbers::set_vectorized_values(shapes_test[k],
+                                                       v,
+                                                       all_shapes_test[k][q]);
+                        numbers::set_vectorized_values(shapes_trial[k],
+                                                       v,
+                                                       all_shapes_trial[k][q]);
                       }
                   }
 
@@ -2739,8 +2627,6 @@ namespace WeakForms
             VectorizedValueTypeFunctor             values_functor{};
             AlignedVector<VectorizedValueTypeTest> shapes_test(n_dofs_per_cell);
 
-            using QPRange_t =
-              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
                  batch_start += width)
               {
@@ -2749,9 +2635,11 @@ namespace WeakForms
                 const unsigned int batch_end =
                   std::min(batch_start + static_cast<unsigned int>(width),
                            n_q_points);
-                const QPRange_t q_range{batch_start, batch_end};
+                const types::vectorized_qp_range_t q_range{batch_start,
+                                                           batch_end};
 
                 // Assign values for each entry in vectorized arrays.
+                DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     // The entire vectorization lane might not be filled, so
@@ -2761,7 +2649,7 @@ namespace WeakForms
                     // integrate to zero.
                     if (v >= q_range.size())
                       {
-                        internal::set_vectorized_values(JxW, v, 0.0);
+                        numbers::set_vectorized_values(JxW, v, 0.0);
                         continue;
                       }
 
@@ -2771,19 +2659,19 @@ namespace WeakForms
 
                     // Copy non-vectorized data into the vectorized
                     // counterparts.
-                    internal::set_vectorized_values(
+                    numbers::set_vectorized_values(
                       JxW,
                       v,
                       volume_integral.template operator()<ScalarType>(fe_values,
                                                                       q));
-                    internal::set_vectorized_values(values_functor,
-                                                    v,
-                                                    all_values_functor[q]);
+                    numbers::set_vectorized_values(values_functor,
+                                                   v,
+                                                   all_values_functor[q]);
 
                     for (const unsigned int k : fe_values.dof_indices())
-                      internal::set_vectorized_values(shapes_test[k],
-                                                      v,
-                                                      all_shapes_test[k][q]);
+                      numbers::set_vectorized_values(shapes_test[k],
+                                                     v,
+                                                     all_shapes_test[k][q]);
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2931,8 +2819,6 @@ namespace WeakForms
             VectorizedValueTypeFunctor             values_functor{};
             AlignedVector<VectorizedValueTypeTest> shapes_test(n_dofs_per_cell);
 
-            using QPRange_t =
-              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
                  batch_start += width)
               {
@@ -2941,9 +2827,11 @@ namespace WeakForms
                 const unsigned int batch_end =
                   std::min(batch_start + static_cast<unsigned int>(width),
                            n_q_points);
-                const QPRange_t q_range{batch_start, batch_end};
+                const types::vectorized_qp_range_t q_range{batch_start,
+                                                           batch_end};
 
                 // Assign values for each entry in vectorized arrays.
+                DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     // The entire vectorization lane might not be filled, so
@@ -2953,7 +2841,7 @@ namespace WeakForms
                     // integrate to zero.
                     if (v >= q_range.size())
                       {
-                        internal::set_vectorized_values(JxW, v, 0.0);
+                        numbers::set_vectorized_values(JxW, v, 0.0);
                         continue;
                       }
 
@@ -2963,19 +2851,19 @@ namespace WeakForms
 
                     // Copy non-vectorized data into the vectorized
                     // counterparts.
-                    internal::set_vectorized_values(
+                    numbers::set_vectorized_values(
                       JxW,
                       v,
                       boundary_integral.template operator()<ScalarType>(
                         fe_face_values, q));
-                    internal::set_vectorized_values(values_functor,
-                                                    v,
-                                                    all_values_functor[q]);
+                    numbers::set_vectorized_values(values_functor,
+                                                   v,
+                                                   all_values_functor[q]);
 
                     for (const unsigned int k : fe_values.dof_indices())
-                      internal::set_vectorized_values(shapes_test[k],
-                                                      v,
-                                                      all_shapes_test[k][q]);
+                      numbers::set_vectorized_values(shapes_test[k],
+                                                     v,
+                                                     all_shapes_test[k][q]);
                   }
 
                 // Do the assembly for the current batch of quadrature points

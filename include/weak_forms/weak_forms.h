@@ -24,6 +24,7 @@
 
 // Utilities
 // #include <weak_forms/operators.h> // ? TODO: Remove
+#include <weak_forms/numbers.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/type_traits.h>
 #include <weak_forms/types.h>

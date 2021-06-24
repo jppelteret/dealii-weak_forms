@@ -15,7 +15,7 @@
 
 
 // Check that symbolic operators work
-// - Functors
+// - Functors (vectorized)
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -29,6 +29,7 @@
 
 #include <weak_forms/functors.h>
 #include <weak_forms/symbolic_operators.h>
+#include <weak_forms/types.h>
 
 #include "../weak_forms_tests.h"
 
@@ -53,7 +54,9 @@ run()
   FEValues<dim, spacedim> fe_values(fe, qf_cell, update_flags);
   fe_values.reinit(dof_handler.begin_active());
 
-  const unsigned int q_point = 0;
+  constexpr std::size_t width =
+    dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
+  const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
 
   {
     const std::string title = "Scalar functor";
@@ -69,7 +72,8 @@ run()
                                       const unsigned int) { return 1.0; });
 
     std::cout << "Value: "
-              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << (functor.template operator()<NumberType, width>(fe_values,
+                                                                 q_point_range))
               << std::endl;
 
     deallog << "OK" << std::endl;
@@ -89,7 +93,8 @@ run()
       });
 
     std::cout << "Value: "
-              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << (functor.template operator()<NumberType, width>(fe_values,
+                                                                 q_point_range))
               << std::endl;
 
     deallog << "OK" << std::endl;
@@ -109,7 +114,8 @@ run()
       });
 
     std::cout << "Value: "
-              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << (functor.template operator()<NumberType, width>(fe_values,
+                                                                 q_point_range))
               << std::endl;
 
     deallog << "OK" << std::endl;
@@ -129,7 +135,8 @@ run()
       value<double, spacedim>(coeff, constant_scalar_function);
 
     std::cout << "Value: "
-              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << (functor.template operator()<NumberType, width>(fe_values,
+                                                                 q_point_range))
               << std::endl;
 
     deallog << "OK" << std::endl;
@@ -149,7 +156,8 @@ run()
       value<double, spacedim>(coeff, constant_tensor_function);
 
     std::cout << "Value: "
-              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << (functor.template operator()<NumberType, width>(fe_values,
+                                                                 q_point_range))
               << std::endl;
 
     deallog << "OK" << std::endl;
