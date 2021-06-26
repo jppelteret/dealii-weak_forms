@@ -1034,6 +1034,14 @@ public:                                                                        \
    */                                                                          \
   template <typename ScalarType>                                               \
   using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_qp_value_type = typename numbers::VectorizedValue<          \
+    value_type<ScalarType>>::template type<width>;                             \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_dof_value_type =                                            \
+    std::vector<vectorized_qp_value_type<ScalarType, width>>;                  \
   /**                                                                          \
    * The index in the solution history that this field solution                \
    * corresponds to. The default value (0) indicates that it relates           \
@@ -1878,6 +1886,10 @@ public:                                                                      \
   template <typename ScalarType>                                             \
   using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
                                                                              \
+  template <typename ScalarType, std::size_t width>                          \
+  using vectorized_return_type =                                             \
+    typename Base_t::template vectorized_dof_value_type<ScalarType, width>;  \
+                                                                             \
   /**                                                                        \
    * Return all shape function values all quadrature points.                 \
    *                                                                         \
@@ -1903,6 +1915,33 @@ public:                                                                      \
         for (const auto q_point : fe_values_op.quadrature_point_indices())   \
           out[dof_index].emplace_back(this->template operator()<ScalarType>( \
             fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
+  vectorized_return_type<ScalarType, width> operator()(                      \
+    const FEValuesBase<dim, spacedim> & fe_values_dofs,                      \
+    const FEValuesBase<dim, spacedim> & fe_values_op,                        \
+    const types::vectorized_qp_range_t &q_point_range) const                 \
+  {                                                                          \
+    vectorized_return_type<ScalarType, width> out(                           \
+      fe_values_dofs.dofs_per_cell);                                         \
+                                                                             \
+    Assert(q_point_range.size() <= width,                                    \
+           ExcIndexRange(q_point_range.size(), 0, width));                   \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        DEAL_II_OPENMP_SIMD_PRAGMA                                           \
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)              \
+          numbers::set_vectorized_values(                                    \
+            out[dof_index],                                                  \
+            i,                                                               \
+            this->template operator()<ScalarType>(fe_values_op,              \
+                                                  dof_index,                 \
+                                                  q_point_range[i]));        \
       }                                                                      \
                                                                              \
     return out;                                                              \
