@@ -23,7 +23,6 @@
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
 #include <deal.II/base/tensor_function.h>
-#include <deal.II/base/vectorization.h>
 
 #include <deal.II/fe/fe_update_flags.h>
 #include <deal.II/fe/fe_values.h>

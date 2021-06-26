@@ -25,9 +25,11 @@
 #include <deal.II/fe/fe_values.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -71,6 +73,10 @@ namespace WeakForms
 
     template <typename ScalarType>
     using value_type = Tensor<rank, spacedim, double>;
+
+    template <typename ScalarType, std::size_t width>
+    using vectorized_value_type = typename numbers::VectorizedValue<
+      value_type<ScalarType>>::template type<width>;
 
     // Call operator to promote this class to a SymbolicOp
     auto
@@ -183,8 +189,16 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Op::template vectorized_value_type<ResultScalarType, width>;
+
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
+
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_return_type =
+        vectorized_value_type<ResultScalarType, width>;
 
       explicit SymbolicOp(const Op &operand)
         : operand(operand)
@@ -231,6 +245,26 @@ namespace WeakForms
           .get_normal_vectors();
       }
 
+      template <typename ResultScalarType, std::size_t width, int dim2>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(const FEValuesBase<dim2, spacedim> &fe_face_values,
+                 const types::vectorized_qp_range_t &q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(
+              fe_face_values)[q_point_range[i]]);
+
+        return out;
+      }
+
       /**
        * Return normals at all quadrature points
        */
@@ -240,6 +274,26 @@ namespace WeakForms
         const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const
       {
         return fe_interface_values.get_normal_vectors();
+      }
+
+      template <typename ResultScalarType, std::size_t width, int dim2>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(const FEInterfaceValues<dim2, spacedim> &fe_interface_values,
+                 const types::vectorized_qp_range_t &     q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(
+              fe_interface_values)[q_point_range[i]]);
+
+        return out;
       }
 
     private:

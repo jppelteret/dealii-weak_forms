@@ -18,8 +18,6 @@
 
 #include <deal.II/base/config.h>
 
-#include <deal.II/base/vectorization.h>
-
 #include <deal.II/fe/fe_update_flags.h>
 
 #include <deal.II/meshworker/scratch_data.h>
@@ -31,6 +29,7 @@
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
