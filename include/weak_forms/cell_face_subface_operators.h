@@ -74,10 +74,6 @@ namespace WeakForms
     template <typename ScalarType>
     using value_type = Tensor<rank, spacedim, double>;
 
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
-
     // Call operator to promote this class to a SymbolicOp
     auto
     operator()() const;
@@ -189,16 +185,12 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       explicit SymbolicOp(const Op &operand)
         : operand(operand)

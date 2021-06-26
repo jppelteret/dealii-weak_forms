@@ -176,10 +176,6 @@ namespace WeakForms
     template <typename ScalarType>
     using value_type = ScalarType;
 
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
-
     template <typename ScalarType, int dim, int spacedim = dim>
     using function_type = std::function<
       value_type<ScalarType>(const FEValuesBase<dim, spacedim> &fe_values,
@@ -219,10 +215,6 @@ namespace WeakForms
 
     template <typename ScalarType>
     using value_type = Tensor<rank, spacedim, ScalarType>;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
 
     template <typename ScalarType, int dim = spacedim>
     using function_type = std::function<
@@ -265,10 +257,6 @@ namespace WeakForms
 
     template <typename ScalarType>
     using value_type = SymmetricTensor<rank, spacedim, ScalarType>;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
 
     template <typename ScalarType, int dim = spacedim>
     using function_type = std::function<
@@ -318,14 +306,6 @@ namespace WeakForms
 
     template <typename ScalarType>
     using gradient_type = Tensor<1, spacedim, ScalarType>;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_gradient_type = typename numbers::VectorizedValue<
-      gradient_type<ScalarType>>::template type<width>;
 
     ScalarFunctionFunctor(const std::string &symbol_ascii,
                           const std::string &symbol_latex)
@@ -381,14 +361,6 @@ namespace WeakForms
     template <typename ResultScalarType>
     using gradient_type =
       typename function_type<ResultScalarType>::gradient_type;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_value_type = typename numbers::VectorizedValue<
-      value_type<ScalarType>>::template type<width>;
-
-    template <typename ScalarType, std::size_t width>
-    using vectorized_gradient_type = typename numbers::VectorizedValue<
-      gradient_type<ScalarType>>::template type<width>;
 
     TensorFunctionFunctor(const std::string &symbol_ascii,
                           const std::string &symbol_latex)
@@ -488,10 +460,6 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, dim, spacedim>;
@@ -500,8 +468,8 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       static const int                  rank    = 0;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -633,10 +601,6 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, spacedim>;
@@ -645,8 +609,8 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       static const int                  rank    = rank_;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -776,10 +740,6 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, spacedim>;
@@ -788,8 +748,8 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       static const int                  rank    = rank_;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -923,10 +883,6 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType>;
@@ -935,8 +891,8 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       static const int                  rank    = 0;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -1079,10 +1035,6 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename Op::template vectorized_value_type<ResultScalarType, width>;
-
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType>;
@@ -1091,8 +1043,8 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type =
-        vectorized_value_type<ResultScalarType, width>;
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
 
       static const int                  rank    = rank_;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
