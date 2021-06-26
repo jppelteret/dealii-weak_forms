@@ -501,7 +501,7 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_result_type =
+      using vectorized_return_type =
         vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = 0;
@@ -574,11 +574,11 @@ namespace WeakForms
        * Return a vectorized set of values for a given quadrature point range.
        */
       template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_result_type<ResultScalarType, width>
+      vectorized_return_type<ResultScalarType, width>
       operator()(const FEValuesBase<dim2, spacedim> &fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
-        vectorized_result_type<ResultScalarType, width> out;
+        vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
@@ -646,7 +646,7 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_result_type =
+      using vectorized_return_type =
         vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = rank_;
@@ -716,11 +716,11 @@ namespace WeakForms
        * Return a vectorized set of values for a given quadrature point range.
        */
       template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_result_type<ResultScalarType, width>
+      vectorized_return_type<ResultScalarType, width>
       operator()(const FEValuesBase<dim2, spacedim> &fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
-        vectorized_result_type<ResultScalarType, width> out;
+        vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
@@ -789,7 +789,7 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_result_type =
+      using vectorized_return_type =
         vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = rank_;
@@ -858,11 +858,11 @@ namespace WeakForms
        * Return a vectorized set of values for a given quadrature point range.
        */
       template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_result_type<ResultScalarType, width>
+      vectorized_return_type<ResultScalarType, width>
       operator()(const FEValuesBase<dim2, spacedim> &fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
-        vectorized_result_type<ResultScalarType, width> out;
+        vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
@@ -936,7 +936,7 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_result_type =
+      using vectorized_return_type =
         vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = 0;
@@ -1008,11 +1008,11 @@ namespace WeakForms
        * Return a vectorized set of values for a given quadrature point range.
        */
       template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_result_type<ResultScalarType, width>
+      vectorized_return_type<ResultScalarType, width>
       operator()(const FEValuesBase<dim2, spacedim> &fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
-        vectorized_result_type<ResultScalarType, width> out;
+        vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
@@ -1092,7 +1092,7 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
-      using vectorized_result_type =
+      using vectorized_return_type =
         vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = rank_;
@@ -1167,11 +1167,11 @@ namespace WeakForms
        * Return a vectorized set of values for a given quadrature point range.
        */
       template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_result_type<ResultScalarType, width>
+      vectorized_return_type<ResultScalarType, width>
       operator()(const FEValuesBase<dim2, spacedim> &fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
-        vectorized_result_type<ResultScalarType, width> out;
+        vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 

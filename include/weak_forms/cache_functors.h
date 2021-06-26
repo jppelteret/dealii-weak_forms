@@ -18,12 +18,15 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/vectorization.h>
+
 #include <deal.II/fe/fe_update_flags.h>
 
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
 #include <weak_forms/functors.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -62,6 +65,10 @@ namespace WeakForms
   public:
     template <typename ScalarType>
     using value_type = ScalarType;
+
+    template <typename ScalarType, std::size_t width>
+    using vectorized_value_type = typename numbers::VectorizedValue<
+      value_type<ScalarType>>::template type<width>;
 
     // Return values at all quadrature points
     template <typename ScalarType, int dim, int spacedim = dim>
@@ -129,6 +136,10 @@ namespace WeakForms
     template <typename ScalarType>
     using value_type = Tensor<rank, spacedim, ScalarType>;
 
+    template <typename ScalarType, std::size_t width>
+    using vectorized_value_type = typename numbers::VectorizedValue<
+      value_type<ScalarType>>::template type<width>;
+
     // Return values at all quadrature points
     template <typename ScalarType, int dim = spacedim>
     using function_type = std::function<std::vector<value_type<ScalarType>>(
@@ -192,6 +203,10 @@ namespace WeakForms
 
     template <typename ScalarType>
     using value_type = SymmetricTensor<rank, spacedim, ScalarType>;
+
+    template <typename ScalarType, std::size_t width>
+    using vectorized_value_type = typename numbers::VectorizedValue<
+      value_type<ScalarType>>::template type<width>;
 
     // Return values at all quadrature points
     template <typename ScalarType, int dim = spacedim>
@@ -288,6 +303,10 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Op::template vectorized_value_type<ResultScalarType, width>;
+
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, dim, spacedim>;
@@ -298,6 +317,10 @@ namespace WeakForms
 
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
+
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_return_type =
+        vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = 0;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -398,6 +421,29 @@ namespace WeakForms
           }
       }
 
+      template <typename ResultScalarType, std::size_t width, int dim2>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
+                 const std::vector<std::string> &         solution_names,
+                 const types::vectorized_qp_range_t &     q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        // TODO: Can we guarantee that the underlying function is immutable?
+        // DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(scratch_data,
+                                                        solution_names,
+                                                        q_point_range[i]));
+
+        return out;
+      }
+
     private:
       const Op                           operand;
       const function_type<ScalarType>    function;
@@ -434,6 +480,10 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Op::template vectorized_value_type<ResultScalarType, width>;
+
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, spacedim>;
@@ -444,6 +494,10 @@ namespace WeakForms
 
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
+
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_return_type =
+        vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = rank_;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -542,6 +596,29 @@ namespace WeakForms
 
             return qp_function(scratch_data, solution_names, q_point);
           }
+      }
+
+      template <typename ResultScalarType, std::size_t width, int dim2>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
+                 const std::vector<std::string> &         solution_names,
+                 const types::vectorized_qp_range_t &     q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        // TODO: Can we guarantee that the underlying function is immutable?
+        // DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(scratch_data,
+                                                        solution_names,
+                                                        q_point_range[i]));
+
+        return out;
       }
 
     private:
@@ -580,6 +657,10 @@ namespace WeakForms
       template <typename ResultScalarType>
       using value_type = typename Op::template value_type<ResultScalarType>;
 
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Op::template vectorized_value_type<ResultScalarType, width>;
+
       template <typename ResultScalarType>
       using function_type =
         typename Op::template function_type<ResultScalarType, spacedim>;
@@ -590,6 +671,10 @@ namespace WeakForms
 
       template <typename ResultScalarType>
       using return_type = std::vector<value_type<ResultScalarType>>;
+
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_return_type =
+        vectorized_value_type<ResultScalarType, width>;
 
       static const int                  rank    = rank_;
       static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -688,6 +773,29 @@ namespace WeakForms
 
             return qp_function(scratch_data, solution_names, q_point);
           }
+      }
+
+      template <typename ResultScalarType, std::size_t width, int dim2>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
+                 const std::vector<std::string> &         solution_names,
+                 const types::vectorized_qp_range_t &     q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        // TODO: Can we guarantee that the underlying function is immutable?
+        // DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(scratch_data,
+                                                        solution_names,
+                                                        q_point_range[i]));
+
+        return out;
       }
 
     private:

@@ -14,7 +14,7 @@
 // ---------------------------------------------------------------------
 
 
-// Check that cache functors work
+// Check that vectorized cache functors work
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -29,6 +29,7 @@
 #include <weak_forms/cache_functors.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
+#include <weak_forms/types.h>
 
 #include "../weak_forms_tests.h"
 
@@ -148,41 +149,47 @@ run()
     };
   const auto S4 = value<NumberType, dim>(tensor4, S4_func, update_flags);
 
-  const unsigned int q_point = 0;
+  constexpr std::size_t width =
+    dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
+  const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
 
-
-  // Test values
   {
-    deallog << "Scalar: "
-            << s.template operator()<NumberType>(scratch_data,
-                                                 solution_names)[q_point]
-            << std::endl;
-    deallog << "Vector: "
-            << v.template operator()<NumberType>(scratch_data,
-                                                 solution_names)[q_point]
-            << std::endl;
-    deallog << "Tensor (rank 2): "
-            << T2.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[q_point]
-            << std::endl;
-    deallog << "Tensor (rank 3): "
-            << T3.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[q_point]
-            << std::endl;
-    deallog << "Tensor (rank 4): "
-            << T4.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[q_point]
-            << std::endl;
-    deallog << "SymmetricTensor (rank 2): "
-            << S2.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[q_point]
-            << std::endl;
-    deallog << "SymmetricTensor (rank 4): "
-            << S4.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[q_point]
-            << std::endl;
+    std::cout << "Scalar: "
+              << s.template operator()<NumberType, width>(scratch_data,
+                                                          solution_names,
+                                                          q_point_range)
+              << std::endl;
+    std::cout << "Vector: "
+              << v.template operator()<NumberType, width>(scratch_data,
+                                                          solution_names,
+                                                          q_point_range)
+              << std::endl;
+    std::cout << "Tensor (rank 2): "
+              << T2.template operator()<NumberType, width>(scratch_data,
+                                                           solution_names,
+                                                           q_point_range)
+              << std::endl;
+    std::cout << "Tensor (rank 3): "
+              << T3.template operator()<NumberType, width>(scratch_data,
+                                                           solution_names,
+                                                           q_point_range)
+              << std::endl;
+    std::cout << "Tensor (rank 4): "
+              << T4.template operator()<NumberType, width>(scratch_data,
+                                                           solution_names,
+                                                           q_point_range)
+              << std::endl;
+    std::cout << "SymmetricTensor (rank 2): "
+              << S2.template operator()<NumberType, width>(scratch_data,
+                                                           solution_names,
+                                                           q_point_range)
+              << std::endl;
+    std::cout << "SymmetricTensor (rank 4): "
+              << S4.template operator()<NumberType, width>(scratch_data,
+                                                           solution_names,
+                                                           q_point_range)
+              << std::endl;
   }
-
   deallog << "OK" << std::endl << std::endl;
 }
 
