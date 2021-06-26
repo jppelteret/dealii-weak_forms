@@ -1273,6 +1273,14 @@ public:                                                                      \
   template <typename ScalarType>                                             \
   using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
                                                                              \
+  template <typename ScalarType, std::size_t width>                          \
+  using vectorized_qp_value_type = typename numbers::VectorizedValue<        \
+    value_type<ScalarType>>::template type<width>;                           \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
+  using vectorized_return_type =                                             \
+    typename Base_t::template vectorized_dof_value_type<ScalarType, width>;  \
+                                                                             \
   explicit SymbolicOp(const Op &operand)                                     \
     : Base_t(operand)                                                        \
   {}                                                                         \
@@ -1302,6 +1310,33 @@ public:                                                                      \
         for (const auto q_point : fe_values_op.quadrature_point_indices())   \
           out[dof_index].emplace_back(this->template operator()<ScalarType>( \
             fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
+  vectorized_return_type<ScalarType, width> operator()(                      \
+    const FEValuesBase<dimension, space_dimension> & fe_values_dofs,                      \
+    const FEValuesBase<dimension, space_dimension> & fe_values_op,                        \
+    const types::vectorized_qp_range_t &q_point_range) const                 \
+  {                                                                          \
+    vectorized_return_type<ScalarType, width> out(                           \
+      fe_values_dofs.dofs_per_cell);                                         \
+                                                                             \
+    Assert(q_point_range.size() <= width,                                    \
+           ExcIndexRange(q_point_range.size(), 0, width));                   \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        DEAL_II_OPENMP_SIMD_PRAGMA                                           \
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)              \
+          numbers::set_vectorized_values(                                    \
+            out[dof_index],                                                  \
+            i,                                                               \
+            this->template operator()<ScalarType>(fe_values_op,              \
+                                                  dof_index,                 \
+                                                  q_point_range[i]));        \
       }                                                                      \
                                                                              \
     return out;                                                              \
@@ -2136,9 +2171,34 @@ public:                                                                        \
   template <typename ScalarType>                                               \
   using return_type = typename Base_t::template qp_value_type<ScalarType>;     \
                                                                                \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_return_type =                                               \
+    typename Base_t::template vectorized_qp_value_type<ScalarType, width>;     \
+                                                                               \
   explicit SymbolicOp(const Op &operand)                                       \
     : Base_t(operand)                                                          \
   {}                                                                           \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  vectorized_return_type<ScalarType, width> operator()(                        \
+    MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,         \
+    const std::vector<std::string> &                     solution_names,       \
+    const types::vectorized_qp_range_t &                 q_point_range) const                   \
+  {                                                                            \
+    vectorized_return_type<ScalarType, width> out;                             \
+    Assert(q_point_range.size() <= width,                                      \
+           ExcIndexRange(q_point_range.size(), 0, width));                     \
+                                                                               \
+    DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
+    for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
+      numbers::set_vectorized_values(out,                                      \
+                                     i,                                        \
+                                     this->template operator()<ScalarType>(    \
+                                       scratch_data,                           \
+                                       solution_names)[q_point_range[i]]);     \
+                                                                               \
+    return out;                                                                \
+  }                                                                            \
                                                                                \
 protected:                                                                     \
   /**                                                                          \

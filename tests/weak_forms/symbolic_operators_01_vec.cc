@@ -16,7 +16,7 @@
 
 // Check that symbolic operators work
 // - Trial function, test function, field solution (scalar-valued finite
-// element)
+// element) (vectorised)
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
