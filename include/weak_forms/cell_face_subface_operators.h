@@ -189,6 +189,10 @@ namespace WeakForms
       using return_type = std::vector<value_type<ResultScalarType>>;
 
       template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
+
+      template <typename ResultScalarType, std::size_t width>
       using vectorized_return_type = typename numbers::VectorizedValue<
         value_type<ResultScalarType>>::template type<width>;
 

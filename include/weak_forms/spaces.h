@@ -1036,6 +1036,10 @@ public:                                                                        \
   using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
                                                                                \
   template <typename ScalarType, std::size_t width>                            \
+  using vectorized_value_type = typename numbers::VectorizedValue<             \
+    value_type<ScalarType>>::template type<width>;                             \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
   using vectorized_qp_value_type = typename numbers::VectorizedValue<          \
     value_type<ScalarType>>::template type<width>;                             \
                                                                                \
@@ -1887,6 +1891,10 @@ public:                                                                      \
   using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
                                                                              \
   template <typename ScalarType, std::size_t width>                          \
+  using vectorized_value_type =                                              \
+    typename Base_t::template vectorized_value_type<ScalarType, width>;      \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
   using vectorized_return_type =                                             \
     typename Base_t::template vectorized_dof_value_type<ScalarType, width>;  \
                                                                              \
@@ -2190,6 +2198,10 @@ public:                                                                       \
                                                                               \
   template <typename ScalarType>                                              \
   using return_type = typename Base_t::template dof_value_type<ScalarType>;   \
+                                                                              \
+  template <typename ScalarType, std::size_t width>                           \
+  using vectorized_value_type =                                               \
+    typename Base_t::template vectorized_value_type<ScalarType, width>;       \
                                                                               \
   template <typename ScalarType, std::size_t width>                           \
   using vectorized_return_type =                                              \

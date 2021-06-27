@@ -24,6 +24,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -261,6 +262,10 @@ namespace WeakForms
     OpType>::template return_type<value_type<ScalarType>>;           \
                                                                      \
   template <typename ScalarType, std::size_t width>                  \
+  using vectorized_value_type = typename numbers::VectorizedValue<   \
+    value_type<ScalarType>>::template type<width>;                   \
+                                                                     \
+  template <typename ScalarType, std::size_t width>                  \
   using vectorized_return_type =                                     \
     typename internal::unary_op_test_trial_traits<                   \
       OpType>::template vectorized_return_type<value_type<ScalarType>, width>;
@@ -276,12 +281,6 @@ namespace WeakForms
       template <typename ScalarType>
       using value_type =
         decltype(-std::declval<typename Op::template value_type<ScalarType>>());
-
-      // template <typename ScalarType, std::size_t width>
-      // using vectorized_return_type = decltype(
-      //   -std::declval<
-      //     typename Op::template vectorized_return_type<ScalarType,
-      //     width>>());
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -301,12 +300,6 @@ namespace WeakForms
       template <typename ScalarType>
       using value_type = decltype(
         sqrt(std::declval<typename Op::template value_type<ScalarType>>()));
-
-      // template <typename ScalarType, std::size_t width>
-      // using vectorized_return_type = decltype(sqrt(
-      //   std::declval<
-      //     typename Op::template vectorized_return_type<ScalarType,
-      //     width>>()));
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -344,12 +337,6 @@ namespace WeakForms
       using value_type = decltype(
         invert(std::declval<typename Op::template value_type<ScalarType>>()));
 
-      // template <typename ScalarType, std::size_t width>
-      // using vectorized_return_type = decltype(invert(
-      //   std::declval<
-      //     typename Op::template vectorized_return_type<ScalarType,
-      //     width>>()));
-
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
@@ -368,12 +355,6 @@ namespace WeakForms
       using value_type = decltype(transpose(
         std::declval<typename Op::template value_type<ScalarType>>()));
 
-      // template <typename ScalarType, std::size_t width>
-      // using vectorized_return_type = decltype(transpose(
-      //   std::declval<
-      //     typename Op::template vectorized_return_type<ScalarType,
-      //     width>>()));
-
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
     };
@@ -391,12 +372,6 @@ namespace WeakForms
       template <typename ScalarType>
       using value_type = decltype(symmetrize(
         std::declval<typename Op::template value_type<ScalarType>>()));
-
-      // template <typename ScalarType, std::size_t width>
-      // using vectorized_return_type = decltype(symmetrize(
-      //   std::declval<
-      //     typename Op::template vectorized_return_type<ScalarType,
-      //     width>>()));
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -421,8 +396,13 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
+
       template <typename ScalarType>
       using return_type = typename Traits::template return_type<ScalarType>;
+
+      template <typename ScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Traits::template vectorized_value_type<ScalarType, width>;
 
       template <typename ScalarType, std::size_t width>
       using vectorized_return_type =
@@ -448,15 +428,14 @@ namespace WeakForms
 
       // ----- VECTORIZATION -----
 
-      // template <typename ScalarType, std::size_t width>
-      // vectorized_return_type<ScalarType, width>
-      // operator()(
-      //   const typename OpType::template vectorized_return_type<ScalarType,
-      //                                                          width> &value)
-      //   const
-      // {
-      //   return derived.template operator()<ScalarType, width>(value);
-      // }
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename OpType::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return derived.template operator()<ScalarType, width>(value);
+      }
 
 
       // ---- Operators NOT for test functions / trial solutions ---
@@ -523,17 +502,17 @@ namespace WeakForms
 
       // ----- VECTORIZATION -----
 
-      template <typename ScalarType, std::size_t width>
-      auto
-      operator()(
-        const typename OpType::template vectorized_return_type<ScalarType,
-                                                               width> &value)
-        const -> typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value,
-          vectorized_return_type<ScalarType, width>>::type
-      {
-        return derived.template operator()<ScalarType, width>(value);
-      }
+      // template <typename ScalarType, std::size_t width>
+      // auto
+      // operator()(
+      //   const typename OpType::template vectorized_return_type<ScalarType,
+      //                                                          width> &value)
+      //   const -> typename std::enable_if<
+      //     !is_or_has_test_function_or_trial_solution_op<OpType>::value,
+      //     vectorized_return_type<ScalarType, width>>::type
+      // {
+      //   return derived.template operator()<ScalarType, width>(value);
+      // }
 
       template <typename ScalarType, std::size_t width, int dim, int spacedim>
       auto
@@ -642,15 +621,11 @@ namespace WeakForms
       auto
       operator()(
         const typename OpType::template vectorized_return_type<ScalarType,
-                                                               width> &value,
-        const types::vectorized_qp_range_t &q_point_range) const ->
-        typename std::enable_if<
+                                                               width> &value)
+        const -> typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
-        Assert(q_point_range.size() <= width,
-               ExcIndexRange(q_point_range.size(), 0, width));
-
         const unsigned int                        n_dofs = value.size();
         vectorized_return_type<ScalarType, width> out(n_dofs);
 
@@ -658,13 +633,6 @@ namespace WeakForms
           {
             out[dof_index] =
               this->template operator()<ScalarType, width>(value[dof_index]);
-            // DEAL_II_OPENMP_SIMD_PRAGMA
-            // for (unsigned int i = 0; i < q_point_range.size(); ++i)
-            //   numbers::set_vectorized_values(
-            //     out[dof_index],
-            //     i,
-            //     this->template
-            //     operator()<ScalarType,width>(value[dof_index]));
           }
 
         return out;
@@ -739,8 +707,14 @@ public:                                                                  \
                                                                          \
   template <typename ScalarType>                                         \
   using value_type = typename Traits::template value_type<ScalarType>;   \
+                                                                         \
   template <typename ScalarType>                                         \
   using return_type = typename Traits::template return_type<ScalarType>; \
+                                                                         \
+  template <typename ScalarType, std::size_t width>                      \
+  using vectorized_value_type =                                          \
+    typename Traits::template vectorized_value_type<ScalarType, width>;  \
+                                                                         \
   template <typename ScalarType, std::size_t width>                      \
   using vectorized_return_type =                                         \
     typename Traits::template vectorized_return_type<ScalarType, width>; \
@@ -811,9 +785,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         return -value;
@@ -867,9 +841,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         using namespace std;
@@ -923,9 +897,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         return determinant(value);
@@ -976,9 +950,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         return invert(value);
@@ -1023,9 +997,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         return transpose(value);
@@ -1070,9 +1044,9 @@ private:                                                                 \
       }
 
       template <typename ScalarType, std::size_t width>
-      vectorized_return_type<ScalarType, width>
+      vectorized_value_type<ScalarType, width>
       operator()(
-        const typename Op::template vectorized_return_type<ScalarType, width>
+        const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
         return symmetrize(value);
