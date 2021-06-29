@@ -821,9 +821,18 @@ namespace WeakForms
       template <typename ScalarType>
       using value_type =
         typename BinaryOpTypeTraits<Derived>::template value_type<ScalarType>;
+
+      template <typename ScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename BinaryOpTypeTraits<Derived>::template vectorized_value_type<ScalarType, width>;
+
       template <typename ScalarType>
       using return_type =
         typename BinaryOpTypeTraits<Derived>::template return_type<ScalarType>;
+
+      template <typename ScalarType, std::size_t width>
+      using vectorized_return_type =
+        typename BinaryOpTypeTraits<Derived>::template vectorized_return_type<ScalarType, width>;
 
       static const enum BinaryOpCodes op_code =
         BinaryOpTypeTraits<Derived>::op_code;
@@ -920,6 +929,48 @@ namespace WeakForms
                                      fe_values,
                                      scratch_data,
                                      solution_names);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> &fe_values,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value &&
+            !is_or_has_evaluated_with_scratch_data<LhsOpType>::value &&
+            !is_or_has_evaluated_with_scratch_data<RhsOpType>::value,
+          vectorized_return_type<ScalarType,width>>::type
+      {
+        return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
+          template apply<ScalarType,width>(derived,
+                                     derived.get_lhs_operand(),
+                                     derived.get_rhs_operand(),
+                                     fe_values, q_point_range);
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> &     fe_values,
+                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<std::string> &solution_names,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value &&
+            (is_or_has_evaluated_with_scratch_data<LhsOpType>::value ||
+             is_or_has_evaluated_with_scratch_data<RhsOpType>::value),
+          vectorized_return_type<ScalarType,width>>::type
+      {
+        return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
+          template apply<ScalarType,width>(derived,
+                                     derived.get_lhs_operand(),
+                                     derived.get_rhs_operand(),
+                                     fe_values,
+                                     scratch_data,
+                                     solution_names, q_point_range);
       }
 
 
@@ -1078,6 +1129,8 @@ namespace WeakForms
                                      scratch_data,
                                      solution_names);
       }
+
+      // ----- VECTORIZATION -----
 
     private:
       const Derived &derived;

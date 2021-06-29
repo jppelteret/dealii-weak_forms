@@ -95,41 +95,41 @@ run()
               << ((f1 + f2).template operator()<NumberType, width>(
                    fe_values, q_point_range))
               << std::endl;
-    // std::cout << "Addition 2: "
-    //           << ((f1 + (f2 + f3))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Addition 3: "
-    //           << (((f1 + f2) + f3)
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Addition 4: "
-    //           << (((f1 + f2) + (f3 + f4))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
+    std::cout << "Addition 2: "
+              << ((f1 + (f2 + f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 3: "
+              << (((f1 + f2) + f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 4: "
+              << (((f1 + f2) + (f3 + f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-    // std::cout << "Subtraction 1: "
-    //           << ((f1 - f2).template operator()<NumberType, width>(
-    //                fe_values, q_point_range))
-    //           << std::endl;
-    // std::cout << "Subtraction 2: "
-    //           << ((f1 - (f2 - f3))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Subtraction 3: "
-    //           << (((f1 - f2) - f3)
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Subtraction 4: "
-    //           << (((f1 - f2) - (f3 - f4))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
+    std::cout << "Subtraction 1: "
+              << ((f1 - f2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 2: "
+              << ((f1 - (f2 - f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 3: "
+              << (((f1 - f2) - f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 4: "
+              << (((f1 - f2) - (f3 - f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
     // std::cout << "Multiplication 1: "
     //           << ((f1 * f2).template operator()<NumberType, width>(
