@@ -393,238 +393,6 @@ namespace WeakForms
         using vectorized_return_type = std::vector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
-
-
-      template <typename LhsOpType, typename RhsOpType, typename T = void>
-      struct binary_op_evaluator;
-
-      template <typename LhsOpType, typename RhsOpType>
-      struct binary_op_evaluator<
-        LhsOpType,
-        RhsOpType,
-        typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
-          !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value>::
-          type>
-      {
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        multiply(const BinaryOpType &op,
-                 const typename LhsOpType::
-                   template vectorized_value_type<ScalarType, width> &lhs_value,
-                 const typename RhsOpType::
-                   template vectorized_value_type<ScalarType, width> &rhs_value)
-        {
-          (void)op;
-          return lhs_value * rhs_value;
-        }
-
-
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        divide(const BinaryOpType &op,
-               const typename LhsOpType::
-                 template vectorized_value_type<ScalarType, width> &lhs_value,
-               const typename RhsOpType::
-                 template vectorized_value_type<ScalarType, width> &rhs_value)
-        {
-          (void)op;
-          return lhs_value / rhs_value;
-        }
-      };
-
-      template <typename LhsOpType, typename RhsOpType>
-      struct binary_op_evaluator<
-        LhsOpType,
-        RhsOpType,
-        typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
-          !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value>::
-          type>
-      {
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        multiply(
-          const BinaryOpType &op,
-          const typename LhsOpType::template vectorized_return_type<ScalarType,
-                                                                    width>
-            &lhs_value,
-          const typename RhsOpType::template vectorized_value_type<ScalarType,
-                                                                   width>
-            &rhs_value)
-        {
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-                             out;
-          const unsigned int size = lhs_value.size();
-          out.reserve(size);
-
-          for (unsigned int i = 0; i < size; ++i)
-            out.emplace_back(
-              op.template operator()<ScalarType, width>(lhs_value[i],
-                                                        rhs_value));
-
-          return out;
-        }
-
-
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        divide(const BinaryOpType &op,
-               const typename LhsOpType::
-                 template vectorized_return_type<ScalarType, width> &lhs_value,
-               const typename RhsOpType::
-                 template vectorized_value_type<ScalarType, width> &rhs_value)
-        {
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-                             out;
-          const unsigned int size = lhs_value.size();
-          out.reserve(size);
-
-          for (unsigned int i = 0; i < size; ++i)
-            out.emplace_back(
-              op.template operator()<ScalarType, width>(lhs_value[i],
-                                                        rhs_value));
-
-          return out;
-        }
-      };
-
-      template <typename LhsOpType, typename RhsOpType>
-      struct binary_op_evaluator<
-        LhsOpType,
-        RhsOpType,
-        typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<RhsOpType>::value &&
-          !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value>::
-          type>
-      {
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        multiply(
-          const BinaryOpType &op,
-          const typename LhsOpType::template vectorized_value_type<ScalarType,
-                                                                   width>
-            &lhs_value,
-          const typename RhsOpType::template vectorized_return_type<ScalarType,
-                                                                    width>
-            &rhs_value)
-        {
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-                             out;
-          const unsigned int size = rhs_value.size();
-          out.reserve(size);
-
-          for (unsigned int i = 0; i < size; ++i)
-            out.emplace_back(
-              op.template operator()<ScalarType, width>(lhs_value,
-                                                        rhs_value[i]));
-
-          return out;
-        }
-
-
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        divide(const BinaryOpType &op,
-               const typename LhsOpType::
-                 template vectorized_value_type<ScalarType, width> &lhs_value,
-               const typename RhsOpType::
-                 template vectorized_return_type<ScalarType, width> &rhs_value)
-        {
-          AssertThrow(
-            false,
-            ExcMessage(
-              "It is not reasonable to have the divisor be a test function or trial solution."));
-
-          (void)op;
-          (void)lhs_value;
-          (void)rhs_value;
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-            out;
-          return out;
-        }
-      };
-
-      template <typename LhsOpType, typename RhsOpType>
-      struct binary_op_evaluator<
-        LhsOpType,
-        RhsOpType,
-        typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
-          is_or_has_test_function_or_trial_solution_op<RhsOpType>::value>::type>
-      {
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        multiply(
-          const BinaryOpType &op,
-          const typename LhsOpType::template vectorized_value_type<ScalarType,
-                                                                   width>
-            &lhs_value,
-          const typename RhsOpType::template vectorized_return_type<ScalarType,
-                                                                    width>
-            &rhs_value)
-        {
-          AssertThrow(
-            false,
-            ExcMessage(
-              "Both LhsOpType and RhsOpType cannot simultaneously be a test function or trial solution."));
-
-          (void)op;
-          (void)lhs_value;
-          (void)rhs_value;
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-            out;
-          return out;
-        }
-
-
-        template <typename ScalarType, std::size_t width, typename BinaryOpType>
-        static auto
-        divide(const BinaryOpType &op,
-               const typename LhsOpType::
-                 template vectorized_value_type<ScalarType, width> &lhs_value,
-               const typename RhsOpType::
-                 template vectorized_return_type<ScalarType, width> &rhs_value)
-        {
-          AssertThrow(
-            false,
-            ExcMessage(
-              "Both LhsOpType and RhsOpType cannot simultaneously be a test function or trial solution."));
-
-          (void)op;
-          (void)lhs_value;
-          (void)rhs_value;
-          typename BinaryOpType::template vectorized_return_type<ScalarType,
-                                                                 width>
-            out;
-          return out;
-        }
-      };
-
-      // template <typename OpType, typename ScalarType, std::size_t width>
-      // struct has_same_vectorized_value_and_return_types
-      // {
-      //   static constexpr bool value = std::is_same<
-      //     typename OpType::template vectorized_value_type<ScalarType, width>,
-      //     typename OpType::template vectorized_return_type<ScalarType,
-      //                                                      width>>::value;
-
-      //   static_assert(
-      //     value ?
-      //       true :
-      //       std::is_same<
-      //         std::vector<typename OpType::
-      //                       template vectorized_value_type<ScalarType,
-      //                       width>>,
-      //         typename OpType::template vectorized_return_type<ScalarType,
-      //                                                          width>>::value,
-      //     "Unexpected type");
-      // };
     } // namespace internal
 
 
@@ -823,16 +591,16 @@ namespace WeakForms
         typename BinaryOpTypeTraits<Derived>::template value_type<ScalarType>;
 
       template <typename ScalarType, std::size_t width>
-      using vectorized_value_type =
-        typename BinaryOpTypeTraits<Derived>::template vectorized_value_type<ScalarType, width>;
+      using vectorized_value_type = typename BinaryOpTypeTraits<
+        Derived>::template vectorized_value_type<ScalarType, width>;
 
       template <typename ScalarType>
       using return_type =
         typename BinaryOpTypeTraits<Derived>::template return_type<ScalarType>;
 
       template <typename ScalarType, std::size_t width>
-      using vectorized_return_type =
-        typename BinaryOpTypeTraits<Derived>::template vectorized_return_type<ScalarType, width>;
+      using vectorized_return_type = typename BinaryOpTypeTraits<
+        Derived>::template vectorized_return_type<ScalarType, width>;
 
       static const enum BinaryOpCodes op_code =
         BinaryOpTypeTraits<Derived>::op_code;
@@ -935,42 +703,44 @@ namespace WeakForms
 
       template <typename ScalarType, std::size_t width, int dim, int spacedim>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &fe_values,
+      operator()(const FEValuesBase<dim, spacedim> & fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
           !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
             !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value &&
             !is_or_has_evaluated_with_scratch_data<LhsOpType>::value &&
             !is_or_has_evaluated_with_scratch_data<RhsOpType>::value,
-          vectorized_return_type<ScalarType,width>>::type
+          vectorized_return_type<ScalarType, width>>::type
       {
         return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
-          template apply<ScalarType,width>(derived,
-                                     derived.get_lhs_operand(),
-                                     derived.get_rhs_operand(),
-                                     fe_values, q_point_range);
+          template apply<ScalarType, width>(derived,
+                                            derived.get_lhs_operand(),
+                                            derived.get_rhs_operand(),
+                                            fe_values,
+                                            q_point_range);
       }
 
       template <typename ScalarType, std::size_t width, int dim, int spacedim>
       auto
       operator()(const FEValuesBase<dim, spacedim> &     fe_values,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &solution_names,
-                 const types::vectorized_qp_range_t &q_point_range) const ->
+                 const std::vector<std::string> &        solution_names,
+                 const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
           !is_or_has_test_function_or_trial_solution_op<LhsOpType>::value &&
             !is_or_has_test_function_or_trial_solution_op<RhsOpType>::value &&
             (is_or_has_evaluated_with_scratch_data<LhsOpType>::value ||
              is_or_has_evaluated_with_scratch_data<RhsOpType>::value),
-          vectorized_return_type<ScalarType,width>>::type
+          vectorized_return_type<ScalarType, width>>::type
       {
         return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
-          template apply<ScalarType,width>(derived,
-                                     derived.get_lhs_operand(),
-                                     derived.get_rhs_operand(),
-                                     fe_values,
-                                     scratch_data,
-                                     solution_names, q_point_range);
+          template apply<ScalarType, width>(derived,
+                                            derived.get_lhs_operand(),
+                                            derived.get_rhs_operand(),
+                                            fe_values,
+                                            scratch_data,
+                                            solution_names,
+                                            q_point_range);
       }
 
 
@@ -1417,38 +1187,82 @@ private:                                                                   \
 
       // ----- VECTORIZATION -----
 
-      template <
-        typename ScalarType,
-        std::size_t width,
-        template <typename, std::size_t> class LhsVectorizedType,
-        template <typename, std::size_t> class RhsVectorizedType,
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &rhs_value,
         typename std::enable_if<
-          (std::is_same<
-             LhsVectorizedType<ScalarType, width>,
-             typename LhsOp::template vectorized_value_type<ScalarType,
-                                                            width>>::value ||
-           std::is_same<
-             LhsVectorizedType<ScalarType, width>,
-             typename LhsOp::template vectorized_return_type<ScalarType,
-                                                             width>>::value) &&
-          (std::is_same<
-             RhsVectorizedType<ScalarType, width>,
-             typename RhsOp::template vectorized_value_type<ScalarType,
-                                                            width>>::value ||
-           std::is_same<RhsVectorizedType<ScalarType, width>,
-                        typename RhsOp::template vectorized_return_type<
-                          ScalarType,
-                          width>>::value)>::type>
-      auto
-      operator()(const LhsVectorizedType<ScalarType, width> &lhs_value,
-                 const RhsVectorizedType<ScalarType, width> &rhs_value) const
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
+          type * = nullptr) const
       {
-        // The LhsOpType and/or RhsOpType's vectorized_value_type might be the
-        // same as the vectorized_return_type. We cannot use SFINAE to
-        // selectively disable this operator (leads to multiple definition
-        // errors), so we have to dispatch the definition elsewhere.
-        return internal::binary_op_evaluator<LhsOp, RhsOp>::
-          template multiply<ScalarType, width>(this, lhs_value, rhs_value);
+        return lhs_value * rhs_value;
+      }
+
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &rhs_value,
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
+          type * = nullptr) const
+      {
+        vectorized_return_type<ScalarType, width> out;
+        const unsigned int                        size = lhs_value.size();
+        out.reserve(size);
+
+        for (unsigned int i = 0; i < size; ++i)
+          out.emplace_back(
+            this->template operator()<ScalarType, width>(lhs_value[i],
+                                                         rhs_value));
+
+        return out;
+      }
+
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &rhs_value,
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::type
+          * = nullptr) const
+      {
+        vectorized_return_type<ScalarType, width> out;
+        const unsigned int                        size = rhs_value.size();
+        out.reserve(size);
+
+        for (unsigned int i = 0; i < size; ++i)
+          out.emplace_back(
+            this->template operator()<ScalarType, width>(lhs_value,
+                                                         rhs_value[i]));
+
+        return out;
       }
     };
 
@@ -1513,38 +1327,53 @@ private:                                                                   \
 
       // ----- VECTORIZATION -----
 
-      template <
-        typename ScalarType,
-        std::size_t width,
-        template <typename, std::size_t> class LhsVectorizedType,
-        template <typename, std::size_t> class RhsVectorizedType,
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &rhs_value,
         typename std::enable_if<
-          (std::is_same<
-             LhsVectorizedType<ScalarType, width>,
-             typename LhsOp::template vectorized_value_type<ScalarType,
-                                                            width>>::value ||
-           std::is_same<
-             LhsVectorizedType<ScalarType, width>,
-             typename LhsOp::template vectorized_return_type<ScalarType,
-                                                             width>>::value) &&
-          (std::is_same<
-             RhsVectorizedType<ScalarType, width>,
-             typename RhsOp::template vectorized_value_type<ScalarType,
-                                                            width>>::value ||
-           std::is_same<RhsVectorizedType<ScalarType, width>,
-                        typename RhsOp::template vectorized_return_type<
-                          ScalarType,
-                          width>>::value)>::type>
-      auto
-      operator()(const LhsVectorizedType<ScalarType, width> &lhs_value,
-                 const RhsVectorizedType<ScalarType, width> &rhs_value) const
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
+          type * = nullptr) const
       {
-        // The LhsOpType and/or RhsOpType's vectorized_value_type might be the
-        // same as the vectorized_return_type. We cannot use SFINAE to
-        // selectively disable this operator (leads to multiple definition
-        // errors), so we have to dispatch the definition elsewhere.
-        return internal::binary_op_evaluator<LhsOp, RhsOp>::
-          template divide<ScalarType, width>(this, lhs_value, rhs_value);
+        return lhs_value / rhs_value;
+      }
+
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &rhs_value,
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
+          type * = nullptr) const
+      {
+        vectorized_return_type<ScalarType, width> out;
+        const unsigned int                        size = lhs_value.size();
+        out.reserve(size);
+
+        for (unsigned int i = 0; i < size; ++i)
+          out.emplace_back(
+            this->template operator()<ScalarType, width>(lhs_value[i],
+                                                         rhs_value));
+
+        return out;
       }
     };
 

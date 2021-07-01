@@ -131,359 +131,356 @@ run()
                                                             q_point_range))
               << std::endl;
 
-    // std::cout << "Multiplication 1: "
-    //           << ((f1 * f2).template operator()<NumberType, width>(
-    //                fe_values, q_point_range))
-    //           << std::endl;
-    // std::cout << "Multiplication 2: "
-    //           << ((f1 * (f2 * f3))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Multiplication 3: "
-    //           << (((f1 * f2) * f3)
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
-    // std::cout << "Multiplication 4: "
-    //           << (((f1 * f2) * (f3 * f4))
-    //                 .template operator()<NumberType, width>(fe_values,
-    //                                                         q_point_range))
-    //           << std::endl;
+    std::cout << "Multiplication 1: "
+              << ((f1 * f2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 2: "
+              << ((f1 * (f2 * f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 3: "
+              << (((f1 * f2) * f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 4: "
+              << (((f1 * f2) * (f3 * f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
     deallog << "OK" << std::endl;
   }
 
-  // {
-  //   const std::string title = "Tensor functor";
-  //   std::cout << title << std::endl;
-  //   deallog << title << std::endl;
+  {
+    const std::string title = "Tensor functor";
+    std::cout << title << std::endl;
+    deallog << title << std::endl;
 
-  //   using namespace WeakForms;
+    using namespace WeakForms;
 
-  //   const TensorFunctor<2, spacedim> t1("C1", "C1");
-  //   const auto                       tf1 = value<double, spacedim>(
-  //     t1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-  //       return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
-  //     });
+    const TensorFunctor<2, spacedim> t1("C1", "C1");
+    const auto                       tf1 = value<double, spacedim>(
+      t1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+        return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
+      });
 
-  //   const TensorFunctor<2, spacedim> t2("C1", "C1");
-  //   const auto                       tf2 = value<double, spacedim>(
-  //     t2, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-  //       return Tensor<2, dim, double>(2.0 *
-  //       unit_symmetric_tensor<spacedim>());
-  //     });
+    const TensorFunctor<2, spacedim> t2("C1", "C1");
+    const auto                       tf2 = value<double, spacedim>(
+      t2, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+        return Tensor<2, dim, double>(2.0 * unit_symmetric_tensor<spacedim>());
+      });
 
-  //   const TensorFunctor<2, spacedim> t3("C3", "C3");
-  //   const auto                       tf3 = value<double, spacedim>(
-  //     t3, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-  //       return Tensor<2, dim, double>(3.0 *
-  //       unit_symmetric_tensor<spacedim>());
-  //     });
+    const TensorFunctor<2, spacedim> t3("C3", "C3");
+    const auto                       tf3 = value<double, spacedim>(
+      t3, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+        return Tensor<2, dim, double>(3.0 * unit_symmetric_tensor<spacedim>());
+      });
 
-  //   const TensorFunctor<2, spacedim> t4("C4", "C4");
-  //   const auto                       tf4 = value<double, spacedim>(
-  //     t4, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-  //       return Tensor<2, dim, double>(4.0 *
-  //       unit_symmetric_tensor<spacedim>());
-  //     });
+    const TensorFunctor<2, spacedim> t4("C4", "C4");
+    const auto                       tf4 = value<double, spacedim>(
+      t4, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+        return Tensor<2, dim, double>(4.0 * unit_symmetric_tensor<spacedim>());
+      });
 
-  //   const ScalarFunctor c1("c1", "c1");
-  //   const auto          f1 =
-  //     value<double, dim, spacedim>(c1,
-  //                                  [](const FEValuesBase<dim, spacedim> &,
-  //                                     const unsigned int) { return 1.0; });
+    const ScalarFunctor c1("c1", "c1");
+    const auto          f1 =
+      value<double, dim, spacedim>(c1,
+                                   [](const FEValuesBase<dim, spacedim> &,
+                                      const unsigned int) { return 1.0; });
 
-  //   const ScalarFunctor c2("c2", "c2");
-  //   const auto          f2 =
-  //     value<double, dim, spacedim>(c2,
-  //                                  [](const FEValuesBase<dim, spacedim> &,
-  //                                     const unsigned int) { return 2.0; });
+    const ScalarFunctor c2("c2", "c2");
+    const auto          f2 =
+      value<double, dim, spacedim>(c2,
+                                   [](const FEValuesBase<dim, spacedim> &,
+                                      const unsigned int) { return 2.0; });
 
-  //   std::cout << "Addition 1: "
-  //             << ((tf1 + tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 2: "
-  //             << ((tf1 + (tf2 + tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 3: "
-  //             << (((tf1 + tf2) + tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 4: "
-  //             << (((tf1 + tf2) + (tf3 + tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 5: "
-  //             << (((f1 * tf1) + (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Addition 1: "
+              << ((tf1 + tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Addition 2: "
+              << ((tf1 + (tf2 + tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 3: "
+              << (((tf1 + tf2) + tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 4: "
+              << (((tf1 + tf2) + (tf3 + tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 5: "
+              << (((f1 * tf1) + (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Subtraction 1: "
-  //             << ((tf1 - tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 2: "
-  //             << ((tf1 - (tf2 - tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 3: "
-  //             << (((tf1 - tf2) - tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 4: "
-  //             << (((tf1 - tf2) - (tf3 - tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 5: "
-  //             << (((f1 * tf1) - (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Subtraction 1: "
+              << ((tf1 - tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 2: "
+              << ((tf1 - (tf2 - tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 3: "
+              << (((tf1 - tf2) - tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 4: "
+              << (((tf1 - tf2) - (tf3 - tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 5: "
+              << (((f1 * tf1) - (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Single contraction 1: "
-  //             << ((tf1 * tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 2: "
-  //             << ((tf1 * (tf2 * tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 3: "
-  //             << (((tf1 * tf2) * tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 4: "
-  //             << (((tf1 * tf2) * (tf3 * tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 5: "
-  //             << (((f1 * tf1) * (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Single contraction 1: "
+              << ((tf1 * tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 2: "
+              << ((tf1 * (tf2 * tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 3: "
+              << (((tf1 * tf2) * tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 4: "
+              << (((tf1 * tf2) * (tf3 * tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 5: "
+              << (((f1 * tf1) * (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   deallog << "OK" << std::endl;
-  // }
+    deallog << "OK" << std::endl;
+  }
 
-  // {
-  //   const std::string title = "Scalar function functor";
-  //   std::cout << title << std::endl;
-  //   deallog << title << std::endl;
+  {
+    const std::string title = "Scalar function functor";
+    std::cout << title << std::endl;
+    deallog << title << std::endl;
 
-  //   using namespace WeakForms;
+    using namespace WeakForms;
 
-  //   const ScalarFunctionFunctor<spacedim> c1("c1", "c1");
-  //   const Functions::ConstantFunction<spacedim, double>
-  //              constant_scalar_function_1(1.0);
-  //   const auto f1 = value<double, dim>(c1, constant_scalar_function_1);
+    const ScalarFunctionFunctor<spacedim> c1("c1", "c1");
+    const Functions::ConstantFunction<spacedim, double>
+               constant_scalar_function_1(1.0);
+    const auto f1 = value<double, dim>(c1, constant_scalar_function_1);
 
-  //   const ScalarFunctionFunctor<spacedim> c2("c2", "c2");
-  //   const Functions::ConstantFunction<spacedim, double>
-  //              constant_scalar_function_2(2.0);
-  //   const auto f2 = value<double, dim>(c2, constant_scalar_function_2);
+    const ScalarFunctionFunctor<spacedim> c2("c2", "c2");
+    const Functions::ConstantFunction<spacedim, double>
+               constant_scalar_function_2(2.0);
+    const auto f2 = value<double, dim>(c2, constant_scalar_function_2);
 
-  //   const ScalarFunctionFunctor<spacedim> c3("c3", "c3");
-  //   const Functions::ConstantFunction<spacedim, double>
-  //              constant_scalar_function_3(3.0);
-  //   const auto f3 = value<double, dim>(c3, constant_scalar_function_3);
+    const ScalarFunctionFunctor<spacedim> c3("c3", "c3");
+    const Functions::ConstantFunction<spacedim, double>
+               constant_scalar_function_3(3.0);
+    const auto f3 = value<double, dim>(c3, constant_scalar_function_3);
 
-  //   const ScalarFunctionFunctor<spacedim> c4("c4", "c4");
-  //   const Functions::ConstantFunction<spacedim, double>
-  //              constant_scalar_function_4(4.0);
-  //   const auto f4 = value<double, dim>(c4, constant_scalar_function_4);
+    const ScalarFunctionFunctor<spacedim> c4("c4", "c4");
+    const Functions::ConstantFunction<spacedim, double>
+               constant_scalar_function_4(4.0);
+    const auto f4 = value<double, dim>(c4, constant_scalar_function_4);
 
-  //   std::cout << "Addition 1: "
-  //             << ((f1 + f2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 2: "
-  //             << ((f1 + (f2 + f3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 3: "
-  //             << (((f1 + f2) + f3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 4: "
-  //             << (((f1 + f2) + (f3 + f4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Addition 1: "
+              << ((f1 + f2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Addition 2: "
+              << ((f1 + (f2 + f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 3: "
+              << (((f1 + f2) + f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 4: "
+              << (((f1 + f2) + (f3 + f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Subtraction 1: "
-  //             << ((f1 - f2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 2: "
-  //             << ((f1 - (f2 - f3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 3: "
-  //             << (((f1 - f2) - f3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 4: "
-  //             << (((f1 - f2) - (f3 - f4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Subtraction 1: "
+              << ((f1 - f2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 2: "
+              << ((f1 - (f2 - f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 3: "
+              << (((f1 - f2) - f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 4: "
+              << (((f1 - f2) - (f3 - f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Multiplication 1: "
-  //             << ((f1 * f2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Multiplication 2: "
-  //             << ((f1 * (f2 * f3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Multiplication 3: "
-  //             << (((f1 * f2) * f3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Multiplication 4: "
-  //             << (((f1 * f2) * (f3 * f4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Multiplication 1: "
+              << ((f1 * f2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 2: "
+              << ((f1 * (f2 * f3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 3: "
+              << (((f1 * f2) * f3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Multiplication 4: "
+              << (((f1 * f2) * (f3 * f4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   deallog << "OK" << std::endl;
-  // }
+    deallog << "OK" << std::endl;
+  }
 
-  // {
-  //   const std::string title = "Tensor function functor";
-  //   std::cout << title << std::endl;
-  //   deallog << title << std::endl;
+  {
+    const std::string title = "Tensor function functor";
+    std::cout << title << std::endl;
+    deallog << title << std::endl;
 
-  //   using namespace WeakForms;
+    using namespace WeakForms;
 
-  //   const TensorFunctionFunctor<2, spacedim>     t1("C1", "C1");
-  //   const ConstantTensorFunction<2, dim, double> constant_tensor_function_1(
-  //     unit_symmetric_tensor<dim>());
-  //   const auto tf1 = value<double, dim>(t1, constant_tensor_function_1);
+    const TensorFunctionFunctor<2, spacedim>     t1("C1", "C1");
+    const ConstantTensorFunction<2, dim, double> constant_tensor_function_1(
+      unit_symmetric_tensor<dim>());
+    const auto tf1 = value<double, dim>(t1, constant_tensor_function_1);
 
-  //   const TensorFunctionFunctor<2, spacedim>     t2("C1", "C1");
-  //   const ConstantTensorFunction<2, dim, double> constant_tensor_function_2(
-  //     2.0 * unit_symmetric_tensor<dim>());
-  //   const auto tf2 = value<double, dim>(t2, constant_tensor_function_2);
+    const TensorFunctionFunctor<2, spacedim>     t2("C1", "C1");
+    const ConstantTensorFunction<2, dim, double> constant_tensor_function_2(
+      2.0 * unit_symmetric_tensor<dim>());
+    const auto tf2 = value<double, dim>(t2, constant_tensor_function_2);
 
-  //   const TensorFunctionFunctor<2, spacedim>     t3("C3", "C3");
-  //   const ConstantTensorFunction<2, dim, double> constant_tensor_function_3(
-  //     3.0 * unit_symmetric_tensor<dim>());
-  //   const auto tf3 = value<double, dim>(t3, constant_tensor_function_3);
+    const TensorFunctionFunctor<2, spacedim>     t3("C3", "C3");
+    const ConstantTensorFunction<2, dim, double> constant_tensor_function_3(
+      3.0 * unit_symmetric_tensor<dim>());
+    const auto tf3 = value<double, dim>(t3, constant_tensor_function_3);
 
-  //   const TensorFunctionFunctor<2, spacedim>     t4("C4", "C4");
-  //   const ConstantTensorFunction<2, dim, double> constant_tensor_function_4(
-  //     4.0 * unit_symmetric_tensor<dim>());
-  //   const auto tf4 = value<double, dim>(t4, constant_tensor_function_4);
+    const TensorFunctionFunctor<2, spacedim>     t4("C4", "C4");
+    const ConstantTensorFunction<2, dim, double> constant_tensor_function_4(
+      4.0 * unit_symmetric_tensor<dim>());
+    const auto tf4 = value<double, dim>(t4, constant_tensor_function_4);
 
-  //   const ScalarFunctor c1("c1", "c1");
-  //   const auto          f1 =
-  //     value<double, dim, spacedim>(c1,
-  //                                  [](const FEValuesBase<dim, spacedim> &,
-  //                                     const unsigned int) { return 1.0; });
+    const ScalarFunctor c1("c1", "c1");
+    const auto          f1 =
+      value<double, dim, spacedim>(c1,
+                                   [](const FEValuesBase<dim, spacedim> &,
+                                      const unsigned int) { return 1.0; });
 
-  //   const ScalarFunctor c2("c2", "c2");
-  //   const auto          f2 =
-  //     value<double, dim, spacedim>(c2,
-  //                                  [](const FEValuesBase<dim, spacedim> &,
-  //                                     const unsigned int) { return 2.0; });
+    const ScalarFunctor c2("c2", "c2");
+    const auto          f2 =
+      value<double, dim, spacedim>(c2,
+                                   [](const FEValuesBase<dim, spacedim> &,
+                                      const unsigned int) { return 2.0; });
 
-  //   std::cout << "Addition 1: "
-  //             << ((tf1 + tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 2: "
-  //             << ((tf1 + (tf2 + tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 3: "
-  //             << (((tf1 + tf2) + tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 4: "
-  //             << (((tf1 + tf2) + (tf3 + tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Addition 5: "
-  //             << (((f1 * tf1) + (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Addition 1: "
+              << ((tf1 + tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Addition 2: "
+              << ((tf1 + (tf2 + tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 3: "
+              << (((tf1 + tf2) + tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 4: "
+              << (((tf1 + tf2) + (tf3 + tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Addition 5: "
+              << (((f1 * tf1) + (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Subtraction 1: "
-  //             << ((tf1 - tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 2: "
-  //             << ((tf1 - (tf2 - tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 3: "
-  //             << (((tf1 - tf2) - tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 4: "
-  //             << (((tf1 - tf2) - (tf3 - tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Subtraction 5: "
-  //             << (((f1 * tf1) - (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Subtraction 1: "
+              << ((tf1 - tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 2: "
+              << ((tf1 - (tf2 - tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 3: "
+              << (((tf1 - tf2) - tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 4: "
+              << (((tf1 - tf2) - (tf3 - tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Subtraction 5: "
+              << (((f1 * tf1) - (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   std::cout << "Single contraction 1: "
-  //             << ((tf1 * tf2).template operator()<NumberType, width>(
-  //                  fe_values, q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 2: "
-  //             << ((tf1 * (tf2 * tf3))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 3: "
-  //             << (((tf1 * tf2) * tf3)
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 4: "
-  //             << (((tf1 * tf2) * (tf3 * tf4))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
-  //   std::cout << "Single contraction 5: "
-  //             << (((f1 * tf1) * (tf2 * f2))
-  //                   .template operator()<NumberType, width>(fe_values,
-  //                                                           q_point_range))
-  //             << std::endl;
+    std::cout << "Single contraction 1: "
+              << ((tf1 * tf2).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 2: "
+              << ((tf1 * (tf2 * tf3))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 3: "
+              << (((tf1 * tf2) * tf3)
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 4: "
+              << (((tf1 * tf2) * (tf3 * tf4))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+    std::cout << "Single contraction 5: "
+              << (((f1 * tf1) * (tf2 * f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
 
-  //   deallog << "OK" << std::endl;
-  // }
+    deallog << "OK" << std::endl;
+  }
 
   deallog << "OK" << std::endl;
 }
