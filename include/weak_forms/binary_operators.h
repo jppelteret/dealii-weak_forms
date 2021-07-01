@@ -902,6 +902,143 @@ namespace WeakForms
 
       // ----- VECTORIZATION -----
 
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &rhs_value,
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::type
+          * = nullptr) const
+      {
+        Assert(lhs_value.size() == rhs_value.size(),
+               ExcDimensionMismatch(lhs_value.size(), rhs_value.size()));
+
+        const unsigned int n_dofs = lhs_value.size();
+
+        vectorized_return_type<ScalarType, width> out;
+        out.reserve(n_dofs);
+
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out.emplace_back(derived.template operator()<ScalarType, width>(
+            lhs_value[dof_index], rhs_value[dof_index]));
+
+        return out;
+      }
+
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &rhs_value,
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
+          type * = nullptr) const
+      {
+        const unsigned int n_dofs = lhs_value.size();
+
+        vectorized_return_type<ScalarType, width> out;
+        out.reserve(n_dofs);
+
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out.emplace_back(
+            derived.template operator()<ScalarType, width>(lhs_value[dof_index],
+                                                           rhs_value));
+
+        return out;
+      }
+
+      template <typename ScalarType,
+                std::size_t width,
+                typename LhsOpType2 = LhsOpType,
+                typename RhsOpType2 = RhsOpType>
+      vectorized_return_type<ScalarType, width>
+      operator()(
+        const typename LhsOpType::template vectorized_value_type<ScalarType,
+                                                                 width>
+          &lhs_value,
+        const typename RhsOpType::template vectorized_return_type<ScalarType,
+                                                                  width>
+          &rhs_value,
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
+          is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::type
+          * = nullptr) const
+      {
+        const unsigned int n_dofs = rhs_value.size();
+
+        vectorized_return_type<ScalarType, width> out;
+        out.reserve(n_dofs);
+
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out.emplace_back(derived.template operator()<ScalarType, width>(
+            lhs_value, rhs_value[dof_index]));
+
+        return out;
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> & fe_values_dofs,
+                 const FEValuesBase<dim, spacedim> & fe_values_op,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
+        typename std::enable_if<
+          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+            !is_or_has_evaluated_with_scratch_data<LhsOpType>::value &&
+            !is_or_has_evaluated_with_scratch_data<RhsOpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
+          template apply<ScalarType, width>(derived,
+                                            derived.get_lhs_operand(),
+                                            derived.get_rhs_operand(),
+                                            fe_values_dofs,
+                                            fe_values_op,
+                                            q_point_range);
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> &     fe_values_dofs,
+                 const FEValuesBase<dim, spacedim> &     fe_values_op,
+                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<std::string> &        solution_names,
+                 const types::vectorized_qp_range_t &    q_point_range) const ->
+        typename std::enable_if<
+          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+            (is_or_has_evaluated_with_scratch_data<LhsOpType>::value ||
+             is_or_has_evaluated_with_scratch_data<RhsOpType>::value),
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::BinaryOpEvaluator<LhsOpType, RhsOpType>::
+          template apply<ScalarType, width>(derived,
+                                            derived.get_lhs_operand(),
+                                            derived.get_rhs_operand(),
+                                            fe_values_dofs,
+                                            fe_values_op,
+                                            scratch_data,
+                                            solution_names,
+                                            q_point_range);
+      }
+
     private:
       const Derived &derived;
     };
