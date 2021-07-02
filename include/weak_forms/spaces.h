@@ -18,6 +18,7 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/aligned_vector.h>
 #include <deal.II/base/exceptions.h>
 
 #include <deal.II/fe/fe_interface_values.h>
@@ -1045,7 +1046,7 @@ public:                                                                        \
                                                                                \
   template <typename ScalarType, std::size_t width>                            \
   using vectorized_dof_value_type =                                            \
-    std::vector<vectorized_qp_value_type<ScalarType, width>>;                  \
+    AlignedVector<vectorized_qp_value_type<ScalarType, width>>;                \
   /**                                                                          \
    * The index in the solution history that this field solution                \
    * corresponds to. The default value (0) indicates that it relates           \

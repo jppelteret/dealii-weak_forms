@@ -18,6 +18,7 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/aligned_vector.h>
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/vectorization.h>
 
@@ -346,7 +347,7 @@ namespace WeakForms
         using return_type = std::vector<std::vector<T>>;
 
         template <typename T, std::size_t width>
-        using vectorized_return_type = std::vector<
+        using vectorized_return_type = AlignedVector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
 
@@ -363,7 +364,7 @@ namespace WeakForms
         using return_type = std::vector<std::vector<T>>;
 
         template <typename T, std::size_t width>
-        using vectorized_return_type = std::vector<
+        using vectorized_return_type = AlignedVector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
 
@@ -390,7 +391,7 @@ namespace WeakForms
         using return_type = std::vector<std::vector<T>>;
 
         template <typename T, std::size_t width>
-        using vectorized_return_type = std::vector<
+        using vectorized_return_type = AlignedVector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
     } // namespace internal
@@ -924,12 +925,10 @@ namespace WeakForms
 
         const unsigned int n_dofs = lhs_value.size();
 
-        vectorized_return_type<ScalarType, width> out;
-        out.reserve(n_dofs);
-
+        vectorized_return_type<ScalarType, width> out(n_dofs);
         for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
-          out.emplace_back(derived.template operator()<ScalarType, width>(
-            lhs_value[dof_index], rhs_value[dof_index]));
+          out[dof_index] = derived.template operator()<ScalarType, width>(
+            lhs_value[dof_index], rhs_value[dof_index]);
 
         return out;
       }
@@ -953,13 +952,11 @@ namespace WeakForms
       {
         const unsigned int n_dofs = lhs_value.size();
 
-        vectorized_return_type<ScalarType, width> out;
-        out.reserve(n_dofs);
-
+        vectorized_return_type<ScalarType, width> out(n_dofs);
         for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
-          out.emplace_back(
+          out[dof_index] =
             derived.template operator()<ScalarType, width>(lhs_value[dof_index],
-                                                           rhs_value));
+                                                           rhs_value);
 
         return out;
       }
@@ -983,12 +980,10 @@ namespace WeakForms
       {
         const unsigned int n_dofs = rhs_value.size();
 
-        vectorized_return_type<ScalarType, width> out;
-        out.reserve(n_dofs);
-
+        vectorized_return_type<ScalarType, width> out(n_dofs);
         for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
-          out.emplace_back(derived.template operator()<ScalarType, width>(
-            lhs_value, rhs_value[dof_index]));
+          out[dof_index] = derived.template operator()<ScalarType, width>(
+            lhs_value, rhs_value[dof_index]);
 
         return out;
       }
@@ -1357,14 +1352,13 @@ private:                                                                   \
           !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
           type * = nullptr) const
       {
-        vectorized_return_type<ScalarType, width> out;
-        const unsigned int                        size = lhs_value.size();
-        out.reserve(size);
+        const unsigned int n_dofs = lhs_value.size();
 
-        for (unsigned int i = 0; i < size; ++i)
-          out.emplace_back(
-            this->template operator()<ScalarType, width>(lhs_value[i],
-                                                         rhs_value));
+        vectorized_return_type<ScalarType, width> out(n_dofs);
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out[dof_index] =
+            this->template operator()<ScalarType, width>(lhs_value[dof_index],
+                                                         rhs_value);
 
         return out;
       }
@@ -1386,14 +1380,13 @@ private:                                                                   \
           is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::type
           * = nullptr) const
       {
-        vectorized_return_type<ScalarType, width> out;
-        const unsigned int                        size = rhs_value.size();
-        out.reserve(size);
+        const unsigned int n_dofs = rhs_value.size();
 
-        for (unsigned int i = 0; i < size; ++i)
-          out.emplace_back(
+        vectorized_return_type<ScalarType, width> out(n_dofs);
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out[dof_index] =
             this->template operator()<ScalarType, width>(lhs_value,
-                                                         rhs_value[i]));
+                                                         rhs_value[dof_index]);
 
         return out;
       }
@@ -1493,14 +1486,13 @@ private:                                                                   \
           !is_or_has_test_function_or_trial_solution_op<RhsOpType2>::value>::
           type * = nullptr) const
       {
-        vectorized_return_type<ScalarType, width> out;
-        const unsigned int                        size = lhs_value.size();
-        out.reserve(size);
+        const unsigned int n_dofs = lhs_value.size();
 
-        for (unsigned int i = 0; i < size; ++i)
-          out.emplace_back(
-            this->template operator()<ScalarType, width>(lhs_value[i],
-                                                         rhs_value));
+        vectorized_return_type<ScalarType, width> out(n_dofs);
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          out[dof_index] =
+            this->template operator()<ScalarType, width>(lhs_value[dof_index],
+                                                         rhs_value);
 
         return out;
       }
