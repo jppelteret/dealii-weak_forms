@@ -197,27 +197,52 @@ run(const unsigned int n_subdivisions)
     const ScalarFunctionFunctor<dim> source("f_pillow", "f_{s}");
     const VectorFunctionFunctor<dim> traction("f_cosine", "\\mathbf{f}_{t}");
 
-    // Still no concrete definitions
-    // NB: Linear forms change sign when RHS is assembled.
-    MatrixBasedAssembler<dim, spacedim> assembler;
-    assembler -= linear_form(test_ss.value(), source(source_function)).dV();
-    assembler -=
-      linear_form(test_ss.value(), normal() * traction(traction_function)).dA();
+    // Non-vectorized assembler
+    {
+      // Still no concrete definitions
+      // NB: Linear forms change sign when RHS is assembled.
+      constexpr bool use_vectorization = false;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+      assembler -= linear_form(test_ss.value(), source(source_function)).dV();
+      assembler -=
+        linear_form(test_ss.value(), normal() * traction(traction_function))
+          .dA();
 
-    // Look at what we're going to compute
-    const SymbolicDecorations decorator;
-    deallog << "Weak form (ascii):\n"
-            << assembler.as_ascii(decorator) << std::endl;
-    deallog << "Weak form (LaTeX):\n"
-            << assembler.as_latex(decorator) << std::endl;
+      // Look at what we're going to compute
+      const SymbolicDecorations decorator;
+      deallog << "Weak form (ascii):\n"
+              << assembler.as_ascii(decorator) << std::endl;
+      deallog << "Weak form (LaTeX):\n"
+              << assembler.as_latex(decorator) << std::endl;
 
-    // Now we pass in concrete objects to get data from
-    // and assemble into.
-    assembler.assemble_rhs_vector(
-      system_rhs_wf, constraints, dof_handler, qf_cell, qf_face);
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_rhs_vector(
+        system_rhs_wf, constraints, dof_handler, qf_cell, qf_face);
 
-    // system_rhs_wf.print(std::cout);
-    verify_assembly(system_rhs_std, system_rhs_wf);
+      // system_rhs_wf.print(std::cout);
+      verify_assembly(system_rhs_std, system_rhs_wf);
+    }
+
+    system_rhs_wf = 0;
+
+    // Vectorized assembler
+    {
+      constexpr bool use_vectorization = true;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+      assembler -= linear_form(test_ss.value(), source(source_function)).dV();
+      assembler -=
+        linear_form(test_ss.value(), normal() * traction(traction_function))
+          .dA();
+
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_rhs_vector(
+        system_rhs_wf, constraints, dof_handler, qf_cell, qf_face);
+
+      // system_rhs_wf.print(std::cout);
+      verify_assembly(system_rhs_std, system_rhs_wf);
+    }
   }
 
   deallog << "OK" << std::endl;
