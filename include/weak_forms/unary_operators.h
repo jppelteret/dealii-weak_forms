@@ -18,6 +18,7 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/aligned_vector.h>
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/utilities.h>
 
@@ -219,7 +220,7 @@ namespace WeakForms
         using return_type = std::vector<std::vector<T>>;
 
         template <typename T, std::size_t width>
-        using vectorized_return_type = std::vector<
+        using vectorized_return_type = AlignedVector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
 

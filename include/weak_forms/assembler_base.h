@@ -2123,13 +2123,15 @@ namespace WeakForms
             constexpr std::size_t width =
               dealii::internal::VectorizedArrayWidthSpecifier<
                 ScalarType>::max_width;
-            using Vector_t = VectorizedArray<ScalarType, width>;
             using VectorizedValueTypeTest =
-              typename TestSpaceOp::template value_type<Vector_t>;
+              typename TestSpaceOp::template vectorized_value_type<ScalarType,
+                                                                   width>;
             using VectorizedValueTypeFunctor =
-              typename Functor::template value_type<Vector_t>;
+              typename Functor::template vectorized_value_type<ScalarType,
+                                                               width>;
             using VectorizedValueTypeTrial =
-              typename TrialSpaceOp::template value_type<Vector_t>;
+              typename TrialSpaceOp::template vectorized_value_type<ScalarType,
+                                                                    width>;
 
             const unsigned int n_q_points = fe_values.n_quadrature_points;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -2179,10 +2181,7 @@ namespace WeakForms
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      {
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                        continue;
-                      }
+                      numbers::set_vectorized_values(JxW, v, 0.0);
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2458,13 +2457,15 @@ namespace WeakForms
             constexpr std::size_t width =
               dealii::internal::VectorizedArrayWidthSpecifier<
                 ScalarType>::max_width;
-            using Vector_t = VectorizedArray<ScalarType, width>;
             using VectorizedValueTypeTest =
-              typename TestSpaceOp::template value_type<Vector_t>;
+              typename TestSpaceOp::template vectorized_value_type<ScalarType,
+                                                                   width>;
             using VectorizedValueTypeFunctor =
-              typename Functor::template value_type<Vector_t>;
+              typename Functor::template vectorized_value_type<ScalarType,
+                                                               width>;
             using VectorizedValueTypeTrial =
-              typename TrialSpaceOp::template value_type<Vector_t>;
+              typename TrialSpaceOp::template vectorized_value_type<ScalarType,
+                                                                    width>;
 
             const unsigned int n_q_points = fe_face_values.n_quadrature_points;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -2514,10 +2515,7 @@ namespace WeakForms
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      {
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                        continue;
-                      }
+                      numbers::set_vectorized_values(JxW, v, 0.0);
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2707,11 +2705,12 @@ namespace WeakForms
             constexpr std::size_t width =
               dealii::internal::VectorizedArrayWidthSpecifier<
                 ScalarType>::max_width;
-            using Vector_t = VectorizedArray<ScalarType, width>;
             using VectorizedValueTypeTest =
-              typename TestSpaceOp::template value_type<Vector_t>;
+              typename TestSpaceOp::template vectorized_value_type<ScalarType,
+                                                                   width>;
             using VectorizedValueTypeFunctor =
-              typename Functor::template value_type<Vector_t>;
+              typename Functor::template vectorized_value_type<ScalarType,
+                                                               width>;
 
             const unsigned int n_q_points = fe_values.n_quadrature_points;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -2753,10 +2752,7 @@ namespace WeakForms
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      {
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                        continue;
-                      }
+                      numbers::set_vectorized_values(JxW, v, 0.0);
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2886,11 +2882,12 @@ namespace WeakForms
             constexpr std::size_t width =
               dealii::internal::VectorizedArrayWidthSpecifier<
                 ScalarType>::max_width;
-            using Vector_t = VectorizedArray<ScalarType, width>;
             using VectorizedValueTypeTest =
-              typename TestSpaceOp::template value_type<Vector_t>;
+              typename TestSpaceOp::template vectorized_value_type<ScalarType,
+                                                                   width>;
             using VectorizedValueTypeFunctor =
-              typename Functor::template value_type<Vector_t>;
+              typename Functor::template vectorized_value_type<ScalarType,
+                                                               width>;
 
             const unsigned int n_q_points = fe_face_values.n_quadrature_points;
             for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -2932,10 +2929,7 @@ namespace WeakForms
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      {
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                        continue;
-                      }
+                      numbers::set_vectorized_values(JxW, v, 0.0);
                   }
 
                 // Do the assembly for the current batch of quadrature points
