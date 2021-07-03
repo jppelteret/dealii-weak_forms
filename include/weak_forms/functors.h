@@ -536,7 +536,8 @@ namespace WeakForms
         out.reserve(fe_values.n_quadrature_points);
 
         for (const auto q_point : fe_values.quadrature_point_indices())
-          out.emplace_back(function(fe_values, q_point));
+          out.emplace_back(
+            this->template operator()<ResultScalarType>(fe_values, q_point));
 
         return out;
       }
@@ -556,9 +557,11 @@ namespace WeakForms
         // TODO: Can we guarantee that the underlying function is immutable?
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(out,
-                                         i,
-                                         function(fe_values, q_point_range[i]));
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(fe_values,
+                                                        q_point_range[i]));
 
         return out;
       }
@@ -678,7 +681,8 @@ namespace WeakForms
         out.reserve(fe_values.n_quadrature_points);
 
         for (const auto q_point : fe_values.quadrature_point_indices())
-          out.emplace_back(function(fe_values, q_point));
+          out.emplace_back(
+            this->template operator()<ResultScalarType>(fe_values, q_point));
 
         return out;
       }
@@ -698,9 +702,11 @@ namespace WeakForms
         // TODO: Can we guarantee that the underlying function is immutable?
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(out,
-                                         i,
-                                         function(fe_values, q_point_range[i]));
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(fe_values,
+                                                        q_point_range[i]));
 
         return out;
       }
@@ -820,7 +826,8 @@ namespace WeakForms
         out.reserve(fe_values.n_quadrature_points);
 
         for (const auto q_point : fe_values.quadrature_point_indices())
-          out.emplace_back(function(fe_values, q_point));
+          out.emplace_back(
+            this->template operator()<ResultScalarType>(fe_values, q_point));
 
         return out;
       }
@@ -840,9 +847,11 @@ namespace WeakForms
         // TODO: Can we guarantee that the underlying function is immutable?
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(out,
-                                         i,
-                                         function(fe_values, q_point_range[i]));
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(fe_values,
+                                                        q_point_range[i]));
 
         return out;
       }
