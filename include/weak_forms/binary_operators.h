@@ -909,11 +909,11 @@ namespace WeakForms
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_return_type<ScalarType,
-                                                                  width>
+        const typename LhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &lhs_value,
-        const typename RhsOpType::template vectorized_return_type<ScalarType,
-                                                                  width>
+        const typename RhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &rhs_value,
         typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
@@ -939,11 +939,11 @@ namespace WeakForms
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_return_type<ScalarType,
-                                                                  width>
+        const typename LhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &lhs_value,
-        const typename RhsOpType::template vectorized_value_type<ScalarType,
-                                                                 width>
+        const typename RhsOpType2::template vectorized_value_type<ScalarType,
+                                                                  width>
           &rhs_value,
         typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
@@ -967,11 +967,11 @@ namespace WeakForms
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_value_type<ScalarType,
-                                                                 width>
-          &lhs_value,
-        const typename RhsOpType::template vectorized_return_type<ScalarType,
+        const typename LhsOpType2::template vectorized_value_type<ScalarType,
                                                                   width>
+          &lhs_value,
+        const typename RhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &rhs_value,
         typename std::enable_if<
           !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
@@ -1319,10 +1319,7 @@ private:                                                                   \
 
       // ----- VECTORIZATION -----
 
-      template <typename ScalarType,
-                std::size_t width,
-                typename LhsOpType2 = LhsOpType,
-                typename RhsOpType2 = RhsOpType>
+      template <typename ScalarType, std::size_t width>
       vectorized_value_type<ScalarType, width>
       operator()(
         const typename LhsOpType::template vectorized_value_type<ScalarType,
@@ -1341,11 +1338,11 @@ private:                                                                   \
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_return_type<ScalarType,
-                                                                  width>
+        const typename LhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &lhs_value,
-        const typename RhsOpType::template vectorized_value_type<ScalarType,
-                                                                 width>
+        const typename RhsOpType2::template vectorized_value_type<ScalarType,
+                                                                  width>
           &rhs_value,
         typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
@@ -1369,11 +1366,11 @@ private:                                                                   \
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_value_type<ScalarType,
-                                                                 width>
-          &lhs_value,
-        const typename RhsOpType::template vectorized_return_type<ScalarType,
+        const typename LhsOpType2::template vectorized_value_type<ScalarType,
                                                                   width>
+          &lhs_value,
+        const typename RhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &rhs_value,
         typename std::enable_if<
           !is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
@@ -1453,10 +1450,7 @@ private:                                                                   \
 
       // ----- VECTORIZATION -----
 
-      template <typename ScalarType,
-                std::size_t width,
-                typename LhsOpType2 = LhsOpType,
-                typename RhsOpType2 = RhsOpType>
+      template <typename ScalarType, std::size_t width>
       vectorized_value_type<ScalarType, width>
       operator()(
         const typename LhsOpType::template vectorized_value_type<ScalarType,
@@ -1475,11 +1469,11 @@ private:                                                                   \
                 typename RhsOpType2 = RhsOpType>
       vectorized_return_type<ScalarType, width>
       operator()(
-        const typename LhsOpType::template vectorized_return_type<ScalarType,
-                                                                  width>
+        const typename LhsOpType2::template vectorized_return_type<ScalarType,
+                                                                   width>
           &lhs_value,
-        const typename RhsOpType::template vectorized_value_type<ScalarType,
-                                                                 width>
+        const typename RhsOpType2::template vectorized_value_type<ScalarType,
+                                                                  width>
           &rhs_value,
         typename std::enable_if<
           is_or_has_test_function_or_trial_solution_op<LhsOpType2>::value &&
