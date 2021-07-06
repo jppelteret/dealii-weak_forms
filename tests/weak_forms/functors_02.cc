@@ -148,36 +148,38 @@ run()
     };
   const auto S4 = value<NumberType, dim>(tensor4, S4_func, update_flags);
 
+  const unsigned int q_point = 0;
+
 
   // Test values
   {
     deallog << "Scalar: "
             << s.template operator()<NumberType>(scratch_data,
-                                                 solution_names)[0]
+                                                 solution_names)[q_point]
             << std::endl;
     deallog << "Vector: "
             << v.template operator()<NumberType>(scratch_data,
-                                                 solution_names)[0]
+                                                 solution_names)[q_point]
             << std::endl;
     deallog << "Tensor (rank 2): "
             << T2.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[0]
+                                                  solution_names)[q_point]
             << std::endl;
     deallog << "Tensor (rank 3): "
             << T3.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[0]
+                                                  solution_names)[q_point]
             << std::endl;
     deallog << "Tensor (rank 4): "
             << T4.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[0]
+                                                  solution_names)[q_point]
             << std::endl;
     deallog << "SymmetricTensor (rank 2): "
             << S2.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[0]
+                                                  solution_names)[q_point]
             << std::endl;
     deallog << "SymmetricTensor (rank 4): "
             << S4.template operator()<NumberType>(scratch_data,
-                                                  solution_names)[0]
+                                                  solution_names)[q_point]
             << std::endl;
   }
 

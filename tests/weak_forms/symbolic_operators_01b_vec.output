@@ -1,0 +1,15 @@
+
+DEAL:Dim 3::Test function: Cell
+DEAL:Dim 3::OK
+DEAL:Dim 3::Trial solution: Cell
+DEAL:Dim 3::OK
+DEAL:Dim 3::Field solution: Cell
+DEAL:Dim 3::OK
+DEAL:Dim 3::Test function: Face
+DEAL:Dim 3::OK
+DEAL:Dim 3::Trial solution: Face
+DEAL:Dim 3::OK
+DEAL:Dim 3::Field solution: Face
+DEAL:Dim 3::OK
+DEAL:Dim 3::OK
+DEAL::OK

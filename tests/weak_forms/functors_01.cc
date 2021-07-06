@@ -96,6 +96,26 @@ run()
   }
 
   {
+    const std::string title = "Symmetric tensor functor";
+    std::cout << title << std::endl;
+    deallog << title << std::endl;
+
+    using namespace WeakForms;
+
+    const SymmetricTensorFunctor<2, spacedim> coeff("C", "C");
+    const auto                                functor = value<double, spacedim>(
+      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+        return unit_symmetric_tensor<spacedim>();
+      });
+
+    std::cout << "Value: "
+              << (functor.template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    deallog << "OK" << std::endl;
+  }
+
+  {
     const std::string title = "Scalar function functor";
     std::cout << title << std::endl;
     deallog << title << std::endl;

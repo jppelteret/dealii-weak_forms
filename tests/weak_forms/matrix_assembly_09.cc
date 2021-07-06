@@ -78,26 +78,53 @@ run()
   const auto dE_ns = transpose(F) * dF;
   const auto DE_ns = transpose(F) * DF;
 
-  // Assembly
-  MatrixBasedAssembler<dim> assembler;
+  // Non-vectorized assembler
+  {
+    constexpr bool use_vectorization = false;
+    MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
 
-  // Rank 2 tensor . Scalar . Rank 2 tensor
-  assembler += bilinear_form(dE, 1.0, DE).dV();       // Fully symmetric
-  assembler += bilinear_form(dE_ns, 1.0, DE_ns).dV(); // Fully non-symmetric
-  assembler += bilinear_form(dE_ns, 1.0, DE).dV();    // Mixed 1
-  assembler += bilinear_form(dE, 1.0, DE_ns).dV();    // Mixed 2
+    // Rank 2 tensor . Scalar . Rank 2 tensor
+    assembler += bilinear_form(dE, 1.0, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, 1.0, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, 1.0, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, 1.0, DE_ns).dV();    // Mixed 2
 
-  // Rank 2 tensor : Symmetric Rank 4 tensor : Rank 2 tensor
-  assembler += bilinear_form(dE, H, DE).dV();       // Fully symmetric
-  assembler += bilinear_form(dE_ns, H, DE_ns).dV(); // Fully non-symmetric
-  assembler += bilinear_form(dE_ns, H, DE).dV();    // Mixed 1
-  assembler += bilinear_form(dE, H, DE_ns).dV();    // Mixed 2
+    // Rank 2 tensor : Symmetric Rank 4 tensor : Rank 2 tensor
+    assembler += bilinear_form(dE, H, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, H, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, H, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, H, DE_ns).dV();    // Mixed 2
 
-  // Rank 2 tensor : Non-symmetric Rank 4 tensor : Rank 2 tensor
-  assembler += bilinear_form(dE, H_ns, DE).dV();       // Fully symmetric
-  assembler += bilinear_form(dE_ns, H_ns, DE_ns).dV(); // Fully non-symmetric
-  assembler += bilinear_form(dE_ns, H_ns, DE).dV();    // Mixed 1
-  assembler += bilinear_form(dE, H_ns, DE_ns).dV();    // Mixed 2
+    // Rank 2 tensor : Non-symmetric Rank 4 tensor : Rank 2 tensor
+    assembler += bilinear_form(dE, H_ns, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, H_ns, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, H_ns, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, H_ns, DE_ns).dV();    // Mixed 2
+  }
+
+  // Vectorized assembler
+  {
+    constexpr bool use_vectorization = true;
+    MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+
+    // Rank 2 tensor . Scalar . Rank 2 tensor
+    assembler += bilinear_form(dE, 1.0, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, 1.0, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, 1.0, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, 1.0, DE_ns).dV();    // Mixed 2
+
+    // Rank 2 tensor : Symmetric Rank 4 tensor : Rank 2 tensor
+    assembler += bilinear_form(dE, H, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, H, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, H, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, H, DE_ns).dV();    // Mixed 2
+
+    // Rank 2 tensor : Non-symmetric Rank 4 tensor : Rank 2 tensor
+    assembler += bilinear_form(dE, H_ns, DE).dV();       // Fully symmetric
+    assembler += bilinear_form(dE_ns, H_ns, DE_ns).dV(); // Fully non-symmetric
+    assembler += bilinear_form(dE_ns, H_ns, DE).dV();    // Mixed 1
+    assembler += bilinear_form(dE, H_ns, DE_ns).dV();    // Mixed 2
+  }
 
   deallog << "OK" << std::endl;
 }

@@ -16,6 +16,8 @@
 #ifndef dealii_weakforms_types_h
 #define dealii_weakforms_types_h
 
+#include <deal.II/base/std_cxx20/iota_view.h>
+
 #include <weak_forms/config.h>
 
 
@@ -28,18 +30,10 @@ namespace WeakForms
     using field_index = unsigned int;
 
     using solution_index = unsigned int;
+
+    using vectorized_qp_range_t =
+      std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
   } // namespace types
-
-
-  namespace numbers
-  {
-    const types::field_index invalid_field_index =
-      static_cast<types::field_index>(-1);
-
-    const types::solution_index invalid_solution_index =
-      static_cast<types::field_index>(-1);
-  } // namespace numbers
-
 } // namespace WeakForms
 
 WEAK_FORMS_NAMESPACE_CLOSE

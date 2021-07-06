@@ -1,0 +1,11 @@
+
+DEAL:Dim 2:Compound binary::Test function: Cell
+DEAL:Dim 2:Compound binary::OK
+DEAL:Dim 2:Unary of compound binary::Test function: Cell
+DEAL:Dim 2:Unary of compound binary::OK
+DEAL:Dim 2:Compound binary::Test function: Face
+DEAL:Dim 2:Compound binary::OK
+DEAL:Dim 2:Unary of compound binary::Test function: Face
+DEAL:Dim 2:Unary of compound binary::OK
+DEAL:Dim 2::OK
+DEAL::OK

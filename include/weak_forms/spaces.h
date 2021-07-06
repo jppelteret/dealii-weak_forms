@@ -18,6 +18,7 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/aligned_vector.h>
 #include <deal.II/base/exceptions.h>
 
 #include <deal.II/fe/fe_interface_values.h>
@@ -27,6 +28,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/subspace_extractors.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -1033,6 +1035,18 @@ public:                                                                        \
    */                                                                          \
   template <typename ScalarType>                                               \
   using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_value_type = typename numbers::VectorizedValue<             \
+    value_type<ScalarType>>::template type<width>;                             \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_qp_value_type = typename numbers::VectorizedValue<          \
+    value_type<ScalarType>>::template type<width>;                             \
+                                                                               \
+  template <typename ScalarType, std::size_t width>                            \
+  using vectorized_dof_value_type =                                            \
+    AlignedVector<vectorized_qp_value_type<ScalarType, width>>;                \
   /**                                                                          \
    * The index in the solution history that this field solution                \
    * corresponds to. The default value (0) indicates that it relates           \
@@ -1877,6 +1891,14 @@ public:                                                                      \
   template <typename ScalarType>                                             \
   using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
                                                                              \
+  template <typename ScalarType, std::size_t width>                          \
+  using vectorized_value_type =                                              \
+    typename Base_t::template vectorized_value_type<ScalarType, width>;      \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
+  using vectorized_return_type =                                             \
+    typename Base_t::template vectorized_dof_value_type<ScalarType, width>;  \
+                                                                             \
   /**                                                                        \
    * Return all shape function values all quadrature points.                 \
    *                                                                         \
@@ -1902,6 +1924,33 @@ public:                                                                      \
         for (const auto q_point : fe_values_op.quadrature_point_indices())   \
           out[dof_index].emplace_back(this->template operator()<ScalarType>( \
             fe_values_op, dof_index, q_point));                              \
+      }                                                                      \
+                                                                             \
+    return out;                                                              \
+  }                                                                          \
+                                                                             \
+  template <typename ScalarType, std::size_t width>                          \
+  vectorized_return_type<ScalarType, width> operator()(                      \
+    const FEValuesBase<dim, spacedim> & fe_values_dofs,                      \
+    const FEValuesBase<dim, spacedim> & fe_values_op,                        \
+    const types::vectorized_qp_range_t &q_point_range) const                 \
+  {                                                                          \
+    vectorized_return_type<ScalarType, width> out(                           \
+      fe_values_dofs.dofs_per_cell);                                         \
+                                                                             \
+    Assert(q_point_range.size() <= width,                                    \
+           ExcIndexRange(q_point_range.size(), 0, width));                   \
+                                                                             \
+    for (const auto dof_index : fe_values_dofs.dof_indices())                \
+      {                                                                      \
+        DEAL_II_OPENMP_SIMD_PRAGMA                                           \
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)              \
+          numbers::set_vectorized_values(                                    \
+            out[dof_index],                                                  \
+            i,                                                               \
+            this->template operator()<ScalarType>(fe_values_op,              \
+                                                  dof_index,                 \
+                                                  q_point_range[i]));        \
       }                                                                      \
                                                                              \
     return out;                                                              \
@@ -2125,74 +2174,110 @@ protected:                                                                   \
  * @note It is intended that this should used immediately after class
  * definition is opened.
  */
-#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(          \
-  SymbolicOpBaseType, dim, spacedim)                                         \
-private:                                                                     \
-  using Base_t = SymbolicOpBaseType<Space<dim, spacedim>>;                   \
-  using typename Base_t::Op;                                                 \
-                                                                             \
-public:                                                                      \
-  /**                                                                        \
-   * Dimension in which this object operates.                                \
-   */                                                                        \
-  static const unsigned int dimension = dim;                                 \
-                                                                             \
-  /**                                                                        \
-   * Dimension of the space in which this object operates.                   \
-   */                                                                        \
-  static const unsigned int space_dimension = spacedim;                      \
-                                                                             \
-  template <typename ScalarType>                                             \
-  using value_type = typename Base_t::template value_type<ScalarType>;       \
-                                                                             \
-  template <typename ScalarType>                                             \
-  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>; \
-                                                                             \
-  template <typename ScalarType>                                             \
-  using return_type = typename Base_t::template dof_value_type<ScalarType>;  \
-                                                                             \
-  /**                                                                        \
-   * Return all shape function values all quadrature points.                 \
-   *                                                                         \
-   * The outer index is the shape function, and the inner index              \
-   * is the quadrature point.                                                \
-   *                                                                         \
-   * @tparam ScalarType                                                      \
-   * @param fe_values_dofs                                                   \
-   * @param fe_values_op                                                     \
-   * @return return_type<ScalarType>                                         \
-   */                                                                        \
-  template <typename ScalarType>                                             \
-  return_type<ScalarType> operator()(                                        \
-    const FEInterfaceValues<dim, spacedim> &fe_interface_values) const       \
-  {                                                                          \
-    return_type<ScalarType> out(                                             \
-      fe_interface_values.n_current_interface_dofs());                       \
-                                                                             \
-    for (const auto interface_dof_index :                                    \
-         fe_interface_values.get_interface_dof_indices())                    \
-      {                                                                      \
-        out[interface_dof_index].reserve(                                    \
-          fe_interface_values.n_quadrature_points);                          \
-                                                                             \
-        for (const auto q_point :                                            \
-             fe_interface_values.quadrature_point_indices())                 \
-          out[interface_dof_index].emplace_back(                             \
-            this->template operator()<ScalarType>(fe_interface_values,       \
-                                                  interface_dof_index,       \
-                                                  q_point));                 \
-      }                                                                      \
-                                                                             \
-    return out;                                                              \
-  }                                                                          \
-                                                                             \
-protected:                                                                   \
-  /**                                                                        \
-   * Only want this to be a base class providing common implementation       \
-   * for test functions / trial solutions.                                   \
-   */                                                                        \
-  explicit SymbolicOp(const Op &operand)                                     \
-    : Base_t(operand)                                                        \
+#define DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SPACE_INTERFACE_COMMON_IMPL(           \
+  SymbolicOpBaseType, dim, spacedim)                                          \
+private:                                                                      \
+  using Base_t = SymbolicOpBaseType<Space<dim, spacedim>>;                    \
+  using typename Base_t::Op;                                                  \
+                                                                              \
+public:                                                                       \
+  /**                                                                         \
+   * Dimension in which this object operates.                                 \
+   */                                                                         \
+  static const unsigned int dimension = dim;                                  \
+                                                                              \
+  /**                                                                         \
+   * Dimension of the space in which this object operates.                    \
+   */                                                                         \
+  static const unsigned int space_dimension = spacedim;                       \
+                                                                              \
+  template <typename ScalarType>                                              \
+  using value_type = typename Base_t::template value_type<ScalarType>;        \
+                                                                              \
+  template <typename ScalarType>                                              \
+  using qp_value_type = typename Base_t::template qp_value_type<ScalarType>;  \
+                                                                              \
+  template <typename ScalarType>                                              \
+  using return_type = typename Base_t::template dof_value_type<ScalarType>;   \
+                                                                              \
+  template <typename ScalarType, std::size_t width>                           \
+  using vectorized_value_type =                                               \
+    typename Base_t::template vectorized_value_type<ScalarType, width>;       \
+                                                                              \
+  template <typename ScalarType, std::size_t width>                           \
+  using vectorized_return_type =                                              \
+    typename Base_t::template vectorized_dof_value_type<ScalarType, width>;   \
+                                                                              \
+  /**                                                                         \
+   * Return all shape function values all quadrature points.                  \
+   *                                                                          \
+   * The outer index is the shape function, and the inner index               \
+   * is the quadrature point.                                                 \
+   *                                                                          \
+   * @tparam ScalarType                                                       \
+   * @param fe_values_dofs                                                    \
+   * @param fe_values_op                                                      \
+   * @return return_type<ScalarType>                                          \
+   */                                                                         \
+  template <typename ScalarType>                                              \
+  return_type<ScalarType> operator()(                                         \
+    const FEInterfaceValues<dimension, space_dimension> &fe_interface_values) \
+    const                                                                     \
+  {                                                                           \
+    return_type<ScalarType> out(                                              \
+      fe_interface_values.n_current_interface_dofs());                        \
+                                                                              \
+    for (const auto interface_dof_index :                                     \
+         fe_interface_values.get_interface_dof_indices())                     \
+      {                                                                       \
+        out[interface_dof_index].reserve(                                     \
+          fe_interface_values.n_quadrature_points);                           \
+                                                                              \
+        for (const auto q_point :                                             \
+             fe_interface_values.quadrature_point_indices())                  \
+          out[interface_dof_index].emplace_back(                              \
+            this->template operator()<ScalarType>(fe_interface_values,        \
+                                                  interface_dof_index,        \
+                                                  q_point));                  \
+      }                                                                       \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+  template <typename ScalarType, std::size_t width>                           \
+  vectorized_return_type<ScalarType, width> operator()(                       \
+    const FEInterfaceValues<dimension, space_dimension> &fe_interface_values, \
+    const types::vectorized_qp_range_t &                 q_point_range) const                  \
+  {                                                                           \
+    vectorized_return_type<ScalarType, width> out(                            \
+      fe_interface_values.n_current_interface_dofs());                        \
+                                                                              \
+    Assert(q_point_range.size() <= width,                                     \
+           ExcIndexRange(q_point_range.size(), 0, width));                    \
+                                                                              \
+    for (const auto interface_dof_index :                                     \
+         fe_interface_values.get_interface_dof_indices())                     \
+      {                                                                       \
+        DEAL_II_OPENMP_SIMD_PRAGMA                                            \
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)               \
+          numbers::set_vectorized_values(                                     \
+            out[interface_dof_index],                                         \
+            i,                                                                \
+            this->template operator()<ScalarType>(fe_interface_values,        \
+                                                  interface_dof_index,        \
+                                                  q_point_range[i]));         \
+      }                                                                       \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+protected:                                                                    \
+  /**                                                                         \
+   * Only want this to be a base class providing common implementation        \
+   * for test functions / trial solutions.                                    \
+   */                                                                         \
+  explicit SymbolicOp(const Op &operand)                                      \
+    : Base_t(operand)                                                         \
   {}
 
 

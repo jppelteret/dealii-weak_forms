@@ -217,39 +217,54 @@ run(const unsigned int n_subdivisions)
     const auto test_val  = test_ss.value();
     const auto test_grad = test_ss.gradient();
 
-    // Still no concrete definitions
-    // NB: Linear forms change sign when RHS is assembled.
-    MatrixBasedAssembler<dim, spacedim> assembler;
+    // Non-vectorized assembler
+    {
+      // Still no concrete definitions
+      // NB: Linear forms change sign when RHS is assembled.
+      constexpr bool use_vectorization = false;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
 
-    assembler -= linear_form(test_val, soln_value).dV() +
-                 linear_form(test_grad, soln_gradient).dV() +
-                 linear_form(test_val, soln_value).dA() +
-                 linear_form(test_grad, soln_gradient).dA();
+      assembler -= linear_form(test_val, soln_value).dV() +
+                   linear_form(test_grad, soln_gradient).dV() +
+                   linear_form(test_val, soln_value).dA() +
+                   linear_form(test_grad, soln_gradient).dA();
 
-    // assembler -= linear_form(test_val, soln_value).dV() +
-    // linear_form(test_grad, soln_gradient).dV(); assembler -=
-    // linear_form(test_val, soln_value).dA() + linear_form(test_grad,
-    // soln_gradient).dA();
+      // Look at what we're going to compute
+      const SymbolicDecorations decorator;
+      deallog << "Weak form (ascii):\n"
+              << assembler.as_ascii(decorator) << std::endl;
+      deallog << "Weak form (LaTeX):\n"
+              << assembler.as_latex(decorator) << std::endl;
 
-    // assembler -= linear_form(test_val, soln_value).dV();
-    // assembler -= linear_form(test_grad, soln_gradient).dV();
-    // assembler -= linear_form(test_val, soln_value).dA();
-    // assembler -= linear_form(test_grad, soln_gradient).dA();
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_rhs_vector(
+        system_rhs_wf, solution, constraints, dof_handler, qf_cell, qf_face);
 
-    // Look at what we're going to compute
-    const SymbolicDecorations decorator;
-    deallog << "Weak form (ascii):\n"
-            << assembler.as_ascii(decorator) << std::endl;
-    deallog << "Weak form (LaTeX):\n"
-            << assembler.as_latex(decorator) << std::endl;
+      // system_rhs_wf.print(std::cout);
+      verify_assembly(system_rhs_std, system_rhs_wf);
+    }
 
-    // Now we pass in concrete objects to get data from
-    // and assemble into.
-    assembler.assemble_rhs_vector(
-      system_rhs_wf, solution, constraints, dof_handler, qf_cell, qf_face);
+    system_rhs_wf = 0;
 
-    // system_rhs_wf.print(std::cout);
-    verify_assembly(system_rhs_std, system_rhs_wf);
+    // Vectorized assembler
+    {
+      constexpr bool use_vectorization = true;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+
+      assembler -= linear_form(test_val, soln_value).dV() +
+                   linear_form(test_grad, soln_gradient).dV() +
+                   linear_form(test_val, soln_value).dA() +
+                   linear_form(test_grad, soln_gradient).dA();
+
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_rhs_vector(
+        system_rhs_wf, solution, constraints, dof_handler, qf_cell, qf_face);
+
+      // system_rhs_wf.print(std::cout);
+      verify_assembly(system_rhs_std, system_rhs_wf);
+    }
   }
 
   deallog << "OK" << std::endl;

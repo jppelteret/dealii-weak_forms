@@ -18,17 +18,20 @@
 
 #include <deal.II/base/config.h>
 
+#include <deal.II/base/aligned_vector.h>
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/utilities.h>
 
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 #include <type_traits>
 
@@ -201,6 +204,10 @@ namespace WeakForms
       {
         template <typename T>
         using return_type = std::vector<T>;
+
+        template <typename T, std::size_t width>
+        using vectorized_return_type =
+          typename numbers::VectorizedValue<T>::template type<width>;
       };
 
       template <typename OpType>
@@ -211,6 +218,10 @@ namespace WeakForms
       {
         template <typename T>
         using return_type = std::vector<std::vector<T>>;
+
+        template <typename T, std::size_t width>
+        using vectorized_return_type = AlignedVector<
+          typename numbers::VectorizedValue<T>::template type<width>>;
       };
 
     } // namespace internal
@@ -249,7 +260,16 @@ namespace WeakForms
    */                                                                \
   template <typename ScalarType>                                     \
   using return_type = typename internal::unary_op_test_trial_traits< \
-    OpType>::template return_type<value_type<ScalarType>>;
+    OpType>::template return_type<value_type<ScalarType>>;           \
+                                                                     \
+  template <typename ScalarType, std::size_t width>                  \
+  using vectorized_value_type = typename numbers::VectorizedValue<   \
+    value_type<ScalarType>>::template type<width>;                   \
+                                                                     \
+  template <typename ScalarType, std::size_t width>                  \
+  using vectorized_return_type =                                     \
+    typename internal::unary_op_test_trial_traits<                   \
+      OpType>::template vectorized_return_type<value_type<ScalarType>, width>;
 
 
 
@@ -377,8 +397,17 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = typename Traits::template value_type<ScalarType>;
+
       template <typename ScalarType>
       using return_type = typename Traits::template return_type<ScalarType>;
+
+      template <typename ScalarType, std::size_t width>
+      using vectorized_value_type =
+        typename Traits::template vectorized_value_type<ScalarType, width>;
+
+      template <typename ScalarType, std::size_t width>
+      using vectorized_return_type =
+        typename Traits::template vectorized_return_type<ScalarType, width>;
 
       UnaryOpBase(const Derived &derived)
         : derived(derived)
@@ -398,10 +427,21 @@ namespace WeakForms
         return derived.template operator()<ScalarType>(value);
       }
 
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename OpType::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return derived.template operator()<ScalarType, width>(value);
+      }
+
 
       // ---- Operators NOT for test functions / trial solutions ---
       // So these are restricted to symbolic ops, functors (standard and
-      // cache)  and field solutions as leaf operations.
+      // cache) and field solutions as leaf operations.
 
       template <typename ScalarType>
       auto
@@ -459,6 +499,54 @@ namespace WeakForms
           fe_values,
           scratch_data,
           solution_names);
+      }
+
+      // ----- VECTORIZATION -----
+
+      // template <typename ScalarType, std::size_t width>
+      // auto
+      // operator()(
+      //   const typename OpType::template vectorized_return_type<ScalarType,
+      //                                                          width> &value)
+      //   const -> typename std::enable_if<
+      //     !is_or_has_test_function_or_trial_solution_op<OpType>::value,
+      //     vectorized_return_type<ScalarType, width>>::type
+      // {
+      //   return derived.template operator()<ScalarType, width>(value);
+      // }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> & fe_values,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+            !is_or_has_evaluated_with_scratch_data<OpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::UnaryOpEvaluator<OpType>::template apply<ScalarType,
+                                                                  width>(
+          *this, derived.get_operand(), fe_values, q_point_range);
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> &     fe_values,
+                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<std::string> &        solution_names,
+                 const types::vectorized_qp_range_t &    q_point_range) const ->
+        typename std::enable_if<
+          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+            is_or_has_evaluated_with_scratch_data<OpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::UnaryOpEvaluator<
+          OpType>::template apply<ScalarType, width>(*this,
+                                                     derived.get_operand(),
+                                                     fe_values,
+                                                     scratch_data,
+                                                     solution_names,
+                                                     q_point_range);
       }
 
 
@@ -528,6 +616,69 @@ namespace WeakForms
           solution_names);
       }
 
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      auto
+      operator()(
+        const typename OpType::template vectorized_return_type<ScalarType,
+                                                               width> &value)
+        const -> typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<OpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        const unsigned int                        n_dofs = value.size();
+        vectorized_return_type<ScalarType, width> out(n_dofs);
+
+        for (unsigned int dof_index = 0; dof_index < n_dofs; ++dof_index)
+          {
+            out[dof_index] =
+              this->template operator()<ScalarType, width>(value[dof_index]);
+          }
+
+        return out;
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> & fe_values_dofs,
+                 const FEValuesBase<dim, spacedim> & fe_values_op,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+            !is_or_has_evaluated_with_scratch_data<OpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::UnaryOpEvaluator<
+          OpType>::template apply<ScalarType, width>(*this,
+                                                     derived.get_operand(),
+                                                     fe_values_dofs,
+                                                     fe_values_op,
+                                                     q_point_range);
+      }
+
+      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      auto
+      operator()(const FEValuesBase<dim, spacedim> &     fe_values_dofs,
+                 const FEValuesBase<dim, spacedim> &     fe_values_op,
+                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<std::string> &        solution_names,
+                 const types::vectorized_qp_range_t &    q_point_range) const ->
+        typename std::enable_if<
+          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+            is_or_has_evaluated_with_scratch_data<OpType>::value,
+          vectorized_return_type<ScalarType, width>>::type
+      {
+        return internal::UnaryOpEvaluator<
+          OpType>::template apply<ScalarType, width>(*this,
+                                                     derived.get_operand(),
+                                                     fe_values_dofs,
+                                                     fe_values_op,
+                                                     scratch_data,
+                                                     solution_names,
+                                                     q_point_range);
+      }
+
     private:
       const Derived &derived;
     };
@@ -557,8 +708,17 @@ public:                                                                  \
                                                                          \
   template <typename ScalarType>                                         \
   using value_type = typename Traits::template value_type<ScalarType>;   \
+                                                                         \
   template <typename ScalarType>                                         \
   using return_type = typename Traits::template return_type<ScalarType>; \
+                                                                         \
+  template <typename ScalarType, std::size_t width>                      \
+  using vectorized_value_type =                                          \
+    typename Traits::template vectorized_value_type<ScalarType, width>;  \
+                                                                         \
+  template <typename ScalarType, std::size_t width>                      \
+  using vectorized_return_type =                                         \
+    typename Traits::template vectorized_return_type<ScalarType, width>; \
                                                                          \
   using Base::dimension;                                                 \
   using Base::op_code;                                                   \
@@ -624,6 +784,15 @@ private:                                                                 \
       {
         return -value;
       }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return -value;
+      }
     };
 
 
@@ -667,6 +836,16 @@ private:                                                                 \
       value_type<ScalarType>
       operator()(
         const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return sqrt(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
       {
         using namespace std;
         return sqrt(value);
@@ -717,6 +896,15 @@ private:                                                                 \
       {
         return determinant(value);
       }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return determinant(value);
+      }
     };
 
 
@@ -761,6 +949,15 @@ private:                                                                 \
       {
         return invert(value);
       }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return invert(value);
+      }
     };
 
 
@@ -799,6 +996,15 @@ private:                                                                 \
       {
         return transpose(value);
       }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return transpose(value);
+      }
     };
 
 
@@ -834,6 +1040,15 @@ private:                                                                 \
       value_type<ScalarType>
       operator()(
         const typename Op::template value_type<ScalarType> &value) const
+      {
+        return symmetrize(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
       {
         return symmetrize(value);
       }

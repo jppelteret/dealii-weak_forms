@@ -23,9 +23,11 @@
 // TODO: Move FeValuesViews::[Scalar/Vector/...]::Output<> into another header??
 #include <deal.II/fe/fe_values.h>
 
+#include <weak_forms/numbers.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
+#include <weak_forms/types.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -325,6 +327,14 @@ namespace WeakForms
       template <typename ScalarType2>
       using return_type = std::vector<value_type<ScalarType2>>;
 
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_value_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
+
+      template <typename ResultScalarType, std::size_t width>
+      using vectorized_return_type = typename numbers::VectorizedValue<
+        value_type<ResultScalarType>>::template type<width>;
+
       static const int rank = 0;
 
       // static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
@@ -384,6 +394,43 @@ namespace WeakForms
                UpdateFlags::update_JxW_values;
       }
 
+      /**
+       * Return all JxW values at all quadrature points
+       */
+      template <typename ScalarType2, int dim, int spacedim>
+      const return_type<ScalarType2> &
+      operator()(const FEValuesBase<dim, spacedim> &fe_values) const
+      {
+        return fe_values.get_JxW_values();
+      }
+
+      template <typename ResultScalarType,
+                std::size_t width,
+                int         dim,
+                int         spacedim>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(const FEValuesBase<dim, spacedim> & fe_values,
+                 const types::vectorized_qp_range_t &q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(fe_values,
+                                                        q_point_range[i]));
+
+        return out;
+      }
+
+    private:
+      const IntegralType  integral_operation;
+      const IntegrandType integrand;
+
       // Return single entry
       template <typename ScalarType2, int dim, int spacedim>
       value_type<ScalarType2>
@@ -395,20 +442,6 @@ namespace WeakForms
 
         return fe_values.JxW(q_point);
       }
-
-      /**
-       * Return all JxW values at all quadrature points
-       */
-      template <typename ScalarType2, int dim, int spacedim>
-      const return_type<ScalarType2> &
-      operator()(const FEValuesBase<dim, spacedim> &fe_values) const
-      {
-        return fe_values.get_JxW_values();
-      }
-
-    private:
-      const IntegralType  integral_operation;
-      const IntegrandType integrand;
     };
 
   } // namespace Operators

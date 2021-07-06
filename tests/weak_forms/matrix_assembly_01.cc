@@ -252,26 +252,49 @@ run()
     const auto coeff_func =
       value<double, dim, spacedim>(coeff, constant_scalar_function);
 
-    // Still no concrete definitions
-    MatrixBasedAssembler<dim, spacedim> assembler;
-    assembler += bilinear_form(test_val, coeff_func, trial_val).dV();
+    // Non-vectorized assembler
+    {
+      // Still no concrete definitions
+      constexpr bool use_vectorization = false;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+      assembler += bilinear_form(test_val, coeff_func, trial_val).dV();
 
-    // Look at what we're going to compute
-    const SymbolicDecorations decorator;
-    deallog << "Weak form (ascii):\n"
-            << assembler.as_ascii(decorator) << std::endl;
-    deallog << "Weak form (LaTeX):\n"
-            << assembler.as_latex(decorator) << std::endl;
+      // Look at what we're going to compute
+      const SymbolicDecorations decorator;
+      deallog << "Weak form (ascii):\n"
+              << assembler.as_ascii(decorator) << std::endl;
+      deallog << "Weak form (LaTeX):\n"
+              << assembler.as_latex(decorator) << std::endl;
 
-    // Now we pass in concrete objects to get data from
-    // and assemble into.
-    assembler.assemble_matrix(system_matrix_wf,
-                              constraints,
-                              dof_handler,
-                              qf_cell);
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_matrix(system_matrix_wf,
+                                constraints,
+                                dof_handler,
+                                qf_cell);
 
-    // system_matrix_wf.print(std::cout);
-    verify_assembly(system_matrix_std, system_matrix_wf);
+      // system_matrix_wf.print(std::cout);
+      verify_assembly(system_matrix_std, system_matrix_wf);
+    }
+
+    system_matrix_wf = 0;
+
+    // Vectorized assembler
+    {
+      constexpr bool use_vectorization = true;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+      assembler += bilinear_form(test_val, coeff_func, trial_val).dV();
+
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_matrix(system_matrix_wf,
+                                constraints,
+                                dof_handler,
+                                qf_cell);
+
+      // system_matrix_wf.print(std::cout);
+      verify_assembly(system_matrix_std, system_matrix_wf);
+    }
   }
 
   deallog << "OK" << std::endl;
