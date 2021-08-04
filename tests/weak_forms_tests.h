@@ -7,7 +7,7 @@
 #include <weak_forms/config.h>
 
 // deal.II test-suite header
-#include "tests.h"
+#include <tests.h>
 
 using namespace WEAK_FORMS_NAMESPACE_NAME;
 using namespace dealii;
