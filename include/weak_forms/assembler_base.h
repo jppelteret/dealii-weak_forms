@@ -1593,22 +1593,23 @@ namespace WeakForms
     AssemblerBase &
     operator+=(const SymbolicOpType &interface_integral)
     {
-      (void)interface_integral;
-
-      AssertThrow(false, ExcNotImplemented());
-
-      // static_assert(false, "Assembler: operator+= not yet implemented for
-      // interface integrals");
-
       // TODO: Detect if the Test+Trial combo is the same as one that has
       // already been added. If so, augment the functor rather than repeating
       // the loop?
       // Potential problem: One functor is scalar valued, and the other is
       // tensor valued...
 
-      // constexpr auto sign = internal::AccumulationSign::plus;
-      // add_ascii_latex_operations<sign>(boundary_integral);
-      // add_cell_operation<sign>(boundary_integral);
+      // Linear forms go on the RHS, bilinear forms go on the LHS.
+      // So we switch the sign based on this.
+      using IntegrandType         = typename SymbolicOpType::IntegrandType;
+      constexpr bool keep_op_sign = is_bilinear_form<IntegrandType>::value;
+      constexpr auto print_sign   = internal::AccumulationSign::plus;
+      constexpr auto op_sign =
+        (keep_op_sign ? internal::AccumulationSign::plus :
+                        internal::AccumulationSign::minus);
+
+      add_ascii_latex_operations<print_sign>(interface_integral);
+      add_interface_face_operation<op_sign>(interface_integral);
 
       return *this;
     }
@@ -1740,21 +1741,23 @@ namespace WeakForms
     AssemblerBase &
     operator-=(const SymbolicOpType &interface_integral)
     {
-      (void)interface_integral;
-      AssertThrow(false, ExcNotImplemented());
-
-      // static_assert(false, "Assembler: operator-= not yet implemented for
-      // interface integrals");
-
       // TODO: Detect if the Test+Trial combo is the same as one that has
       // already been added. If so, augment the functor rather than repeating
       // the loop?
       // Potential problem: One functor is scalar valued, and the other is
       // tensor valued...
 
-      // constexpr auto sign = internal::AccumulationSign::minus;
-      // add_ascii_latex_operations<sign>(boundary_integral);
-      // add_cell_operation<sign>(boundary_integral);
+      // Linear forms go on the RHS, bilinear forms go on the LHS.
+      // So we switch the sign based on this.
+      using IntegrandType         = typename SymbolicOpType::IntegrandType;
+      constexpr bool keep_op_sign = is_bilinear_form<IntegrandType>::value;
+      constexpr auto print_sign   = internal::AccumulationSign::minus;
+      constexpr auto op_sign =
+        (keep_op_sign ? internal::AccumulationSign::minus :
+                        internal::AccumulationSign::plus);
+
+      add_ascii_latex_operations<print_sign>(interface_integral);
+      add_interface_face_operation<op_sign>(interface_integral);
 
       return *this;
     }
@@ -2611,7 +2614,7 @@ namespace WeakForms
         typename SymbolicOpInterfaceIntegral::IntegrandType>::value>::type * =
         nullptr>
     void
-    add_internal_face_operation(
+    add_interface_face_operation(
       const SymbolicOpInterfaceIntegral &interface_integral)
     {
       (void)interface_integral;
@@ -2620,6 +2623,8 @@ namespace WeakForms
         "Expected an interface integral type.");
       // static_assert(false, "Assembler: Internal face operations not yet
       // implemented for bilinear forms.")
+
+      // AssertThrow(false, ExcNotImplemented());
     }
 
 
@@ -2984,7 +2989,7 @@ namespace WeakForms
                 is_linear_form<typename SymbolicOpInterfaceIntegral::
                                  IntegrandType>::value>::type * = nullptr>
     void
-    add_internal_face_operation(
+    add_interface_face_operation(
       const SymbolicOpInterfaceIntegral &interface_integral)
     {
       (void)interface_integral;
@@ -2996,6 +3001,8 @@ namespace WeakForms
         "A interface integral cannot operate with a boundary operator.");
       // static_assert(false, "Assembler: Internal face operations not yet
       // implemented for linear forms.")
+
+      // AssertThrow(false, ExcNotImplemented());
     }
 
     UpdateFlags
