@@ -1927,7 +1927,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].jump_value(
+        return fe_interface_values[get_extractor()].jump_in_values(
           interface_dof_index, q_point);
       }
     };
@@ -1973,7 +1973,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].jump_gradient(
+        return fe_interface_values[get_extractor()].jump_in_gradients(
           interface_dof_index, q_point);
       }
     };
@@ -2019,7 +2019,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].jump_hessian(
+        return fe_interface_values[get_extractor()].jump_in_hessians(
           interface_dof_index, q_point);
       }
     };
@@ -2065,7 +2065,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].jump_third_derivative(
+        return fe_interface_values[get_extractor()].jump_in_third_derivatives(
           interface_dof_index, q_point);
       }
     };
@@ -2112,7 +2112,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].average_value(
+        return fe_interface_values[get_extractor()].average_of_values(
           interface_dof_index, q_point);
       }
     };
@@ -2158,7 +2158,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].average_gradient(
+        return fe_interface_values[get_extractor()].average_of_gradients(
           interface_dof_index, q_point);
       }
     };
@@ -2204,7 +2204,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values[get_extractor()].average_hessian(
+        return fe_interface_values[get_extractor()].average_of_hessians(
           interface_dof_index, q_point);
       }
     };

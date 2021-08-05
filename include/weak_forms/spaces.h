@@ -2345,7 +2345,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.jump_shape_value(interface_dof_index,
+        return fe_interface_values.jump_in_shape_values(interface_dof_index,
                                                     q_point);
       }
     };
@@ -2385,7 +2385,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.jump_shape_gradient(interface_dof_index,
+        return fe_interface_values.jump_in_shape_gradients(interface_dof_index,
                                                        q_point);
       }
     };
@@ -2425,7 +2425,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.jump_shape_hessian(interface_dof_index,
+        return fe_interface_values.jump_in_shape_hessians(interface_dof_index,
                                                       q_point);
       }
     };
@@ -2467,7 +2467,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.jump_shape_3rd_derivative(
+        return fe_interface_values.jump_in_shape_3rd_derivatives(
           interface_dof_index, q_point);
       }
     };
@@ -2507,7 +2507,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.average_shape_value(interface_dof_index,
+        return fe_interface_values.average_of_shape_values(interface_dof_index,
                                                        q_point);
       }
     };
@@ -2549,7 +2549,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.average_shape_gradient(interface_dof_index,
+        return fe_interface_values.average_of_shape_gradients(interface_dof_index,
                                                           q_point);
       }
     };
@@ -2590,7 +2590,7 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.average_shape_hessian(interface_dof_index,
+        return fe_interface_values.average_of_shape_hessians(interface_dof_index,
                                                          q_point);
       }
     };
@@ -2633,7 +2633,7 @@ protected:                                                                      
     //                          fe_interface_values.n_quadrature_points));
 
     //     return
-    //     fe_interface_values.average_shape_third_derivative(interface_dof_index,
+    //     fe_interface_values.average_of_shape_third_derivatives(interface_dof_index,
     //                                                    q_point);
     //   }
     // };
