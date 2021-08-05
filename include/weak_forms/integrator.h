@@ -217,7 +217,8 @@ namespace WeakForms
     }
 
     template <int dim,
-              template <int, int> class DoFHandlerType,
+              template <int, int>
+              class DoFHandlerType,
               typename BaseIterator>
     ReturnType
     dV(const Quadrature<dim> &              cell_quadrature,
@@ -304,7 +305,8 @@ namespace WeakForms
     }
 
     template <int dim,
-              template <int, int> class DoFHandlerType,
+              template <int, int>
+              class DoFHandlerType,
               typename BaseIterator>
     ReturnType
     dA(const Quadrature<dim - 1> &                 face_quadrature,

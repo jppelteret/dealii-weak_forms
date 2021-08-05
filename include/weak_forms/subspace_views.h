@@ -193,7 +193,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -205,7 +206,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -218,7 +220,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -230,7 +233,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -244,7 +248,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -257,7 +262,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -269,7 +275,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -283,7 +290,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -295,7 +303,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -307,7 +316,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -319,7 +329,8 @@ namespace WeakForms
 
 
   template <types::solution_index solution_index = 0,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3308,7 +3319,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3342,7 +3354,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -3377,7 +3390,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3411,7 +3425,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -3452,7 +3467,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3522,7 +3538,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3560,7 +3577,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <int, class> class SubSpaceViewsType,
+            template <int, class>
+            class SubSpaceViewsType,
             int rank,
             int dim,
             int spacedim>
@@ -3596,7 +3614,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3663,7 +3682,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3727,7 +3747,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<
@@ -3786,7 +3807,8 @@ namespace WeakForms
    * WeakForms::Operators::SymbolicOpCodes::value>
    */
   template <types::solution_index solution_index,
-            template <class> class SubSpaceViewsType,
+            template <class>
+            class SubSpaceViewsType,
             int dim,
             int spacedim>
   WeakForms::Operators::SymbolicOp<

@@ -556,11 +556,13 @@ public:                                                                        \
   explicit SymbolicOp(const Op &                    operand,                   \
                       const value_type<ScalarType> &value =                    \
                         value_type<ScalarType>{})                              \
-    : SymbolicOp(operand,                                                      \
-                 [value](const FEValuesBase<dim, spacedim> &,                  \
-                         const unsigned int) { return value; },                \
-                 [value](const FEInterfaceValues<dim, spacedim> &,             \
-                         const unsigned int) { return value; })                \
+    : SymbolicOp(                                                              \
+        operand,                                                               \
+        [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {     \
+          return value;                                                        \
+        },                                                                     \
+        [value](const FEInterfaceValues<dim, spacedim> &,                      \
+                const unsigned int) { return value; })                         \
   {}                                                                           \
                                                                                \
   std::string as_ascii(const SymbolicDecorations &decorator) const             \
@@ -1367,12 +1369,12 @@ namespace WeakForms
 {
   template <typename ScalarType, int dim, int spacedim>
   auto
-  ScalarFunctor::
-  operator()(const typename WeakForms::ScalarFunctor::
-               template function_type<ScalarType, dim, spacedim> &function,
-             const typename WeakForms::ScalarFunctor::
-               template interface_function_type<ScalarType, dim, spacedim>
-                 &interface_function) const
+  ScalarFunctor::operator()(
+    const typename WeakForms::ScalarFunctor::
+      template function_type<ScalarType, dim, spacedim> &function,
+    const typename WeakForms::ScalarFunctor::
+      template interface_function_type<ScalarType, dim, spacedim>
+        &interface_function) const
   {
     return WeakForms::value<ScalarType, dim>(*this,
                                              function,
@@ -1383,12 +1385,12 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  TensorFunctor<rank, spacedim>::
-  operator()(const typename WeakForms::TensorFunctor<rank, spacedim>::
-               template function_type<ScalarType, dim> &function,
-             const typename WeakForms::TensorFunctor<rank, spacedim>::
-               template interface_function_type<ScalarType, dim>
-                 &interface_function) const
+  TensorFunctor<rank, spacedim>::operator()(
+    const typename WeakForms::TensorFunctor<rank, spacedim>::
+      template function_type<ScalarType, dim> &function,
+    const typename WeakForms::TensorFunctor<rank, spacedim>::
+      template interface_function_type<ScalarType, dim> &interface_function)
+    const
   {
     return WeakForms::value<ScalarType, dim>(*this,
                                              function,
@@ -1399,12 +1401,12 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  SymmetricTensorFunctor<rank, spacedim>::
-  operator()(const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
-               template function_type<ScalarType, dim> &function,
-             const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
-               template interface_function_type<ScalarType, dim>
-                 &interface_function) const
+  SymmetricTensorFunctor<rank, spacedim>::operator()(
+    const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
+      template function_type<ScalarType, dim> &function,
+    const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
+      template interface_function_type<ScalarType, dim> &interface_function)
+    const
   {
     return WeakForms::value<ScalarType, dim>(*this,
                                              function,
@@ -1415,9 +1417,9 @@ namespace WeakForms
   template <int spacedim>
   template <typename ScalarType, int dim>
   auto
-  ScalarFunctionFunctor<spacedim>::
-  operator()(const typename WeakForms::ScalarFunctionFunctor<
-             spacedim>::template function_type<ScalarType> &function) const
+  ScalarFunctionFunctor<spacedim>::operator()(
+    const typename WeakForms::ScalarFunctionFunctor<
+      spacedim>::template function_type<ScalarType> &function) const
   {
     return WeakForms::value<ScalarType, dim>(*this, function);
   }
@@ -1426,9 +1428,9 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  TensorFunctionFunctor<rank, spacedim>::
-  operator()(const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
-               template function_type<ScalarType> &function) const
+  TensorFunctionFunctor<rank, spacedim>::operator()(
+    const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
+      template function_type<ScalarType> &function) const
   {
     return WeakForms::value<ScalarType, dim>(*this, function);
   }

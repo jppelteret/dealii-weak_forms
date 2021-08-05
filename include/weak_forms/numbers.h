@@ -114,7 +114,8 @@ namespace WeakForms
 
 
     template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
+    void
+    set_vectorized_values(
       Tensor<0, dim, VectorizedArray<ScalarType, width>> &out,
       const unsigned int                                  v,
       const Tensor<0, dim, ScalarType> &                  in)
@@ -143,7 +144,8 @@ namespace WeakForms
 
 
     template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
+    void
+    set_vectorized_values(
       SymmetricTensor<2, dim, VectorizedArray<ScalarType, width>> &out,
       const unsigned int                                           v,
       const SymmetricTensor<2, dim, ScalarType> &                  in)
@@ -174,7 +176,8 @@ namespace WeakForms
 
 
     template <int dim, typename ScalarType, std::size_t width>
-    void set_vectorized_values(
+    void
+    set_vectorized_values(
       SymmetricTensor<4, dim, VectorizedArray<ScalarType, width>> &out,
       const unsigned int                                           v,
       const SymmetricTensor<4, dim, ScalarType> &                  in)

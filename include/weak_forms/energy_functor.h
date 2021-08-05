@@ -66,7 +66,7 @@ namespace WeakForms
       const std::vector<std::string> &              solution_names,
       const unsigned int                            q_point,
       const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-        ADNumberType> &... field_solutions)>;
+        ADNumberType> &...field_solutions)>;
 
     template <typename ScalarType>
     using sd_type               = Differentiation::SD::Expression;
@@ -75,13 +75,13 @@ namespace WeakForms
     template <typename SDNumberType, int dim, int spacedim = dim>
     using sd_function_type = std::function<value_type<SDNumberType>(
       const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-        SDNumberType> &... field_solutions)>;
+        SDNumberType> &...field_solutions)>;
 
     template <typename SDNumberType, int dim, int spacedim = dim>
     using sd_intermediate_substitution_function_type =
       std::function<substitution_map_type(
         const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-          SDNumberType> &... field_solutions)>;
+          SDNumberType> &...field_solutions)>;
 
     // This also allows the user to encode symbols/parameters in terms of
     // the (symbolic) field variables, for which we'll supply the values.
@@ -89,7 +89,7 @@ namespace WeakForms
     using sd_register_symbols_function_type =
       std::function<substitution_map_type(
         const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-          SDNumberType> &... field_solutions)>;
+          SDNumberType> &...field_solutions)>;
 
     template <typename SDNumberType, int dim, int spacedim = dim>
     using sd_substitution_function_type = std::function<substitution_map_type(
@@ -101,7 +101,7 @@ namespace WeakForms
     EnergyFunctor(
       const std::string &symbol_ascii,
       const std::string &symbol_latex,
-      const SymbolicOpsSubSpaceFieldSolution &... symbolic_op_field_solutions)
+      const SymbolicOpsSubSpaceFieldSolution &...symbolic_op_field_solutions)
       : Base(symbol_ascii, symbol_latex)
       , symbolic_op_field_solutions(symbolic_op_field_solutions...)
     {}
@@ -156,7 +156,7 @@ namespace WeakForms
       const sd_intermediate_substitution_function_type<SDNumberType,
                                                        dim,
                                                        spacedim>
-                                                        intermediate_substitution_map,
+        intermediate_substitution_map,
       const enum Differentiation::SD::OptimizerType     optimization_method,
       const enum Differentiation::SD::OptimizationFlags optimization_flags,
       const UpdateFlags                                 update_flags) const;
@@ -190,7 +190,7 @@ namespace WeakForms
           const sd_intermediate_substitution_function_type<SDNumberType,
                                                            dim,
                                                            spacedim>
-                                                            intermediate_substitution_map,
+            intermediate_substitution_map,
           const enum Differentiation::SD::OptimizerType     optimization_method,
           const enum Differentiation::SD::OptimizationFlags optimization_flags,
           const UpdateFlags                                 update_flags) const;
@@ -1097,7 +1097,7 @@ namespace WeakForms
   energy_functor(
     const std::string &symbol_ascii,
     const std::string &symbol_latex,
-    const SymbolicOpsSubSpaceFieldSolution &... symbolic_op_field_solutions)
+    const SymbolicOpsSubSpaceFieldSolution &...symbolic_op_field_solutions)
   {
     return EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>(
       symbol_ascii, symbol_latex, symbolic_op_field_solutions...);
@@ -1171,8 +1171,8 @@ namespace WeakForms
       template sd_intermediate_substitution_function_type<SDNumberType,
                                                           dim,
                                                           spacedim>
-                                                      intermediate_substitution_map,
-    const enum Differentiation::SD::OptimizerType     optimization_method,
+                                                  intermediate_substitution_map,
+    const enum Differentiation::SD::OptimizerType optimization_method,
     const enum Differentiation::SD::OptimizationFlags optimization_flags,
     const UpdateFlags                                 update_flags)
   {
@@ -1210,11 +1210,11 @@ namespace WeakForms
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   template <typename ADNumberType, int dim, int spacedim>
   auto
-  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::
-  operator()(const typename WeakForms::EnergyFunctor<
-               SymbolicOpsSubSpaceFieldSolution...>::
-               template ad_function_type<ADNumberType, dim, spacedim> &function,
-             const UpdateFlags update_flags) const
+  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::operator()(
+    const typename WeakForms::EnergyFunctor<
+      SymbolicOpsSubSpaceFieldSolution...>::
+      template ad_function_type<ADNumberType, dim, spacedim> &function,
+    const UpdateFlags update_flags) const
   {
     return WeakForms::value<ADNumberType, dim, spacedim>(*this,
                                                          function,
@@ -1242,8 +1242,8 @@ namespace WeakForms
       template sd_intermediate_substitution_function_type<SDNumberType,
                                                           dim,
                                                           spacedim>
-                                                      intermediate_substitution_map,
-    const enum Differentiation::SD::OptimizerType     optimization_method,
+                                                  intermediate_substitution_map,
+    const enum Differentiation::SD::OptimizerType optimization_method,
     const enum Differentiation::SD::OptimizationFlags optimization_flags,
     const UpdateFlags                                 update_flags) const
   {

@@ -629,7 +629,8 @@ template <
                  typename EnableIfScalar<ScalarType>::type>::value &&
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const ScalarType &value, const SymbolicOp &op)
+auto
+operator*(const ScalarType &value, const SymbolicOp &op)
 {
   constexpr int dim      = SymbolicOp::dimension;
   constexpr int spacedim = SymbolicOp::space_dimension;
@@ -646,7 +647,8 @@ template <
                  typename EnableIfScalar<ScalarType>::type>::value &&
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const SymbolicOp &op, const ScalarType &value)
+auto
+operator*(const SymbolicOp &op, const ScalarType &value)
 {
   constexpr int dim      = SymbolicOp::dimension;
   constexpr int spacedim = SymbolicOp::space_dimension;
@@ -663,8 +665,8 @@ template <
   typename = typename std::enable_if<
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const Tensor<rank, spacedim, ScalarType> &value,
-               const SymbolicOp &                        op)
+auto
+operator*(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
@@ -681,8 +683,8 @@ template <
   typename = typename std::enable_if<
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const SymbolicOp &                        op,
-               const Tensor<rank, spacedim, ScalarType> &value)
+auto
+operator*(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
@@ -699,8 +701,9 @@ template <
   typename = typename std::enable_if<
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const SymmetricTensor<rank, spacedim, ScalarType> &value,
-               const SymbolicOp &                                 op)
+auto
+operator*(const SymmetricTensor<rank, spacedim, ScalarType> &value,
+          const SymbolicOp &                                 op)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
@@ -717,8 +720,9 @@ template <
   typename = typename std::enable_if<
     WeakForms::Operators::internal::
       is_compatible_with_scalar_and_tensor_arithmetic<SymbolicOp>::value>::type>
-auto operator*(const SymbolicOp &                                 op,
-               const SymmetricTensor<rank, spacedim, ScalarType> &value)
+auto
+operator*(const SymbolicOp &                                 op,
+          const SymmetricTensor<rank, spacedim, ScalarType> &value)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");

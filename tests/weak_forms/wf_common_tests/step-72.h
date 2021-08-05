@@ -723,9 +723,8 @@ namespace Step72
 
         ++refinement_cycle;
         deallog << std::endl;
-      }
-    while (last_residual_norm > tolerance &&
-           refinement_cycle < n_refinement_cycles);
+    } while (last_residual_norm > tolerance &&
+             refinement_cycle < n_refinement_cycles);
   }
 } // namespace Step72
 

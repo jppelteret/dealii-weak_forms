@@ -908,7 +908,7 @@ namespace WeakForms
         apply(const BinaryOpType &op,
               const LhsOpType &   lhs_operand,
               const RhsOpType &   rhs_operand,
-              Arguments &... args)
+              Arguments &...args)
         {
           return op.template operator()<ScalarType>(
             BranchEvaluator<LhsOpType>::template evaluate<ScalarType>(
@@ -931,7 +931,7 @@ namespace WeakForms
           apply(const BinaryOpType &op,
                 const LhsOpType &   lhs_operand,
                 const RhsOpType &   rhs_operand,
-                Arguments &... args)
+                Arguments &...args)
         {
           return op.template operator()<ScalarType, width>(
             BranchEvaluator<LhsOpType>::template evaluate<ScalarType, width>(
@@ -1346,7 +1346,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // Use a shim to make all symbolic operations compatible with the
           // input arguments.
@@ -1356,7 +1356,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // Use a shim to make all symbolic operations compatible with the
           // input arguments.
@@ -1373,7 +1373,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // These can evaluate themselves. They also provide some additional
           // checks that we'd bypass if we directly called
@@ -1392,7 +1392,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           return UnaryOpEvaluator<typename OpType::OpType>::
             template apply<ScalarType, width>(op, op.get_operand(), args...);
@@ -1407,7 +1407,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // These can evaluate themselves. They also provide some additional
           // checks that we'd bypass if we directly called
@@ -1433,7 +1433,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           return BinaryOpEvaluator<typename OpType::LhsOpType,
                                    typename OpType::RhsOpType>::

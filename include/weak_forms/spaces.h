@@ -2346,7 +2346,7 @@ protected:                                                                      
                              fe_interface_values.n_quadrature_points));
 
         return fe_interface_values.jump_in_shape_values(interface_dof_index,
-                                                    q_point);
+                                                        q_point);
       }
     };
 
@@ -2386,7 +2386,7 @@ protected:                                                                      
                              fe_interface_values.n_quadrature_points));
 
         return fe_interface_values.jump_in_shape_gradients(interface_dof_index,
-                                                       q_point);
+                                                           q_point);
       }
     };
 
@@ -2426,7 +2426,7 @@ protected:                                                                      
                              fe_interface_values.n_quadrature_points));
 
         return fe_interface_values.jump_in_shape_hessians(interface_dof_index,
-                                                      q_point);
+                                                          q_point);
       }
     };
 
@@ -2508,7 +2508,7 @@ protected:                                                                      
                              fe_interface_values.n_quadrature_points));
 
         return fe_interface_values.average_of_shape_values(interface_dof_index,
-                                                       q_point);
+                                                           q_point);
       }
     };
 
@@ -2549,8 +2549,8 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.average_of_shape_gradients(interface_dof_index,
-                                                          q_point);
+        return fe_interface_values.average_of_shape_gradients(
+          interface_dof_index, q_point);
       }
     };
 
@@ -2590,8 +2590,8 @@ protected:                                                                      
                              0,
                              fe_interface_values.n_quadrature_points));
 
-        return fe_interface_values.average_of_shape_hessians(interface_dof_index,
-                                                         q_point);
+        return fe_interface_values.average_of_shape_hessians(
+          interface_dof_index, q_point);
       }
     };
 
