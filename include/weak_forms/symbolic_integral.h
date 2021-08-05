@@ -266,8 +266,10 @@ namespace WeakForms
     template <typename CellIteratorType>
     bool
     integrate_on_face(const CellIteratorType &cell,
-                      const unsigned int      face) const
+                      const unsigned int      face,
+                      const unsigned int      neighbour_face) const
     {
+      (void)neighbour_face;
       if (cell->face(face)->at_boundary())
         return false;
 
@@ -404,6 +406,14 @@ namespace WeakForms
         return fe_values.get_JxW_values();
       }
 
+      template <typename ScalarType2, int dim, int spacedim>
+      const return_type<ScalarType2> &
+      operator()(
+        const FEInterfaceValues<dim, spacedim> &fe_interface_values) const
+      {
+        return fe_interface_values.get_JxW_values();
+      }
+
       template <typename ResultScalarType,
                 std::size_t width,
                 int         dim,
@@ -427,15 +437,38 @@ namespace WeakForms
         return out;
       }
 
+      template <typename ResultScalarType,
+                std::size_t width,
+                int         dim,
+                int         spacedim>
+      vectorized_return_type<ResultScalarType, width>
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const types::vectorized_qp_range_t &    q_point_range) const
+      {
+        vectorized_return_type<ResultScalarType, width> out;
+        Assert(q_point_range.size() <= width,
+               ExcIndexRange(q_point_range.size(), 0, width));
+
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int i = 0; i < q_point_range.size(); ++i)
+          numbers::set_vectorized_values(
+            out,
+            i,
+            this->template operator()<ResultScalarType>(fe_interface_values,
+                                                        q_point_range[i]));
+
+        return out;
+      }
+
     private:
       const IntegralType  integral_operation;
       const IntegrandType integrand;
 
       // Return single entry
-      template <typename ScalarType2, int dim, int spacedim>
+      template <typename ScalarType2, typename FEValuesType>
       value_type<ScalarType2>
-      operator()(const FEValuesBase<dim, spacedim> &fe_values,
-                 const unsigned int                 q_point) const
+      operator()(const FEValuesType &fe_values,
+                 const unsigned int  q_point) const
       {
         Assert(q_point < fe_values.n_quadrature_points,
                ExcIndexRange(q_point, 0, fe_values.n_quadrature_points));
