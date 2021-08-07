@@ -33,6 +33,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
+#include <weak_forms/operator_utilities.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -288,30 +289,6 @@ namespace WeakForms
                                                                LhsOp>::value,
             std::false_type,
             std::true_type>::type
-      {};
-
-
-      template <typename T, typename U = void>
-      struct is_fe_values_type : std::false_type
-      {};
-
-
-      template <template <int, int> class FEValuesType, int dim, int spacedim>
-      struct is_fe_values_type<FEValuesType<dim, spacedim>,
-                               typename std::enable_if<std::is_base_of<
-                                 FEValuesBase<dim, spacedim>,
-                                 FEValuesType<dim, spacedim>>::value>::type>
-        : std::true_type
-      {};
-
-
-      template <template <int, int> class FEValuesType, int dim, int spacedim>
-      struct is_fe_values_type<
-        FEValuesType<dim, spacedim>,
-        typename std::enable_if<
-          std::is_same<FEValuesType<dim, spacedim>,
-                       FEInterfaceValues<dim, spacedim>>::value>::type>
-        : std::true_type
       {};
 
     } // namespace internal

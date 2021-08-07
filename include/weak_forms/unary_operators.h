@@ -27,6 +27,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
+#include <weak_forms/operator_utilities.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -475,7 +476,8 @@ namespace WeakForms
       auto
       operator()(const FEValuesType &fe_values) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -492,7 +494,8 @@ namespace WeakForms
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &solution_names) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -523,7 +526,8 @@ namespace WeakForms
       operator()(const FEValuesType &                fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -543,7 +547,8 @@ namespace WeakForms
                  const std::vector<std::string> &        solution_names,
                  const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -597,7 +602,9 @@ namespace WeakForms
       operator()(const FEValuesTypeDoFs &fe_values_dofs,
                  const FEValuesTypeOp &  fe_values_op) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -616,7 +623,9 @@ namespace WeakForms
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &solution_names) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -661,7 +670,9 @@ namespace WeakForms
                  const FEValuesTypeOp &              fe_values_op,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -686,7 +697,9 @@ namespace WeakForms
                  const std::vector<std::string> &        solution_names,
                  const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
