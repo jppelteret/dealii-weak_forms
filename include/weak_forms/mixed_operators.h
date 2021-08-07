@@ -368,6 +368,7 @@ namespace WeakForms
                   WeakForms::is_test_function_op<T>::value ||
                   WeakForms::is_trial_solution_op<T>::value ||
                   WeakForms::is_field_solution_op<T>::value ||
+                  WeakForms::is_cell_geometry_op<T>::value ||
                   WeakForms::is_functor_op<T>::value ||
                   WeakForms::is_cache_functor_op<T>::value ||
                   WeakForms::is_unary_op<T>::value ||
