@@ -595,6 +595,7 @@ namespace WeakForms
       const std::vector<double> &                     JxW,
       const bool                                      symmetric_contribution)
     {
+      (void)symmetric_contribution;
       Assert(shapes_test.size() == fe_values_dofs.n_current_interface_dofs(),
              ExcDimensionMismatch(shapes_test.size(),
                                   fe_values_dofs.n_current_interface_dofs()));
@@ -938,6 +939,7 @@ namespace WeakForms
       const VectorizedArray<double, width> &         JxW,
       const bool                                     symmetric_contribution)
     {
+      (void)symmetric_contribution;
       // This is the equivalent of
       // for (q : q_points) --> vectorized
       //   for (i : dof_indices)
