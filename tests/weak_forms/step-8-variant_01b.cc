@@ -76,8 +76,8 @@ Step8<dim>::assemble_system()
   //            - linear_form(test[subspace_extractor].value(),
   //            rhs_coeff_func).dV();
   assembler +=
-    bilinear_form(test_grad, mat_coeff(coefficient), trial_grad).dV() -
-    linear_form(test_val, rhs_coeff(rhs)).dV();
+    bilinear_form(test_grad, mat_coeff.value(coefficient), trial_grad).dV() -
+    linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

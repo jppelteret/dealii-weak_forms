@@ -103,7 +103,7 @@ Step8<dim>::assemble_system()
 
   MatrixBasedAssembler<dim> assembler;
   assembler += energy_functional_form(energy).dV() -
-               linear_form(test_val, rhs_coeff(rhs)).dV();
+               linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

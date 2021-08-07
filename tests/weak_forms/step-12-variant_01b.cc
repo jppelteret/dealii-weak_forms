@@ -50,8 +50,6 @@ namespace Step12
     constexpr int spacedim = dim;
 
     // Symbolic types for test function, trial solution and a coefficient.
-    // const SubSpaceExtractors::Vector subspace_extractor(0, "v",
-    // "\\mathbf{v}");
     const SubSpaceExtractors::Scalar subspace_extractor(0, "s", "\\mathbf{s}");
     const auto test_s      = TestFunction<spacedim>()[subspace_extractor];
     const auto trial_s     = TrialSolution<spacedim>()[subspace_extractor];
