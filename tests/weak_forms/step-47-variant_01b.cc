@@ -49,17 +49,17 @@ namespace Step47
     const TrialSolution<dim, spacedim> trial;
 
     // Test function (subspaces)
-    const auto test_value       = test.value();
-    const auto test_gradient    = test.gradient();
-    const auto test_hessian     = test.hessian();
-    const auto test_ave_hessian = test.average_of_hessians();
-    const auto test_jump_gradient   = test.jump_in_gradients();
+    const auto test_value         = test.value();
+    const auto test_gradient      = test.gradient();
+    const auto test_hessian       = test.hessian();
+    const auto test_ave_hessian   = test.average_of_hessians();
+    const auto test_jump_gradient = test.jump_in_gradients();
 
     // Trial solution (subspaces)
-    const auto trial_gradient     = trial.gradient();
-    const auto trial_hessian     = trial.hessian();
-    const auto trial_ave_hessian = trial.average_of_hessians();
-    const auto trial_jump_gradient   = trial.jump_in_gradients();
+    const auto trial_gradient      = trial.gradient();
+    const auto trial_hessian       = trial.hessian();
+    const auto trial_ave_hessian   = trial.average_of_hessians();
+    const auto trial_jump_gradient = trial.jump_in_gradients();
 
     // Boundaries and interfaces
     const Normal<spacedim> normal{};
@@ -71,8 +71,10 @@ namespace Step47
       "f(x)", "f\\left(\\mathbf{X}\\right)");
 
     const ExactSolution::Solution<dim>    exact_solution;
-    const VectorFunctionFunctor<spacedim> exact_solution_gradients_function(
-      "grad_u(x)", "\\Nabla \\mathbf{U}\\left(\\mathbf{X}\\right)");
+    const ScalarFunctionFunctor<spacedim> exact_solution_function(
+      "u(x)", "u\\left(\\mathbf{X}\\right)");
+    // const VectorFunctionFunctor<spacedim> exact_solution_gradients_function(
+    //   "grad_u(x)", "\\Nabla \\mathbf{U}\\left(\\mathbf{X}\\right)");
     // exact_solution.gradient_list(q_points, exact_gradients);
 
     const ScalarFunctor gamma_over_h_functor("gamma/h", "\\frac{\\gamma}{h}");
@@ -136,18 +138,30 @@ namespace Step47
     // + (gamma/h [grad v n] * [grad u n]).dA
     assembler +=
       bilinear_form(test_hessian, 1.0, trial_hessian).dV() -
-      bilinear_form(N * test_ave_hessian * N, 1.0, trial_jump_gradient * N).dI() -
-      bilinear_form(test_jump_gradient * N, 1.0, N * trial_ave_hessian * N).dI()
-    + bilinear_form(test_jump_gradient * N, gamma_over_h, trial_jump_gradient * N).dI() -
+      bilinear_form(N * test_ave_hessian * N, 1.0, trial_jump_gradient * N)
+        .dI() -
+      bilinear_form(test_jump_gradient * N, 1.0, N * trial_ave_hessian * N)
+        .dI() +
+      bilinear_form(test_jump_gradient * N,
+                    gamma_over_h,
+                    trial_jump_gradient * N)
+        .dI() -
       bilinear_form(N * test_hessian * N, 0.5, trial_gradient * N).dA() -
-      bilinear_form(test_gradient * N, 0.5, N * trial_hessian * N).dA()
-    + bilinear_form(test_gradient * N, gamma_over_h, trial_gradient * N).dA();
+      bilinear_form(test_gradient * N, 0.5, N * trial_hessian * N).dA() +
+      bilinear_form(test_gradient * N, gamma_over_h, trial_gradient * N).dA();
 
     // Cell RHS to assemble:
     //   (phi_i(x) * f(x)).dV
     // - ({grad^2 v n n} * (grad u_exact . n)).dA
     // + (gamma/h [grad v n] * (grad u_exact . n)).dA
-    assembler += linear_form(test_value, rhs_function(right_hand_side)).dV();
+    assembler +=
+      linear_form(test_value, rhs_function.value(right_hand_side)).dV() -
+      linear_form(0.5 * N * test_hessian * N,
+                  exact_solution_function.gradient(exact_solution) * N)
+        .dA() +
+      linear_form(0.5 * gamma_over_h * test_gradient * N,
+                  exact_solution_function.gradient(exact_solution) * N)
+        .dA();
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
