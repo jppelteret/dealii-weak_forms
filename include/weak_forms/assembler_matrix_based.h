@@ -38,6 +38,58 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  namespace internal
+  {
+    template <int n_matrices    = 1,
+              int n_vectors     = n_matrices,
+              int n_dof_indices = n_matrices>
+    struct CopyDataWithInterfaceSupport
+      : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>
+    {
+      explicit CopyDataWithInterfaceSupport(const unsigned int size)
+        : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>(size)
+      {}
+
+      explicit CopyDataWithInterfaceSupport(
+        const ndarray<unsigned int, n_matrices, 2> &   matrix_sizes,
+        const std::array<unsigned int, n_vectors> &    vector_sizes,
+        const std::array<unsigned int, n_dof_indices> &dof_indices_sizes)
+        : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>(
+            matrix_sizes,
+            vector_sizes,
+            dof_indices_sizes)
+      {}
+
+      CopyDataWithInterfaceSupport(
+        const CopyDataWithInterfaceSupport<n_matrices, n_vectors, n_dof_indices>
+          &other) = default;
+
+      // Interface operators have a different number of local DoFs
+      // than cell and boundary operators. So we extend CopyData in a
+      // way analogous to that which step-74 does it.
+      struct InterfaceData
+      {
+        /**
+         * An array of local matrices.
+         */
+        std::array<FullMatrix<double>, n_matrices> matrices;
+
+        /**
+         * An array of local vectors.
+         */
+        std::array<Vector<double>, n_vectors> vectors;
+
+        /**
+         * An array of local degrees of freedom indices.
+         */
+        std::array<std::vector<dealii::types::global_dof_index>, n_dof_indices>
+          local_dof_indices;
+      };
+
+      std::vector<InterfaceData> interface_data;
+    };
+  } // namespace internal
+
   template <int dim,
             int spacedim           = dim,
             typename ScalarType    = double,
@@ -536,7 +588,7 @@ namespace WeakForms
 
       using CellIteratorType = typename DoFHandlerType::active_cell_iterator;
       using ScratchData      = MeshWorker::ScratchData<dim, spacedim>;
-      using CopyData         = MeshWorker::CopyData<1, 1, 1>;
+      using CopyData         = internal::CopyDataWithInterfaceSupport<1, 1, 1>;
 
       // Define a cell worker
       const auto &cell_matrix_operations = this->cell_matrix_operations;
@@ -736,6 +788,17 @@ namespace WeakForms
                                     neighbour_face,
                                     neighbour_subface);
 
+              const unsigned int n_interface_dofs =
+                fe_interface_values.n_current_interface_dofs();
+
+              // Follow the method used by step-74
+              copy_data.interface_data.emplace_back();
+              CopyData::InterfaceData &copy_data_interface =
+                copy_data.interface_data.back();
+
+              copy_data_interface.local_dof_indices[0] =
+                fe_interface_values.get_interface_dof_indices();
+
               // Extract the local solution vector, if it's provided.
               if (solution_storage.n_solution_vectors() > 0)
                 internal::extract_solution_local_dof_values(scratch_data,
@@ -755,7 +818,10 @@ namespace WeakForms
               // Perform all operations that contribute to the local cell matrix
               if (system_matrix)
                 {
-                  FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
+                  FullMatrix<ScalarType> &cell_matrix =
+                    copy_data_interface.matrices[0];
+                  cell_matrix.reinit(n_interface_dofs, n_interface_dofs);
+
                   for (const auto &interface_face_matrix_op :
                        interface_face_matrix_operations)
                     {
@@ -772,7 +838,10 @@ namespace WeakForms
               // Perform all operations that contribute to the local cell vector
               if (system_vector)
                 {
-                  Vector<ScalarType> &cell_vector = copy_data.vectors[0];
+                  Vector<ScalarType> &cell_vector =
+                    copy_data_interface.vectors[0];
+                  cell_vector.reinit(n_interface_dofs);
+
                   for (const auto &interface_face_vector_op :
                        interface_face_vector_operations)
                     {
@@ -796,63 +865,84 @@ namespace WeakForms
                      system_matrix,
                      system_vector,
                      &global_system_symmetry_flag](const CopyData &copy_data) {
-        const FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
-        const Vector<ScalarType> &    cell_vector = copy_data.vectors[0];
-        const std::vector<dealii::types::global_dof_index> &local_dof_indices =
-          copy_data.local_dof_indices[0];
-
-        // Copy the upper half (i.e. contributions below the diagonal) into the
-        // lower half if the global system is marked as symmetric.
-        if (global_system_symmetry_flag == true)
-          {
-            // Hmm... a bit nasty, but it makes sense to do the global
-            // symmetrization only once if possible. To (unnecessarily)
-            // symmetrize each form contribution after assembling only it's
-            // lower diagonal part would be a little wasteful.
-            FullMatrix<ScalarType> &symmetrized_cell_matrix =
-              const_cast<FullMatrix<ScalarType> &>(cell_matrix);
-            // symmetrized_cell_matrix.symmetrize();
-
-            using DoFRange_t =
-              std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
-            const DoFRange_t dof_range_j(0, local_dof_indices.size());
-            for (const auto j : dof_range_j)
+        auto const copy_local_to_global =
+          [&constraints,
+           system_matrix,
+           system_vector,
+           &global_system_symmetry_flag](
+            const FullMatrix<ScalarType> &cell_matrix,
+            const Vector<ScalarType> &    cell_vector,
+            const std::vector<dealii::types::global_dof_index>
+              &local_dof_indices) {
+            // Copy the upper half (i.e. contributions below the diagonal) into
+            // the lower half if the global system is marked as symmetric.
+            if (global_system_symmetry_flag == true)
               {
-                const DoFRange_t dof_range_i(j + 1, local_dof_indices.size());
-                for (const auto i : dof_range_i)
-                  symmetrized_cell_matrix(i, j) = cell_matrix(j, i);
-              }
-          }
+                // Hmm... a bit nasty, but it makes sense to do the global
+                // symmetrization only once if possible. To (unnecessarily)
+                // symmetrize each form contribution after assembling only it's
+                // lower diagonal part would be a little wasteful.
+                FullMatrix<ScalarType> &symmetrized_cell_matrix =
+                  const_cast<FullMatrix<ScalarType> &>(cell_matrix);
+                // symmetrized_cell_matrix.symmetrize();
 
-        if (system_matrix && system_vector)
+                using DoFRange_t =
+                  std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
+                const DoFRange_t dof_range_j(0, local_dof_indices.size());
+                for (const auto j : dof_range_j)
+                  {
+                    const DoFRange_t dof_range_i(j + 1,
+                                                 local_dof_indices.size());
+                    for (const auto i : dof_range_i)
+                      symmetrized_cell_matrix(i, j) = cell_matrix(j, i);
+                  }
+              }
+
+            if (system_matrix && system_vector)
+              {
+                internal::distribute_local_to_global(constraints,
+                                                     cell_matrix,
+                                                     cell_vector,
+                                                     local_dof_indices,
+                                                     system_matrix,
+                                                     system_vector);
+              }
+            else if (system_matrix)
+              {
+                internal::distribute_local_to_global(constraints,
+                                                     cell_matrix,
+                                                     local_dof_indices,
+                                                     system_matrix);
+              }
+            else if (system_vector)
+              {
+                internal::distribute_local_to_global(constraints,
+                                                     cell_vector,
+                                                     local_dof_indices,
+                                                     system_vector);
+              }
+            else
+              {
+                AssertThrow(
+                  system_matrix || system_vector,
+                  ExcMessage(
+                    "Either the system matrix or system RHS vector have "
+                    "to be supplied in order for assembly to occur."));
+              }
+          };
+
+        // Cell and/or boundary contributions
+        copy_local_to_global(copy_data.matrices[0],
+                             copy_data.vectors[0],
+                             copy_data.local_dof_indices[0]);
+
+        // Interface contributions
+        for (const CopyData::InterfaceData &copy_data_interface :
+             copy_data.interface_data)
           {
-            internal::distribute_local_to_global(constraints,
-                                                 cell_matrix,
-                                                 cell_vector,
-                                                 local_dof_indices,
-                                                 system_matrix,
-                                                 system_vector);
-          }
-        else if (system_matrix)
-          {
-            internal::distribute_local_to_global(constraints,
-                                                 cell_matrix,
-                                                 local_dof_indices,
-                                                 system_matrix);
-          }
-        else if (system_vector)
-          {
-            internal::distribute_local_to_global(constraints,
-                                                 cell_vector,
-                                                 local_dof_indices,
-                                                 system_vector);
-          }
-        else
-          {
-            AssertThrow(system_matrix || system_vector,
-                        ExcMessage(
-                          "Either the system matrix or system RHS vector have "
-                          "to be supplied in order for assembly to occur."));
+            copy_local_to_global(copy_data_interface.matrices[0],
+                                 copy_data_interface.vectors[0],
+                                 copy_data_interface.local_dof_indices[0]);
           }
       };
 
