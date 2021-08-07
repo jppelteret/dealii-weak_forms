@@ -73,9 +73,6 @@ namespace Step47
     const ExactSolution::Solution<dim>    exact_solution;
     const ScalarFunctionFunctor<spacedim> exact_solution_function(
       "u(x)", "u\\left(\\mathbf{X}\\right)");
-    // const VectorFunctionFunctor<spacedim> exact_solution_gradients_function(
-    //   "grad_u(x)", "\\Nabla \\mathbf{U}\\left(\\mathbf{X}\\right)");
-    // exact_solution.gradient_list(q_points, exact_gradients);
 
     const ScalarFunctor gamma_over_h_functor("gamma/h", "\\frac{\\gamma}{h}");
     const auto          gamma_over_h =
@@ -146,20 +143,20 @@ namespace Step47
                     gamma_over_h,
                     trial_jump_gradient * N)
         .dI() -
-      bilinear_form(N * test_hessian * N, 0.5, trial_gradient * N).dA() -
-      bilinear_form(test_gradient * N, 0.5, N * trial_hessian * N).dA() +
+      bilinear_form(N * test_hessian * N, 1.0, trial_gradient * N).dA() -
+      bilinear_form(test_gradient * N, 1.0, N * trial_hessian * N).dA() +
       bilinear_form(test_gradient * N, gamma_over_h, trial_gradient * N).dA();
 
     // Cell RHS to assemble:
     //   (phi_i(x) * f(x)).dV
     // - ({grad^2 v n n} * (grad u_exact . n)).dA
     // + (gamma/h [grad v n] * (grad u_exact . n)).dA
-    assembler +=
+    assembler -=
       linear_form(test_value, rhs_function.value(right_hand_side)).dV() -
-      linear_form(0.5 * N * test_hessian * N,
+      linear_form(N * test_hessian * N,
                   exact_solution_function.gradient(exact_solution) * N)
         .dA() +
-      linear_form(0.5 * gamma_over_h * test_gradient * N,
+      linear_form(gamma_over_h * test_gradient * N,
                   exact_solution_function.gradient(exact_solution) * N)
         .dA();
 
@@ -189,195 +186,6 @@ namespace Step47
                               this->dof_handler,
                               cell_quadrature,
                               face_quadrature);
-
-
-    //   auto face_worker = [&](const Iterator &    cell,
-    //                          const unsigned int &f,
-    //                          const unsigned int &sf,
-    //                          const Iterator &    ncell,
-    //                          const unsigned int &nf,
-    //                          const unsigned int &nsf,
-    //                          ScratchData<dim> &  scratch_data,
-    //                          CopyData &          copy_data) {
-    //     FEInterfaceValues<dim> &fe_interface_values =
-    //       scratch_data.fe_interface_values;
-    //     fe_interface_values.reinit(cell, f, sf, ncell, nf, nsf);
-
-    //     copy_data.face_data.emplace_back();
-    //     CopyData::FaceData &copy_data_face = copy_data.face_data.back();
-
-    //     copy_data_face.joint_dof_indices =
-    //       fe_interface_values.get_interface_dof_indices();
-
-    //     const unsigned int n_interface_dofs =
-    //       fe_interface_values.n_current_interface_dofs();
-    //     copy_data_face.cell_matrix.reinit(n_interface_dofs,
-    //     n_interface_dofs);
-
-    //     const unsigned int p = this->fe.degree;
-    //     const double       gamma_over_h =
-    //       std::max((1.0 * p * (p + 1) /
-    //                 cell->extent_in_direction(
-    //                   GeometryInfo<dim>::unit_normal_direction[f])),
-    //                (1.0 * p * (p + 1) /
-    //                 ncell->extent_in_direction(
-    //                   GeometryInfo<dim>::unit_normal_direction[nf])));
-
-    //     for (unsigned int qpoint = 0;
-    //          qpoint < fe_interface_values.n_quadrature_points;
-    //          ++qpoint)
-    //       {
-    //         const auto &n = fe_interface_values.normal(qpoint);
-
-    //         for (unsigned int i = 0; i < n_interface_dofs; ++i)
-    //           {
-    //             const double av_hessian_i_dot_n_dot_n =
-    //               (fe_interface_values.average_hessian(i, qpoint) * n * n);
-    //             const double jump_gradient_i_dot_n =
-    //               (fe_interface_values.jump_gradientient(i, qpoint) * n);
-
-    //             for (unsigned int j = 0; j < n_interface_dofs; ++j)
-    //               {
-    //                 const double av_hessian_j_dot_n_dot_n =
-    //                   (fe_interface_values.average_hessian(j, qpoint) * n *
-    //                   n);
-    //                 const double jump_gradient_j_dot_n =
-    //                   (fe_interface_values.jump_gradientient(j, qpoint) * n);
-
-    //                 copy_data_face.cell_matrix(i, j) +=
-    //                   (-av_hessian_i_dot_n_dot_n       // - {grad^2 v n n }
-    //                      * jump_gradient_j_dot_n           // [grad u n]
-    //                    - av_hessian_j_dot_n_dot_n      // - {grad^2 u n n }
-    //                        * jump_gradient_i_dot_n         // [grad v n]
-    //                    +                               // +
-    //                    gamma_over_h *                  // gamma/h
-    //                      jump_gradient_i_dot_n *           // [grad v n]
-    //                      jump_gradient_j_dot_n) *          // [grad u n]
-    //                   fe_interface_values.JxW(qpoint); // dx
-    //               }
-    //           }
-    //       }
-    //   };
-
-
-    //   auto boundary_worker = [&](const Iterator &    cell,
-    //                              const unsigned int &face_no,
-    //                              ScratchData<dim> &  scratch_data,
-    //                              CopyData &          copy_data) {
-    //     FEInterfaceValues<dim> &fe_interface_values =
-    //       scratch_data.fe_interface_values;
-    //     fe_interface_values.reinit(cell, face_no);
-    //     const auto &q_points = fe_interface_values.get_quadrature_points();
-
-    //     copy_data.face_data.emplace_back();
-    //     CopyData::FaceData &copy_data_face = copy_data.face_data.back();
-
-    //     const unsigned int n_dofs =
-    //       fe_interface_values.n_current_interface_dofs();
-    //     copy_data_face.joint_dof_indices =
-    //       fe_interface_values.get_interface_dof_indices();
-
-    //     copy_data_face.cell_matrix.reinit(n_dofs, n_dofs);
-
-    //     const std::vector<double> &JxW =
-    //     fe_interface_values.get_JxW_values(); const std::vector<Tensor<1,
-    //     dim>> &normals =
-    //       fe_interface_values.get_normal_vectors();
-
-
-    //     const ExactSolution::Solution<dim> exact_solution;
-    //     std::vector<Tensor<1, dim>>        exact_gradients(q_points.size());
-    //     exact_solution.gradient_list(q_points, exact_gradients);
-
-
-    //     const unsigned int p = this->fe.degree;
-    //     const double       gamma_over_h =
-    //       (1.0 * p * (p + 1) /
-    //        cell->extent_in_direction(
-    //          GeometryInfo<dim>::unit_normal_direction[face_no]));
-
-    //     for (unsigned int qpoint = 0; qpoint < q_points.size(); ++qpoint)
-    //       {
-    //         const auto &n = normals[qpoint];
-
-    //         for (unsigned int i = 0; i < n_dofs; ++i)
-    //           {
-    //             const double av_hessian_i_dot_n_dot_n =
-    //               (fe_interface_values.average_hessian(i, qpoint) * n * n);
-    //             const double jump_gradient_i_dot_n =
-    //               (fe_interface_values.jump_gradientient(i, qpoint) * n);
-
-    //             for (unsigned int j = 0; j < n_dofs; ++j)
-    //               {
-    //                 const double av_hessian_j_dot_n_dot_n =
-    //                   (fe_interface_values.average_hessian(j, qpoint) * n *
-    //                   n);
-    //                 const double jump_gradient_j_dot_n =
-    //                   (fe_interface_values.jump_gradientient(j, qpoint) * n);
-
-    //                 copy_data_face.cell_matrix(i, j) +=
-    //                   (-av_hessian_i_dot_n_dot_n  // - {grad^2 v n n}
-    //                      * jump_gradient_j_dot_n      //   [grad u n]
-    //                    - av_hessian_j_dot_n_dot_n // - {grad^2 u n n}
-    //                        * jump_gradient_i_dot_n    //   [grad v n]
-    //                    + gamma_over_h             //  gamma/h
-    //                        * jump_gradient_i_dot_n    // [grad v n]
-    //                        * jump_gradient_j_dot_n    // [grad u n]
-    //                    ) *
-    //                   JxW[qpoint]; // dx
-    //               }
-
-    //             copy_data.cell_rhs(i) +=
-    //               (-av_hessian_i_dot_n_dot_n *       // - {grad^2 v n n }
-    //                  (exact_gradients[qpoint] * n)   //   (grad u_exact . n)
-    //                +                                 // +
-    //                gamma_over_h                      //  gamma/h
-    //                  * jump_gradient_i_dot_n             // [grad v n]
-    //                  * (exact_gradients[qpoint] * n) // (grad u_exact . n)
-    //                ) *
-    //               JxW[qpoint]; // dx
-    //           }
-    //       }
-    //   };
-
-    //   auto copier = [&](const CopyData &copy_data) {
-    //     this->constraints.distribute_local_to_global(copy_data.cell_matrix,
-    //                                                  copy_data.cell_rhs,
-    //                                                  copy_data.local_dof_indices,
-    //                                                  this->system_matrix,
-    //                                                  this->system_rhs);
-
-    //     for (auto &cdf : copy_data.face_data)
-    //       {
-    //         this->constraints.distribute_local_to_global(cdf.cell_matrix,
-    //                                                      cdf.joint_dof_indices,
-    //                                                      this->system_matrix);
-    //       }
-    //   };
-
-
-    //   const unsigned int n_gauss_points = this->dof_handler.get_fe().degree +
-    //   1; ScratchData<dim>   scratch_data(this->mapping,
-    //                                 this->fe,
-    //                                 n_gauss_points,
-    //                                 update_values | update_gradients |
-    //                                   update_hessians | update_quadrature_points |
-    //                                   update_JxW_values,
-    //                                 update_values | update_gradients |
-    //                                   update_hessians | update_quadrature_points |
-    //                                   update_JxW_values | update_normal_vectors);
-    //   CopyData copy_data(this->dof_handler.get_fe().n_dofs_per_cell());
-    //   MeshWorker::mesh_loop(this->dof_handler.begin_active(),
-    //                         this->dof_handler.end(),
-    //                         cell_worker,
-    //                         copier,
-    //                         scratch_data,
-    //                         copy_data,
-    //                         MeshWorker::assemble_own_cells |
-    //                           MeshWorker::assemble_boundary_faces |
-    //                           MeshWorker::assemble_own_interior_faces_once,
-    //                         boundary_worker,
-    //                         face_worker);
   }
 
 } // namespace Step47
