@@ -290,6 +290,30 @@ namespace WeakForms
             std::true_type>::type
       {};
 
+
+      template <typename T, typename U = void>
+      struct is_fe_values_type : std::false_type
+      {};
+
+
+      template <template <int, int> class FEValuesType, int dim, int spacedim>
+      struct is_fe_values_type<FEValuesType<dim, spacedim>,
+                               typename std::enable_if<std::is_base_of<
+                                 FEValuesBase<dim, spacedim>,
+                                 FEValuesType<dim, spacedim>>::value>::type>
+        : std::true_type
+      {};
+
+
+      template <template <int, int> class FEValuesType, int dim, int spacedim>
+      struct is_fe_values_type<
+        FEValuesType<dim, spacedim>,
+        typename std::enable_if<
+          std::is_same<FEValuesType<dim, spacedim>,
+                       FEInterfaceValues<dim, spacedim>>::value>::type>
+        : std::true_type
+      {};
+
     } // namespace internal
 
   } // namespace Operators
@@ -871,8 +895,10 @@ namespace WeakForms
       operator()(const FEValuesTypeDoFs &fe_values_dofs,
                  const FEValuesTypeOp &  fe_values_op) const ->
         typename std::enable_if<
-          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
-           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+             is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
             !is_or_has_evaluated_with_scratch_data<LhsOpType>::value &&
             !is_or_has_evaluated_with_scratch_data<RhsOpType>::value,
           return_type<ScalarType>>::type
@@ -898,8 +924,10 @@ namespace WeakForms
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &solution_names) const ->
         typename std::enable_if<
-          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
-           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+             is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
             (is_or_has_evaluated_with_scratch_data<LhsOpType>::value ||
              is_or_has_evaluated_with_scratch_data<RhsOpType>::value),
           return_type<ScalarType>>::type
@@ -1010,8 +1038,10 @@ namespace WeakForms
                  const FEValuesTypeOp &              fe_values_op,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
-          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
-           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+             is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
             !is_or_has_evaluated_with_scratch_data<LhsOpType>::value &&
             !is_or_has_evaluated_with_scratch_data<RhsOpType>::value,
           vectorized_return_type<ScalarType, width>>::type
@@ -1038,8 +1068,10 @@ namespace WeakForms
                  const std::vector<std::string> &        solution_names,
                  const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
-          (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
-           is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            (is_or_has_test_function_or_trial_solution_op<LhsOpType>::value ||
+             is_or_has_test_function_or_trial_solution_op<RhsOpType>::value) &&
             (is_or_has_evaluated_with_scratch_data<LhsOpType>::value ||
              is_or_has_evaluated_with_scratch_data<RhsOpType>::value),
           vectorized_return_type<ScalarType, width>>::type
