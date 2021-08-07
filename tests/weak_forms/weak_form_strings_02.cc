@@ -132,8 +132,12 @@ run()
   const ConstantTensorFunction<2, dim, NumberType> constant_tensor_function(
     unit_symmetric_tensor<dim>());
   const auto sf = value<NumberType, dim>(scalar_func, constant_scalar_function);
+  const auto grad_sf =
+    gradient<NumberType, dim>(scalar_func, constant_scalar_function);
   const auto T2f =
     value<NumberType, dim>(tensor_func2, constant_tensor_function);
+  const auto grad_T2f =
+    gradient<NumberType, dim>(tensor_func2, constant_tensor_function);
 
   const FE_Q<dim>         fe_cell(1);
   const QGauss<dim>       qf_cell(2);
@@ -166,6 +170,13 @@ run()
             << sf.template operator()<NumberType>(fe_values)[0] << std::endl;
     deallog << "Tensor function (rank 2): "
             << T2f.template operator()<NumberType>(fe_values)[0] << std::endl;
+
+    deallog << "Scalar function gradient : "
+            << grad_sf.template operator()<NumberType>(fe_values)[0]
+            << std::endl;
+    deallog << "Tensor function (rank 2) gradient: "
+            << grad_T2f.template operator()<NumberType>(fe_values)[0]
+            << std::endl;
 
     deallog << std::endl;
   }

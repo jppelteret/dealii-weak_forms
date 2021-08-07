@@ -216,7 +216,7 @@ namespace WeakForms
     value(const function_type<ScalarType, dim, spacedim> &function) const
     {
       const interface_function_type<ScalarType, dim, spacedim> dummy_function;
-      return value(function, dummy_function);
+      return this->value(function, dummy_function);
     }
 
     template <typename ScalarType, int dim, int spacedim = dim>
@@ -225,7 +225,7 @@ namespace WeakForms
             &interface_function) const
     {
       const function_type<ScalarType, dim, spacedim> dummy_function;
-      return value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function);
     }
   };
 
@@ -282,7 +282,7 @@ namespace WeakForms
     value(const function_type<ScalarType, dim> &function) const
     {
       const interface_function_type<ScalarType, dim> dummy_function;
-      return value(function, dummy_function);
+      return this->value(function, dummy_function);
     }
 
     template <typename ScalarType, int dim = spacedim>
@@ -291,7 +291,7 @@ namespace WeakForms
       const interface_function_type<ScalarType, dim> &interface_function) const
     {
       const function_type<ScalarType, dim> dummy_function;
-      return value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function);
     }
   };
 
@@ -352,7 +352,7 @@ namespace WeakForms
     value(const function_type<ScalarType, dim> &function) const
     {
       const interface_function_type<ScalarType, dim> dummy_function;
-      return value(function, dummy_function);
+      return this->value(function, dummy_function);
     }
 
     template <typename ScalarType, int dim = spacedim>
@@ -361,7 +361,7 @@ namespace WeakForms
       const interface_function_type<ScalarType, dim> &interface_function) const
     {
       const function_type<ScalarType, dim> dummy_function;
-      return value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function);
     }
   };
 
@@ -406,19 +406,13 @@ namespace WeakForms
       return decorator.make_position_dependent_symbol_latex(this->symbol_latex);
     }
 
-    // Call operator to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
-    operator()(const function_type<ScalarType> &function) const;
+    value(const function_type<ScalarType> &function) const;
 
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType> &function) const
-    {
-      return this->operator()<ScalarType>(function);
-    }
+    gradient(const function_type<ScalarType> &function) const;
   };
 
 
@@ -461,19 +455,13 @@ namespace WeakForms
       return decorator.make_position_dependent_symbol_latex(this->symbol_latex);
     }
 
-    // Call operator to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
-    operator()(const function_type<ScalarType> &function) const;
+    value(const function_type<ScalarType> &function) const;
 
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType> &function) const
-    {
-      return this->operator()<ScalarType>(function);
-    }
+    gradient(const function_type<ScalarType> &function) const;
   };
 
 
@@ -553,9 +541,7 @@ public:                                                                        \
     , interface_function(interface_function)                                   \
   {}                                                                           \
                                                                                \
-  explicit SymbolicOp(const Op &                    operand,                   \
-                      const value_type<ScalarType> &value =                    \
-                        value_type<ScalarType>{})                              \
+  explicit SymbolicOp(const Op &operand, const value_type<ScalarType> &value)  \
     : SymbolicOp(                                                              \
         operand,                                                               \
         [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {     \
@@ -787,6 +773,198 @@ private:                                                                       \
     /* ------------------------ Functors: deal.II ------------------------ */
 
 
+#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                     \
+public:                                                                        \
+  /**                                                                          \
+   * Dimension in which this object operates.                                  \
+   */                                                                          \
+  static const unsigned int dimension = dim;                                   \
+                                                                               \
+  /**                                                                          \
+   * Dimension of the space in which this object operates.                     \
+   */                                                                          \
+  static const unsigned int space_dimension = spacedim;                        \
+                                                                               \
+  using scalar_type = ScalarType;                                              \
+                                                                               \
+  template <typename ResultScalarType>                                         \
+  using function_type = typename Op::template function_type<ResultScalarType>; \
+                                                                               \
+  template <typename ResultScalarType>                                         \
+  using return_type = std::vector<value_type<ResultScalarType>>;               \
+                                                                               \
+  template <typename ResultScalarType, std::size_t width>                      \
+  using vectorized_value_type = typename numbers::VectorizedValue<             \
+    value_type<ResultScalarType>>::template type<width>;                       \
+                                                                               \
+  template <typename ResultScalarType, std::size_t width>                      \
+  using vectorized_return_type = typename numbers::VectorizedValue<            \
+    value_type<ResultScalarType>>::template type<width>;                       \
+                                                                               \
+  static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;          \
+                                                                               \
+  /**                                                                          \
+   * @brief Construct a new Unary Op object                                    \
+   *                                                                           \
+   * @param operand                                                            \
+   * @param function Non-owning, so the passed in @p function_type must have   \
+   * a longer lifetime than this object.                                       \
+   */                                                                          \
+  explicit SymbolicOp(const Op &                       operand,                \
+                      const function_type<ScalarType> &function)               \
+    : operand(operand)                                                         \
+    , function(&function)                                                      \
+  {}                                                                           \
+                                                                               \
+  UpdateFlags get_update_flags() const                                         \
+  {                                                                            \
+    return UpdateFlags::update_quadrature_points;                              \
+  }                                                                            \
+                                                                               \
+  /**                                                                          \
+   * Return values at all quadrature points                                    \
+   */                                                                          \
+  template <typename ResultScalarType, int dim2>                               \
+  return_type<ResultScalarType> operator()(                                    \
+    const FEValuesBase<dim2, spacedim> &fe_values) const                       \
+  {                                                                            \
+    return_type<ResultScalarType> out;                                         \
+    out.reserve(fe_values.n_quadrature_points);                                \
+                                                                               \
+    for (const auto &q_point : fe_values.get_quadrature_points())              \
+      out.emplace_back(this->template operator()<ResultScalarType>(q_point));  \
+                                                                               \
+    return out;                                                                \
+  }                                                                            \
+                                                                               \
+  template <typename ResultScalarType, int dim2>                               \
+  return_type<ResultScalarType> operator()(                                    \
+    const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const        \
+  {                                                                            \
+    return_type<ResultScalarType> out;                                         \
+    out.reserve(fe_interface_values.n_quadrature_points);                      \
+                                                                               \
+    for (const auto &q_point : fe_interface_values.get_quadrature_points())    \
+      out.emplace_back(this->template operator()<ResultScalarType>(q_point));  \
+                                                                               \
+    return out;                                                                \
+  }                                                                            \
+                                                                               \
+  /**                                                                          \
+   * Return a vectorized set of values for a given quadrature point range.     \
+   */                                                                          \
+  template <typename ResultScalarType, std::size_t width, int dim2>            \
+  vectorized_return_type<ResultScalarType, width> operator()(                  \
+    const FEValuesBase<dim2, spacedim> &fe_values,                             \
+    const types::vectorized_qp_range_t &q_point_range) const                   \
+  {                                                                            \
+    vectorized_return_type<ResultScalarType, width> out;                       \
+    Assert(q_point_range.size() <= width,                                      \
+           ExcIndexRange(q_point_range.size(), 0, width));                     \
+                                                                               \
+    /* TODO: Can we guarantee that the underlying function is immutable?  */   \
+    DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
+    for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
+      numbers::set_vectorized_values(                                          \
+        out,                                                                   \
+        i,                                                                     \
+        this->template operator()<ResultScalarType>(                           \
+          fe_values.quadrature_point(q_point_range[i])));                      \
+                                                                               \
+    return out;                                                                \
+  }                                                                            \
+                                                                               \
+  /**                                                                          \
+   * Return a vectorized set of values for a given quadrature point range.     \
+   */                                                                          \
+  template <typename ResultScalarType, std::size_t width, int dim2>            \
+  vectorized_return_type<ResultScalarType, width> operator()(                  \
+    const FEInterfaceValues<dim2, spacedim> &fe_interface_values,              \
+    const types::vectorized_qp_range_t &     q_point_range) const                   \
+  {                                                                            \
+    vectorized_return_type<ResultScalarType, width> out;                       \
+    Assert(q_point_range.size() <= width,                                      \
+           ExcIndexRange(q_point_range.size(), 0, width));                     \
+                                                                               \
+    /* TODO: Can we guarantee that the underlying function is immutable?  */   \
+    DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
+    for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
+      numbers::set_vectorized_values(                                          \
+        out,                                                                   \
+        i,                                                                     \
+        this->template operator()<ResultScalarType>(                           \
+          fe_interface_values.quadrature_point(q_point_range[i])));            \
+                                                                               \
+    return out;                                                                \
+  }                                                                            \
+                                                                               \
+private:                                                                       \
+  const Op                                            operand;                 \
+  const SmartPointer<const function_type<ScalarType>> function;
+
+
+#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()              \
+public:                                                                       \
+  template <typename ResultScalarType>                                        \
+  using value_type = typename Op::template value_type<ResultScalarType>;      \
+                                                                              \
+  std::string as_ascii(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_ascii().differential_operators; \
+    return decorator.decorate_with_operator_ascii(                            \
+      naming.value, operand.as_ascii(decorator));                             \
+  }                                                                           \
+                                                                              \
+  std::string as_latex(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_latex().differential_operators; \
+    return decorator.decorate_with_operator_latex(                            \
+      naming.value, operand.as_latex(decorator));                             \
+  }                                                                           \
+                                                                              \
+  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                          \
+                                                                              \
+private:                                                                      \
+  /**                                                                         \
+   * Return single entry                                                      \
+   */                                                                         \
+  template <typename ResultScalarType>                                        \
+  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
+  {                                                                           \
+    return function->value(point);                                            \
+  }
+
+#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()           \
+public:                                                                       \
+  template <typename ResultScalarType>                                        \
+  using value_type = typename Op::template gradient_type<ResultScalarType>;   \
+                                                                              \
+  std::string as_ascii(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_ascii().differential_operators; \
+    return decorator.decorate_with_operator_ascii(                            \
+      naming.gradient, operand.as_ascii(decorator));                          \
+  }                                                                           \
+                                                                              \
+  std::string as_latex(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_latex().differential_operators; \
+    return decorator.decorate_with_operator_latex(                            \
+      naming.gradient, operand.as_latex(decorator));                          \
+  }                                                                           \
+                                                                              \
+  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                          \
+                                                                              \
+private:                                                                      \
+  /**                                                                         \
+   * Return single entry                                                      \
+   */                                                                         \
+  template <typename ResultScalarType>                                        \
+  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
+  {                                                                           \
+    return function->gradient(point);                                         \
+  }
+
 
     /**
      * Extract the value from a scalar function functor.
@@ -800,146 +978,32 @@ private:                                                                       \
                      WeakForms::internal::DimPack<dim, spacedim>>
     {
       using Op = ScalarFunctionFunctor<spacedim>;
+      DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
+      static const int rank = 0;
+    };
 
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
 
-      using scalar_type = ScalarType;
+    /**
+     * Extract the gradient from a scalar function functor.
+     *
+     * @note This class stores a reference to the function that will be evaluated.
+     */
+    template <typename ScalarType, int dim, int spacedim>
+    class SymbolicOp<ScalarFunctionFunctor<spacedim>,
+                     SymbolicOpCodes::gradient,
+                     ScalarType,
+                     WeakForms::internal::DimPack<dim, spacedim>>
+    {
+      using Op = ScalarFunctionFunctor<spacedim>;
+      DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()
 
-      template <typename ResultScalarType>
-      using value_type = typename Op::template value_type<ResultScalarType>;
+    public:
+      static const int rank = 1;
 
-      template <typename ResultScalarType>
-      using function_type =
-        typename Op::template function_type<ResultScalarType>;
-
-      template <typename ResultScalarType>
-      using return_type = std::vector<value_type<ResultScalarType>>;
-
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type = typename numbers::VectorizedValue<
-        value_type<ResultScalarType>>::template type<width>;
-
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type = typename numbers::VectorizedValue<
-        value_type<ResultScalarType>>::template type<width>;
-
-      static const int                  rank    = 0;
-      static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
-
-      /**
-       * @brief Construct a new Unary Op object
-       *
-       * @param operand
-       * @param function Non-owning, so the passed in @p function_type must have
-       * a longer lifetime than this object.
-       */
-      explicit SymbolicOp(const Op &                       operand,
-                          const function_type<ScalarType> &function)
-        : operand(operand)
-        , function(&function)
-      {}
-
-      explicit SymbolicOp(const Op &operand)
-        : SymbolicOp(operand, [](const unsigned int) {
-          return value_type<ScalarType>{};
-        })
-      {}
-
-      std::string
-      as_ascii(const SymbolicDecorations &decorator) const
-      {
-        const auto &naming =
-          decorator.get_naming_ascii().differential_operators;
-        return decorator.decorate_with_operator_ascii(
-          naming.value, operand.as_ascii(decorator));
-      }
-
-      std::string
-      as_latex(const SymbolicDecorations &decorator) const
-      {
-        const auto &naming =
-          decorator.get_naming_latex().differential_operators;
-        return decorator.decorate_with_operator_latex(
-          naming.value, operand.as_latex(decorator));
-      }
-
-      // =======
-
-      UpdateFlags
-      get_update_flags() const
-      {
-        return UpdateFlags::update_quadrature_points;
-      }
-
-      /**
-       * Return values at all quadrature points
-       */
-      template <typename ResultScalarType, int dim2>
-      return_type<ResultScalarType>
-      operator()(const FEValuesBase<dim2, spacedim> &fe_values) const
-      {
-        return_type<ResultScalarType> out;
-        out.reserve(fe_values.n_quadrature_points);
-
-        for (const auto &q_point : fe_values.get_quadrature_points())
-          out.emplace_back(
-            this->template operator()<ResultScalarType>(q_point));
-
-        return out;
-      }
-
-      /**
-       * Return a vectorized set of values for a given quadrature point range.
-       */
-      template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_return_type<ResultScalarType, width>
-      operator()(const FEValuesBase<dim2, spacedim> &fe_values,
-                 const types::vectorized_qp_range_t &q_point_range) const
-      {
-        vectorized_return_type<ResultScalarType, width> out;
-        Assert(q_point_range.size() <= width,
-               ExcIndexRange(q_point_range.size(), 0, width));
-
-        // TODO: Can we guarantee that the underlying function is immutable?
-        DEAL_II_OPENMP_SIMD_PRAGMA
-        for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              fe_values.quadrature_point(q_point_range[i])));
-
-        return out;
-      }
-
-    private:
-      const Op                                            operand;
-      const SmartPointer<const function_type<ScalarType>> function;
-
-      // template <typename ResultScalarType, int dim2>
-      // value_type<ResultScalarType>
-      // operator()(const FEValuesBase<dim2, spacedim> &fe_values,
-      //            const unsigned int                  q_point) const
-      // {
-      //   return function(fe_values, fe_values.quadrature_point(q_point));
-      // }
-
-      // Return single entry
-      template <typename ResultScalarType>
-      value_type<ResultScalarType>
-      operator()(const Point<dim> &p, const unsigned int component = 0) const
-      {
-        return function->value(p, component);
-      }
+      static_assert(value_type<double>::rank == rank,
+                    "Mismatch in rank of return value type.");
     };
 
 
@@ -956,150 +1020,41 @@ private:                                                                       \
                      WeakForms::internal::DimPack<dim, spacedim>>
     {
       using Op = TensorFunctionFunctor<rank_, spacedim>;
+      DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()
 
     public:
-      /**
-       * Dimension in which this object operates.
-       */
-      static const unsigned int dimension = dim;
-
-      /**
-       * Dimension of the space in which this object operates.
-       */
-      static const unsigned int space_dimension = spacedim;
-
-      using scalar_type = ScalarType;
-
-      template <typename ResultScalarType>
-      using value_type = typename Op::template value_type<ResultScalarType>;
-
-      template <typename ResultScalarType>
-      using function_type =
-        typename Op::template function_type<ResultScalarType>;
-
-      template <typename ResultScalarType>
-      using return_type = std::vector<value_type<ResultScalarType>>;
-
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_value_type = typename numbers::VectorizedValue<
-        value_type<ResultScalarType>>::template type<width>;
-
-      template <typename ResultScalarType, std::size_t width>
-      using vectorized_return_type = typename numbers::VectorizedValue<
-        value_type<ResultScalarType>>::template type<width>;
-
-      static const int                  rank    = rank_;
-      static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;
+      static const int rank = rank_;
 
       static_assert(value_type<double>::rank == rank,
                     "Mismatch in rank of return value type.");
-
-      /**
-       * @brief Construct a new Unary Op object
-       *
-       * @param operand
-       * @param function Non-owning, so the passed in @p function_type must have
-       * a longer lifetime than this object.
-       */
-      explicit SymbolicOp(const Op &                       operand,
-                          const function_type<ScalarType> &function)
-        : operand(operand)
-        , function(&function)
-      {}
-
-      explicit SymbolicOp(const Op &operand)
-        : SymbolicOp(operand, [](const unsigned int) {
-          return value_type<ScalarType>();
-        })
-      {}
-
-      std::string
-      as_ascii(const SymbolicDecorations &decorator) const
-      {
-        const auto &naming =
-          decorator.get_naming_ascii().differential_operators;
-        return decorator.decorate_with_operator_ascii(
-          naming.value, operand.as_ascii(decorator));
-      }
-
-      std::string
-      as_latex(const SymbolicDecorations &decorator) const
-      {
-        const auto &naming =
-          decorator.get_naming_latex().differential_operators;
-        return decorator.decorate_with_operator_latex(
-          naming.value, operand.as_latex(decorator));
-      }
-
-      // =======
-
-      UpdateFlags
-      get_update_flags() const
-      {
-        return UpdateFlags::update_quadrature_points;
-      }
-
-      /**
-       * Return values at all quadrature points
-       */
-      template <typename ResultScalarType, int dim2>
-      return_type<ResultScalarType>
-      operator()(const FEValuesBase<dim2, spacedim> &fe_values) const
-      {
-        return_type<ResultScalarType> out;
-        out.reserve(fe_values.n_quadrature_points);
-
-        for (const auto &q_point : fe_values.get_quadrature_points())
-          out.emplace_back(
-            this->template operator()<ResultScalarType>(q_point));
-
-        return out;
-      }
-
-      /**
-       * Return a vectorized set of values for a given quadrature point range.
-       */
-      template <typename ResultScalarType, std::size_t width, int dim2>
-      vectorized_return_type<ResultScalarType, width>
-      operator()(const FEValuesBase<dim2, spacedim> &fe_values,
-                 const types::vectorized_qp_range_t &q_point_range) const
-      {
-        vectorized_return_type<ResultScalarType, width> out;
-        Assert(q_point_range.size() <= width,
-               ExcIndexRange(q_point_range.size(), 0, width));
-
-        // TODO: Can we guarantee that the underlying function is immutable?
-        DEAL_II_OPENMP_SIMD_PRAGMA
-        for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              fe_values.quadrature_point(q_point_range[i])));
-
-        return out;
-      }
-
-    private:
-      const Op                                            operand;
-      const SmartPointer<const function_type<ScalarType>> function;
-
-      // template <typename ResultScalarType, int dim2>
-      // value_type<ResultScalarType>
-      // operator()(const FEValuesBase<dim2, spacedim> &fe_values,
-      //            const unsigned int                  q_point) const
-      // {
-      //   return function(fe_values, fe_values.quadrature_point(q_point));
-      // }
-
-      // Return single entry
-      template <typename ResultScalarType>
-      value_type<ResultScalarType>
-      operator()(const Point<spacedim> &p) const
-      {
-        return function->value(p);
-      }
     };
+
+
+
+    /**
+     * Extract the gradient from a tensor function functor.
+     *
+     * @note This class stores a reference to the function that will be evaluated.
+     */
+    template <typename ScalarType, int rank_, int dim, int spacedim>
+    class SymbolicOp<TensorFunctionFunctor<rank_, spacedim>,
+                     SymbolicOpCodes::gradient,
+                     ScalarType,
+                     WeakForms::internal::DimPack<dim, spacedim>>
+    {
+      using Op = TensorFunctionFunctor<rank_, spacedim>;
+      DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()
+
+    public:
+      static const int rank = rank_ + 1;
+
+      static_assert(value_type<double>::rank == rank,
+                    "Mismatch in rank of return value type.");
+    };
+
+#undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL
+#undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL
+#undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
@@ -1207,6 +1162,60 @@ namespace WeakForms
 
 
 
+  template <typename ScalarType, int dim, int spacedim = dim>
+  WeakForms::Operators::SymbolicOp<WeakForms::ScalarFunctor,
+                                   WeakForms::Operators::SymbolicOpCodes::value,
+                                   ScalarType,
+                                   internal::DimPack<dim, spacedim>>
+  value(const WeakForms::ScalarFunctor &operand,
+        const typename WeakForms::ScalarFunctor::
+          template function_type<ScalarType, dim, spacedim> &function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = ScalarFunctor;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::
+      template interface_function_type<ScalarType, dim, spacedim>
+        dummy_function;
+
+    return OpType(operand, function, dummy_function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int spacedim = dim>
+  WeakForms::Operators::SymbolicOp<WeakForms::ScalarFunctor,
+                                   WeakForms::Operators::SymbolicOpCodes::value,
+                                   ScalarType,
+                                   internal::DimPack<dim, spacedim>>
+  value(const WeakForms::ScalarFunctor &operand,
+        const typename WeakForms::ScalarFunctor::
+          template interface_function_type<ScalarType, dim, spacedim>
+            &interface_function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = ScalarFunctor;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::template function_type<ScalarType, dim, spacedim>
+      dummy_function;
+
+    return OpType(operand, dummy_function, interface_function);
+  }
+
+
+
   template <typename ScalarType, int dim, int rank, int spacedim>
   WeakForms::Operators::SymbolicOp<WeakForms::TensorFunctor<rank, spacedim>,
                                    WeakForms::Operators::SymbolicOpCodes::value,
@@ -1228,6 +1237,57 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     return OpType(operand, function, interface_function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  WeakForms::Operators::SymbolicOp<WeakForms::TensorFunctor<rank, spacedim>,
+                                   WeakForms::Operators::SymbolicOpCodes::value,
+                                   ScalarType,
+                                   internal::DimPack<dim, spacedim>>
+  value(const WeakForms::TensorFunctor<rank, spacedim> &operand,
+        const typename WeakForms::TensorFunctor<rank, spacedim>::
+          template function_type<ScalarType, dim> &function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TensorFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::template interface_function_type<ScalarType, dim>
+      dummy_function;
+
+    return OpType(operand, function, dummy_function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  WeakForms::Operators::SymbolicOp<WeakForms::TensorFunctor<rank, spacedim>,
+                                   WeakForms::Operators::SymbolicOpCodes::value,
+                                   ScalarType,
+                                   internal::DimPack<dim, spacedim>>
+  value(const WeakForms::TensorFunctor<rank, spacedim> &operand,
+        const typename WeakForms::TensorFunctor<rank, spacedim>::
+          template interface_function_type<ScalarType, dim> &interface_function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TensorFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::template function_type<ScalarType, dim> dummy_function;
+
+    return OpType(operand, dummy_function, interface_function);
   }
 
 
@@ -1258,6 +1318,59 @@ namespace WeakForms
 
 
 
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::SymmetricTensorFunctor<rank, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::value,
+    ScalarType,
+    internal::DimPack<dim, spacedim>>
+  value(const WeakForms::SymmetricTensorFunctor<rank, spacedim> &operand,
+        const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
+          template function_type<ScalarType, dim> &function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SymmetricTensorFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::template interface_function_type<ScalarType, dim>
+      dummy_function;
+
+    return OpType(operand, function, dummy_function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::SymmetricTensorFunctor<rank, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::value,
+    ScalarType,
+    internal::DimPack<dim, spacedim>>
+  value(const WeakForms::SymmetricTensorFunctor<rank, spacedim> &operand,
+        const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
+          template interface_function_type<ScalarType, dim> &interface_function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SymmetricTensorFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const typename Op::template function_type<ScalarType, dim> dummy_function;
+
+    return OpType(operand, dummy_function, interface_function);
+  }
+
+
+
   template <typename ScalarType, int dim, int spacedim>
   WeakForms::Operators::SymbolicOp<WeakForms::ScalarFunctionFunctor<spacedim>,
                                    WeakForms::Operators::SymbolicOpCodes::value,
@@ -1273,6 +1386,30 @@ namespace WeakForms
     using Op     = ScalarFunctionFunctor<spacedim>;
     using OpType = SymbolicOp<Op,
                               SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    return OpType(operand, function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::ScalarFunctionFunctor<spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::gradient,
+    ScalarType,
+    WeakForms::internal::DimPack<dim, spacedim>>
+  gradient(const WeakForms::ScalarFunctionFunctor<spacedim> &operand,
+           const typename WeakForms::ScalarFunctionFunctor<
+             spacedim>::template function_type<ScalarType> &function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = ScalarFunctionFunctor<spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::gradient,
                               ScalarType,
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
@@ -1297,6 +1434,30 @@ namespace WeakForms
     using Op     = TensorFunctionFunctor<rank, spacedim>;
     using OpType = SymbolicOp<Op,
                               SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    return OpType(operand, function);
+  }
+
+
+
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    WeakForms::TensorFunctionFunctor<rank, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::gradient,
+    ScalarType,
+    WeakForms::internal::DimPack<dim, spacedim>>
+  gradient(const WeakForms::TensorFunctionFunctor<rank, spacedim> &operand,
+           const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
+             template function_type<ScalarType> &function)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TensorFunctionFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::gradient,
                               ScalarType,
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
@@ -1348,10 +1509,26 @@ namespace WeakForms
     internal::DimPack<dim, spacedim>>> : std::true_type
   {};
 
+  template <typename ScalarType, int dim, int spacedim>
+  struct is_functor_op<WeakForms::Operators::SymbolicOp<
+    WeakForms::ScalarFunctionFunctor<spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::gradient,
+    ScalarType,
+    internal::DimPack<dim, spacedim>>> : std::true_type
+  {};
+
   template <typename ScalarType, int dim, int rank, int spacedim>
   struct is_functor_op<WeakForms::Operators::SymbolicOp<
     WeakForms::TensorFunctionFunctor<rank, spacedim>,
     WeakForms::Operators::SymbolicOpCodes::value,
+    ScalarType,
+    internal::DimPack<dim, spacedim>>> : std::true_type
+  {};
+
+  template <typename ScalarType, int dim, int rank, int spacedim>
+  struct is_functor_op<WeakForms::Operators::SymbolicOp<
+    WeakForms::TensorFunctionFunctor<rank, spacedim>,
+    WeakForms::Operators::SymbolicOpCodes::gradient,
     ScalarType,
     internal::DimPack<dim, spacedim>>> : std::true_type
   {};
@@ -1417,9 +1594,31 @@ namespace WeakForms
   template <int spacedim>
   template <typename ScalarType, int dim>
   auto
-  ScalarFunctionFunctor<spacedim>::operator()(
+  ScalarFunctionFunctor<spacedim>::value(
     const typename WeakForms::ScalarFunctionFunctor<
       spacedim>::template function_type<ScalarType> &function) const
+  {
+    return WeakForms::value<ScalarType, dim>(*this, function);
+  }
+
+
+  template <int spacedim>
+  template <typename ScalarType, int dim>
+  auto
+  ScalarFunctionFunctor<spacedim>::gradient(
+    const typename WeakForms::ScalarFunctionFunctor<
+      spacedim>::template function_type<ScalarType> &function) const
+  {
+    return WeakForms::gradient<ScalarType, dim>(*this, function);
+  }
+
+
+  template <int rank, int spacedim>
+  template <typename ScalarType, int dim>
+  auto
+  TensorFunctionFunctor<rank, spacedim>::value(
+    const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
+      template function_type<ScalarType> &function) const
   {
     return WeakForms::value<ScalarType, dim>(*this, function);
   }
@@ -1428,11 +1627,11 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  TensorFunctionFunctor<rank, spacedim>::operator()(
+  TensorFunctionFunctor<rank, spacedim>::gradient(
     const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
       template function_type<ScalarType> &function) const
   {
-    return WeakForms::value<ScalarType, dim>(*this, function);
+    return WeakForms::gradient<ScalarType, dim>(*this, function);
   }
 
 } // namespace WeakForms
