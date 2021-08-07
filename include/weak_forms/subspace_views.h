@@ -1812,8 +1812,7 @@ public:                                                                         
     return_type<ScalarType> out(                                                           \
       fe_interface_values.n_current_interface_dofs());                                     \
                                                                                            \
-    for (const auto interface_dof_index :                                                  \
-         fe_interface_values.get_interface_dof_indices())                                  \
+    for (const auto interface_dof_index : fe_interface_values.dof_indices())               \
       {                                                                                    \
         out[interface_dof_index].reserve(                                                  \
           fe_interface_values.n_quadrature_points);                                        \
@@ -1854,8 +1853,7 @@ public:                                                                         
     Assert(q_point_range.size() <= width,                                                  \
            ExcIndexRange(q_point_range.size(), 0, width));                                 \
                                                                                            \
-    for (const auto interface_dof_index :                                                  \
-         fe_interface_values.get_interface_dof_indices())                                  \
+    for (const auto interface_dof_index : fe_interface_values.dof_indices())               \
       {                                                                                    \
         DEAL_II_OPENMP_SIMD_PRAGMA                                                         \
         for (unsigned int i = 0; i < q_point_range.size(); ++i)                            \
