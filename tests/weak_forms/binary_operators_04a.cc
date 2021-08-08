@@ -82,7 +82,8 @@ run()
 
   const auto test = [](const FEValuesBase<dim, spacedim> &fe_values_dofs,
                        const FEValuesBase<dim, spacedim> &fe_values_op,
-                       const std::string &                type) {
+                       const std::string &                type)
+  {
     const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
     const unsigned int q_point   = fe_values_op.n_quadrature_points - 1;
     std::cout << "dof_index: " << dof_index << " ; q_point: " << q_point

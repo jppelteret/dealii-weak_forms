@@ -44,7 +44,8 @@ namespace Step12
 
     const auto cell_worker = [&](const Iterator &  cell,
                                  ScratchData<dim> &scratch_data,
-                                 CopyData &        copy_data) {
+                                 CopyData &        copy_data)
+    {
       const unsigned int n_dofs =
         scratch_data.fe_values.get_fe().n_dofs_per_cell();
       copy_data.reinit(cell, n_dofs);
@@ -73,7 +74,8 @@ namespace Step12
     const auto boundary_worker = [&](const Iterator &    cell,
                                      const unsigned int &face_no,
                                      ScratchData<dim> &  scratch_data,
-                                     CopyData &          copy_data) {
+                                     CopyData &          copy_data)
+    {
       scratch_data.fe_interface_values.reinit(cell, face_no);
       const FEFaceValuesBase<dim> &fe_face =
         scratch_data.fe_interface_values.get_fe_face_values(0);
@@ -117,7 +119,8 @@ namespace Step12
                                  const unsigned int &nf,
                                  const unsigned int &nsf,
                                  ScratchData<dim> &  scratch_data,
-                                 CopyData &          copy_data) {
+                                 CopyData &          copy_data)
+    {
       FEInterfaceValues<dim> &fe_iv = scratch_data.fe_interface_values;
       fe_iv.reinit(cell, f, sf, ncell, nf, nsf);
       const auto &q_points = fe_iv.get_quadrature_points();
@@ -149,7 +152,8 @@ namespace Step12
 
     const AffineConstraints<double> constraints;
 
-    const auto copier = [&](const CopyData &c) {
+    const auto copier = [&](const CopyData &c)
+    {
       constraints.distribute_local_to_global(c.cell_matrix,
                                              c.cell_rhs,
                                              c.local_dof_indices,

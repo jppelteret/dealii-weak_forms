@@ -42,38 +42,40 @@ namespace Step74
   Step74<dim>::assemble_system()
   {
     const auto cell_worker =
-      [this](const auto &cell, auto &scratch_data, auto &copy_data) {
-        const FEValues<dim> &fe_v          = scratch_data.reinit(cell);
-        const unsigned int   dofs_per_cell = fe_v.dofs_per_cell;
-        copy_data.reinit(cell, dofs_per_cell);
+      [this](const auto &cell, auto &scratch_data, auto &copy_data)
+    {
+      const FEValues<dim> &fe_v          = scratch_data.reinit(cell);
+      const unsigned int   dofs_per_cell = fe_v.dofs_per_cell;
+      copy_data.reinit(cell, dofs_per_cell);
 
-        const auto &       q_points    = scratch_data.get_quadrature_points();
-        const unsigned int n_q_points  = q_points.size();
-        const std::vector<double> &JxW = scratch_data.get_JxW_values();
+      const auto &       q_points    = scratch_data.get_quadrature_points();
+      const unsigned int n_q_points  = q_points.size();
+      const std::vector<double> &JxW = scratch_data.get_JxW_values();
 
-        std::vector<double> rhs(n_q_points);
-        this->rhs_function->value_list(q_points, rhs);
+      std::vector<double> rhs(n_q_points);
+      this->rhs_function->value_list(q_points, rhs);
 
-        for (unsigned int point = 0; point < n_q_points; ++point)
-          for (unsigned int i = 0; i < fe_v.dofs_per_cell; ++i)
-            {
-              for (unsigned int j = 0; j < fe_v.dofs_per_cell; ++j)
-                copy_data.cell_matrix(i, j) +=
-                  this->diffusion_coefficient * // nu
-                  fe_v.shape_grad(i, point) *   // grad v_h
-                  fe_v.shape_grad(j, point) *   // grad u_h
-                  JxW[point];                   // dx
+      for (unsigned int point = 0; point < n_q_points; ++point)
+        for (unsigned int i = 0; i < fe_v.dofs_per_cell; ++i)
+          {
+            for (unsigned int j = 0; j < fe_v.dofs_per_cell; ++j)
+              copy_data.cell_matrix(i, j) +=
+                this->diffusion_coefficient * // nu
+                fe_v.shape_grad(i, point) *   // grad v_h
+                fe_v.shape_grad(j, point) *   // grad u_h
+                JxW[point];                   // dx
 
-              copy_data.cell_rhs(i) += fe_v.shape_value(i, point) * // v_h
-                                       rhs[point] *                 // f
-                                       JxW[point];                  // dx
-            }
-      };
+            copy_data.cell_rhs(i) += fe_v.shape_value(i, point) * // v_h
+                                     rhs[point] *                 // f
+                                     JxW[point];                  // dx
+          }
+    };
 
     const auto boundary_worker = [this](const auto &        cell,
                                         const unsigned int &face_no,
                                         auto &              scratch_data,
-                                        auto &              copy_data) {
+                                        auto &              copy_data)
+    {
       const FEFaceValuesBase<dim> &fe_fv = scratch_data.reinit(cell, face_no);
 
       const auto &       q_points      = scratch_data.get_quadrature_points();
@@ -135,7 +137,8 @@ namespace Step74
                                     const unsigned int &nf,
                                     const unsigned int &nsf,
                                     auto &              scratch_data,
-                                    auto &              copy_data) {
+                                    auto &              copy_data)
+    {
       const FEInterfaceValues<dim> &fe_iv =
         scratch_data.reinit(cell, f, sf, ncell, nf, nsf);
 
@@ -180,7 +183,8 @@ namespace Step74
 
     AffineConstraints<double> constraints;
     constraints.close();
-    const auto copier = [this, &constraints](const auto &c) {
+    const auto copier = [this, &constraints](const auto &c)
+    {
       constraints.distribute_local_to_global(c.cell_matrix,
                                              c.cell_rhs,
                                              c.local_dof_indices,

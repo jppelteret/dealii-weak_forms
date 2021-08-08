@@ -84,189 +84,190 @@ run()
     [&scratch_data,
      &solution_names](const FEValuesBase<dim, spacedim> &fe_values_dofs,
                       const FEValuesBase<dim, spacedim> &fe_values_op,
-                      const std::string &                type) {
-      const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
+                      const std::string &                type)
+  {
+    const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
 
-      constexpr std::size_t width =
-        dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
-      const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
+    constexpr std::size_t width =
+      dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
+    const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
 
-      std::cout << "dof_index: " << dof_index << " ; q_point range: [" << 0
-                << "," << width << ")" << std::endl;
+    std::cout << "dof_index: " << dof_index << " ; q_point range: [" << 0 << ","
+              << width << ")" << std::endl;
 
-      {
-        const std::string title = "Test function: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+    {
+      const std::string title = "Test function: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        using namespace WeakForms;
-        const TestFunction<dim, spacedim> test;
-        const SubSpaceExtractors::Vector  subspace_extractor(0,
-                                                            "u",
-                                                            "\\mathbf{u}");
+      using namespace WeakForms;
+      const TestFunction<dim, spacedim> test;
+      const SubSpaceExtractors::Vector  subspace_extractor(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
 
-        std::cout << "Value: "
-                  << (test[subspace_extractor].value().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Gradient: "
-                  << (test[subspace_extractor].gradient().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Symmetric gradient: "
-                  << (test[subspace_extractor].symmetric_gradient().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Divergence: "
-                  << (test[subspace_extractor].divergence().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Curl: "
-                  << (test[subspace_extractor].curl().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Hessian: "
-                  << (test[subspace_extractor].hessian().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Third derivative: "
-                  << (test[subspace_extractor].third_derivative().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Value: "
+                << (test[subspace_extractor].value().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Gradient: "
+                << (test[subspace_extractor].gradient().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Symmetric gradient: "
+                << (test[subspace_extractor].symmetric_gradient().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Divergence: "
+                << (test[subspace_extractor].divergence().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Curl: "
+                << (test[subspace_extractor].curl().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Hessian: "
+                << (test[subspace_extractor].hessian().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Third derivative: "
+                << (test[subspace_extractor].third_derivative().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
 
-        deallog << "OK" << std::endl;
-      }
+      deallog << "OK" << std::endl;
+    }
 
-      {
-        const std::string title = "Trial solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+    {
+      const std::string title = "Trial solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        using namespace WeakForms;
-        const TrialSolution<dim, spacedim> trial;
-        const SubSpaceExtractors::Vector   subspace_extractor(0,
-                                                            "u",
-                                                            "\\mathbf{u}");
+      using namespace WeakForms;
+      const TrialSolution<dim, spacedim> trial;
+      const SubSpaceExtractors::Vector   subspace_extractor(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
 
-        std::cout << "Value: "
-                  << (trial[subspace_extractor].value().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Gradient: "
-                  << (trial[subspace_extractor].gradient().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Symmetric gradient: "
-                  << (trial[subspace_extractor].symmetric_gradient().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Divergence: "
-                  << (trial[subspace_extractor].divergence().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Curl: "
-                  << (trial[subspace_extractor].curl().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Hessian: "
-                  << (trial[subspace_extractor].hessian().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Third derivative: "
-                  << (trial[subspace_extractor].third_derivative().template
-                      operator()<NumberType, width>(fe_values_dofs,
-                                                    fe_values_op,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Value: "
+                << (trial[subspace_extractor].value().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Gradient: "
+                << (trial[subspace_extractor].gradient().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Symmetric gradient: "
+                << (trial[subspace_extractor].symmetric_gradient().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Divergence: "
+                << (trial[subspace_extractor].divergence().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Curl: "
+                << (trial[subspace_extractor].curl().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Hessian: "
+                << (trial[subspace_extractor].hessian().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Third derivative: "
+                << (trial[subspace_extractor].third_derivative().template
+                    operator()<NumberType, width>(fe_values_dofs,
+                                                  fe_values_op,
+                                                  q_point_range))[dof_index]
+                << std::endl;
 
-        deallog << "OK" << std::endl;
-      }
+      deallog << "OK" << std::endl;
+    }
 
-      {
-        const std::string title = "Field solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+    {
+      const std::string title = "Field solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        using namespace WeakForms;
-        const FieldSolution<dim, spacedim> field_solution;
-        const SubSpaceExtractors::Vector   subspace_extractor(0,
-                                                            "u",
-                                                            "\\mathbf{u}");
+      using namespace WeakForms;
+      const FieldSolution<dim, spacedim> field_solution;
+      const SubSpaceExtractors::Vector   subspace_extractor(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
 
-        std::cout << "Value: "
-                  << (field_solution[subspace_extractor].value().template
-                      operator()<NumberType, width>(scratch_data,
-                                                    solution_names,
-                                                    q_point_range))
-                  << std::endl;
-        std::cout << "Gradient: "
-                  << (field_solution[subspace_extractor].gradient().template
-                      operator()<NumberType, width>(scratch_data,
-                                                    solution_names,
-                                                    q_point_range))
-                  << std::endl;
-        std::cout << "Symmetric gradient: "
-                  << (field_solution[subspace_extractor]
-                        .symmetric_gradient()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
-        std::cout << "Divergence: "
-                  << (field_solution[subspace_extractor].divergence().template
-                      operator()<NumberType, width>(scratch_data,
-                                                    solution_names,
-                                                    q_point_range))
-                  << std::endl;
-        std::cout << "Curl: "
-                  << (field_solution[subspace_extractor].curl().template
-                      operator()<NumberType, width>(scratch_data,
-                                                    solution_names,
-                                                    q_point_range))
-                  << std::endl;
-        std::cout << "Hessian: "
-                  << (field_solution[subspace_extractor].hessian().template
-                      operator()<NumberType, width>(scratch_data,
-                                                    solution_names,
-                                                    q_point_range))
-                  << std::endl;
-        std::cout << "Third derivative: "
-                  << (field_solution[subspace_extractor]
-                        .third_derivative()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
+      std::cout << "Value: "
+                << (field_solution[subspace_extractor].value().template
+                    operator()<NumberType, width>(scratch_data,
+                                                  solution_names,
+                                                  q_point_range))
+                << std::endl;
+      std::cout << "Gradient: "
+                << (field_solution[subspace_extractor].gradient().template
+                    operator()<NumberType, width>(scratch_data,
+                                                  solution_names,
+                                                  q_point_range))
+                << std::endl;
+      std::cout << "Symmetric gradient: "
+                << (field_solution[subspace_extractor]
+                      .symmetric_gradient()
+                      .template operator()<NumberType, width>(scratch_data,
+                                                              solution_names,
+                                                              q_point_range))
+                << std::endl;
+      std::cout << "Divergence: "
+                << (field_solution[subspace_extractor].divergence().template
+                    operator()<NumberType, width>(scratch_data,
+                                                  solution_names,
+                                                  q_point_range))
+                << std::endl;
+      std::cout << "Curl: "
+                << (field_solution[subspace_extractor].curl().template
+                    operator()<NumberType, width>(scratch_data,
+                                                  solution_names,
+                                                  q_point_range))
+                << std::endl;
+      std::cout << "Hessian: "
+                << (field_solution[subspace_extractor].hessian().template
+                    operator()<NumberType, width>(scratch_data,
+                                                  solution_names,
+                                                  q_point_range))
+                << std::endl;
+      std::cout << "Third derivative: "
+                << (field_solution[subspace_extractor]
+                      .third_derivative()
+                      .template operator()<NumberType, width>(scratch_data,
+                                                              solution_names,
+                                                              q_point_range))
+                << std::endl;
 
-        deallog << "OK" << std::endl;
-      }
-    };
+      deallog << "OK" << std::endl;
+    }
+  };
 
   const FEValuesBase<dim, spacedim> &fe_values = scratch_data.reinit(cell);
   test(fe_values, fe_values, "Cell");

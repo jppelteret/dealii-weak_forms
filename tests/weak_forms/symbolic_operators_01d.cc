@@ -84,84 +84,85 @@ run()
     [&scratch_data,
      &solution_names](const FEValuesBase<dim, spacedim> &fe_values_dofs,
                       const FEValuesBase<dim, spacedim> &fe_values_op,
-                      const std::string &                type) {
-      const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
-      const unsigned int q_point   = fe_values_op.n_quadrature_points - 1;
-      std::cout << "dof_index: " << dof_index << " ; q_point: " << q_point
+                      const std::string &                type)
+  {
+    const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
+    const unsigned int q_point   = fe_values_op.n_quadrature_points - 1;
+    std::cout << "dof_index: " << dof_index << " ; q_point: " << q_point
+              << std::endl;
+
+    {
+      const std::string title = "Test function: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
+
+      using namespace WeakForms;
+      const TestFunction<dim, spacedim>            test;
+      const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
+        0, "S", "\\mathbf{S}");
+
+      std::cout
+        << "Value: "
+        << (test[subspace_extractor].value().template operator()<NumberType>(
+             fe_values_dofs, fe_values_op))[dof_index][q_point]
+        << std::endl;
+      std::cout << "Divergence: "
+                << (test[subspace_extractor].divergence().template
+                    operator()<NumberType>(fe_values_dofs,
+                                           fe_values_op))[dof_index][q_point]
                 << std::endl;
 
-      {
-        const std::string title = "Test function: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+      deallog << "OK" << std::endl;
+    }
 
-        using namespace WeakForms;
-        const TestFunction<dim, spacedim>            test;
-        const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
-          0, "S", "\\mathbf{S}");
+    {
+      const std::string title = "Trial solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        std::cout
-          << "Value: "
-          << (test[subspace_extractor].value().template operator()<NumberType>(
-               fe_values_dofs, fe_values_op))[dof_index][q_point]
-          << std::endl;
-        std::cout << "Divergence: "
-                  << (test[subspace_extractor].divergence().template
-                      operator()<NumberType>(fe_values_dofs,
-                                             fe_values_op))[dof_index][q_point]
-                  << std::endl;
+      using namespace WeakForms;
+      const TrialSolution<dim, spacedim>           trial;
+      const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
+        0, "S", "\\mathbf{S}");
 
-        deallog << "OK" << std::endl;
-      }
+      std::cout
+        << "Value: "
+        << (trial[subspace_extractor].value().template operator()<NumberType>(
+             fe_values_dofs, fe_values_op))[dof_index][q_point]
+        << std::endl;
+      std::cout << "Divergence: "
+                << (trial[subspace_extractor].divergence().template
+                    operator()<NumberType>(fe_values_dofs,
+                                           fe_values_op))[dof_index][q_point]
+                << std::endl;
 
-      {
-        const std::string title = "Trial solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+      deallog << "OK" << std::endl;
+    }
 
-        using namespace WeakForms;
-        const TrialSolution<dim, spacedim>           trial;
-        const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
-          0, "S", "\\mathbf{S}");
+    {
+      const std::string title = "Field solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        std::cout
-          << "Value: "
-          << (trial[subspace_extractor].value().template operator()<NumberType>(
-               fe_values_dofs, fe_values_op))[dof_index][q_point]
-          << std::endl;
-        std::cout << "Divergence: "
-                  << (trial[subspace_extractor].divergence().template
-                      operator()<NumberType>(fe_values_dofs,
-                                             fe_values_op))[dof_index][q_point]
-                  << std::endl;
+      using namespace WeakForms;
+      const FieldSolution<dim, spacedim>           field_solution;
+      const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
+        0, "S", "\\mathbf{S}");
 
-        deallog << "OK" << std::endl;
-      }
+      std::cout << "Value: "
+                << (field_solution[subspace_extractor].value().template
+                    operator()<NumberType>(scratch_data,
+                                           solution_names))[q_point]
+                << std::endl;
+      std::cout << "Divergence: "
+                << (field_solution[subspace_extractor].divergence().template
+                    operator()<NumberType>(scratch_data,
+                                           solution_names))[q_point]
+                << std::endl;
 
-      {
-        const std::string title = "Field solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
-
-        using namespace WeakForms;
-        const FieldSolution<dim, spacedim>           field_solution;
-        const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
-          0, "S", "\\mathbf{S}");
-
-        std::cout << "Value: "
-                  << (field_solution[subspace_extractor].value().template
-                      operator()<NumberType>(scratch_data,
-                                             solution_names))[q_point]
-                  << std::endl;
-        std::cout << "Divergence: "
-                  << (field_solution[subspace_extractor].divergence().template
-                      operator()<NumberType>(scratch_data,
-                                             solution_names))[q_point]
-                  << std::endl;
-
-        deallog << "OK" << std::endl;
-      }
-    };
+      deallog << "OK" << std::endl;
+    }
+  };
 
   const FEValuesBase<dim, spacedim> &fe_values = scratch_data.reinit(cell);
   test(fe_values, fe_values, "Cell");

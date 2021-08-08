@@ -90,7 +90,8 @@ run()
   }
 
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
-                            const SparseMatrix<double> &system_matrix_wf) {
+                            const SparseMatrix<double> &system_matrix_wf)
+  {
     constexpr double tol = 1e-12;
 
     for (auto it1 = system_matrix_std.begin(), it2 = system_matrix_wf.begin();

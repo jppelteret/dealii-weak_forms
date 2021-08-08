@@ -95,7 +95,8 @@ run()
   }
 
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
-                            const SparseMatrix<double> &system_matrix_wf) {
+                            const SparseMatrix<double> &system_matrix_wf)
+  {
     constexpr double tol = 1e-12;
 
     Assert(system_matrix_wf.m() == system_matrix_std.m(),
@@ -223,9 +224,9 @@ run()
     const auto test_div   = divergence(test_ss);
     const auto trial_div  = divergence(trial_ss);
     const auto coeff_func = value<double, spacedim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return Tensor<2, dim>(unit_symmetric_tensor<dim>());
-      });
+      coeff,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return Tensor<2, dim>(unit_symmetric_tensor<dim>()); });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;

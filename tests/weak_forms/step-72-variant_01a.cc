@@ -58,7 +58,8 @@ namespace Step72
 
     const auto cell_worker = [this](const CellIteratorType &cell,
                                     ScratchData &           scratch_data,
-                                    CopyData &              copy_data) {
+                                    CopyData &              copy_data)
+    {
       const auto &fe_values = scratch_data.reinit(cell);
 
       FullMatrix<double> &                  cell_matrix = copy_data.matrices[0];
@@ -101,7 +102,8 @@ namespace Step72
         }
     };
 
-    const auto copier = [dofs_per_cell, this](const CopyData &copy_data) {
+    const auto copier = [dofs_per_cell, this](const CopyData &copy_data)
+    {
       const FullMatrix<double> &cell_matrix = copy_data.matrices[0];
       const Vector<double> &    cell_rhs    = copy_data.vectors[0];
       const std::vector<types::global_dof_index> &local_dof_indices =

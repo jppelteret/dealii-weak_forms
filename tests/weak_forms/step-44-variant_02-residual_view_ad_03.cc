@@ -116,7 +116,8 @@ namespace Step44
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_u,
-                    const ADNumber_t &                     p_tilde) {
+                    const ADNumber_t &                     p_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -138,7 +139,8 @@ namespace Step44
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_u,
-                    const ADNumber_t &                     J_tilde) {
+                    const ADNumber_t &                     J_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -155,7 +157,8 @@ namespace Step44
                const std::vector<std::string> &              solution_names,
                const unsigned int                            q_point,
                const ADNumber_t &                            p_tilde,
-               const ADNumber_t &                            J_tilde) {
+               const ADNumber_t &                            J_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -184,7 +187,8 @@ namespace Step44
        &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                   const std::vector<std::string> &              solution_names,
                   const unsigned int                            q_point,
-                  const Tensor<2, spacedim, ADNumber_t> &       grad_u) {
+                  const Tensor<2, spacedim, ADNumber_t> &       grad_u)
+      {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);
         const double time_ramp = (this->time.current() / this->time.end());

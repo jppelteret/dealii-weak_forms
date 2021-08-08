@@ -95,7 +95,8 @@ namespace Step44
                     const unsigned int                     q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_u,
                     const ADNumber_t &                     p_tilde,
-                    const ADNumber_t &                     J_tilde) {
+                    const ADNumber_t &                     J_tilde)
+        {
           const FEValuesBase<dim, spacedim> &fe_values =
             scratch_data.get_current_fe_values();
           const auto &cell = fe_values.get_cell();
@@ -115,7 +116,8 @@ namespace Step44
     const Normal<spacedim>           normal{};
 
     const auto p = p_symb.template value<double, dim, spacedim>(
-      [this](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      [this](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);
         const double time_ramp = (this->time.current() / this->time.end());

@@ -393,37 +393,39 @@ namespace Step74
   SIPGLaplace<dim>::compute_error_estimate()
   {
     const auto cell_worker =
-      [&](const auto &cell, auto &scratch_data, auto &copy_data) {
-        const FEValues<dim> &fe_v = scratch_data.reinit(cell);
+      [&](const auto &cell, auto &scratch_data, auto &copy_data)
+    {
+      const FEValues<dim> &fe_v = scratch_data.reinit(cell);
 
-        copy_data.cell_index = cell->active_cell_index();
+      copy_data.cell_index = cell->active_cell_index();
 
-        const auto &               q_points   = fe_v.get_quadrature_points();
-        const unsigned int         n_q_points = q_points.size();
-        const std::vector<double> &JxW        = fe_v.get_JxW_values();
+      const auto &               q_points   = fe_v.get_quadrature_points();
+      const unsigned int         n_q_points = q_points.size();
+      const std::vector<double> &JxW        = fe_v.get_JxW_values();
 
-        std::vector<Tensor<2, dim>> hessians(n_q_points);
-        fe_v.get_function_hessians(solution, hessians);
+      std::vector<Tensor<2, dim>> hessians(n_q_points);
+      fe_v.get_function_hessians(solution, hessians);
 
-        std::vector<double> rhs(n_q_points);
-        rhs_function->value_list(q_points, rhs);
+      std::vector<double> rhs(n_q_points);
+      rhs_function->value_list(q_points, rhs);
 
-        const double hk                   = cell->diameter();
-        double       residual_norm_square = 0;
+      const double hk                   = cell->diameter();
+      double       residual_norm_square = 0;
 
-        for (unsigned int point = 0; point < n_q_points; ++point)
-          {
-            const double residual =
-              rhs[point] + diffusion_coefficient * trace(hessians[point]);
-            residual_norm_square += residual * residual * JxW[point];
-          }
-        copy_data.value = hk * hk * residual_norm_square;
-      };
+      for (unsigned int point = 0; point < n_q_points; ++point)
+        {
+          const double residual =
+            rhs[point] + diffusion_coefficient * trace(hessians[point]);
+          residual_norm_square += residual * residual * JxW[point];
+        }
+      copy_data.value = hk * hk * residual_norm_square;
+    };
 
     const auto boundary_worker = [&](const auto &        cell,
                                      const unsigned int &face_no,
                                      auto &              scratch_data,
-                                     auto &              copy_data) {
+                                     auto &              copy_data)
+    {
       const FEFaceValuesBase<dim> &fe_fv = scratch_data.reinit(cell, face_no);
 
       const auto &   q_points   = fe_fv.get_quadrature_points();
@@ -456,7 +458,8 @@ namespace Step74
                                  const unsigned int &nf,
                                  const unsigned int &nsf,
                                  auto &              scratch_data,
-                                 auto &              copy_data) {
+                                 auto &              copy_data)
+    {
       const FEInterfaceValues<dim> &fe_iv =
         scratch_data.reinit(cell, f, sf, ncell, nf, nsf);
 
@@ -498,7 +501,8 @@ namespace Step74
       copy_data_face.values[1] = copy_data_face.values[0];
     };
 
-    const auto copier = [&](const auto &copy_data) {
+    const auto copier = [&](const auto &copy_data)
+    {
       if (copy_data.cell_index != numbers::invalid_unsigned_int)
         estimated_error_square_per_cell[copy_data.cell_index] +=
           copy_data.value;
@@ -539,34 +543,36 @@ namespace Step74
     energy_norm_square_per_cell.reinit(triangulation.n_active_cells());
 
     const auto cell_worker =
-      [&](const auto &cell, auto &scratch_data, auto &copy_data) {
-        const FEValues<dim> &fe_v = scratch_data.reinit(cell);
+      [&](const auto &cell, auto &scratch_data, auto &copy_data)
+    {
+      const FEValues<dim> &fe_v = scratch_data.reinit(cell);
 
-        copy_data.cell_index = cell->active_cell_index();
+      copy_data.cell_index = cell->active_cell_index();
 
-        const auto &               q_points   = fe_v.get_quadrature_points();
-        const unsigned int         n_q_points = q_points.size();
-        const std::vector<double> &JxW        = fe_v.get_JxW_values();
+      const auto &               q_points   = fe_v.get_quadrature_points();
+      const unsigned int         n_q_points = q_points.size();
+      const std::vector<double> &JxW        = fe_v.get_JxW_values();
 
-        std::vector<Tensor<1, dim>> grad_u(n_q_points);
-        fe_v.get_function_gradients(solution, grad_u);
+      std::vector<Tensor<1, dim>> grad_u(n_q_points);
+      fe_v.get_function_gradients(solution, grad_u);
 
-        std::vector<Tensor<1, dim>> grad_exact(n_q_points);
-        exact_solution->gradient_list(q_points, grad_exact);
+      std::vector<Tensor<1, dim>> grad_exact(n_q_points);
+      exact_solution->gradient_list(q_points, grad_exact);
 
-        double norm_square = 0;
-        for (unsigned int point = 0; point < n_q_points; ++point)
-          {
-            norm_square +=
-              (grad_u[point] - grad_exact[point]).norm_square() * JxW[point];
-          }
-        copy_data.value = diffusion_coefficient * norm_square;
-      };
+      double norm_square = 0;
+      for (unsigned int point = 0; point < n_q_points; ++point)
+        {
+          norm_square +=
+            (grad_u[point] - grad_exact[point]).norm_square() * JxW[point];
+        }
+      copy_data.value = diffusion_coefficient * norm_square;
+    };
 
     const auto boundary_worker = [&](const auto &        cell,
                                      const unsigned int &face_no,
                                      auto &              scratch_data,
-                                     auto &              copy_data) {
+                                     auto &              copy_data)
+    {
       const FEFaceValuesBase<dim> &fe_fv = scratch_data.reinit(cell, face_no);
 
       const auto &   q_points   = fe_fv.get_quadrature_points();
@@ -599,7 +605,8 @@ namespace Step74
                                  const unsigned int &nf,
                                  const unsigned int &nsf,
                                  auto &              scratch_data,
-                                 auto &              copy_data) {
+                                 auto &              copy_data)
+    {
       const FEInterfaceValues<dim> &fe_iv =
         scratch_data.reinit(cell, f, sf, ncell, nf, nsf);
 
@@ -630,7 +637,8 @@ namespace Step74
       copy_data_face.values[1] = copy_data_face.values[0];
     };
 
-    const auto copier = [&](const auto &copy_data) {
+    const auto copier = [&](const auto &copy_data)
+    {
       if (copy_data.cell_index != numbers::invalid_unsigned_int)
         energy_norm_square_per_cell[copy_data.cell_index] += copy_data.value;
       for (auto &cdf : copy_data.face_data)
@@ -749,7 +757,8 @@ namespace Step74
 
         switch (test_case)
           {
-              case TestCase::convergence_rate: {
+            case TestCase::convergence_rate:
+              {
                 if (cycle == 0)
                   {
                     GridGenerator::hyper_cube(triangulation);
@@ -763,7 +772,8 @@ namespace Step74
                 break;
               }
 
-              case TestCase::l_singularity: {
+            case TestCase::l_singularity:
+              {
                 if (cycle == 0)
                   {
                     GridGenerator::hyper_L(triangulation);
@@ -776,7 +786,8 @@ namespace Step74
                 break;
               }
 
-              default: {
+            default:
+              {
                 Assert(false, ExcNotImplemented());
               }
           }

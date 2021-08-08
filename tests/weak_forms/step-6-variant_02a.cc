@@ -58,7 +58,8 @@ Step6<dim>::assemble_system()
 
   std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
 
-  auto coefficient = [](const Point<dim> &p) -> double {
+  auto coefficient = [](const Point<dim> &p) -> double
+  {
     if (p.square() < 0.5 * 0.5)
       return 20;
     else

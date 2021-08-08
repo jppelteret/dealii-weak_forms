@@ -88,7 +88,8 @@ run()
   }
 
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
-                            const SparseMatrix<double> &system_matrix_wf) {
+                            const SparseMatrix<double> &system_matrix_wf)
+  {
     constexpr double tol = 1e-12;
 
     for (auto it1 = system_matrix_std.begin(), it2 = system_matrix_wf.begin();
@@ -195,12 +196,13 @@ run()
     const TrialSolution<dim, spacedim> trial;
     const TensorFunctor<0, spacedim>   coeff("C", "C");
 
-    const auto test_lap   = laplacian(test);
-    const auto trial_lap  = laplacian(trial);
-    const auto coeff_func = value<double, dim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return Tensor<0, spacedim, double>({1.0});
-      });
+    const auto test_lap  = laplacian(test);
+    const auto trial_lap = laplacian(trial);
+    const auto coeff_func =
+      value<double, dim>(coeff,
+                         [](const FEValuesBase<dim, spacedim> &,
+                            const unsigned int)
+                         { return Tensor<0, spacedim, double>({1.0}); });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;

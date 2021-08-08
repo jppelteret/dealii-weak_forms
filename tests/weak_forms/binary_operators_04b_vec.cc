@@ -87,10 +87,12 @@ run()
   const std::vector<std::string> &solution_names =
     solution_storage.get_solution_names();
 
-  const auto test = [&scratch_data, &solution_names](
-                      const FEValuesBase<dim, spacedim> &fe_values_dofs,
+  const auto test =
+    [&scratch_data,
+     &solution_names](const FEValuesBase<dim, spacedim> &fe_values_dofs,
                       const FEValuesBase<dim, spacedim> &fe_values_op,
-                      const std::string &                type) {
+                      const std::string &                type)
+  {
     const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
 
     constexpr std::size_t width =

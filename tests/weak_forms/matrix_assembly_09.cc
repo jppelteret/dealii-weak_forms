@@ -53,21 +53,18 @@ run()
   const SymmetricTensorFunctor<2, spacedim> I_symb(
     "I", "\\mathbf{I}"); // Identity tensor
   const auto I = I_symb.template value<double, dim>(
-    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int) {
-      return Physics::Elasticity::StandardTensors<dim>::I;
-    });
+    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int)
+    { return Physics::Elasticity::StandardTensors<dim>::I; });
   const SymmetricTensorFunctor<4, spacedim> H_symb(
     "H", "\\mathcal{H}"); // Constitutive tensor
   const auto H = H_symb.template value<double, dim>(
-    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int) {
-      return SymmetricTensor<4, dim>();
-    });
+    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int)
+    { return SymmetricTensor<4, dim>(); });
   const TensorFunctor<4, spacedim> H_ns_symb(
     "HH", "\\mathcal{HH}"); // Constitutive tensor
   const auto H_ns = H_ns_symb.template value<double, dim>(
-    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int) {
-      return Tensor<4, dim>();
-    });
+    [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int)
+    { return Tensor<4, dim>(); });
 
   // Variations and linearisations
   const auto F     = I + grad_u;

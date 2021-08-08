@@ -84,9 +84,9 @@ run()
 
     const TensorFunctor<2, spacedim> coeff("C", "C");
     const auto                       functor = value<double, spacedim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
-      });
+      coeff,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>()); });
 
     std::cout << "Value: "
               << (functor.template operator()<NumberType>(fe_values))[q_point]
@@ -103,10 +103,11 @@ run()
     using namespace WeakForms;
 
     const SymmetricTensorFunctor<2, spacedim> coeff("C", "C");
-    const auto                                functor = value<double, spacedim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return unit_symmetric_tensor<spacedim>();
-      });
+    const auto                                functor =
+      value<double, spacedim>(coeff,
+                              [](const FEValuesBase<dim, spacedim> &,
+                                 const unsigned int)
+                              { return unit_symmetric_tensor<spacedim>(); });
 
     std::cout << "Value: "
               << (functor.template operator()<NumberType>(fe_values))[q_point]

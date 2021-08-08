@@ -74,16 +74,14 @@ Step6<dim>::assemble_system()
   const auto energy_func = energy_functor("e", "\\Psi", soln_grad);
 
   const auto energy = energy_func.template value<SDNumber_t, dim, spacedim>(
-    [](const Tensor<1, spacedim, SDNumber_t> &grad_u) {
-      return 0.5 * scalar_product(grad_u, grad_u);
-    },
+    [](const Tensor<1, spacedim, SDNumber_t> &grad_u)
+    { return 0.5 * scalar_product(grad_u, grad_u); },
     Differentiation::SD::OptimizerType::llvm,
     Differentiation::SD::OptimizationFlags::optimize_all);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
   assembler += energy_functional_form(energy).dV();

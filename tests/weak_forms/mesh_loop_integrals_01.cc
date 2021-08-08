@@ -60,7 +60,8 @@ run()
 
     auto cell_worker = [](const CellIteratorType &cell,
                           ScratchData &           scratch_data,
-                          CopyData &              copy_data) {
+                          CopyData &              copy_data)
+    {
       const auto &fe_values = scratch_data.reinit(cell);
 
       for (const unsigned int q_point : fe_values.quadrature_point_indices())
@@ -70,9 +71,8 @@ run()
     };
 
     double volume = 0.0;
-    auto   copier = [&volume](const CopyData &copy_data) {
-      volume += copy_data.vectors[0][0];
-    };
+    auto   copier = [&volume](const CopyData &copy_data)
+    { volume += copy_data.vectors[0][0]; };
 
     MeshWorker::mesh_loop(dof_handler.active_cell_iterators(),
                           cell_worker,
@@ -107,7 +107,8 @@ run()
     auto boundary_worker = [](const CellIteratorType &cell,
                               const unsigned int      face,
                               ScratchData &           scratch_data,
-                              CopyData &              copy_data) {
+                              CopyData &              copy_data)
+    {
       const auto &fe_face_values = scratch_data.reinit(cell, face);
 
       for (const unsigned int q_point :
@@ -118,7 +119,8 @@ run()
     };
 
     double area   = 0.0;
-    auto   copier = [&area](const CopyData &copy_data) {
+    auto   copier = [&area](const CopyData &copy_data)
+    {
       // ***
       // The problem is observed here. For some faces, the copy_data that
       // is passed in is reset, even though there is always work being

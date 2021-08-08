@@ -95,7 +95,8 @@ run()
   }
 
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
-                            const SparseMatrix<double> &system_matrix_wf) {
+                            const SparseMatrix<double> &system_matrix_wf)
+  {
     constexpr double tol = 1e-12;
 
     for (auto it1 = system_matrix_std.begin(), it2 = system_matrix_wf.begin();
@@ -219,9 +220,9 @@ run()
     const auto trial_val = value(trial_u);
 
     const auto coeff_func = value<double, spacedim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
-      });
+      coeff,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>()); });
 
     // Non-vectorized assembler
     {

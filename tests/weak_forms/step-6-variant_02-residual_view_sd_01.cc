@@ -77,15 +77,14 @@ Step6<dim>::assemble_system()
 
   const SDNumber_t coefficient("c");
   const auto residual = residual_ss.template value<SDNumber_t, dim, spacedim>(
-    [coefficient](const Tensor<1, spacedim, SDNumber_t> &grad_u) {
-      return coefficient * grad_u;
-    },
-    [coefficient](const Tensor<1, spacedim, SDNumber_t> &grad_u) {
-      return Differentiation::SD::make_symbol_map(coefficient);
-    },
+    [coefficient](const Tensor<1, spacedim, SDNumber_t> &grad_u)
+    { return coefficient * grad_u; },
+    [coefficient](const Tensor<1, spacedim, SDNumber_t> &grad_u)
+    { return Differentiation::SD::make_symbol_map(coefficient); },
     [coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                   const std::vector<std::string> &              solution_names,
-                  const unsigned int                            q_point) {
+                  const unsigned int                            q_point)
+    {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const double           c = (p.square() < 0.5 * 0.5 ? 20.0 : 1.0);
       return Differentiation::SD::make_substitution_map(coefficient, c);
@@ -95,9 +94,8 @@ Step6<dim>::assemble_system()
     UpdateFlags::update_quadrature_points);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
   assembler += residual_form(residual).dV();

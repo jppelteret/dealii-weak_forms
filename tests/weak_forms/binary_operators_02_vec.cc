@@ -169,7 +169,9 @@ run()
 
     const VectorFunctor<dim> v1("v1", "v1");
     const auto               f1 = value<double, spacedim>(
-      v1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      v1,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         Tensor<1, dim> t;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
           *it = 2.0;
@@ -235,7 +237,9 @@ run()
 
     const TensorFunctor<2, dim> T1("T1", "T1");
     const auto                  f1 = value<double, spacedim>(
-      T1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      T1,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         Tensor<2, dim> t;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
           *it = 2.0;
@@ -301,7 +305,9 @@ run()
 
     const SymmetricTensorFunctor<2, dim> S1("S1", "S1");
     const auto                           f1 = value<double, spacedim>(
-      S1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      S1,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         SymmetricTensor<2, dim> t;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
           *it = 2.0;

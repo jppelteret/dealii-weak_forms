@@ -71,12 +71,10 @@ namespace Step74
     const ScalarFunctor diffusion_coeff("nu", "\\nu");
     const auto          nu = value<double, dim, spacedim>(
       diffusion_coeff,
-      [this](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return this->diffusion_coefficient;
-      },
-      [this](const FEInterfaceValues<dim, spacedim> &, const unsigned int) {
-        return this->diffusion_coefficient;
-      });
+      [this](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return this->diffusion_coefficient; },
+      [this](const FEInterfaceValues<dim, spacedim> &, const unsigned int)
+      { return this->diffusion_coefficient; });
 
     const ScalarFunctionFunctor<spacedim> right_hand_side(
       "f(x)", "f\\left(\\mathbf{X}\\right)");
@@ -91,7 +89,8 @@ namespace Step74
                                       "\\sigma\\left(\\mathbf{X}\\right)");
     const auto sigma = sigma_functor.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         Assert((dynamic_cast<const FEFaceValuesBase<dim, spacedim> *const>(
                  &fe_values)),
                ExcMessage("Cannot cast to FEFaceValues."));
@@ -107,7 +106,8 @@ namespace Step74
         return penalty;
       },
       [this](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
-             const unsigned int                      q_point) {
+             const unsigned int                      q_point)
+      {
         Assert(fe_interface_values.at_boundary() == false, ExcInternalError());
 
         const auto cell  = fe_interface_values.get_fe_face_values(0).get_cell();

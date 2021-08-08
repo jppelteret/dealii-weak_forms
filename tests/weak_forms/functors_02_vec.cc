@@ -89,64 +89,65 @@ run()
   const auto s_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return scratch_data.get_values(solution_names[0], extractor)[q_point];
-    };
+                 const unsigned int                      q_point)
+  { return scratch_data.get_values(solution_names[0], extractor)[q_point]; };
   const auto s = value<NumberType, dim, spacedim>(scalar, s_func, update_flags);
 
   const auto v_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return scratch_data.get_gradients(solution_names[0], extractor)[q_point];
-    };
+                 const unsigned int                      q_point)
+  { return scratch_data.get_gradients(solution_names[0], extractor)[q_point]; };
   const auto v = value<NumberType, dim>(vector, v_func, update_flags);
 
   const auto T2_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return scratch_data.get_hessians(solution_names[0], extractor)[q_point];
-    };
+                 const unsigned int                      q_point)
+  { return scratch_data.get_hessians(solution_names[0], extractor)[q_point]; };
   const auto T2 = value<NumberType, dim>(tensor2, T2_func, update_flags);
 
   const auto T3_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return scratch_data.get_third_derivatives(solution_names[0],
-                                                extractor)[q_point];
-    };
+                 const unsigned int                      q_point)
+  {
+    return scratch_data.get_third_derivatives(solution_names[0],
+                                              extractor)[q_point];
+  };
   const auto T3 = value<NumberType, dim>(tensor3, T3_func, update_flags);
 
   const auto T4_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return outer_product(
-        scratch_data.get_gradients(solution_names[0], extractor)[q_point],
-        scratch_data.get_third_derivatives(solution_names[0],
-                                           extractor)[q_point]);
-    };
+                 const unsigned int                      q_point)
+  {
+    return outer_product(
+      scratch_data.get_gradients(solution_names[0], extractor)[q_point],
+      scratch_data.get_third_derivatives(solution_names[0],
+                                         extractor)[q_point]);
+  };
   const auto T4 = value<NumberType, dim>(tensor4, T4_func, update_flags);
 
   const auto S2_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      return symmetrize(
-        scratch_data.get_hessians(solution_names[0], extractor)[q_point]);
-    };
+                 const unsigned int                      q_point)
+  {
+    return symmetrize(
+      scratch_data.get_hessians(solution_names[0], extractor)[q_point]);
+  };
   const auto S2 = value<NumberType, dim>(tensor2, S2_func, update_flags);
 
   const auto S4_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
-                 const unsigned int                      q_point) {
-      const auto S2 = symmetrize(
-        scratch_data.get_hessians(solution_names[0], extractor)[q_point]);
-      return outer_product(S2, S2);
-    };
+                 const unsigned int                      q_point)
+  {
+    const auto S2 = symmetrize(
+      scratch_data.get_hessians(solution_names[0], extractor)[q_point]);
+    return outer_product(S2, S2);
+  };
   const auto S4 = value<NumberType, dim>(tensor4, S4_func, update_flags);
 
   constexpr std::size_t width =

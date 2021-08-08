@@ -77,9 +77,8 @@ Step6<dim>::assemble_system()
   const Coefficient<dim>           coefficient;
   const auto mat_coeff_func = mat_coeff.value(coefficient);
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
   assembler +=

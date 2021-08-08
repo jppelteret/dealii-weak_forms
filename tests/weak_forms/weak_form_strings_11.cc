@@ -36,7 +36,8 @@ run()
 
   using namespace WeakForms;
 
-  auto print_assembler = [](const MatrixBasedAssembler<dim> &assembler) {
+  auto print_assembler = [](const MatrixBasedAssembler<dim> &assembler)
+  {
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
     deallog << "Weak form (ascii):\n"

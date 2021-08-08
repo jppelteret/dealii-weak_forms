@@ -74,9 +74,10 @@ run()
                        local_dof_values.begin(),
                        local_dof_values.end());
 
-  const auto test = [](const FEInterfaceValues<dim, spacedim>
-                         &                fe_interface_values,
-                       const std::string &type) {
+  const auto test =
+    [](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+       const std::string &                     type)
+  {
     const unsigned int dof_index =
       fe_interface_values.n_current_interface_dofs() - 1;
     const unsigned int q_point = fe_interface_values.n_quadrature_points - 1;
