@@ -18,8 +18,8 @@
 
 #include <deal.II/base/config.h>
 
-#include <deal.II/fe/fe_values.h>
 #include <deal.II/fe/fe_interface_values.h>
+#include <deal.II/fe/fe_values.h>
 
 #include <weak_forms/config.h>
 
@@ -35,7 +35,6 @@ namespace WeakForms
   {
     namespace internal
     {
-
       template <typename T, typename U = void>
       struct is_fe_values_type : std::false_type
       {};
@@ -58,9 +57,9 @@ namespace WeakForms
                        FEInterfaceValues<dim, spacedim>>::value>::type>
         : std::true_type
       {};
-      
-    }
-  } // namespace Operators
+
+    } // namespace internal
+  }   // namespace Operators
 } // namespace WeakForms
 
 
