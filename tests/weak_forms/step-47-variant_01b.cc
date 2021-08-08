@@ -48,14 +48,14 @@ namespace Step47
     const TestFunction<dim, spacedim>  test;
     const TrialSolution<dim, spacedim> trial;
 
-    // Test function (subspaces)
+    // Test function
     const auto test_value         = test.value();
     const auto test_gradient      = test.gradient();
     const auto test_hessian       = test.hessian();
     const auto test_ave_hessian   = test.average_of_hessians();
     const auto test_jump_gradient = test.jump_in_gradients();
 
-    // Trial solution (subspaces)
+    // Trial solution
     const auto trial_gradient      = trial.gradient();
     const auto trial_hessian       = trial.hessian();
     const auto trial_ave_hessian   = trial.average_of_hessians();

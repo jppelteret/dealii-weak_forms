@@ -1,0 +1,21 @@
+
+DEAL::Cycle 0
+DEAL::
+
+DEAL::Weak form (ascii):
+0 = #(Grad(d{U}), nu, Grad(D{U}))#dV - #([[d{U}]], nu, [{{Grad(D{U})}} * N])#dI - #([{{Grad(d{U})}} * N], nu, [[D{U}]])#dI + #([[d{U}]], [nu * sigma], [[D{U}]])#dI - #(d{U}, nu, [Grad(D{U}) * N])#dA - #([Grad(d{U}) * N], nu, D{U})#dA + #(d{U}, [nu * sigma], D{U})#dA - #(d{U}, f(x)(X))#dV + #([Grad(d{U}) * N], [nu * u(x)(X)])#dA - #(d{U}, [[nu * sigma] * u(x)(X)])#dA
+DEAL::Weak form (LaTeX):
+0 = \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[{\nu}\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} - \int\left[\left[\!\left[\delta{\varphi}\right]\!\right]\,\left[{\nu}\,\left[\left\lbrace\!\left\lbrace\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace \cdot \mathbf{N}\right]\right]\right]\textrm{dI} - \int\left[\left[\left\lbrace\!\left\lbrace\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace \cdot \mathbf{N}\right]\,\left[{\nu}\,\left[\!\left[\Delta{\varphi}\right]\!\right]\right]\right]\textrm{dI} + \int\left[\left[\!\left[\delta{\varphi}\right]\!\right]\,\left[\left[{\nu}\,{\sigma\left(\mathbf{X}\right)}\right]\,\left[\!\left[\Delta{\varphi}\right]\!\right]\right]\right]\textrm{dI} - \int\left[\delta{\varphi}\,\left[{\nu}\,\left[\nabla\left(\Delta{\varphi}\right) \cdot \mathbf{N}\right]\right]\right]\textrm{dA} - \int\left[\left[\nabla\left(\delta{\varphi}\right) \cdot \mathbf{N}\right]\,\left[{\nu}\,\Delta{\varphi}\right]\right]\textrm{dA} + \int\left[\delta{\varphi}\,\left[\left[{\nu}\,{\sigma\left(\mathbf{X}\right)}\right]\,\Delta{\varphi}\right]\right]\textrm{dA} - \int\left[\delta{\varphi}\,{f\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right]\textrm{dV} + \int\left[\left[\nabla\left(\delta{\varphi}\right) \cdot \mathbf{N}\right]\,\left[{\nu}\,{u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right]\right]\textrm{dA} - \int\left[\delta{\varphi}\,\left[\left[{\nu}\,{\sigma\left(\mathbf{X}\right)}\right]\,{u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right]\right]\textrm{dA}
+DEAL::
+
+DEAL::  Estimated error              : 0.136066559
+DEAL::Cycle 1
+DEAL::  Estimated error              : 0.0857185869
+DEAL::Cycle 2
+DEAL::  Estimated error              : 0.0540021728
+DEAL::Cycle 3
+DEAL::  Estimated error              : 0.0340225662
+DEAL::Cycle 4
+DEAL::  Estimated error              : 0.0214359646
+DEAL::Cycle 5
+DEAL::  Estimated error              : 0.0135062534
