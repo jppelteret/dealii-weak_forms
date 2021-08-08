@@ -67,30 +67,30 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - value
     - gradient
     - laplacian
-    - hessian
-    - third_derivative
-    - [TODO] jump
-    - [TODO] average
-    - [TODO] jump_gradient
-    - [TODO] average_gradient
-    - [TODO] jump_hessian
-    - [TODO] average_hessian
-    - [TODO] jump_third_derivative
+    - Hessian
+    - third derivative
+    - jump in values
+    - jump in gradients
+    - jump in Hessians
+    - jump in third derivatives
+    - average of values
+    - average of gradients
+    - average of Hessians
   - Vector
     - value
     - gradient
     - symmetric_gradient
     - divergence
     - curl
-    - hessian
-    - third_derivative
-    - [TODO] jump
-    - [TODO] average
-    - [TODO] jump_gradient
-    - [TODO] average_gradient
-    - [TODO] jump_hessian
-    - [TODO] average_hessian
-    - [TODO] jump_third_derivative
+    - Hessian
+    - third derivative
+    - jump in values
+    - jump in gradients
+    - jump in Hessians
+    - jump in third derivatives
+    - average of values
+    - average of gradients
+    - average of Hessians
   - Tensor
     - value
     - gradient
@@ -156,9 +156,9 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - Subdomains: Material ID
   - Boundary
     - Subdomains: Boundary ID
-  - [TODO] Interface
-    - [TODO] Subdomains: Manifold ID
-    - [TODO] Inter-cell interfaces for DG
+  - Interface
+    - Subdomains: Manifold ID
+    - Inter-cell interfaces for DG
   - [TODO] Custom predicates for the above
 - User-defined function integrators
   - Position independent/dependent
