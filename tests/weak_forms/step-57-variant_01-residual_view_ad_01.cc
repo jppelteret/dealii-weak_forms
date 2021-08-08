@@ -101,7 +101,8 @@ namespace Step57
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
-                    const ADNumber_t &                     p) {
+                    const ADNumber_t &                     p)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -118,7 +119,8 @@ namespace Step57
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
-                    const ADNumber_t &                     p) {
+                    const ADNumber_t &                     p)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -135,7 +137,8 @@ namespace Step57
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
-                    const ADNumber_t &                     p) {
+                    const ADNumber_t &                     p)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -152,7 +155,8 @@ namespace Step57
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
-                    const ADNumber_t &                     p) {
+                    const ADNumber_t &                     p)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!

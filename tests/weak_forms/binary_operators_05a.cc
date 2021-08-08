@@ -114,16 +114,14 @@ main()
 
     const auto T_func = [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                            const std::vector<std::string> &solution_names,
-                           const unsigned int              q_point) {
-      return Tensor<2, dim>();
-    };
+                           const unsigned int              q_point)
+    { return Tensor<2, dim>(); };
     const auto Tc = value<double, dim>(T, T_func, update_flags);
 
     const auto S_func = [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                            const std::vector<std::string> &solution_names,
-                           const unsigned int              q_point) {
-      return SymmetricTensor<2, dim>();
-    };
+                           const unsigned int              q_point)
+    { return SymmetricTensor<2, dim>(); };
     const auto Sc = value<double, dim>(S, S_func, update_flags);
 
     // Multiply

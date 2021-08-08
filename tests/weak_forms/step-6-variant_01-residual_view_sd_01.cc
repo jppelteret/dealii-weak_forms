@@ -76,16 +76,14 @@ Step6<dim>::assemble_system()
   const auto residual_ss   = residual_func[test_grad];
 
   const auto residual = residual_ss.template value<SDNumber_t, dim, spacedim>(
-    [&spacedim](const Tensor<1, spacedim, SDNumber_t> &grad_u) {
-      return grad_u;
-    },
+    [&spacedim](const Tensor<1, spacedim, SDNumber_t> &grad_u)
+    { return grad_u; },
     Differentiation::SD::OptimizerType::dictionary,
     Differentiation::SD::OptimizationFlags::optimize_default);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
   assembler += residual_form(residual).dV();

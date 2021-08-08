@@ -82,17 +82,18 @@ Step8<dim>::assemble_system()
   const Tensor<4, dim, SDNumber_t> symb_coeff =
     Differentiation::SD::make_tensor_of_symbols<4, dim>("C");
   const auto energy = energy_func.template value<SDNumber_t, dim, spacedim>(
-    [&symb_coeff](const Tensor<2, spacedim, SDNumber_t> &grad_u) {
+    [&symb_coeff](const Tensor<2, spacedim, SDNumber_t> &grad_u)
+    {
       const auto &C = symb_coeff;
       return 0.5 * contract3(grad_u, C, grad_u);
     },
-    [&symb_coeff](const Tensor<2, spacedim, SDNumber_t> &grad_u) {
-      return Differentiation::SD::make_symbol_map(symb_coeff);
-    },
+    [&symb_coeff](const Tensor<2, spacedim, SDNumber_t> &grad_u)
+    { return Differentiation::SD::make_symbol_map(symb_coeff); },
     [&symb_coeff,
      &coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                    const std::vector<std::string> &              solution_names,
-                   const unsigned int                            q_point) {
+                   const unsigned int                            q_point)
+    {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const auto             C = coefficient.value(p);
       return Differentiation::SD::make_substitution_map(symb_coeff, C);
@@ -103,7 +104,7 @@ Step8<dim>::assemble_system()
 
   MatrixBasedAssembler<dim> assembler;
   assembler += energy_functional_form(energy).dV() -
-               linear_form(test_val, rhs_coeff(rhs)).dV();
+               linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

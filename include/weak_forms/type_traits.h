@@ -58,6 +58,11 @@ namespace WeakForms
 
   // TODO: Add test for this
   template <typename T>
+  struct is_cell_geometry_op : std::false_type
+  {};
+
+  // TODO: Add test for this
+  template <typename T>
   struct is_functor_op : std::false_type
   {};
 

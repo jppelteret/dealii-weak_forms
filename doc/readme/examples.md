@@ -1,10 +1,14 @@
 # Examples
 
 Summary
-- step-6: Scalar-valued problem
-- step-8: Vector-valued problem
+- step-6
+  - Laplace / Poisson equation 
+  - Scalar-valued problem
+- step-8
+  - Elasticity equation
+  - Vector-valued problem
 - step-44: Multi-field problem
-  - Solid mechanics (mixed formulation)
+  - Finite-strain solid mechanics (mixed formulation)
   - Volume and boundary integrals
 - step-57:
   - Fluid mechanics (Incompressible stationary Navier-Stokes equations)
@@ -12,9 +16,17 @@ Summary
 - step-72:
   - A nonlinear elliptic problem (the minimal surface equation)
   - Field-dependent material coefficient (and trial solution in bilinear form)
-- [TODO] step-12: DG
-- [TODO] step-47: DG
-- [TODO] step-74: DG
+- step-12:
+  - Advection problem
+  - Discontinuous Galerkin method  (DG)
+  - Only a partial implementation (the conditional in the assembly doesn't lend
+    itself well to the weak forms approach)
+-  step-47:
+  - Biharmonic problem
+  - Discontinuous Galerkin method (DG)
+- step-74:
+  - The Symmetric interior penalty Galerkin (SIPG) method for Poisson's equation
+  - Discontinuous Galerkin method  (DG)
 
 ## Step-44
 

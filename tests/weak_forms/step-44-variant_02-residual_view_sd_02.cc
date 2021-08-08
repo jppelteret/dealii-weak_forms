@@ -114,7 +114,8 @@ namespace Step44
     const auto residual_u =
       residual_ss_u.template value<SDNumber_t, dim, spacedim>(
         [lqph_q_point, &spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
-                                  const SDNumber_t &p_tilde) {
+                                  const SDNumber_t &p_tilde)
+        {
           const Tensor<2, spacedim, SDNumber_t> F =
             grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const Tensor<2, spacedim, SDNumber_t> P =
@@ -122,16 +123,16 @@ namespace Step44
           return P;
         },
         [](const Tensor<2, spacedim, SDNumber_t> &grad_u,
-           const SDNumber_t &                     p_tilde) {
+           const SDNumber_t &                     p_tilde)
+        {
           // Due to our shortcut, we've not made the constitutive
           // parameters symbolic.
           return Differentiation::SD::types::substitution_map{};
         },
         [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
            const std::vector<std::string> &              solution_names,
-           const unsigned int                            q_point) {
-          return Differentiation::SD::types::substitution_map{};
-        },
+           const unsigned int                            q_point)
+        { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
         UpdateFlags::update_default);
@@ -139,44 +140,46 @@ namespace Step44
     const auto residual_p =
       residual_ss_p.template value<SDNumber_t, dim, spacedim>(
         [&spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
-                    const SDNumber_t &                     J_tilde) {
+                    const SDNumber_t &                     J_tilde)
+        {
           const Tensor<2, spacedim, SDNumber_t> F =
             grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const SDNumber_t det_F_minus_J_tilde = determinant(F) - J_tilde;
           return det_F_minus_J_tilde;
         },
         [&spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
-                    const SDNumber_t &                     J_tilde) {
+                    const SDNumber_t &                     J_tilde)
+        {
           // Due to our shortcut, we've not made the constitutive
           // parameters symbolic.
           return Differentiation::SD::types::substitution_map{};
         },
         [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &solution_names,
-                    const unsigned int              q_point) {
-          return Differentiation::SD::types::substitution_map{};
-        },
+                    const unsigned int              q_point)
+        { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
         UpdateFlags::update_default);
 
     const auto residual_J =
       residual_ss_J.template value<SDNumber_t, dim, spacedim>(
-        [lqph_q_point](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde) {
+        [lqph_q_point](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde)
+        {
           const SDNumber_t dPsi_vol_dJ = lqph_q_point->get_dPsi_vol_dJ(J_tilde);
           const SDNumber_t dPsi_vol_dJ_minus_p_tilde = dPsi_vol_dJ - p_tilde;
           return dPsi_vol_dJ_minus_p_tilde;
         },
-        [](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde) {
+        [](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde)
+        {
           // Due to our shortcut, we've not made the constitutive
           // parameters symbolic.
           return Differentiation::SD::types::substitution_map{};
         },
         [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
            const std::vector<std::string> &              solution_names,
-           const unsigned int                            q_point) {
-          return Differentiation::SD::types::substitution_map{};
-        },
+           const unsigned int                            q_point)
+        { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
         UpdateFlags::update_default);
@@ -190,17 +193,16 @@ namespace Step44
       Differentiation::SD::make_vector_of_symbols<spacedim>("N");
     const auto force_u = force_ss_u.template value<SDNumber_t, dim, spacedim>(
       [symb_pressure, symb_N, &spacedim](
-        const Tensor<1, spacedim, SDNumber_t> &u) {
-        return symb_pressure * symb_N;
-      },
+        const Tensor<1, spacedim, SDNumber_t> &u)
+      { return symb_pressure * symb_N; },
       [symb_pressure, symb_N, &spacedim](
-        const Tensor<1, spacedim, SDNumber_t> &u) {
-        return Differentiation::SD::make_symbol_map(symb_pressure, symb_N);
-      },
+        const Tensor<1, spacedim, SDNumber_t> &u)
+      { return Differentiation::SD::make_symbol_map(symb_pressure, symb_N); },
       [this, symb_pressure, symb_N, &spacedim](
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
         const std::vector<std::string> &              solution_names,
-        const unsigned int                            q_point) {
+        const unsigned int                            q_point)
+      {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);
         const double time_ramp = (this->time.current() / this->time.end());

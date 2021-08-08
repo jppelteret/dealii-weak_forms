@@ -79,121 +79,122 @@ run()
 
   const auto test =
     [](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
-       const std::string &                     type) {
-      const unsigned int dof_index =
-        fe_interface_values.n_current_interface_dofs() - 1;
+       const std::string &                     type)
+  {
+    const unsigned int dof_index =
+      fe_interface_values.n_current_interface_dofs() - 1;
 
-      constexpr std::size_t width =
-        dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
-      const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
+    constexpr std::size_t width =
+      dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
+    const WeakForms::types::vectorized_qp_range_t q_point_range(0, width);
 
-      std::cout << "dof_index: " << dof_index << " ; q_point range: [" << 0
-                << "," << width << ")" << std::endl;
+    std::cout << "dof_index: " << dof_index << " ; q_point range: [" << 0 << ","
+              << width << ")" << std::endl;
 
-      {
-        const std::string title = "Test function: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+    {
+      const std::string title = "Test function: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        using namespace WeakForms;
-        const TestFunction<dim, spacedim> test;
-        const SubSpaceExtractors::Vector  subspace_extractor(0,
-                                                            "u",
-                                                            "\\mathbf{u}");
+      using namespace WeakForms;
+      const TestFunction<dim, spacedim> test;
+      const SubSpaceExtractors::Vector  subspace_extractor(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
 
-        std::cout << "Jump in values: "
-                  << (test[subspace_extractor].jump_in_values().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in gradients: "
-                  << (test[subspace_extractor].jump_in_gradients().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in Hessians: "
-                  << (test[subspace_extractor].jump_in_hessians().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in third derivatives: "
-                  << (test[subspace_extractor]
-                        .jump_in_third_derivatives()
-                        .template operator()<NumberType, width>(
-                          fe_interface_values, q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Jump in values: "
+                << (test[subspace_extractor].jump_in_values().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (test[subspace_extractor].jump_in_gradients().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (test[subspace_extractor].jump_in_hessians().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in third derivatives: "
+                << (test[subspace_extractor]
+                      .jump_in_third_derivatives()
+                      .template operator()<NumberType, width>(
+                        fe_interface_values, q_point_range))[dof_index]
+                << std::endl;
 
-        std::cout << "Average of values: "
-                  << (test[subspace_extractor].average_of_values().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in gradients: "
-                  << (test[subspace_extractor].average_of_gradients().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in Hessians: "
-                  << (test[subspace_extractor].average_of_hessians().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Average of values: "
+                << (test[subspace_extractor].average_of_values().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (test[subspace_extractor].average_of_gradients().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (test[subspace_extractor].average_of_hessians().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
 
-        deallog << "OK" << std::endl;
-      }
+      deallog << "OK" << std::endl;
+    }
 
-      {
-        const std::string title = "Trial solution: " + type;
-        std::cout << title << std::endl;
-        deallog << title << std::endl;
+    {
+      const std::string title = "Trial solution: " + type;
+      std::cout << title << std::endl;
+      deallog << title << std::endl;
 
-        using namespace WeakForms;
-        const TrialSolution<dim, spacedim> trial;
-        const SubSpaceExtractors::Vector   subspace_extractor(0,
-                                                            "u",
-                                                            "\\mathbf{u}");
+      using namespace WeakForms;
+      const TrialSolution<dim, spacedim> trial;
+      const SubSpaceExtractors::Vector   subspace_extractor(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
 
-        std::cout << "Jump in values: "
-                  << (trial[subspace_extractor].jump_in_values().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in gradients: "
-                  << (trial[subspace_extractor].jump_in_gradients().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in Hessians: "
-                  << (trial[subspace_extractor].jump_in_hessians().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in third derivatives: "
-                  << (trial[subspace_extractor]
-                        .jump_in_third_derivatives()
-                        .template operator()<NumberType, width>(
-                          fe_interface_values, q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Jump in values: "
+                << (trial[subspace_extractor].jump_in_values().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (trial[subspace_extractor].jump_in_gradients().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (trial[subspace_extractor].jump_in_hessians().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in third derivatives: "
+                << (trial[subspace_extractor]
+                      .jump_in_third_derivatives()
+                      .template operator()<NumberType, width>(
+                        fe_interface_values, q_point_range))[dof_index]
+                << std::endl;
 
-        std::cout << "Average of values: "
-                  << (trial[subspace_extractor].average_of_values().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in gradients: "
-                  << (trial[subspace_extractor].average_of_gradients().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
-        std::cout << "Jump in Hessians: "
-                  << (trial[subspace_extractor].average_of_hessians().template
-                      operator()<NumberType, width>(fe_interface_values,
-                                                    q_point_range))[dof_index]
-                  << std::endl;
+      std::cout << "Average of values: "
+                << (trial[subspace_extractor].average_of_values().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in gradients: "
+                << (trial[subspace_extractor].average_of_gradients().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
+      std::cout << "Jump in Hessians: "
+                << (trial[subspace_extractor].average_of_hessians().template
+                    operator()<NumberType, width>(fe_interface_values,
+                                                  q_point_range))[dof_index]
+                << std::endl;
 
-        deallog << "OK" << std::endl;
-      }
-    };
+      deallog << "OK" << std::endl;
+    }
+  };
 
   // Find a boundary face
   unsigned int face = 0;

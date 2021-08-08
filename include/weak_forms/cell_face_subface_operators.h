@@ -357,6 +357,11 @@ namespace WeakForms
     : std::true_type
   {};
 
+  template <int dim, int spacedim, enum Operators::SymbolicOpCodes OpCode>
+  struct is_cell_geometry_op<
+    Operators::SymbolicOp<Normal<dim, spacedim>, OpCode>> : std::true_type
+  {};
+
 } // namespace WeakForms
 
 

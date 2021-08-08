@@ -80,7 +80,8 @@ run()
 
   const auto test = [](const FEValuesBase<dim, spacedim> &fe_values_dofs,
                        const FEValuesBase<dim, spacedim> &fe_values_op,
-                       const std::string &                type) {
+                       const std::string &                type)
+  {
     const unsigned int dof_index = fe_values_dofs.dofs_per_cell - 1;
 
     constexpr std::size_t width =

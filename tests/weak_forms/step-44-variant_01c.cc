@@ -108,12 +108,12 @@ namespace Step44
       "HH", "\\mathcal{H}"); // Linearisation of Piola stress
 
     const auto unity = one_symb.template value<double, dim, spacedim>(
-      [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return 1.0;
-      });
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
     const auto det_F = det_F_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -123,7 +123,8 @@ namespace Step44
     const auto dPsi_vol_dJ =
       dPsi_vol_dJ_symb.template value<double, dim, spacedim>(
         [this](const FEValuesBase<dim, spacedim> &fe_values,
-               const unsigned int                 q_point) {
+               const unsigned int                 q_point)
+        {
           const auto &cell = fe_values.get_cell();
           const auto &qph  = this->quadrature_point_history;
           const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -133,7 +134,8 @@ namespace Step44
     const auto d2Psi_vol_dJ2 =
       d2Psi_vol_dJ2_symb.template value<double, dim, spacedim>(
         [this](const FEValuesBase<dim, spacedim> &fe_values,
-               const unsigned int                 q_point) {
+               const unsigned int                 q_point)
+        {
           const auto &cell = fe_values.get_cell();
           const auto &qph  = this->quadrature_point_history;
           const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -142,7 +144,8 @@ namespace Step44
         });
     const auto F_inv_T = F_inv_T_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -151,7 +154,8 @@ namespace Step44
       });
     const auto P = P_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -160,7 +164,8 @@ namespace Step44
       });
     const auto HH = HH_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -174,7 +179,8 @@ namespace Step44
     const Normal<spacedim>           normal{};
 
     const auto p = p_symb.template value<double, dim, spacedim>(
-      [this](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      [this](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);
         const double time_ramp = (this->time.current() / this->time.end());

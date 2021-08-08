@@ -27,6 +27,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
+#include <weak_forms/operator_utilities.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -471,11 +472,12 @@ namespace WeakForms
        * We also cannot expose this function when the operand types are
        * symbolic integrals.
        */
-      template <typename ScalarType, int dim, int spacedim>
+      template <typename ScalarType, typename FEValuesType>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &fe_values) const ->
+      operator()(const FEValuesType &fe_values) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -483,13 +485,17 @@ namespace WeakForms
           *this, derived.get_operand(), fe_values);
       }
 
-      template <typename ScalarType, int dim, int spacedim>
+      template <typename ScalarType,
+                typename FEValuesType,
+                int dim,
+                int spacedim>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &     fe_values,
+      operator()(const FEValuesType &                    fe_values,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &solution_names) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -515,12 +521,13 @@ namespace WeakForms
       //   return derived.template operator()<ScalarType, width>(value);
       // }
 
-      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      template <typename ScalarType, std::size_t width, typename FEValuesType>
       auto
-      operator()(const FEValuesBase<dim, spacedim> & fe_values,
+      operator()(const FEValuesType &                fe_values,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -529,14 +536,19 @@ namespace WeakForms
           *this, derived.get_operand(), fe_values, q_point_range);
       }
 
-      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      template <typename ScalarType,
+                std::size_t width,
+                typename FEValuesType,
+                int dim,
+                int spacedim>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &     fe_values,
+      operator()(const FEValuesType &                    fe_values,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
                  const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
-          !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          internal::is_fe_values_type<FEValuesType>::value &&
+            !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -583,12 +595,16 @@ namespace WeakForms
         return out;
       }
 
-      template <typename ScalarType, int dim, int spacedim>
+      template <typename ScalarType,
+                typename FEValuesTypeDoFs,
+                typename FEValuesTypeOp>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &fe_values_op) const ->
+      operator()(const FEValuesTypeDoFs &fe_values_dofs,
+                 const FEValuesTypeOp &  fe_values_op) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -596,14 +612,20 @@ namespace WeakForms
           *this, derived.get_operand(), fe_values_dofs, fe_values_op);
       }
 
-      template <typename ScalarType, int dim, int spacedim>
+      template <typename ScalarType,
+                typename FEValuesTypeDoFs,
+                typename FEValuesTypeOp,
+                int dim,
+                int spacedim>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &     fe_values_op,
+      operator()(const FEValuesTypeDoFs &                fe_values_dofs,
+                 const FEValuesTypeOp &                  fe_values_op,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &solution_names) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           return_type<ScalarType>>::type
       {
@@ -639,13 +661,18 @@ namespace WeakForms
         return out;
       }
 
-      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      template <typename ScalarType,
+                std::size_t width,
+                typename FEValuesTypeDoFs,
+                typename FEValuesTypeOp>
       auto
-      operator()(const FEValuesBase<dim, spacedim> & fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> & fe_values_op,
+      operator()(const FEValuesTypeDoFs &            fe_values_dofs,
+                 const FEValuesTypeOp &              fe_values_op,
                  const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             !is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {
@@ -657,15 +684,22 @@ namespace WeakForms
                                                      q_point_range);
       }
 
-      template <typename ScalarType, std::size_t width, int dim, int spacedim>
+      template <typename ScalarType,
+                std::size_t width,
+                typename FEValuesTypeDoFs,
+                typename FEValuesTypeOp,
+                int dim,
+                int spacedim>
       auto
-      operator()(const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-                 const FEValuesBase<dim, spacedim> &     fe_values_op,
+      operator()(const FEValuesTypeDoFs &                fe_values_dofs,
+                 const FEValuesTypeOp &                  fe_values_op,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                  const std::vector<std::string> &        solution_names,
                  const types::vectorized_qp_range_t &    q_point_range) const ->
         typename std::enable_if<
-          is_or_has_test_function_or_trial_solution_op<OpType>::value &&
+          (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
+           internal::is_fe_values_type<FEValuesTypeOp>::value) &&
+            is_or_has_test_function_or_trial_solution_op<OpType>::value &&
             is_or_has_evaluated_with_scratch_data<OpType>::value,
           vectorized_return_type<ScalarType, width>>::type
       {

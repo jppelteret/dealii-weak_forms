@@ -98,7 +98,8 @@ run(const unsigned int n_subdivisions)
   }
 
   auto verify_assembly = [](const Vector<double> &system_rhs_std,
-                            const Vector<double> &system_rhs_wf) {
+                            const Vector<double> &system_rhs_wf)
+  {
     constexpr double tol = 1e-12;
 
     Assert(system_rhs_std.size() == system_rhs_wf.size(),

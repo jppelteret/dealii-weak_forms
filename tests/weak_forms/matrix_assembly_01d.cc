@@ -98,7 +98,8 @@ run()
   }
 
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
-                            const SparseMatrix<double> &system_matrix_wf) {
+                            const SparseMatrix<double> &system_matrix_wf)
+  {
     constexpr double tol = 1e-12;
 
     for (auto it1 = system_matrix_std.begin(), it2 = system_matrix_wf.begin();
@@ -226,7 +227,9 @@ run()
     const auto test_val   = value(test_u);
     const auto trial_val  = value(trial_u);
     const auto coeff_func = value<double, spacedim>(
-      coeff, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      coeff,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      {
         Tensor<4, dim, double> identity;
 
         for (unsigned int i = 0; i < dim; ++i)

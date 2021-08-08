@@ -85,7 +85,8 @@ Step6<dim>::assemble_system()
     [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &              solution_names,
                 const unsigned int                            q_point,
-                const Tensor<1, spacedim, ADNumber_t> &grad_u) -> Result_t {
+                const Tensor<1, spacedim, ADNumber_t> &grad_u) -> Result_t
+    {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const double coefficient = (p.square() < 0.5 * 0.5 ? 20.0 : 1.0);
       return coefficient * grad_u;
@@ -93,9 +94,8 @@ Step6<dim>::assemble_system()
     UpdateFlags::update_quadrature_points);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
 
   MatrixBasedAssembler<dim> assembler;

@@ -148,25 +148,28 @@ run()
 
     const TensorFunctor<2, spacedim> t1("C1", "C1");
     const auto                       tf1 = value<double, spacedim>(
-      t1, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
-      });
+      t1,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>()); });
 
     const TensorFunctor<2, spacedim> t2("C1", "C1");
     const auto                       tf2 = value<double, spacedim>(
-      t2, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      t2,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
         return Tensor<2, dim, double>(2.0 * unit_symmetric_tensor<spacedim>());
       });
 
     const TensorFunctor<2, spacedim> t3("C3", "C3");
     const auto                       tf3 = value<double, spacedim>(
-      t3, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      t3,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
         return Tensor<2, dim, double>(3.0 * unit_symmetric_tensor<spacedim>());
       });
 
     const TensorFunctor<2, spacedim> t4("C4", "C4");
     const auto                       tf4 = value<double, spacedim>(
-      t4, [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
+      t4,
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
         return Tensor<2, dim, double>(4.0 * unit_symmetric_tensor<spacedim>());
       });
 

@@ -87,7 +87,7 @@ namespace WeakForms
       public:
         SymbolicDiffOp(const SymbolicFunctorOp &symbolic_functor_op,
                        const FunctorOp &        functor_op,
-                       const FieldOps &... field_ops)
+                       const FieldOps &...field_ops)
           : SymbolicFunctorOp(symbolic_functor_op)
           , functor_op(functor_op)
           , field_ops(field_ops...)
@@ -152,7 +152,7 @@ namespace WeakForms
                     const std::string &                 symbol_latex,
                     const function_type<dim, spacedim> &function,
                     const FunctorOp &                   functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -198,7 +198,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -244,7 +244,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -290,7 +290,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -336,7 +336,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -382,7 +382,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -428,7 +428,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -474,7 +474,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)
@@ -521,7 +521,7 @@ namespace WeakForms
                     const std::string &       symbol_latex,
                     const function_type<dim> &function,
                     const FunctorOp &         functor_op,
-                    const FieldOps &... field_ops)
+                    const FieldOps &...field_ops)
         {
           const auto symbolic_op =
             get_operand(symbol_ascii, symbol_latex)

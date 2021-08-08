@@ -43,7 +43,8 @@ namespace Step47
 
     auto cell_worker = [&](const Iterator &  cell,
                            ScratchData<dim> &scratch_data,
-                           CopyData &        copy_data) {
+                           CopyData &        copy_data)
+    {
       copy_data.cell_matrix = 0;
       copy_data.cell_rhs    = 0;
 
@@ -93,7 +94,8 @@ namespace Step47
                            const unsigned int &nf,
                            const unsigned int &nsf,
                            ScratchData<dim> &  scratch_data,
-                           CopyData &          copy_data) {
+                           CopyData &          copy_data)
+    {
       FEInterfaceValues<dim> &fe_interface_values =
         scratch_data.fe_interface_values;
       fe_interface_values.reinit(cell, f, sf, ncell, nf, nsf);
@@ -156,7 +158,8 @@ namespace Step47
     auto boundary_worker = [&](const Iterator &    cell,
                                const unsigned int &face_no,
                                ScratchData<dim> &  scratch_data,
-                               CopyData &          copy_data) {
+                               CopyData &          copy_data)
+    {
       FEInterfaceValues<dim> &fe_interface_values =
         scratch_data.fe_interface_values;
       fe_interface_values.reinit(cell, face_no);
@@ -231,7 +234,8 @@ namespace Step47
         }
     };
 
-    auto copier = [&](const CopyData &copy_data) {
+    auto copier = [&](const CopyData &copy_data)
+    {
       this->constraints.distribute_local_to_global(copy_data.cell_matrix,
                                                    copy_data.cell_rhs,
                                                    copy_data.local_dof_indices,

@@ -90,7 +90,8 @@ Step8<dim>::assemble_system()
     [&coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                    const std::vector<std::string> &              solution_names,
                    const unsigned int                            q_point,
-                   const Tensor<2, spacedim, ADNumber_t> &       grad_u) {
+                   const Tensor<2, spacedim, ADNumber_t> &       grad_u)
+    {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const auto             C = coefficient.value(p);
       return double_contract<2, 0, 3, 1>(C, grad_u);
@@ -98,8 +99,8 @@ Step8<dim>::assemble_system()
     UpdateFlags::update_quadrature_points);
 
   MatrixBasedAssembler<dim> assembler;
-  assembler +=
-    residual_form(residual).dV() - linear_form(test_val, rhs_coeff(rhs)).dV();
+  assembler += residual_form(residual).dV() -
+               linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

@@ -94,7 +94,8 @@ namespace Step44
          symb_kappa,
          &spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
                     const SDNumber_t &                     p_tilde,
-                    const SDNumber_t &                     J_tilde) {
+                    const SDNumber_t &                     J_tilde)
+        {
           const Tensor<2, spacedim, SDNumber_t> F =
             unit_symmetric_tensor<spacedim>() + grad_u;
           const SymmetricTensor<2, spacedim, SDNumber_t> C =
@@ -115,14 +116,14 @@ namespace Step44
         },
         [symb_c_1, symb_kappa](const Tensor<2, spacedim, SDNumber_t> &grad_u,
                                const SDNumber_t &                     p_tilde,
-                               const SDNumber_t &                     J_tilde) {
-          return Differentiation::SD::make_symbol_map(symb_c_1, symb_kappa);
-        },
+                               const SDNumber_t &                     J_tilde)
+        { return Differentiation::SD::make_symbol_map(symb_c_1, symb_kappa); },
         [this,
          symb_c_1,
          symb_kappa](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                      const std::vector<std::string> &solution_names,
-                     const unsigned int              q_point) {
+                     const unsigned int              q_point)
+        {
           const double mu = this->parameters.mu;
           const double nu = this->parameters.nu;
           const double kappa =
@@ -146,16 +147,15 @@ namespace Step44
     const auto external_energy =
       external_energy_func.template value<SDNumber_t, dim, spacedim>(
         [symb_pressure, symb_N, &spacedim](
-          const Tensor<1, spacedim, SDNumber_t> &u) {
-          return -u * (symb_pressure * symb_N);
-        },
-        [symb_pressure, symb_N](const Tensor<1, spacedim, SDNumber_t> &u) {
-          return Differentiation::SD::make_symbol_map(symb_pressure, symb_N);
-        },
+          const Tensor<1, spacedim, SDNumber_t> &u)
+        { return -u * (symb_pressure * symb_N); },
+        [symb_pressure, symb_N](const Tensor<1, spacedim, SDNumber_t> &u)
+        { return Differentiation::SD::make_symbol_map(symb_pressure, symb_N); },
         [this, symb_pressure, symb_N, &spacedim](
           const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
           const std::vector<std::string> &              solution_names,
-          const unsigned int                            q_point) {
+          const unsigned int                            q_point)
+        {
           static const double p0 =
             -4.0 / (this->parameters.scale * this->parameters.scale);
           const double time_ramp = (this->time.current() / this->time.end());

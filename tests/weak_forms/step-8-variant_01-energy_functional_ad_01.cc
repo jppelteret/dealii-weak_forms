@@ -88,7 +88,8 @@ Step8<dim>::assemble_system()
     [&coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                    const std::vector<std::string> &              solution_names,
                    const unsigned int                            q_point,
-                   const Tensor<2, spacedim, ADNumber_t> &       grad_u) {
+                   const Tensor<2, spacedim, ADNumber_t> &       grad_u)
+    {
       // Sacado is unbelievably annoying. If we don't explicitly
       // cast this return type then we get a segfault.
       // i.e. don't return the result inline!
@@ -101,7 +102,7 @@ Step8<dim>::assemble_system()
 
   MatrixBasedAssembler<dim> assembler;
   assembler += energy_functional_form(energy).dV() -
-               linear_form(test_val, rhs_coeff(rhs)).dV();
+               linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

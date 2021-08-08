@@ -106,7 +106,8 @@ run(const unsigned int n_subdivisions)
   }
 
   auto verify_assembly = [](const Vector<double> &system_rhs_std,
-                            const Vector<double> &system_rhs_wf) {
+                            const Vector<double> &system_rhs_wf)
+  {
     constexpr double tol = 1e-12;
 
     Assert(system_rhs_std.size() == system_rhs_wf.size(),
@@ -203,10 +204,11 @@ run(const unsigned int n_subdivisions)
       // NB: Linear forms change sign when RHS is assembled.
       constexpr bool use_vectorization = false;
       MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
-      assembler -= linear_form(test_ss.value(), source(source_function)).dV();
       assembler -=
-        linear_form(test_ss.value(), normal() * traction(traction_function))
-          .dA();
+        linear_form(test_ss.value(), source.value(source_function)).dV();
+      assembler -= linear_form(test_ss.value(),
+                               normal() * traction.value(traction_function))
+                     .dA();
 
       // Look at what we're going to compute
       const SymbolicDecorations decorator;
@@ -230,10 +232,11 @@ run(const unsigned int n_subdivisions)
     {
       constexpr bool use_vectorization = true;
       MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
-      assembler -= linear_form(test_ss.value(), source(source_function)).dV();
       assembler -=
-        linear_form(test_ss.value(), normal() * traction(traction_function))
-          .dA();
+        linear_form(test_ss.value(), source.value(source_function)).dV();
+      assembler -= linear_form(test_ss.value(),
+                               normal() * traction.value(traction_function))
+                     .dA();
 
       // Now we pass in concrete objects to get data from
       // and assemble into.

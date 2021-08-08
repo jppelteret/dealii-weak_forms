@@ -97,16 +97,16 @@ namespace Step44
     const SymmetricTensorFunctor<2, spacedim> I_symb(
       "I", "\\mathbf{I}"); // Identity tensor
     const auto I = I_symb.template value<double, dim>(
-      [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int) {
-        return Physics::Elasticity::StandardTensors<dim>::I;
-      });
+      [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int)
+      { return Physics::Elasticity::StandardTensors<dim>::I; });
 
     const TensorFunctor<4, spacedim> H_geo_symb(
       "H^{geo}",
       "\\mathcal{H}^{geo}"); // Geometric contribution to elasticity tensor
     const auto H_geo = H_geo_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point) {
+             const unsigned int                 q_point)
+      {
         const auto &cell = fe_values.get_cell();
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -146,7 +146,8 @@ namespace Step44
                     const unsigned int                     q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_u,
                     const ADNumber_t &                     p_tilde,
-                    const ADNumber_t &                     J_tilde) {
+                    const ADNumber_t &                     J_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -169,7 +170,8 @@ namespace Step44
                     const unsigned int                     q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_u,
                     const ADNumber_t &                     p_tilde,
-                    const ADNumber_t &                     J_tilde) {
+                    const ADNumber_t &                     J_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -187,7 +189,8 @@ namespace Step44
                const unsigned int                            q_point,
                const Tensor<2, spacedim, ADNumber_t> &       grad_u,
                const ADNumber_t &                            p_tilde,
-               const ADNumber_t &                            J_tilde) {
+               const ADNumber_t &                            J_tilde)
+        {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
@@ -216,7 +219,8 @@ namespace Step44
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
-                    const Tensor<1, spacedim, ADNumber_t> &u) {
+                    const Tensor<1, spacedim, ADNumber_t> &u)
+        {
           static const double p0 =
             -4.0 / (this->parameters.scale * this->parameters.scale);
           const double time_ramp = (this->time.current() / this->time.end());

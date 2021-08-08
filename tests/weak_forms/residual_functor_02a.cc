@@ -93,14 +93,12 @@ run(const SubSpaceExtractorTestSpace &      subspace_extractor_test,
          const Tensor<1, dim, SDNumber_t> &grad_u,
          const Tensor<2, dim, SDNumber_t> &hess_u,
          const SDNumber_t &                lap_u,
-         const Tensor<3, dim, SDNumber_t> &d3_u) {
-        return Differentiation::SD::types::substitution_map{};
-      },
+         const Tensor<3, dim, SDNumber_t> &d3_u)
+      { return Differentiation::SD::types::substitution_map{}; },
       [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
          const std::vector<std::string> &              solution_names,
-         const unsigned int                            q_point) {
-        return Differentiation::SD::types::substitution_map{};
-      },
+         const unsigned int                            q_point)
+      { return Differentiation::SD::types::substitution_map{}; },
       Differentiation::SD::OptimizerType::dictionary,
       Differentiation::SD::OptimizationFlags::optimize_default,
       UpdateFlags::update_default);

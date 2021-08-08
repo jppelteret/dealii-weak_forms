@@ -80,10 +80,10 @@ Step6<dim>::assemble_system()
   MatrixBasedAssembler<dim> assembler;
   assembler +=
     bilinear_form(test[subspace_extractor].gradient(),
-                  mat_coeff(coefficient),
+                  mat_coeff.value(coefficient),
                   trial[subspace_extractor].gradient())
       .dV() -
-    linear_form(test[subspace_extractor].value(), rhs_coeff(rhs)).dV();
+    linear_form(test[subspace_extractor].value(), rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

@@ -959,10 +959,10 @@ namespace WeakForms
 {
   template <typename ScalarType, int dim, int spacedim>
   auto
-  ScalarCacheFunctor::
-  operator()(const typename WeakForms::ScalarCacheFunctor::
-               template function_type<ScalarType, dim, spacedim> &function,
-             const UpdateFlags update_flags) const
+  ScalarCacheFunctor::operator()(
+    const typename WeakForms::ScalarCacheFunctor::
+      template function_type<ScalarType, dim, spacedim> &function,
+    const UpdateFlags                                    update_flags) const
   {
     return WeakForms::value<ScalarType>(*this, function, update_flags);
   }
@@ -982,10 +982,10 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  TensorCacheFunctor<rank, spacedim>::
-  operator()(const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
-               template function_type<ScalarType, dim> &function,
-             const UpdateFlags                          update_flags) const
+  TensorCacheFunctor<rank, spacedim>::operator()(
+    const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
+      template function_type<ScalarType, dim> &function,
+    const UpdateFlags                          update_flags) const
   {
     return WeakForms::value<ScalarType, dim>(*this, function, update_flags);
   }
@@ -994,10 +994,10 @@ namespace WeakForms
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
   auto
-  TensorCacheFunctor<rank, spacedim>::
-  operator()(const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
-               template qp_function_type<ScalarType, dim> &qp_function,
-             const UpdateFlags                             update_flags) const
+  TensorCacheFunctor<rank, spacedim>::operator()(
+    const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
+      template qp_function_type<ScalarType, dim> &qp_function,
+    const UpdateFlags                             update_flags) const
   {
     return WeakForms::value<ScalarType, dim>(*this, qp_function, update_flags);
   }

@@ -82,7 +82,8 @@ Step6<dim>::assemble_system()
     [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
        const std::vector<std::string> &              solution_names,
        const unsigned int                            q_point,
-       const Tensor<1, spacedim, ADNumber_t> &       grad_u) {
+       const Tensor<1, spacedim, ADNumber_t> &       grad_u)
+    {
       // Sacado is unbelievably annoying. If we don't explicitly
       // cast this return type then we get a segfault.
       // i.e. don't return the result inline!
@@ -95,9 +96,8 @@ Step6<dim>::assemble_system()
     UpdateFlags::update_quadrature_points);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
-    [](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-      return 1.0;
-    });
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
 
   MatrixBasedAssembler<dim> assembler;

@@ -82,19 +82,20 @@ namespace WeakForms
           !is_test_function_or_trial_solution_op<OpType>::value &&
           !is_evaluated_with_scratch_data<OpType>::value>::type>
       {
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType, typename FEValuesType>
         static typename OpType::template return_type<ScalarType>
-        apply(const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values)
+        apply(const OpType &operand, const FEValuesType &fe_values)
         {
           return operand.template operator()<ScalarType>(fe_values);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static typename OpType::template return_type<ScalarType>
-        apply(const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &fe_values_op)
+        apply(const OpType &          operand,
+              const FEValuesTypeDoFs &fe_values_dofs,
+              const FEValuesTypeOp &  fe_values_op)
         {
           (void)fe_values_dofs;
 
@@ -102,10 +103,13 @@ namespace WeakForms
           return apply<ScalarType>(operand, fe_values_op);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesType,
+                  int dim,
+                  int spacedim>
         static typename OpType::template return_type<ScalarType>
         apply(const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -116,11 +120,15 @@ namespace WeakForms
           return apply<ScalarType>(operand, fe_values);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static typename OpType::template return_type<ScalarType>
         apply(const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -134,23 +142,26 @@ namespace WeakForms
 
         // ----- VECTORIZATION -----
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType, std::size_t width, typename FEValuesType>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                      operand,
-                const FEValuesBase<dim, spacedim> & fe_values,
+                const FEValuesType &                fe_values,
                 const types::vectorized_qp_range_t &q_point_range)
         {
           return operand.template operator()<ScalarType, width>(fe_values,
                                                                 q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                      operand,
-                const FEValuesBase<dim, spacedim> & fe_values_dofs,
-                const FEValuesBase<dim, spacedim> & fe_values_op,
+                const FEValuesTypeDoFs &            fe_values_dofs,
+                const FEValuesTypeOp &              fe_values_op,
                 const types::vectorized_qp_range_t &q_point_range)
         {
           (void)fe_values_dofs;
@@ -159,11 +170,15 @@ namespace WeakForms
           return apply<ScalarType, width>(operand, fe_values_op, q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesType,
+                  int dim,
+                  int spacedim>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                          operand,
-                const FEValuesBase<dim, spacedim> &     fe_values,
+                const FEValuesType &                    fe_values,
                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &        solution_names,
                 const types::vectorized_qp_range_t &    q_point_range)
@@ -175,12 +190,17 @@ namespace WeakForms
           return apply<ScalarType, width>(operand, fe_values, q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                          operand,
-                const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-                const FEValuesBase<dim, spacedim> &     fe_values_op,
+                const FEValuesTypeDoFs &                fe_values_dofs,
+                const FEValuesTypeOp &                  fe_values_op,
                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &        solution_names,
                 const types::vectorized_qp_range_t &    q_point_range)
@@ -211,10 +231,13 @@ namespace WeakForms
                                                          solution_names);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesType,
+                  int dim,
+                  int spacedim>
         static typename OpType::template return_type<ScalarType>
         apply(const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -224,11 +247,15 @@ namespace WeakForms
           return apply<ScalarType>(operand, scratch_data, solution_names);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static typename OpType::template return_type<ScalarType>
         apply(const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -254,11 +281,15 @@ namespace WeakForms
                                                                 q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesType,
+                  int dim,
+                  int spacedim>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                          operand,
-                const FEValuesBase<dim, spacedim> &     fe_values,
+                const FEValuesType &                    fe_values,
                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &        solution_names,
                 const types::vectorized_qp_range_t &    q_point_range)
@@ -272,12 +303,17 @@ namespace WeakForms
                                           q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                          operand,
-                const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-                const FEValuesBase<dim, spacedim> &     fe_values_op,
+                const FEValuesTypeDoFs &                fe_values_dofs,
+                const FEValuesTypeOp &                  fe_values_op,
                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &        solution_names,
                 const types::vectorized_qp_range_t &    q_point_range)
@@ -303,30 +339,36 @@ namespace WeakForms
           !is_evaluated_with_scratch_data<OpType>::value,
           "Expect the test function or trial solution operator not to be evaluated using scratch data.");
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType, typename FEValuesType>
         static typename OpType::template value_type<ScalarType>
-        apply(const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values,
-              const unsigned int                 dof_index)
+        apply(const OpType &      operand,
+              const FEValuesType &fe_values,
+              const unsigned int  dof_index)
         {
           return operand.template operator()<ScalarType>(fe_values, dof_index);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static typename OpType::template return_type<ScalarType>
-        apply(const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &fe_values_op)
+        apply(const OpType &          operand,
+              const FEValuesTypeDoFs &fe_values_dofs,
+              const FEValuesTypeOp &  fe_values_op)
         {
           return operand.template operator()<ScalarType>(fe_values_dofs,
                                                          fe_values_op);
         }
 
-        template <typename ScalarType, int dim, int spacedim>
+        template <typename ScalarType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static typename OpType::template return_type<ScalarType>
         apply(const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -339,11 +381,11 @@ namespace WeakForms
 
         // ----- VECTORIZATION -----
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType, std::size_t width, typename FEValuesType>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                      operand,
-                const FEValuesBase<dim, spacedim> & fe_values,
+                const FEValuesType &                fe_values,
                 const unsigned int                  dof_index,
                 const types::vectorized_qp_range_t &q_point_range)
         {
@@ -352,12 +394,15 @@ namespace WeakForms
                                                                 q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                      operand,
-                const FEValuesBase<dim, spacedim> & fe_values_dofs,
-                const FEValuesBase<dim, spacedim> & fe_values_op,
+                const FEValuesTypeDoFs &            fe_values_dofs,
+                const FEValuesTypeOp &              fe_values_op,
                 const types::vectorized_qp_range_t &q_point_range)
         {
           return operand.template operator()<ScalarType, width>(fe_values_dofs,
@@ -365,12 +410,17 @@ namespace WeakForms
                                                                 q_point_range);
         }
 
-        template <typename ScalarType, std::size_t width, int dim, int spacedim>
+        template <typename ScalarType,
+                  std::size_t width,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
+                  int dim,
+                  int spacedim>
         static
           typename OpType::template vectorized_return_type<ScalarType, width>
           apply(const OpType &                          operand,
-                const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-                const FEValuesBase<dim, spacedim> &     fe_values_op,
+                const FEValuesTypeDoFs &                fe_values_dofs,
+                const FEValuesTypeOp &                  fe_values_op,
                 MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                 const std::vector<std::string> &        solution_names,
                 const types::vectorized_qp_range_t &    q_point_range)
@@ -415,12 +465,11 @@ namespace WeakForms
       {
         template <typename ScalarType,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesType>
         static typename UnaryOpType::template return_type<ScalarType>
-        apply(const UnaryOpType &                op,
-              const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values)
+        apply(const UnaryOpType & op,
+              const OpType &      operand,
+              const FEValuesType &fe_values)
         {
           // return op.template operator()<ScalarType>(
           //   operand.template operator()<ScalarType>(fe_values));
@@ -432,12 +481,13 @@ namespace WeakForms
 
         template <typename ScalarType,
                   typename UnaryOpType,
+                  typename FEValuesType,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template return_type<ScalarType>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -473,13 +523,12 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesType>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                 op,
               const OpType &                      operand,
-              const FEValuesBase<dim, spacedim> & fe_values,
+              const FEValuesType &                fe_values,
               const types::vectorized_qp_range_t &q_point_range)
         {
           return op.template operator()<ScalarType, width>(
@@ -490,13 +539,14 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
+                  typename FEValuesType,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names,
               const types::vectorized_qp_range_t &    q_point_range)
@@ -550,12 +600,13 @@ namespace WeakForms
 
         template <typename ScalarType,
                   typename UnaryOpType,
+                  typename FEValuesType,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template return_type<ScalarType>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -574,13 +625,15 @@ namespace WeakForms
 
         template <typename ScalarType,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template return_type<ScalarType>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -614,13 +667,14 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
+                  typename FEValuesType,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values,
+              const FEValuesType &                    fe_values,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names,
               const types::vectorized_qp_range_t &    q_point_range)
@@ -633,14 +687,16 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names,
               const types::vectorized_qp_range_t &    q_point_range)
@@ -683,13 +739,12 @@ namespace WeakForms
       {
         template <typename ScalarType,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesType>
         static typename UnaryOpType::template value_type<ScalarType>
-        apply(const UnaryOpType &                op,
-              const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values,
-              const unsigned int                 dof_index)
+        apply(const UnaryOpType & op,
+              const OpType &      operand,
+              const FEValuesType &fe_values,
+              const unsigned int  dof_index)
         {
           return op.template operator()<ScalarType>(
             BranchEvaluator<OpType>::template evaluate<ScalarType>(operand,
@@ -699,13 +754,13 @@ namespace WeakForms
 
         template <typename ScalarType,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static typename UnaryOpType::template return_type<ScalarType>
-        apply(const UnaryOpType &                op,
-              const OpType &                     operand,
-              const FEValuesBase<dim, spacedim> &fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &fe_values_op)
+        apply(const UnaryOpType &     op,
+              const OpType &          operand,
+              const FEValuesTypeDoFs &fe_values_dofs,
+              const FEValuesTypeOp &  fe_values_op)
         {
           // return op.template operator()<ScalarType>(
           //   operand.template operator()<ScalarType>(fe_values_dofs,
@@ -718,13 +773,15 @@ namespace WeakForms
 
         template <typename ScalarType,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template return_type<ScalarType>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -760,13 +817,12 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesType>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                 op,
               const OpType &                      operand,
-              const FEValuesBase<dim, spacedim> & fe_values,
+              const FEValuesType &                fe_values,
               const unsigned int                  dof_index,
               const types::vectorized_qp_range_t &q_point_range)
         {
@@ -778,14 +834,14 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
-                  int dim,
-                  int spacedim>
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                 op,
               const OpType &                      operand,
-              const FEValuesBase<dim, spacedim> & fe_values_dofs,
-              const FEValuesBase<dim, spacedim> & fe_values_op,
+              const FEValuesTypeDoFs &            fe_values_dofs,
+              const FEValuesTypeOp &              fe_values_op,
               const types::vectorized_qp_range_t &q_point_range)
         {
           return op.template operator()<ScalarType, width>(
@@ -796,14 +852,16 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names,
               const types::vectorized_qp_range_t &    q_point_range)
@@ -835,13 +893,15 @@ namespace WeakForms
       {
         template <typename ScalarType,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template return_type<ScalarType>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names)
         {
@@ -859,14 +919,16 @@ namespace WeakForms
         template <typename ScalarType,
                   std::size_t width,
                   typename UnaryOpType,
+                  typename FEValuesTypeDoFs,
+                  typename FEValuesTypeOp,
                   int dim,
                   int spacedim>
         static typename UnaryOpType::template vectorized_return_type<ScalarType,
                                                                      width>
         apply(const UnaryOpType &                     op,
               const OpType &                          operand,
-              const FEValuesBase<dim, spacedim> &     fe_values_dofs,
-              const FEValuesBase<dim, spacedim> &     fe_values_op,
+              const FEValuesTypeDoFs &                fe_values_dofs,
+              const FEValuesTypeOp &                  fe_values_op,
               MeshWorker::ScratchData<dim, spacedim> &scratch_data,
               const std::vector<std::string> &        solution_names,
               const types::vectorized_qp_range_t &    q_point_range)
@@ -908,7 +970,7 @@ namespace WeakForms
         apply(const BinaryOpType &op,
               const LhsOpType &   lhs_operand,
               const RhsOpType &   rhs_operand,
-              Arguments &... args)
+              Arguments &...args)
         {
           return op.template operator()<ScalarType>(
             BranchEvaluator<LhsOpType>::template evaluate<ScalarType>(
@@ -931,7 +993,7 @@ namespace WeakForms
           apply(const BinaryOpType &op,
                 const LhsOpType &   lhs_operand,
                 const RhsOpType &   rhs_operand,
-                Arguments &... args)
+                Arguments &...args)
         {
           return op.template operator()<ScalarType, width>(
             BranchEvaluator<LhsOpType>::template evaluate<ScalarType, width>(
@@ -971,7 +1033,7 @@ namespace WeakForms
       //   apply(const BinaryOpType &               op,
       //         const LhsOpType &                  lhs_operand,
       //         const RhsOpType &                  rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values)
+      //         const FEValuesType &fe_values)
       //   {
       //     return op.template operator()<ScalarType>(
       //       lhs_operand.template operator()<ScalarType>(fe_values),
@@ -1135,8 +1197,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &               op,
       //         const LhsOpType &                  lhs_operand,
       //         const RhsOpType &                  rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op)
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op)
       //   {
       //     return op.template operator()<ScalarType>(
       //       lhs_operand.template operator()<ScalarType>(fe_values_dofs,
@@ -1166,8 +1228,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &               op,
       //         const LhsOpType &                  lhs_operand,
       //         const RhsOpType &                  rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op)
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op)
       //   {
       //     return op.template operator()<ScalarType>(
       //       lhs_operand.template operator()<ScalarType>(fe_values_op),
@@ -1204,8 +1266,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &               op,
       //         const LhsOpType &                  lhs_operand,
       //         const RhsOpType &                  rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op)
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op)
       //   {
       //     return op.template operator()<ScalarType>(
       //       lhs_operand.template operator()<ScalarType>(fe_values_dofs,
@@ -1239,8 +1301,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &                    op,
       //         const LhsOpType &                       lhs_operand,
       //         const RhsOpType &                       rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op,
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op,
       //         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
       //         const std::vector<std::string> &        solution_names)
       //   {
@@ -1278,8 +1340,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &                    op,
       //         const LhsOpType &                       lhs_operand,
       //         const RhsOpType &                       rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op,
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op,
       //         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
       //         const std::vector<std::string> &        solution_names)
       //   {
@@ -1318,8 +1380,8 @@ namespace WeakForms
       //   apply(const BinaryOpType &                    op,
       //         const LhsOpType &                       lhs_operand,
       //         const RhsOpType &                       rhs_operand,
-      //         const FEValuesBase<dim, spacedim> &fe_values_dofs,
-      //         const FEValuesBase<dim, spacedim> &fe_values_op,
+      //         const FEValuesTypeDoFs &fe_values_dofs,
+      //         const FEValuesTypeOp &fe_values_op,
       //         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
       //         const std::vector<std::string> &        solution_names)
       //   {
@@ -1346,7 +1408,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // Use a shim to make all symbolic operations compatible with the
           // input arguments.
@@ -1356,7 +1418,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // Use a shim to make all symbolic operations compatible with the
           // input arguments.
@@ -1373,7 +1435,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // These can evaluate themselves. They also provide some additional
           // checks that we'd bypass if we directly called
@@ -1392,7 +1454,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           return UnaryOpEvaluator<typename OpType::OpType>::
             template apply<ScalarType, width>(op, op.get_operand(), args...);
@@ -1407,7 +1469,7 @@ namespace WeakForms
       {
         template <typename ScalarType, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           // These can evaluate themselves. They also provide some additional
           // checks that we'd bypass if we directly called
@@ -1433,7 +1495,7 @@ namespace WeakForms
 
         template <typename ScalarType, std::size_t width, typename... Arguments>
         static auto
-        evaluate(const OpType &op, Arguments &... args)
+        evaluate(const OpType &op, Arguments &...args)
         {
           return BinaryOpEvaluator<typename OpType::LhsOpType,
                                    typename OpType::RhsOpType>::
