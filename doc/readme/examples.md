@@ -24,9 +24,11 @@ Summary
 -  step-47:
   - Biharmonic problem
   - Discontinuous Galerkin method (DG)
+  - Volume, boundary and interface integrals
 - step-74:
   - The Symmetric interior penalty Galerkin (SIPG) method for Poisson's equation
   - Discontinuous Galerkin method  (DG)
+  - Volume, boundary and interface integrals
 
 ## Step-44
 
