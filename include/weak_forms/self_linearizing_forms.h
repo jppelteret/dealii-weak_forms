@@ -493,7 +493,8 @@ namespace WeakForms
           "D(f)",
           [functor, derivative_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -579,7 +580,8 @@ namespace WeakForms
           "D^{2}(f)",
           [functor, derivative_1_extractor, derivative_2_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -659,7 +661,8 @@ namespace WeakForms
           "D(f)",
           [functor, first_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -756,7 +759,8 @@ namespace WeakForms
           "D^{2}(f)",
           [functor, second_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -1184,7 +1188,8 @@ namespace WeakForms
           "f",
           [functor, residual_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -1262,7 +1267,8 @@ namespace WeakForms
           "D(f)",
           [functor, residual_extractor, derivative_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -1338,7 +1344,8 @@ namespace WeakForms
           "f",
           "f",
           [functor, value](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                           const std::vector<std::string> &solution_names) {
+                           const std::vector<std::string> &solution_names)
+          {
             (void)solution_names;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
@@ -1429,7 +1436,8 @@ namespace WeakForms
           "D(f)",
           [functor, first_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names) {
+            const std::vector<std::string> &        solution_names)
+          {
             (void)solution_names;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy

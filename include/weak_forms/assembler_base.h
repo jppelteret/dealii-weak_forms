@@ -2143,20 +2143,20 @@ namespace WeakForms
     {
       // Augment the composition of the operation
       // Important note: All operations must be captured by copy!
-      as_ascii_operations.push_back([integral]() {
-        return std::make_pair(
-          [integral](const SymbolicDecorations &decorator) {
-            return integral.as_ascii(decorator);
-          },
-          Sign);
-      });
-      as_latex_operations.push_back([integral]() {
-        return std::make_pair(
-          [integral](const SymbolicDecorations &decorator) {
-            return integral.as_latex(decorator);
-          },
-          Sign);
-      });
+      as_ascii_operations.push_back(
+        [integral]()
+        {
+          return std::make_pair([integral](const SymbolicDecorations &decorator)
+                                { return integral.as_ascii(decorator); },
+                                Sign);
+        });
+      as_latex_operations.push_back(
+        [integral]()
+        {
+          return std::make_pair([integral](const SymbolicDecorations &decorator)
+                                { return integral.as_latex(decorator); },
+                                Sign);
+        });
     }
 
     /**
@@ -2273,27 +2273,28 @@ namespace WeakForms
       // having visited all of the blocks.
       const auto skip_contribution_due_to_global_symmetry =
         [underlying_test_space_op,
-         underlying_trial_space_op](const bool global_system_symmetry_flag) {
-          if (global_system_symmetry_flag)
-            {
-              // Note: If both are marked "numbers::invalid_field_index", then
-              // we'll unconditionally add both contributions.
-              if (underlying_test_space_op.get_field_index() >
-                  underlying_trial_space_op.get_field_index())
-                {
-                  Assert(
-                    underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
-                      underlying_trial_space_op.as_ascii(SymbolicDecorations()),
-                    ExcMessage(
-                      "Test and trial spaces have the different field indices, "
-                      "but the same name. The field indices set through the subspace "
-                      "extractors have likely been set up incorrectly."));
-                  return true;
-                }
-            }
+         underlying_trial_space_op](const bool global_system_symmetry_flag)
+      {
+        if (global_system_symmetry_flag)
+          {
+            // Note: If both are marked "numbers::invalid_field_index", then
+            // we'll unconditionally add both contributions.
+            if (underlying_test_space_op.get_field_index() >
+                underlying_trial_space_op.get_field_index())
+              {
+                Assert(
+                  underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
+                    underlying_trial_space_op.as_ascii(SymbolicDecorations()),
+                  ExcMessage(
+                    "Test and trial spaces have the different field indices, "
+                    "but the same name. The field indices set through the subspace "
+                    "extractors have likely been set up incorrectly."));
+                return true;
+              }
+          }
 
-          return false;
-        };
+        return false;
+      };
 
       // Now, compose all of this into a bespoke operation for this
       // contribution.
@@ -2313,7 +2314,8 @@ namespace WeakForms
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                        const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values) {
+                       const FEValuesBase<dim, spacedim> &     fe_values)
+      {
         // Early exit: Don't form the cell contribution if it will add below
         // the diagonal.
         if (skip_contribution_due_to_global_symmetry(
@@ -2595,27 +2597,28 @@ namespace WeakForms
       // having visited all of the blocks.
       const auto skip_contribution_due_to_global_symmetry =
         [underlying_test_space_op,
-         underlying_trial_space_op](const bool global_system_symmetry_flag) {
-          if (global_system_symmetry_flag)
-            {
-              // Note: If both are marked "numbers::invalid_field_index", then
-              // we'll unconditionally add both contributions.
-              if (underlying_test_space_op.get_field_index() >
-                  underlying_trial_space_op.get_field_index())
-                {
-                  Assert(
-                    underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
-                      underlying_trial_space_op.as_ascii(SymbolicDecorations()),
-                    ExcMessage(
-                      "Test and trial spaces have the different field indices, "
-                      "but the same name. The field indices set through the subspace "
-                      "extractors have likely been set up incorrectly."));
-                  return true;
-                }
-            }
+         underlying_trial_space_op](const bool global_system_symmetry_flag)
+      {
+        if (global_system_symmetry_flag)
+          {
+            // Note: If both are marked "numbers::invalid_field_index", then
+            // we'll unconditionally add both contributions.
+            if (underlying_test_space_op.get_field_index() >
+                underlying_trial_space_op.get_field_index())
+              {
+                Assert(
+                  underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
+                    underlying_trial_space_op.as_ascii(SymbolicDecorations()),
+                  ExcMessage(
+                    "Test and trial spaces have the different field indices, "
+                    "but the same name. The field indices set through the subspace "
+                    "extractors have likely been set up incorrectly."));
+                return true;
+              }
+          }
 
-          return false;
-        };
+        return false;
+      };
 
       // Now, compose all of this into a bespoke operation for this
       // contribution.
@@ -2637,7 +2640,8 @@ namespace WeakForms
                        const std::vector<std::string> &        solution_names,
                        const FEValuesBase<dim, spacedim> &     fe_values,
                        const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                       const unsigned int                      face) {
+                       const unsigned int                      face)
+      {
         // Early exit: Don't form the cell contribution if it will add below
         // the diagonal.
         if (skip_contribution_due_to_global_symmetry(
@@ -2922,27 +2926,28 @@ namespace WeakForms
       // having visited all of the blocks.
       const auto skip_contribution_due_to_global_symmetry =
         [underlying_test_space_op,
-         underlying_trial_space_op](const bool global_system_symmetry_flag) {
-          if (global_system_symmetry_flag)
-            {
-              // Note: If both are marked "numbers::invalid_field_index", then
-              // we'll unconditionally add both contributions.
-              if (underlying_test_space_op.get_field_index() >
-                  underlying_trial_space_op.get_field_index())
-                {
-                  Assert(
-                    underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
-                      underlying_trial_space_op.as_ascii(SymbolicDecorations()),
-                    ExcMessage(
-                      "Test and trial spaces have the different field indices, "
-                      "but the same name. The field indices set through the subspace "
-                      "extractors have likely been set up incorrectly."));
-                  return true;
-                }
-            }
+         underlying_trial_space_op](const bool global_system_symmetry_flag)
+      {
+        if (global_system_symmetry_flag)
+          {
+            // Note: If both are marked "numbers::invalid_field_index", then
+            // we'll unconditionally add both contributions.
+            if (underlying_test_space_op.get_field_index() >
+                underlying_trial_space_op.get_field_index())
+              {
+                Assert(
+                  underlying_test_space_op.as_ascii(SymbolicDecorations()) !=
+                    underlying_trial_space_op.as_ascii(SymbolicDecorations()),
+                  ExcMessage(
+                    "Test and trial spaces have the different field indices, "
+                    "but the same name. The field indices set through the subspace "
+                    "extractors have likely been set up incorrectly."));
+                return true;
+              }
+          }
 
-          return false;
-        };
+        return false;
+      };
 
       // Now, compose all of this into a bespoke operation for this
       // contribution.
@@ -2952,20 +2957,21 @@ namespace WeakForms
       // with operator+= , e.g.
       //   MatrixBasedAssembler<dim, spacedim> assembler;
       //   assembler += bilinear_form(test_val, coeff_func, trial_val).dA();
-      const auto f = [interface_integral,
-                      test_space_op,
-                      functor,
-                      trial_space_op,
-                      local_contribution_symmetry_flag,
-                      &global_system_symmetry_flag,
-                      skip_contribution_due_to_global_symmetry](
-                       FullMatrix<ScalarType> &                cell_matrix,
-                       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEInterfaceValues<dim, spacedim>
-                         &                fe_interface_values,
-                       const unsigned int face,
-                       const unsigned int neighbour_face) {
+      const auto f =
+        [interface_integral,
+         test_space_op,
+         functor,
+         trial_space_op,
+         local_contribution_symmetry_flag,
+         &global_system_symmetry_flag,
+         skip_contribution_due_to_global_symmetry](
+          FullMatrix<ScalarType> &                cell_matrix,
+          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+          const std::vector<std::string> &        solution_names,
+          const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+          const unsigned int                      face,
+          const unsigned int                      neighbour_face)
+      {
         // Early exit: Don't form the cell contribution if it will add below
         // the diagonal.
         if (skip_contribution_due_to_global_symmetry(
@@ -3222,7 +3228,8 @@ namespace WeakForms
                        Vector<ScalarType> &                    cell_vector,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                        const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values) {
+                       const FEValuesBase<dim, spacedim> &     fe_values)
+      {
         // Skip this cell if it doesn't match the criteria set for the
         // integration domain.
         if (!volume_integral.get_integral_operation().integrate_on_cell(
@@ -3389,7 +3396,8 @@ namespace WeakForms
                        const std::vector<std::string> &        solution_names,
                        const FEValuesBase<dim, spacedim> &     fe_values,
                        const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                       const unsigned int                      face) {
+                       const unsigned int                      face)
+      {
         // Skip this cell face if it doesn't match the criteria set for the
         // integration domain.
         if (!boundary_integral.get_integral_operation().integrate_on_face(
@@ -3555,14 +3563,16 @@ namespace WeakForms
       // with operator+= , e.g.
       //   MatrixBasedAssembler<dim, spacedim> assembler;
       //   assembler += linear_form(test_val, boundary_func).dA();
-      const auto f = [interface_integral, test_space_op, functor](
-                       Vector<ScalarType> &                    cell_vector,
-                       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEInterfaceValues<dim, spacedim>
-                         &                fe_interface_values,
-                       const unsigned int face,
-                       const unsigned int neighbour_face) {
+      const auto f =
+        [interface_integral,
+         test_space_op,
+         functor](Vector<ScalarType> &                    cell_vector,
+                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                  const std::vector<std::string> &        solution_names,
+                  const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                  const unsigned int                      face,
+                  const unsigned int                      neighbour_face)
+      {
         // Skip this cell face if it doesn't match the criteria set for the
         // integration domain.
         if (!interface_integral.get_integral_operation().integrate_on_face(

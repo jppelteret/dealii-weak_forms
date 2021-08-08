@@ -544,11 +544,10 @@ public:                                                                        \
   explicit SymbolicOp(const Op &operand, const value_type<ScalarType> &value)  \
     : SymbolicOp(                                                              \
         operand,                                                               \
-        [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {     \
-          return value;                                                        \
-        },                                                                     \
-        [value](const FEInterfaceValues<dim, spacedim> &,                      \
-                const unsigned int) { return value; })                         \
+        [value](const FEValuesBase<dim, spacedim> &, const unsigned int)       \
+        { return value; },                                                     \
+        [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int)  \
+        { return value; })                                                     \
   {}                                                                           \
                                                                                \
   std::string as_ascii(const SymbolicDecorations &decorator) const             \
@@ -1109,12 +1108,10 @@ namespace WeakForms
                                 Converter::to_latex(value));
 
     return functor.template value<ScalarType, dim, spacedim>(
-      [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return value;
-      },
-      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int) {
-        return value;
-      });
+      [value](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return value; },
+      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int)
+      { return value; });
   }
 
 
@@ -1129,12 +1126,10 @@ namespace WeakForms
                                                 Converter::to_latex(value));
 
     return functor.template value<ScalarType, dim>(
-      [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return value;
-      },
-      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int) {
-        return value;
-      });
+      [value](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return value; },
+      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int)
+      { return value; });
   }
 
 
@@ -1159,12 +1154,10 @@ namespace WeakForms
       Converter::to_ascii(value), Converter::to_latex(value));
 
     return functor.template value<ScalarType, dim>(
-      [value](const FEValuesBase<dim, spacedim> &, const unsigned int) {
-        return value;
-      },
-      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int) {
-        return value;
-      });
+      [value](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return value; },
+      [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int)
+      { return value; });
   }
 
 

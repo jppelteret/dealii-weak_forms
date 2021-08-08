@@ -54,7 +54,8 @@ namespace WeakForms
       return std::accumulate(std::begin(t),
                              std::end(t),
                              std::string{},
-                             [](const std::string &a, const auto &b) {
+                             [](const std::string &a, const auto &b)
+                             {
                                return a.empty() ?
                                         dealii::Utilities::to_string(b) :
                                         a + ',' +
@@ -73,7 +74,8 @@ namespace WeakForms
       return std::accumulate(begin,
                              end,
                              std::string{},
-                             [&seperator](const std::string &a, const auto &b) {
+                             [&seperator](const std::string &a, const auto &b)
+                             {
                                return a.empty() ?
                                         dealii::Utilities::to_string(b) :
                                         a + seperator +
@@ -496,9 +498,8 @@ namespace WeakForms
       static std::string
       decorate_tensor(const std::string &name, const unsigned int rank)
       {
-        auto decorate = [&name](const std::string latex_cmd) {
-          return latex_cmd + "{" + name + "}";
-        };
+        auto decorate = [&name](const std::string latex_cmd)
+        { return latex_cmd + "{" + name + "}"; };
 
         switch (rank)
           {

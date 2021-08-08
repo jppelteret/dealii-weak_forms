@@ -606,7 +606,8 @@ namespace WeakForms
                          system_vector,
                          solution_storage](const CellIteratorType &cell,
                                            ScratchData &           scratch_data,
-                                           CopyData &              copy_data) {
+                                           CopyData &              copy_data)
+          {
             const auto &fe_values = scratch_data.reinit(cell);
             copy_data             = CopyData(fe_values.dofs_per_cell);
             copy_data.local_dof_indices[0] =
@@ -688,7 +689,8 @@ namespace WeakForms
                              solution_storage](const CellIteratorType &cell,
                                                const unsigned int      face,
                                                ScratchData &scratch_data,
-                                               CopyData &   copy_data) {
+                                               CopyData &   copy_data)
+          {
             Assert((cell->face(face)->at_boundary()),
                    ExcMessage("Cell face is not at the boundary."));
 
@@ -776,85 +778,86 @@ namespace WeakForms
                                const unsigned int      neighbour_face,
                                const unsigned int      neighbour_subface,
                                ScratchData &           scratch_data,
-                               CopyData &              copy_data) {
-              Assert((!cell->face(face)->at_boundary()),
-                     ExcMessage("Cell face is at the boundary."));
+                               CopyData &              copy_data)
+          {
+            Assert((!cell->face(face)->at_boundary()),
+                   ExcMessage("Cell face is at the boundary."));
 
-              const FEInterfaceValues<dim> &fe_interface_values =
-                scratch_data.reinit(cell,
-                                    face,
-                                    subface,
-                                    neighbour_cell,
-                                    neighbour_face,
-                                    neighbour_subface);
+            const FEInterfaceValues<dim> &fe_interface_values =
+              scratch_data.reinit(cell,
+                                  face,
+                                  subface,
+                                  neighbour_cell,
+                                  neighbour_face,
+                                  neighbour_subface);
 
-              const unsigned int n_interface_dofs =
-                fe_interface_values.n_current_interface_dofs();
+            const unsigned int n_interface_dofs =
+              fe_interface_values.n_current_interface_dofs();
 
-              // Follow the method used by step-74
-              copy_data.interface_data.emplace_back();
-              CopyData::InterfaceData &copy_data_interface =
-                copy_data.interface_data.back();
+            // Follow the method used by step-74
+            copy_data.interface_data.emplace_back();
+            CopyData::InterfaceData &copy_data_interface =
+              copy_data.interface_data.back();
 
-              copy_data_interface.local_dof_indices[0] =
-                fe_interface_values.get_interface_dof_indices();
+            copy_data_interface.local_dof_indices[0] =
+              fe_interface_values.get_interface_dof_indices();
 
-              // Extract the local solution vector, if it's provided.
-              if (solution_storage.n_solution_vectors() > 0)
-                internal::extract_solution_local_dof_values(scratch_data,
-                                                            solution_storage);
+            // Extract the local solution vector, if it's provided.
+            if (solution_storage.n_solution_vectors() > 0)
+              internal::extract_solution_local_dof_values(scratch_data,
+                                                          solution_storage);
 
-              // Next we perform all operations that use AD or SD functors.
-              // Although the forms are self-linearizing, they reference the
-              // ADHelpers or SD BatchOptimizers that are stored in the form. So
-              // these need to be updated with this cell/QP data before their
-              // associated self-linearized forms, which require this data,
-              // can be invoked.
-              for (const auto &interface_face_ad_sd_op :
-                   interface_face_ad_sd_operations)
-                interface_face_ad_sd_op(scratch_data,
-                                        solution_storage.get_solution_names());
+            // Next we perform all operations that use AD or SD functors.
+            // Although the forms are self-linearizing, they reference the
+            // ADHelpers or SD BatchOptimizers that are stored in the form. So
+            // these need to be updated with this cell/QP data before their
+            // associated self-linearized forms, which require this data,
+            // can be invoked.
+            for (const auto &interface_face_ad_sd_op :
+                 interface_face_ad_sd_operations)
+              interface_face_ad_sd_op(scratch_data,
+                                      solution_storage.get_solution_names());
 
-              // Perform all operations that contribute to the local cell matrix
-              if (system_matrix)
-                {
-                  FullMatrix<ScalarType> &cell_matrix =
-                    copy_data_interface.matrices[0];
-                  cell_matrix.reinit(n_interface_dofs, n_interface_dofs);
+            // Perform all operations that contribute to the local cell matrix
+            if (system_matrix)
+              {
+                FullMatrix<ScalarType> &cell_matrix =
+                  copy_data_interface.matrices[0];
+                cell_matrix.reinit(n_interface_dofs, n_interface_dofs);
 
-                  for (const auto &interface_face_matrix_op :
-                       interface_face_matrix_operations)
-                    {
-                      interface_face_matrix_op(
-                        cell_matrix,
-                        scratch_data,
-                        solution_storage.get_solution_names(),
-                        fe_interface_values,
-                        face,
-                        neighbour_face);
-                    }
-                }
+                for (const auto &interface_face_matrix_op :
+                     interface_face_matrix_operations)
+                  {
+                    interface_face_matrix_op(
+                      cell_matrix,
+                      scratch_data,
+                      solution_storage.get_solution_names(),
+                      fe_interface_values,
+                      face,
+                      neighbour_face);
+                  }
+              }
 
-              // Perform all operations that contribute to the local cell vector
-              if (system_vector)
-                {
-                  Vector<ScalarType> &cell_vector =
-                    copy_data_interface.vectors[0];
-                  cell_vector.reinit(n_interface_dofs);
+            // Perform all operations that contribute to the local cell vector
+            if (system_vector)
+              {
+                Vector<ScalarType> &cell_vector =
+                  copy_data_interface.vectors[0];
+                cell_vector.reinit(n_interface_dofs);
 
-                  for (const auto &interface_face_vector_op :
-                       interface_face_vector_operations)
-                    {
-                      interface_face_vector_op(
-                        cell_vector,
-                        scratch_data,
-                        solution_storage.get_solution_names(),
-                        fe_interface_values,
-                        face,
-                        neighbour_face);
-                    }
-                }
-            };
+                for (const auto &interface_face_vector_op :
+                     interface_face_vector_operations)
+                  {
+                    interface_face_vector_op(
+                      cell_vector,
+                      scratch_data,
+                      solution_storage.get_solution_names(),
+                      fe_interface_values,
+                      face,
+                      neighbour_face);
+                  }
+              }
+          };
         }
 
       // Symmetry of the global system
@@ -864,7 +867,8 @@ namespace WeakForms
       auto copier = [&constraints,
                      system_matrix,
                      system_vector,
-                     &global_system_symmetry_flag](const CopyData &copy_data) {
+                     &global_system_symmetry_flag](const CopyData &copy_data)
+      {
         auto const copy_local_to_global =
           [&constraints,
            system_matrix,
@@ -873,63 +877,62 @@ namespace WeakForms
             const FullMatrix<ScalarType> &cell_matrix,
             const Vector<ScalarType> &    cell_vector,
             const std::vector<dealii::types::global_dof_index>
-              &local_dof_indices) {
-            // Copy the upper half (i.e. contributions below the diagonal) into
-            // the lower half if the global system is marked as symmetric.
-            if (global_system_symmetry_flag == true)
-              {
-                // Hmm... a bit nasty, but it makes sense to do the global
-                // symmetrization only once if possible. To (unnecessarily)
-                // symmetrize each form contribution after assembling only it's
-                // lower diagonal part would be a little wasteful.
-                FullMatrix<ScalarType> &symmetrized_cell_matrix =
-                  const_cast<FullMatrix<ScalarType> &>(cell_matrix);
-                // symmetrized_cell_matrix.symmetrize();
+              &local_dof_indices)
+        {
+          // Copy the upper half (i.e. contributions below the diagonal) into
+          // the lower half if the global system is marked as symmetric.
+          if (global_system_symmetry_flag == true)
+            {
+              // Hmm... a bit nasty, but it makes sense to do the global
+              // symmetrization only once if possible. To (unnecessarily)
+              // symmetrize each form contribution after assembling only it's
+              // lower diagonal part would be a little wasteful.
+              FullMatrix<ScalarType> &symmetrized_cell_matrix =
+                const_cast<FullMatrix<ScalarType> &>(cell_matrix);
+              // symmetrized_cell_matrix.symmetrize();
 
-                using DoFRange_t =
-                  std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
-                const DoFRange_t dof_range_j(0, local_dof_indices.size());
-                for (const auto j : dof_range_j)
-                  {
-                    const DoFRange_t dof_range_i(j + 1,
-                                                 local_dof_indices.size());
-                    for (const auto i : dof_range_i)
-                      symmetrized_cell_matrix(i, j) = cell_matrix(j, i);
-                  }
-              }
+              using DoFRange_t =
+                std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
+              const DoFRange_t dof_range_j(0, local_dof_indices.size());
+              for (const auto j : dof_range_j)
+                {
+                  const DoFRange_t dof_range_i(j + 1, local_dof_indices.size());
+                  for (const auto i : dof_range_i)
+                    symmetrized_cell_matrix(i, j) = cell_matrix(j, i);
+                }
+            }
 
-            if (system_matrix && system_vector)
-              {
-                internal::distribute_local_to_global(constraints,
-                                                     cell_matrix,
-                                                     cell_vector,
-                                                     local_dof_indices,
-                                                     system_matrix,
-                                                     system_vector);
-              }
-            else if (system_matrix)
-              {
-                internal::distribute_local_to_global(constraints,
-                                                     cell_matrix,
-                                                     local_dof_indices,
-                                                     system_matrix);
-              }
-            else if (system_vector)
-              {
-                internal::distribute_local_to_global(constraints,
-                                                     cell_vector,
-                                                     local_dof_indices,
-                                                     system_vector);
-              }
-            else
-              {
-                AssertThrow(
-                  system_matrix || system_vector,
-                  ExcMessage(
-                    "Either the system matrix or system RHS vector have "
-                    "to be supplied in order for assembly to occur."));
-              }
-          };
+          if (system_matrix && system_vector)
+            {
+              internal::distribute_local_to_global(constraints,
+                                                   cell_matrix,
+                                                   cell_vector,
+                                                   local_dof_indices,
+                                                   system_matrix,
+                                                   system_vector);
+            }
+          else if (system_matrix)
+            {
+              internal::distribute_local_to_global(constraints,
+                                                   cell_matrix,
+                                                   local_dof_indices,
+                                                   system_matrix);
+            }
+          else if (system_vector)
+            {
+              internal::distribute_local_to_global(constraints,
+                                                   cell_vector,
+                                                   local_dof_indices,
+                                                   system_vector);
+            }
+          else
+            {
+              AssertThrow(
+                system_matrix || system_vector,
+                ExcMessage("Either the system matrix or system RHS vector have "
+                           "to be supplied in order for assembly to occur."));
+            }
+        };
 
         // Cell and/or boundary contributions
         copy_local_to_global(copy_data.matrices[0],

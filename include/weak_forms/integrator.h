@@ -89,9 +89,8 @@ namespace WeakForms
       : integrand_position_independent(nullptr)
       , integrand_position_dependent(
           [&function](const std::vector<Point<spacedim>> &points,
-                      std::vector<ReturnType> &           values) {
-            return function.value_list(points, values);
-          })
+                      std::vector<ReturnType> &           values)
+          { return function.value_list(points, values); })
     {}
 
     // SECTION: Volume integrals
@@ -271,7 +270,8 @@ namespace WeakForms
                           &integrand_pi,
                           &destination](const CellIteratorType &cell,
                                         ScratchData &           scratch_data,
-                                        CopyData &              copy_data) {
+                                        CopyData &              copy_data)
+      {
         const auto &fe_values = scratch_data.reinit(cell);
 
         // Get values to be integrated
@@ -290,9 +290,8 @@ namespace WeakForms
 
       ReturnType integral =
         dealii::internal::NumberType<ReturnType>::value(0.0);
-      auto copier = [&integral](const CopyData &copy_data) {
-        integral += copy_data.cell_integral;
-      };
+      auto copier = [&integral](const CopyData &copy_data)
+      { integral += copy_data.cell_integral; };
 
       MeshWorker::mesh_loop(filtered_iterator_range,
                             cell_worker,
@@ -378,7 +377,8 @@ namespace WeakForms
                               &destination](const CellIteratorType &cell,
                                             const unsigned int      face,
                                             ScratchData &scratch_data,
-                                            CopyData &   copy_data) {
+                                            CopyData &   copy_data)
+      {
         Assert(cell->face(face)->at_boundary(), ExcInternalError());
 
         // Check to see if we're going to work on a boundary of interest.
@@ -410,9 +410,8 @@ namespace WeakForms
 
       ReturnType integral =
         dealii::internal::NumberType<ReturnType>::value(0.0);
-      auto copier = [&integral](const CopyData &copy_data) {
-        integral += copy_data.face_integral;
-      };
+      auto copier = [&integral](const CopyData &copy_data)
+      { integral += copy_data.face_integral; };
 
       MeshWorker::mesh_loop(filtered_iterator_range,
                             empty_cell_worker,
