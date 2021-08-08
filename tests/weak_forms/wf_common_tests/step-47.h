@@ -353,23 +353,27 @@ namespace Step47
       std::vector<SymmetricTensor<2, dim>> exact_hessians(n_q_points);
       std::vector<Tensor<2, dim>>          hessians(n_q_points);
       for (auto &cell : dof_handler.active_cell_iterators())
-        {
-          fe_values.reinit(cell);
-          fe_values[scalar].get_function_hessians(solution, hessians);
-          exact_solution.hessian_list(fe_values.get_quadrature_points(),
-                                      exact_hessians);
+        if (cell->is_locally_owned())
+          {
+            fe_values.reinit(cell);
+            fe_values[scalar].get_function_hessians(solution, hessians);
+            exact_solution.hessian_list(fe_values.get_quadrature_points(),
+                                        exact_hessians);
 
-          double local_error = 0;
-          for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-            {
-              local_error +=
-                ((exact_hessians[q_point] - hessians[q_point]).norm_square() *
-                 fe_values.JxW(q_point));
-            }
-          error_per_cell[cell->active_cell_index()] = std::sqrt(local_error);
-        }
+            double local_error = 0;
+            for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+              {
+                local_error +=
+                  ((exact_hessians[q_point] - hessians[q_point]).norm_square() *
+                   fe_values.JxW(q_point));
+              }
+            error_per_cell[cell->active_cell_index()] = std::sqrt(local_error);
+          }
 
-      const double error_norm = error_per_cell.l2_norm();
+      const double error_norm =
+        VectorTools::compute_global_error(triangulation,
+                                          error_per_cell,
+                                          VectorTools::L2_norm);
       deallog << "Iteration: " << iteration
               << "   Error in the broken H2 seminorm: " << error_norm
               << std::endl;
