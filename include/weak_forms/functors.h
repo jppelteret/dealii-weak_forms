@@ -931,7 +931,23 @@ private:                                                                      \
   template <typename ResultScalarType>                                        \
   value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
   {                                                                           \
-    return function->value(point);                                            \
+    /* We require this try-catch block because the user may not               \
+     * overload the value function, but rather chooses to implement           \
+     * the value_list function directly.                                      \
+     */                                                                       \
+    /*                                                                        \
+   try                                                                        \
+     {                                                                        \
+       const value_type<ResultScalarType> value = function->value(point);     \
+       return value;                                                          \
+     }                                                                        \
+   catch (...)                                                                \
+   */                                                                         \
+    {                                                                         \
+      std::vector<value_type<ResultScalarType>> values(1);                    \
+      function->value_list({point}, values);                                  \
+      return values[0];                                                       \
+    }                                                                         \
   }
 
 #define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()           \
@@ -962,7 +978,24 @@ private:                                                                      \
   template <typename ResultScalarType>                                        \
   value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
   {                                                                           \
-    return function->gradient(point);                                         \
+    /* We require this try-catch block because the user may not               \
+     * overload the gradient function, but rather chooses to implement        \
+     * the gradient_list function directly.                                   \
+     */                                                                       \
+    /*                                                                        \
+   try                                                                        \
+     {                                                                        \
+       const value_type<ResultScalarType> gradient =                          \
+         function->gradient(point);                                           \
+       return gradient;                                                       \
+     }                                                                        \
+   catch (...)                                                                \
+   */                                                                         \
+    {                                                                         \
+      std::vector<value_type<ResultScalarType>> gradients(1);                 \
+      function->gradient_list({point}, gradients);                            \
+      return gradients[0];                                                    \
+    }                                                                         \
   }
 
 
