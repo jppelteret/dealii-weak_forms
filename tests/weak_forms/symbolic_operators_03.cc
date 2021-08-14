@@ -16,7 +16,6 @@
 
 // Check that symbolic operators work on interfaces
 // - Trial function, test function
-// - [field solution (scalar-valued finite element)] -- NOT IMPLEMENTED YET
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -196,42 +195,6 @@ run()
                              cell_neighbour_face,
                              cell_neighbour_subface);
   test(fe_interface_values, "Interface");
-
-  // Not implemented
-  //   {
-  //     const std::string title = "Field solution";
-  //     std::cout << title << std::endl;
-  //     deallog << title << std::endl;
-
-  //     using namespace WeakForms;
-  //     const FieldSolution<dim, spacedim> field_solution;
-
-  //     std::cout << "Value: "
-  //               << (field_solution.value().template operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Gradient: "
-  //               << (field_solution.gradient().template
-  //               operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Laplacian: "
-  //               << (field_solution.laplacian().template
-  //               operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Hessian: "
-  //               << (field_solution.hessian().template operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Third derivative: "
-  //               << (field_solution.third_derivative().template
-  //                   operator()<NumberType>(fe_values,
-  //                   local_dof_values))[q_point]
-  //               << std::endl;
-
-  //     deallog << "OK" << std::endl;
-  //   }
 
   deallog << "OK" << std::endl;
 }
