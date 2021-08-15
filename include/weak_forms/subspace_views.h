@@ -341,6 +341,108 @@ namespace WeakForms
   third_derivative(
     const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
+
+
+  /* -------- Finite element subspaces: Field solutions (interface) -------- */
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_values,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_values(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_gradients(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_hessians(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_third_derivatives(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_values,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_values(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_gradients(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+  template <types::solution_index solution_index = 0,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_hessians(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
 } // namespace WeakForms
 
 #endif // DOXYGEN
@@ -741,6 +843,78 @@ public:                                                                     \
       {
         return WeakForms::average_of_hessians(*this);
       }
+
+      // Operators: Field solutions only (interface)
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_values() const
+      {
+        return WeakForms::jump_in_values<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_gradients() const
+      {
+        return WeakForms::jump_in_gradients<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_hessians() const
+      {
+        return WeakForms::jump_in_hessians<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_third_derivatives() const
+      {
+        return WeakForms::jump_in_third_derivatives<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_values() const
+      {
+        return WeakForms::average_of_values<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_gradients() const
+      {
+        return WeakForms::average_of_gradients<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_hessians() const
+      {
+        return WeakForms::average_of_hessians<solution_index>(*this);
+      }
     };
 
 
@@ -942,6 +1116,78 @@ public:                                                                     \
       average_of_hessians() const
       {
         return WeakForms::average_of_hessians(*this);
+      }
+
+      // Operators: Field solutions only (interface)
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_values() const
+      {
+        return WeakForms::jump_in_values<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_gradients() const
+      {
+        return WeakForms::jump_in_gradients<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_hessians() const
+      {
+        return WeakForms::jump_in_hessians<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      jump_in_third_derivatives() const
+      {
+        return WeakForms::jump_in_third_derivatives<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_values() const
+      {
+        return WeakForms::average_of_values<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_gradients() const
+      {
+        return WeakForms::average_of_gradients<solution_index>(*this);
+      }
+
+      template <
+        types::solution_index solution_index = 0,
+        typename T                           = SpaceType_,
+        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+      auto
+      average_of_hessians() const
+      {
+        return WeakForms::average_of_hessians<solution_index>(*this);
       }
     };
 
@@ -2677,6 +2923,237 @@ protected:                                                                     \
     };
 
 
+
+    /* -------- Finite element spaces: Solution fields (interfaces) -------- */
+
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::jump_in_values,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpValueBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpValueBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::jump_in_values)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_jumps_in_values<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::average_of_values,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageValueBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageValueBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::average_of_values)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_averages_of_values<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::jump_in_gradients,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpGradientBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpGradientBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::jump_in_gradients)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_jumps_in_gradients<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::average_of_gradients,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageGradientBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageGradientBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::average_of_gradients)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_averages_of_gradients<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::jump_in_hessians,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpHessianBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpHessianBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::jump_in_hessians)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_jumps_in_hessians<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::average_of_hessians,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageHessianBase<SubSpaceViewsType, solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpAverageHessianBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::average_of_hessians)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_averages_of_hessians<view_extractor_type, ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
+    template <typename SubSpaceViewsType, types::solution_index solution_index>
+    class SymbolicOp<SubSpaceViewsType,
+                     SymbolicOpCodes::jump_in_third_derivatives,
+                     typename std::enable_if<is_field_solution<
+                       typename SubSpaceViewsType::SpaceType>::value>::type,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpThirdDerivativeBase<SubSpaceViewsType,
+                                                 solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(
+        SymbolicOpJumpThirdDerivativeBase,
+        SubSpaceViewsType,
+        solution_index,
+        SymbolicOpCodes::jump_in_third_derivatives)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      const return_type<ScalarType> &
+      operator()(
+        MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
+        const std::vector<std::string> &solution_names) const
+      {
+        Assert(solution_index < solution_names.size(),
+               ExcIndexRange(solution_index, 0, solution_names.size()));
+
+        return scratch_data
+          .template get_jumps_in_third_derivatives<view_extractor_type,
+                                                   ScalarType>(
+            solution_names[solution_index], get_extractor());
+      }
+    };
+
+
 #undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL
 
 
@@ -3855,6 +4332,198 @@ namespace WeakForms
 
   //   return OpType(operand);
   // }
+
+
+
+  /* -------- Finite element subspaces: Field solutions (interface) -------- */
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_values,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_values(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_values,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_gradients(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_gradients,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_hessians(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_hessians,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  jump_in_third_derivatives(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_third_derivatives,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_values,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_values(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_values,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_gradients(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_gradients,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
+
+
+  template <types::solution_index solution_index,
+            template <class>
+            class SubSpaceViewsType,
+            int dim,
+            int spacedim>
+  WeakForms::Operators::SymbolicOp<
+    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+    WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
+    void,
+    WeakForms::internal::SolutionIndex<solution_index>>
+  average_of_hessians(
+    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_hessians,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    return OpType(operand);
+  }
 
 } // namespace WeakForms
 

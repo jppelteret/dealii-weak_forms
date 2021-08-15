@@ -16,7 +16,7 @@
 
 // Check that symbolic operators work on interfaces
 // - Trial function, test function (vector-valued finite element)
-// - [field solution (scalar-valued finite element)] -- NOT IMPLEMENTED YET
+// - Field solution (vector-valued finite element)
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -40,6 +40,22 @@
 
 #include "../weak_forms_tests.h"
 
+template <int dim>
+class DiscontinuousFunction : public Function<dim>
+{
+public:
+  DiscontinuousFunction(const unsigned int n_components = 1)
+    : Function<dim>(n_components)
+  {}
+
+  virtual double
+  value(const Point<dim> &p, const unsigned int component = 0) const override
+  {
+    const double value = (p[0] * p[1] > 0 ? +3 : -1); // Non-trivial average
+    return value * (1.0 + std::sin(p[0]) * std::cos(p[1]));
+  }
+};
+
 
 template <int dim, int spacedim = dim, typename NumberType = double>
 void
@@ -53,23 +69,29 @@ run()
   const QGauss<spacedim - 1>    qf_face(fe.degree + 1);
 
   Triangulation<dim, spacedim> triangulation;
-  GridGenerator::hyper_cube(triangulation);
+  GridGenerator::hyper_cube(triangulation, -1, 1);
   triangulation.refine_global(1);
 
   DoFHandler<dim, spacedim> dof_handler(triangulation);
   dof_handler.distribute_dofs(fe);
 
   Vector<double> solution(dof_handler.n_dofs());
-  VectorTools::interpolate(dof_handler,
-                           Functions::CosineFunction<spacedim>(
-                             fe.n_components()),
-                           solution);
+  // VectorTools::interpolate(dof_handler,
+  //                          DiscontinuousFunction<spacedim>(
+  //                            fe.n_components()),
+  //                          solution);
+  // Don't interpolate, as points precisely on the interfaces get evaluated and
+  // we don't end up with a jump in the values across it.
+  AffineConstraints<double> constraints;
+  constraints.close();
+  VectorTools::project(dof_handler,
+                       constraints,
+                       QGauss<spacedim>(fe.degree + 3),
+                       DiscontinuousFunction<spacedim>(fe.n_components()),
+                       solution);
 
   const UpdateFlags update_flags_interface =
     update_values | update_gradients | update_hessians | update_3rd_derivatives;
-  FEInterfaceValues<dim, spacedim> fe_interface_values(fe,
-                                                       qf_face,
-                                                       update_flags_interface);
 
   const auto          cell = dof_handler.begin_active();
   std::vector<double> local_dof_values(fe.dofs_per_cell);
@@ -77,9 +99,18 @@ run()
                        local_dof_values.begin(),
                        local_dof_values.end());
 
+  MeshWorker::ScratchData<dim, spacedim> scratch_data(
+    fe, qf_cell, update_default, qf_face, update_flags_interface);
+
+  const WeakForms::SolutionStorage<Vector<double>> solution_storage(solution);
+  const std::vector<std::string> &                 solution_names =
+    solution_storage.get_solution_names();
+
   const auto test =
-    [](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
-       const std::string &                     type)
+    [&scratch_data, &solution_names](
+      const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+      const std::string &                     type,
+      const bool                              is_on_interface)
   {
     const unsigned int dof_index =
       fe_interface_values.n_current_interface_dofs() - 1;
@@ -125,12 +156,12 @@ run()
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
                 << std::endl;
-      std::cout << "Jump in gradients: "
+      std::cout << "Average of gradients: "
                 << (test[subspace_extractor].average_of_gradients().template
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
                 << std::endl;
-      std::cout << "Jump in Hessians: "
+      std::cout << "Average of Hessians: "
                 << (test[subspace_extractor].average_of_hessians().template
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
@@ -177,12 +208,12 @@ run()
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
                 << std::endl;
-      std::cout << "Jump in gradients: "
+      std::cout << "Average of gradients: "
                 << (trial[subspace_extractor].average_of_gradients().template
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
                 << std::endl;
-      std::cout << "Jump in Hessians: "
+      std::cout << "Average of Hessians: "
                 << (trial[subspace_extractor].average_of_hessians().template
                     operator()<NumberType>(
                       fe_interface_values))[dof_index][q_point]
@@ -190,70 +221,99 @@ run()
 
       deallog << "OK" << std::endl;
     }
+
+    // Scratch data will only be correctly initialised if on an interface
+    if (is_on_interface)
+      {
+        const std::string title = "Field solution: " + type;
+        std::cout << title << std::endl;
+        deallog << title << std::endl;
+
+        using namespace WeakForms;
+        const FieldSolution<dim, spacedim> field_solution;
+        const SubSpaceExtractors::Vector   subspace_extractor(0,
+                                                            "u",
+                                                            "\\mathbf{u}");
+
+        std::cout
+          << "Jump in values: "
+          << (field_solution[subspace_extractor].jump_in_values().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+        std::cout
+          << "Jump in gradients: "
+          << (field_solution[subspace_extractor].jump_in_gradients().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+        std::cout
+          << "Jump in Hessians: "
+          << (field_solution[subspace_extractor].jump_in_hessians().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+        std::cout << "Jump in third derivatives: "
+                  << (field_solution[subspace_extractor]
+                        .jump_in_third_derivatives()
+                        .template operator()<NumberType>(
+                          scratch_data, solution_names))[q_point]
+                  << std::endl;
+
+        std::cout
+          << "Average of values: "
+          << (field_solution[subspace_extractor].average_of_values().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+        std::cout
+          << "Average of gradients: "
+          << (field_solution[subspace_extractor].average_of_gradients().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+        std::cout
+          << "Average of Hessians: "
+          << (field_solution[subspace_extractor].average_of_hessians().template
+              operator()<NumberType>(scratch_data, solution_names))[q_point]
+          << std::endl;
+
+        deallog << "OK" << std::endl;
+      }
   };
 
   // Find a boundary face
-  unsigned int face = 0;
-  while (!cell->face(face)->at_boundary())
-    {
-      ++face;
-    }
-  fe_interface_values.reinit(cell, face);
-  test(fe_interface_values, "Face");
+  {
+    FEInterfaceValues<dim, spacedim> fe_interface_values(
+      fe, qf_face, update_flags_interface);
+    unsigned int face = 0;
+    while (!cell->face(face)->at_boundary())
+      {
+        ++face;
+      }
+    fe_interface_values.reinit(cell, face);
+
+    solution_storage.extract_local_dof_values(scratch_data);
+    test(fe_interface_values, "Face", false);
+  }
 
   // Find an interface face
-  face = 0;
-  while (cell->face(face)->at_boundary())
-    {
-      ++face;
-    }
-  const unsigned int subface                = numbers::invalid_unsigned_int;
-  const auto         cell_neighbour         = cell->neighbor(face);
-  const unsigned int cell_neighbour_face    = cell->neighbor_face_no(face);
-  const unsigned int cell_neighbour_subface = numbers::invalid_unsigned_int;
-  fe_interface_values.reinit(cell,
-                             face,
-                             subface,
-                             cell_neighbour,
-                             cell_neighbour_face,
-                             cell_neighbour_subface);
-  test(fe_interface_values, "Interface");
+  {
+    unsigned int face = 0;
+    while (cell->face(face)->at_boundary())
+      {
+        ++face;
+      }
+    const unsigned int subface                = numbers::invalid_unsigned_int;
+    const auto         cell_neighbour         = cell->neighbor(face);
+    const unsigned int cell_neighbour_face    = cell->neighbor_face_no(face);
+    const unsigned int cell_neighbour_subface = numbers::invalid_unsigned_int;
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values =
+      scratch_data.reinit(cell,
+                          face,
+                          subface,
+                          cell_neighbour,
+                          cell_neighbour_face,
+                          cell_neighbour_subface);
 
-  // Not implemented
-  //   {
-  //     const std::string title = "Field solution";
-  //     std::cout << title << std::endl;
-  //     deallog << title << std::endl;
-
-  //     using namespace WeakForms;
-  //     const FieldSolution<dim, spacedim> field_solution;
-
-  //     std::cout << "Value: "
-  //               << (field_solution.value().template operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Gradient: "
-  //               << (field_solution.gradient().template
-  //               operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Laplacian: "
-  //               << (field_solution.laplacian().template
-  //               operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Hessian: "
-  //               << (field_solution.hessian().template operator()<NumberType>(
-  //                    fe_values, local_dof_values))[q_point]
-  //               << std::endl;
-  //     std::cout << "Third derivative: "
-  //               << (field_solution.third_derivative().template
-  //                   operator()<NumberType>(fe_values,
-  //                   local_dof_values))[q_point]
-  //               << std::endl;
-
-  //     deallog << "OK" << std::endl;
-  //   }
+    solution_storage.extract_local_dof_values(scratch_data);
+    test(fe_interface_values, "Interface", true);
+  }
 
   deallog << "OK" << std::endl;
 }
