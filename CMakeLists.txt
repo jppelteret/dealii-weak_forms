@@ -248,6 +248,7 @@ IF(BUILD_TESTS OR BUILD_BENCHMARKS)
 
     IF(EXISTS ${DEAL_II_TESTS_H})
       MESSAGE(STATUS "Tests enabled")
+      MESSAGE(STATUS "Path to deal.II test header: ${DEAL_II_TESTS_H}")
       INCLUDE_DIRECTORIES(${DEAL_II_SOURCE_DIR}/tests)
       ADD_SUBDIRECTORY(tests)
     ELSE()
