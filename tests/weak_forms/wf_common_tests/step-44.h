@@ -896,7 +896,9 @@ namespace Step44
     BlockVector<double>
     get_total_solution(const BlockVector<double> &solution_delta) const;
     void
-                              output_results() const;
+    output_results() const;
+    void
+                              output_point_solution() const;
     Parameters::AllParameters parameters;
     double                    vol_reference;
     Triangulation<dim>        triangulation;
@@ -1041,26 +1043,7 @@ namespace Step44
         solve_nonlinear_timestep(solution_delta);
         solution_n += solution_delta;
         output_results();
-        // Output displacement at centre of traction surface
-        {
-          const Point<dim> soln_pt(
-            dim == 3 ? Point<dim>(0.0, 1.0, 0.0) * parameters.scale :
-                       Point<dim>(0.0, 1.0) * parameters.scale);
-          typename DoFHandler<dim>::active_cell_iterator
-            cell = dof_handler_ref.begin_active(),
-            endc = dof_handler_ref.end();
-          for (; cell != endc; ++cell)
-            for (unsigned int v = 0; v < GeometryInfo<dim>::vertices_per_cell;
-                 ++v)
-              if (cell->vertex(v).distance(soln_pt) < 1e-6 * parameters.scale)
-                {
-                  Tensor<1, dim> soln;
-                  for (unsigned int d = 0; d < dim; ++d)
-                    soln[d] = solution_n(cell->vertex_dof_index(v, u_dof + d));
-                  deallog << "Timestep " << time.get_timestep() << ": " << soln
-                          << std::endl;
-                }
-        }
+        output_point_solution();
         time.increment();
       }
   }
@@ -1936,5 +1919,28 @@ namespace Step44
         std::ofstream output(filename.str().c_str());
         data_out.write_vtk(output);
       }
+  }
+  template <int dim>
+  void
+  Step44_Base<dim>::output_point_solution() const
+  {
+    // Output displacement at centre of traction surface
+    const Point<dim> soln_pt(dim == 3 ?
+                               Point<dim>(0.0, 1.0, 0.0) * parameters.scale :
+                               Point<dim>(0.0, 1.0) * parameters.scale);
+
+    typename DoFHandler<dim>::active_cell_iterator cell = dof_handler_ref
+                                                            .begin_active(),
+                                                   endc = dof_handler_ref.end();
+    for (; cell != endc; ++cell)
+      for (unsigned int v = 0; v < GeometryInfo<dim>::vertices_per_cell; ++v)
+        if (cell->vertex(v).distance(soln_pt) < 1e-6 * parameters.scale)
+          {
+            Tensor<1, dim> soln;
+            for (unsigned int d = 0; d < dim; ++d)
+              soln[d] = solution_n(cell->vertex_dof_index(v, u_dof + d));
+            deallog << "Timestep " << time.get_timestep() << ": " << soln
+                    << std::endl;
+          }
   }
 } // namespace Step44
