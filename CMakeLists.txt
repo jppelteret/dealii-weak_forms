@@ -211,6 +211,22 @@ INSTALL(
 # )
 
 ##
+# Build documentation
+##
+OPTION(BUILD_DOCUMENTATION "Build the Doxygen documentation" OFF)
+OPTION(DOXYGEN_EXECUTABLE "Path of the doxygen executable" "doxygen")
+
+IF(BUILD_DOCUMENTATION)
+  MESSAGE(STATUS "Configuring with Doxygen documentation")
+  ADD_SUBDIRECTORY(doc/doxygen)
+
+  ADD_CUSTOM_TARGET(docs
+    COMMAND doxygen doc/doxygen/options.dox
+    COMMENT "Build Doxygen documentation"
+  )
+ENDIF()
+
+##
 # Enable testing and descent into tests/ subdirectory
 ##
 OPTION(BUILD_TESTS "Configure test environment" ON)
