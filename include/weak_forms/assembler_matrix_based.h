@@ -181,6 +181,28 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
+    // Same as the previous function, but with solution storage
+    template <typename MatrixType,
+              typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType>
+    void
+    assemble_matrix(MatrixType &                         system_matrix,
+                    const SolutionStorage<VectorType> &  solution_storage,
+                    const AffineConstraints<ScalarType> &constraints,
+                    const DoFHandlerType &               dof_handler,
+                    const CellQuadratureType &           cell_quadrature) const
+    {
+      do_assemble_system<MatrixType, std::nullptr_t, std::nullptr_t>(
+        &system_matrix,
+        nullptr /*system_vector*/,
+        constraints,
+        dof_handler,
+        solution_storage,
+        cell_quadrature,
+        nullptr /*face_quadrature*/);
+    }
+
     /**
      * Assemble the linear system matrix, including boundary and internal
      * face contributions.
@@ -239,6 +261,30 @@ namespace WeakForms
         &face_quadrature);
     }
 
+    // Same as the previous function, but with solution storage
+    template <typename MatrixType,
+              typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType,
+              typename FaceQuadratureType>
+    void
+    assemble_matrix(MatrixType &                         system_matrix,
+                    const SolutionStorage<VectorType> &  solution_storage,
+                    const AffineConstraints<ScalarType> &constraints,
+                    const DoFHandlerType &               dof_handler,
+                    const CellQuadratureType &           cell_quadrature,
+                    const FaceQuadratureType &           face_quadrature) const
+    {
+      do_assemble_system<MatrixType, std::nullptr_t, FaceQuadratureType>(
+        &system_matrix,
+        nullptr /*system_vector*/,
+        constraints,
+        dof_handler,
+        solution_storage,
+        cell_quadrature,
+        &face_quadrature);
+    }
+
     /**
      * Assemble a RHS vector, boundary and internal face contributions.
      *
@@ -287,6 +333,29 @@ namespace WeakForms
         constraints,
         dof_handler,
         &solution_vector,
+        cell_quadrature,
+        nullptr /*face_quadrature*/);
+    }
+
+    // Same as the previous function, but with solution storage
+    template <typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType>
+    void
+    assemble_rhs_vector(
+      VectorType &system_vector,
+      const SolutionStorage<typename identity<VectorType>::type>
+        &                                  solution_storage,
+      const AffineConstraints<ScalarType> &constraints,
+      const DoFHandlerType &               dof_handler,
+      const CellQuadratureType &           cell_quadrature) const
+    {
+      do_assemble_system<std::nullptr_t, VectorType, std::nullptr_t>(
+        nullptr /*system_matrix*/,
+        &system_vector,
+        constraints,
+        dof_handler,
+        solution_storage,
         cell_quadrature,
         nullptr /*face_quadrature*/);
     }
@@ -348,6 +417,31 @@ namespace WeakForms
         &face_quadrature);
     }
 
+    // Same as the previous function, but with solution storage
+    template <typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType,
+              typename FaceQuadratureType>
+    void
+    assemble_rhs_vector(
+      VectorType &system_vector,
+      const SolutionStorage<typename identity<VectorType>::type>
+        &                                  solution_storage,
+      const AffineConstraints<ScalarType> &constraints,
+      const DoFHandlerType &               dof_handler,
+      const CellQuadratureType &           cell_quadrature,
+      const FaceQuadratureType &           face_quadrature) const
+    {
+      do_assemble_system<std::nullptr_t, VectorType, FaceQuadratureType>(
+        nullptr /*system_matrix*/,
+        &system_vector,
+        constraints,
+        dof_handler,
+        solution_storage,
+        cell_quadrature,
+        &face_quadrature);
+    }
+
     /**
      * Assemble a system matrix and a RHS vector, excluding boundary and
      * internal face contributions.
@@ -401,6 +495,30 @@ namespace WeakForms
         constraints,
         dof_handler,
         &solution_vector,
+        cell_quadrature,
+        nullptr /*face_quadrature*/);
+    }
+
+    // Same as the previous function, but with solution storage
+    template <typename MatrixType,
+              typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType>
+    void
+    assemble_system(MatrixType &system_matrix,
+                    VectorType &system_vector,
+                    const SolutionStorage<typename identity<VectorType>::type>
+                      &                                  solution_storage,
+                    const AffineConstraints<ScalarType> &constraints,
+                    const DoFHandlerType &               dof_handler,
+                    const CellQuadratureType &           cell_quadrature) const
+    {
+      do_assemble_system<MatrixType, VectorType, std::nullptr_t>(
+        &system_matrix,
+        &system_vector,
+        constraints,
+        dof_handler,
+        solution_storage,
         cell_quadrature,
         nullptr /*face_quadrature*/);
     }
@@ -462,6 +580,32 @@ namespace WeakForms
         constraints,
         dof_handler,
         &solution_vector,
+        cell_quadrature,
+        &face_quadrature);
+    }
+
+    // Same as the previous function, but with solution storage
+    template <typename MatrixType,
+              typename VectorType,
+              typename DoFHandlerType,
+              typename CellQuadratureType,
+              typename FaceQuadratureType>
+    void
+    assemble_system(MatrixType &system_matrix,
+                    VectorType &system_vector,
+                    const SolutionStorage<typename identity<VectorType>::type>
+                      &                                  solution_storage,
+                    const AffineConstraints<ScalarType> &constraints,
+                    const DoFHandlerType &               dof_handler,
+                    const CellQuadratureType &           cell_quadrature,
+                    const FaceQuadratureType &           face_quadrature) const
+    {
+      do_assemble_system<MatrixType, VectorType, FaceQuadratureType>(
+        &system_matrix,
+        &system_vector,
+        constraints,
+        dof_handler,
+        solution_storage,
         cell_quadrature,
         &face_quadrature);
     }

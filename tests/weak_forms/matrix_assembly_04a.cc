@@ -25,7 +25,7 @@
 
 #include <deal.II/dofs/dof_tools.h>
 
-#include <deal.II/fe/fe_q.h>
+#include <deal.II/fe/fe_raviart_thomas.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 
@@ -59,7 +59,7 @@ run()
   LogStream::Prefix prefix("Dim " + Utilities::to_string(dim));
   std::cout << "Dim: " << dim << std::endl;
 
-  const FESystem<dim, spacedim> fe(FE_Q<dim, spacedim>(1), dim);
+  const FESystem<dim, spacedim> fe(FE_RaviartThomas<dim /*, spacedim*/>(2), 1);
   const QGauss<spacedim>        qf_cell(fe.degree + 1);
   const QGauss<spacedim - 1>    qf_face(fe.degree + 1);
 
@@ -96,7 +96,7 @@ run()
   auto verify_assembly = [](const SparseMatrix<double> &system_matrix_std,
                             const SparseMatrix<double> &system_matrix_wf)
   {
-    constexpr double tol = 1e-12;
+    constexpr double tol = 1e-9;
 
     Assert(system_matrix_wf.m() == system_matrix_std.m(),
            ExcDimensionMismatch(system_matrix_wf.m(), system_matrix_std.m()));
