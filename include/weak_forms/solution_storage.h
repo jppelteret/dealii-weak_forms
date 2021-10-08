@@ -38,7 +38,7 @@ namespace WeakForms
   class SolutionStorage
   {
   public:
-    using ptr_type = const VectorType *const;
+    using ptr_type = const VectorType *;
 
     // Store nothing
     explicit SolutionStorage()
@@ -57,7 +57,7 @@ namespace WeakForms
 
     explicit SolutionStorage(const std::vector<ptr_type> &solution_vectors,
                              const std::string            name = "solution")
-      : SolutionStorage({&solution_vectors},
+      : SolutionStorage(solution_vectors,
                         create_name_vector(name, solution_vectors.size()))
     {}
 
