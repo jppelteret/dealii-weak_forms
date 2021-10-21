@@ -1,0 +1,103 @@
+# Listing of Parameters
+# ---------------------
+
+subsection Boundary conditions
+  #
+end
+
+
+subsection Geometry
+  # Discretisation type
+  # Options: Cartesian, Exact
+  set Discretisation type = Exact
+
+  # Wire radius
+  set Wire radius     = 0.25
+  #set Wire radius     = 10
+
+  # Surrounding side length
+  set Surrounding side length  = 2.0
+
+  # Global grid scaling factor
+  set Grid scale          = 1.0e-2
+
+  # Discretisation: Elements along wire radius
+  set Number of radial divisions = 1
+
+  # Discretisation: Elements along wire length
+  set Number of longitudinal divisions  = 2
+end
+
+
+subsection Material properties
+  # Wire relative permeability (copper)
+  set Wire relative permeability = 0.999
+  set Wire electrical conductivity = 5e7
+
+  # Surrounding relative permeability (air)
+  set Surrounding relative permeability = 1.0
+  set Surrounding electrical conductivity = 1.0 # Real: ~1e-9
+end
+
+
+subsection Source terms
+  # Total current through wire
+  set Wire current = 10
+end
+
+
+subsection Time Discretisation
+  set End time = 1.0
+  set Time step size = 0.1
+end
+
+
+subsection Finite element system
+  # Minimum potential polynomial order
+  set Minimum polynomial degree = 0
+
+  # Maximum potential polynomial order
+  set Maximum polynomial degree = 0
+end
+
+
+subsection Refinement
+  # Refinement strategy
+  # Options: h-GMR , p-GMR , h-AMR , p-AMR
+  set Refinement strategy         = h-GMR
+
+  # Initial global refinement level
+  set Initial global refinements  = 1
+
+  # Maximum number of refinement cycles
+  set Maximum cycles              = 1
+
+  # Maximum number of refinement levels
+  set Maximum h-level             = 8
+
+  # Fraction of cells to refine
+  set Refinement fraction         = 0.3
+
+  # Fraction of cells to coarsen
+  set Coarsening fraction         = 0.03
+end
+
+
+subsection Linear solver
+  # Linear solver iterations (multiples of the system matrix size)
+  set Max iteration multiplier   = 1
+
+  # Linear solver residual
+  set Residual                   = 1e-6
+
+  # Preconditioner type
+  # Options: jacobi ; ssor ; AMG
+  set Preconditioner type        = AMG
+
+  # Preconditioner relaxation value
+  set Preconditioner relaxation  = 1.2
+
+  # Type of solver used to solve the linear system
+  # Options: Direct ; Iterative
+  set Solver type                = Direct
+end
