@@ -16,6 +16,8 @@
 // Finite strain elasticity problem: Assembly using self-linearizing residual
 // weak form in conjunction with automatic differentiation.
 // This test replicates step-44 exactly.
+//
+// This variant of the test uses Sacado DFad as the AD type.
 
 #include <deal.II/differentiation/ad.h>
 
