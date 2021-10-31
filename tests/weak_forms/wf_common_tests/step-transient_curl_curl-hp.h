@@ -27,6 +27,7 @@
 #include <deal.II/base/logstream.h>
 #include <deal.II/base/parameter_handler.h>
 #include <deal.II/base/quadrature_lib.h>
+#include <deal.II/base/tensor_function.h>
 #include <deal.II/base/timer.h>
 
 #include <deal.II/dofs/dof_renumbering.h>
@@ -770,12 +771,12 @@ namespace StepTransientCurlCurl
   // Note: J_f must be divergence free!
 
   template <int dim>
-  class SourceFreeCurrentDensity : public Function<dim>
+  class SourceFreeCurrentDensity : public TensorFunction<1, dim>
   {
   public:
     SourceFreeCurrentDensity(const Geometry<dim> &geometry,
                              const double &       wire_current)
-      : Function<dim>(dim)
+      : TensorFunction<1, dim>()
       , geometry(geometry)
       , wire_current(wire_current)
       , free_current_density(wire_current / geometry.wire_CSA())
@@ -784,35 +785,25 @@ namespace StepTransientCurlCurl
     virtual ~SourceFreeCurrentDensity()
     {}
 
-    virtual void
-    vector_value(const Point<dim> &p, Vector<double> &values) const;
+    virtual Tensor<1, dim>
+    value(const Point<dim> &p) const override;
 
     const Geometry<dim> &geometry;
     const double         wire_current;         // I
     const double         free_current_density; // J
   };
 
-  template <int dim>
-  void
-  SourceFreeCurrentDensity<dim>::vector_value(const Point<dim> &,
-                                              Vector<double> &) const
-  {
-    AssertThrow(false, ExcInternalError());
-  }
-
   template <>
-  void
-  SourceFreeCurrentDensity<3>::vector_value(const Point<3> &p,
-                                            Vector<double> &values) const
+  Tensor<1, 3>
+  SourceFreeCurrentDensity<3>::value(const Point<3> &p) const
   {
-    const unsigned int dim = 3;
-    Assert(values.size() == dim, ExcDimensionMismatch(values.size(), dim));
-    values = 0.0;
-
     if (geometry.within_wire(p) == true)
       {
-        for (unsigned int d = 0; d < dim; ++d)
-          values[d] = free_current_density * geometry.direction[d];
+        return free_current_density * geometry.direction;
+      }
+    else
+      {
+        return Tensor<1, 3>();
       }
   }
 
@@ -1348,18 +1339,14 @@ namespace StepTransientCurlCurl
             const unsigned int &n_fq_points =
               fe_face_values.n_quadrature_points;
 
-            std::vector<Vector<double>> source_values(n_fq_points,
-                                                      Vector<double>(dim));
-            function_free_current_density.vector_value_list(
+            std::vector<Tensor<1, dim>> source_values(n_fq_points);
+            function_free_current_density.value_list(
               fe_face_values.get_quadrature_points(), source_values);
 
             for (unsigned int fq_point = 0; fq_point < n_fq_points; ++fq_point)
               {
-                const Tensor<1, dim> J_f(
-                  {source_values[fq_point][0],
-                   source_values[fq_point][1],
-                   source_values[fq_point]
-                                [2]}); // Note: J_f must be divergence free!
+                // Note: J_f must be divergence free!
+                const Tensor<1, dim> &J_f = source_values[fq_point];
                 const double          JxW = fe_face_values.JxW(fq_point);
                 const Tensor<1, dim> &N =
                   fe_face_values.normal_vector(fq_point);
@@ -1864,8 +1851,10 @@ namespace StepTransientCurlCurl
       for (unsigned int p = 0; p < n_evaluation_points; ++p)
         {
           AssertDimension(computed_quantities[p].size(), dim);
-          source_free_current.vector_value(evaluation_points[p],
-                                           computed_quantities[p]);
+          const Tensor<1, dim> J_f =
+            source_free_current.value(evaluation_points[p]);
+          for (unsigned int d = 0; d < dim; ++d)
+            computed_quantities[p][d] = J_f[d];
         }
     }
 
@@ -2125,12 +2114,11 @@ namespace StepTransientCurlCurl
         const auto          point = fe_values.get_quadrature_points()[q_point];
 
         std::vector<double>         conductivity_coefficient_values(n_q_points);
-        std::vector<Vector<double>> source_values(n_q_points,
-                                                  Vector<double>(dim));
+        std::vector<Tensor<1,dim>> source_values(n_q_points);
 
         this->function_material_conductivity_coefficients.value_list(
           fe_values.get_quadrature_points(), conductivity_coefficient_values);
-        this->function_free_current_density.vector_value_list(
+        this->function_free_current_density.value_list(
           fe_values.get_quadrature_points(), source_values);
 
         std::vector<Tensor<1, dim>> solution_curls(n_q_points);
@@ -2143,14 +2131,12 @@ namespace StepTransientCurlCurl
         const Tensor<1, dim> B      = solution_curls[q_point];
         const Tensor<1, dim> dA_dt  = d_solution_dt_values[q_point];
         const Tensor<1, dim> J_eddy = -sigma * dA_dt;
-        const Tensor<1, dim> J_free({source_values[q_point][0],
-                                     source_values[q_point][1],
-                                     source_values[q_point][2]});
+        const Tensor<1, dim> &J_free = source_values[q_point];
 
         deallog << " ; Point: " << point
                 << " ; Within wire: " << geometry.within_wire(point)
-                << " ; B: " << B << " ; J_eddy: " << J_eddy
-                << " ; J_free: " << J_free << std::endl;
+                << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
+                << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
       }
   }
 

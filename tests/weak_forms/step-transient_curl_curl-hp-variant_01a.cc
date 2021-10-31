@@ -75,13 +75,12 @@ namespace StepTransientCurlCurl
 
         std::vector<double>         permeability_coefficient_values(n_q_points);
         std::vector<double>         conductivity_coefficient_values(n_q_points);
-        std::vector<Vector<double>> source_values(n_q_points,
-                                                  Vector<double>(dim));
+        std::vector<Tensor<1, dim>> source_values(n_q_points);
         this->function_material_permeability_coefficients.value_list(
           fe_values.get_quadrature_points(), permeability_coefficient_values);
         this->function_material_conductivity_coefficients.value_list(
           fe_values.get_quadrature_points(), conductivity_coefficient_values);
-        this->function_free_current_density.vector_value_list(
+        this->function_free_current_density.value_list(
           fe_values.get_quadrature_points(), source_values);
 
         // std::vector<Tensor<1, dim>> solution_curls(n_q_points);
@@ -136,9 +135,7 @@ namespace StepTransientCurlCurl
 
             // Uniform current through wire
             // Note: J_f must be divergence free!
-            const Tensor<1, dim> J_f({source_values[q_point][0],
-                                      source_values[q_point][1],
-                                      source_values[q_point][2]});
+            const Tensor<1, dim> &J_f = source_values[q_point];
 
             for (unsigned int I = 0; I < n_dofs_per_cell; ++I)
               {

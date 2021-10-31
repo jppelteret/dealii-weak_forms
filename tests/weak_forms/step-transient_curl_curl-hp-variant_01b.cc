@@ -14,12 +14,12 @@
 // ---------------------------------------------------------------------
 
 // Transient, uncoupled curl-curl problem: Assembly using composite weak forms
-// This test replicates step-transient_curl_curl exactly.
+// This test replicates step-transient_curl_curl-hp exactly.
 
 #include <weak_forms/weak_forms.h>
 
 #include "../weak_forms_tests.h"
-#include "wf_common_tests/step-transient_curl_curl.h"
+#include "wf_common_tests/step-transient_curl_curl-hp.h"
 
 namespace StepTransientCurlCurl
 {
@@ -129,8 +129,8 @@ namespace StepTransientCurlCurl
                               system_rhs,
                               solution_storage,
                               constraints,
-                              this->dof_handler,
-                              this->qf_cell);
+                              this->hp_dof_handler,
+                              this->qf_collection_cell);
   }
 
 } // namespace StepTransientCurlCurl
