@@ -74,13 +74,13 @@ namespace Step44
 
     // Field solution (subspaces)
     const auto u       = field_solution[subspace_extractor_u].value();
-    const auto grad_u  = field_solution[subspace_extractor_u].gradient();
+    const auto Grad_u  = field_solution[subspace_extractor_u].gradient();
     const auto p_tilde = field_solution[subspace_extractor_p].value();
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Field variables: Internal energy
     const auto internal_energy_func =
-      energy_functor("e^{int}", "\\Psi^{int}", grad_u, p_tilde, J_tilde);
+      energy_functor("e^{int}", "\\Psi^{int}", Grad_u, p_tilde, J_tilde);
     using EnergyADNumber_t = typename decltype(
       internal_energy_func)::template ad_type<double, ad_typecode>;
     static_assert(std::is_same<ADNumber_t, EnergyADNumber_t>::value,
@@ -92,7 +92,7 @@ namespace Step44
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
-                    const Tensor<2, spacedim, ADNumber_t> &grad_u,
+                    const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     p_tilde,
                     const ADNumber_t &                     J_tilde)
         {
@@ -103,7 +103,7 @@ namespace Step44
           const double c_1 = mu / 2.0;
 
           const Tensor<2, spacedim, ADNumber_t> F =
-            unit_symmetric_tensor<spacedim>() + grad_u;
+            unit_symmetric_tensor<spacedim>() + Grad_u;
           const SymmetricTensor<2, spacedim, ADNumber_t> C =
             symmetrize(transpose(F) * F);
           const ADNumber_t                         det_F = determinant(F);

@@ -77,21 +77,21 @@ namespace Step44
     const auto test_ss_J = test[subspace_extractor_J];
 
     const auto test_u      = test_ss_u.value();
-    const auto grad_test_u = test_ss_u.gradient();
+    const auto Grad_test_u = test_ss_u.gradient();
     const auto test_p      = test_ss_p.value();
     const auto test_J      = test_ss_J.value();
 
     // Field solution (subspaces)
     const auto u       = field_solution[subspace_extractor_u].value();
-    const auto grad_u  = field_solution[subspace_extractor_u].gradient();
+    const auto Grad_u  = field_solution[subspace_extractor_u].gradient();
     const auto p_tilde = field_solution[subspace_extractor_p].value();
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Residual
-    const auto residual_func_u = residual_functor("R", "R", grad_u, p_tilde);
-    const auto residual_func_p = residual_functor("R", "R", grad_u, J_tilde);
+    const auto residual_func_u = residual_functor("R", "R", Grad_u, p_tilde);
+    const auto residual_func_p = residual_functor("R", "R", Grad_u, J_tilde);
     const auto residual_func_J = residual_functor("R", "R", p_tilde, J_tilde);
-    const auto residual_ss_u   = residual_func_u[grad_test_u];
+    const auto residual_ss_u   = residual_func_u[Grad_test_u];
     const auto residual_ss_p   = residual_func_p[test_p];
     const auto residual_ss_J   = residual_func_J[test_J];
 
@@ -112,7 +112,7 @@ namespace Step44
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
-                    const Tensor<2, spacedim, ADNumber_t> &grad_u,
+                    const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     p_tilde)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
@@ -123,7 +123,7 @@ namespace Step44
           const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
             qph.get_data(cell);
           const Tensor<2, spacedim, ADNumber_t> F =
-            grad_u + Physics::Elasticity::StandardTensors<dim>::I;
+            Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const Tensor<2, spacedim, ADNumber_t> P =
             lqph[q_point]->get_P(F, p_tilde);
           return P;
@@ -135,14 +135,14 @@ namespace Step44
         [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
-                    const Tensor<2, spacedim, ADNumber_t> &grad_u,
+                    const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     J_tilde)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
           // i.e. don't return the result inline!
           const Tensor<2, spacedim, ADNumber_t> F =
-            grad_u + Physics::Elasticity::StandardTensors<dim>::I;
+            Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const ADNumber_t det_F_minus_J_tilde = determinant(F) - J_tilde;
           return det_F_minus_J_tilde;
         },

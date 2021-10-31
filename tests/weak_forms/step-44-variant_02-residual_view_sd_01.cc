@@ -84,21 +84,21 @@ namespace Step44
     const auto test_ss_J = test[subspace_extractor_J];
 
     const auto test_u      = test_ss_u.value();
-    const auto grad_test_u = test_ss_u.gradient();
+    const auto Grad_test_u = test_ss_u.gradient();
     const auto test_p      = test_ss_p.value();
     const auto test_J      = test_ss_J.value();
 
     // Field solution (subspaces)
     const auto u       = field_solution[subspace_extractor_u].value();
-    const auto grad_u  = field_solution[subspace_extractor_u].gradient();
+    const auto Grad_u  = field_solution[subspace_extractor_u].gradient();
     const auto p_tilde = field_solution[subspace_extractor_p].value();
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Residual
-    const auto residual_func_u = residual_functor("R", "R", grad_u, p_tilde);
-    const auto residual_func_p = residual_functor("R", "R", grad_u, J_tilde);
+    const auto residual_func_u = residual_functor("R", "R", Grad_u, p_tilde);
+    const auto residual_func_p = residual_functor("R", "R", Grad_u, J_tilde);
     const auto residual_func_J = residual_functor("R", "R", p_tilde, J_tilde);
-    const auto residual_ss_u   = residual_func_u[grad_test_u];
+    const auto residual_ss_u   = residual_func_u[Grad_test_u];
     const auto residual_ss_p   = residual_func_p[test_p];
     const auto residual_ss_J   = residual_func_J[test_J];
 
@@ -113,16 +113,16 @@ namespace Step44
 
     const auto residual_u =
       residual_ss_u.template value<SDNumber_t, dim, spacedim>(
-        [lqph_q_point, &spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+        [lqph_q_point, &spacedim](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
                                   const SDNumber_t &p_tilde)
         {
           const Tensor<2, spacedim, SDNumber_t> F =
-            grad_u + Physics::Elasticity::StandardTensors<dim>::I;
+            Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const Tensor<2, spacedim, SDNumber_t> P =
             lqph_q_point->get_P(F, p_tilde);
           return P;
         },
-        [](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+        [](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
            const SDNumber_t &                     p_tilde)
         {
           // Due to our shortcut, we've not made the constitutive
@@ -139,15 +139,15 @@ namespace Step44
 
     const auto residual_p =
       residual_ss_p.template value<SDNumber_t, dim, spacedim>(
-        [&spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+        [&spacedim](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
                     const SDNumber_t &                     J_tilde)
         {
           const Tensor<2, spacedim, SDNumber_t> F =
-            grad_u + Physics::Elasticity::StandardTensors<dim>::I;
+            Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           const SDNumber_t det_F_minus_J_tilde = determinant(F) - J_tilde;
           return det_F_minus_J_tilde;
         },
-        [&spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+        [&spacedim](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
                     const SDNumber_t &                     J_tilde)
         {
           // Due to our shortcut, we've not made the constitutive
