@@ -757,6 +757,25 @@ namespace Step44
     {
       return Jc;
     }
+    // Geometric stiffnesses
+    Tensor<4, dim>
+    get_Jc_geo() const
+    {
+      const SymmetricTensor<2, dim> tau = get_tau();
+      const SymmetricTensor<2, dim> Id =
+        Physics::Elasticity::StandardTensors<dim>::I;
+
+      Tensor<4, dim> Jc_geo;
+      for (unsigned int i = 0; i < dim; ++i)
+        for (unsigned int j = 0; j < dim; ++j)
+          for (unsigned int k = 0; k < dim; ++k)
+            for (unsigned int l = 0; l < dim; ++l)
+              {
+                Jc_geo[i][j][k][l] += Id[i][k] * tau[j][l];
+              }
+
+      return Jc_geo;
+    }
 
     // Fully referential configuration
     SymmetricTensor<2, dim>
