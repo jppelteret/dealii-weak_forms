@@ -81,14 +81,14 @@ namespace Step44
     const auto test_u      = test_ss_u.value();
     const auto test_p      = test_ss_p.value();
     const auto test_J      = test_ss_J.value();
-    const auto grad_test_u = test_ss_u.gradient();
+    const auto Grad_test_u = test_ss_u.gradient();
 
     // Trial solution (subspaces)
     const auto trial_ss_u = trial[subspace_extractor_u];
     const auto trial_ss_p = trial[subspace_extractor_p];
     const auto trial_ss_J = trial[subspace_extractor_J];
 
-    const auto grad_trial_u = trial_ss_u.gradient();
+    const auto Grad_trial_u = trial_ss_u.gradient();
     const auto trial_p      = trial_ss_p.value();
     const auto trial_J      = trial_ss_J.value();
 
@@ -209,8 +209,8 @@ namespace Step44
 
     // Variations and linearisations
     const auto F  = I + grad_u;
-    const auto dF = grad_test_u;
-    const auto DF = grad_trial_u;
+    const auto dF = Grad_test_u;
+    const auto DF = Grad_trial_u;
     const auto dE = symmetrize(transpose(F) * dF);
     const auto DE = symmetrize(transpose(F) * DF);
 
