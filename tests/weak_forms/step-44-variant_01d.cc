@@ -15,6 +15,10 @@
 
 // Finite strain elasticity problem: Assembly using composite weak forms
 // This test replicates step-44 exactly.
+//
+// In this variant:
+// - the Piola stress is used for the problem parameterisation
+//   (i.e. this is an application of the two-point formulation).
 
 #include <weak_forms/weak_forms.h>
 
@@ -49,11 +53,6 @@ namespace Step44
     const BlockVector<double> solution_total(
       this->get_total_solution(solution_delta));
 
-    // const UpdateFlags uf_cell(update_values | update_gradients |
-    //                           update_JxW_values);
-    // const UpdateFlags uf_face(update_values | update_normal_vectors |
-    //                           update_JxW_values);
-
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim, spacedim>  test;
     const TrialSolution<dim, spacedim> trial;
@@ -76,14 +75,14 @@ namespace Step44
     const auto test_u      = test_ss_u.value();
     const auto test_p      = test_ss_p.value();
     const auto test_J      = test_ss_J.value();
-    const auto grad_test_u = test_ss_u.gradient();
+    const auto Grad_test_u = test_ss_u.gradient();
 
     // Trial solution (subspaces)
     const auto trial_ss_u = trial[subspace_extractor_u];
     const auto trial_ss_p = trial[subspace_extractor_p];
     const auto trial_ss_J = trial[subspace_extractor_J];
 
-    const auto grad_trial_u = trial_ss_u.gradient();
+    const auto Grad_trial_u = trial_ss_u.gradient();
     const auto trial_p      = trial_ss_p.value();
     const auto trial_J      = trial_ss_J.value();
 
@@ -189,13 +188,13 @@ namespace Step44
     // Assembly
     MatrixBasedAssembler<dim> assembler;
     assembler +=
-      bilinear_form(grad_test_u, HH, grad_trial_u).dV()               // K_uu
-      + bilinear_form(grad_test_u, det_F * F_inv_T, trial_p).dV()     // K_up
-      + bilinear_form(test_p, det_F * F_inv_T, grad_trial_u).dV()     // K_pu
+      bilinear_form(Grad_test_u, HH, Grad_trial_u).dV()               // K_uu
+      + bilinear_form(Grad_test_u, det_F * F_inv_T, trial_p).dV()     // K_up
+      + bilinear_form(test_p, det_F * F_inv_T, Grad_trial_u).dV()     // K_pu
       - bilinear_form(test_p, unity, trial_J).dV()                    // K_pJ
       - bilinear_form(test_J, unity, trial_p).dV()                    // K_Jp
       + bilinear_form(test_J, d2Psi_vol_dJ2, trial_J).dV();           // K_JJ
-    assembler += linear_form(grad_test_u, P).dV()                     // r_u
+    assembler += linear_form(Grad_test_u, P).dV()                     // r_u
                  + linear_form(test_p, det_F - J_tilde).dV()          // r_p
                  + linear_form(test_J, dPsi_vol_dJ - p_tilde).dV();   // r_J
     assembler -= linear_form(test_u, N * p).dA(traction_boundary_id); // f_u

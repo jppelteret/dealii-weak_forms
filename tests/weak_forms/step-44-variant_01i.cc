@@ -16,11 +16,9 @@
 // Finite strain elasticity problem: Assembly using composite weak forms
 // This test replicates step-44 exactly.
 //
-// In this variant:
-// - the shape function slots in the bilinear and linear forms
-// have the solution field embedded in a binary operation. So the
-// implementation takes place in the fully referential setting.
-// - there is a global symmetric flag set on the assembler
+// In this variant, we finally go back to the original implementation:
+// - the Kirchhoff stress is used for the problem parameterisation
+//   (i.e. like the original step-44 implementation).
 
 #include <weak_forms/weak_forms.h>
 
@@ -60,15 +58,12 @@ namespace Step44
     const TrialSolution<dim, spacedim> trial;
     const FieldSolution<dim, spacedim> field_solution;
     const SubSpaceExtractors::Vector   subspace_extractor_u(0,
-                                                          0,
                                                           "u",
                                                           "\\mathbf{u}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_p(1,
-                                                          spacedim,
+    const SubSpaceExtractors::Scalar   subspace_extractor_p(spacedim,
                                                           "p_tilde",
                                                           "\\tilde{p}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_J(2,
-                                                          spacedim + 1,
+    const SubSpaceExtractors::Scalar   subspace_extractor_J(spacedim + 1,
                                                           "J_tilde",
                                                           "\\tilde{J}");
 
@@ -92,28 +87,28 @@ namespace Step44
     const auto trial_J      = trial_ss_J.value();
 
     // Field solution
-    const auto grad_u  = field_solution[subspace_extractor_u].gradient();
     const auto p_tilde = field_solution[subspace_extractor_p].value();
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Field variables
+    const ScalarFunctor one_symb("1", "1");
     const ScalarFunctor det_F_symb("det_F", "det(\\mathbf{F})");
     const ScalarFunctor dPsi_vol_dJ_symb("dPsi_vol_dJ",
                                          "\\frac{d \\Psi^{vol}(J)}{dJ}");
     const ScalarFunctor d2Psi_vol_dJ2_symb(
       "d2Psi_vol_dJ2", "\\frac{d^{2} \\Psi^{vol}(J)}{dJ^{2}}");
-    const SymmetricTensorFunctor<2, spacedim> C_inv_symb("C_inv",
-                                                         "\\mathbf{C}^{-1}");
-    const SymmetricTensorFunctor<2, spacedim> I_symb(
-      "I", "\\mathbf{I}"); // Identity tensor
-    const SymmetricTensorFunctor<2, spacedim> S_symb(
-      "S", "\\mathbf{S}"); // Piola Kirchhoff stress
-    const SymmetricTensorFunctor<4, spacedim> H_mat_symb(
-      "H^{mat}", "\\mathcal{H}^{mat}"); // Elasticity tensor: Material stiffness
-    const TensorFunctor<4, spacedim> H_geo_symb(
-      "H^{geo}",
-      "\\mathcal{H}^{geo}"); // Elasticity tensor: Geometric stiffness
+    const SymmetricTensorFunctor<2, spacedim> I_symb("I", "\\mathbf{I}");
+    const TensorFunctor<2, spacedim> F_inv_symb("F_inv", "\\mathbf{F}^{-1}");
+    const SymmetricTensorFunctor<2, spacedim> tau_symb(
+      "tau", "\\boldsymbol{\\tau}"); // Kirchhoff stress
+    const SymmetricTensorFunctor<4, spacedim> Jc_mat_symb(
+      "Jc^{mat}", "J\\mathcal{c}^{mat}"); // Linearisation of Kirchhoff stress
+    const TensorFunctor<4, spacedim> Jc_geo_symb(
+      "Jc^{geo}", "J\\mathcal{c}^{geo}"); // Linearisation of Kirchhoff stress
 
+    const auto unity = one_symb.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
     const auto det_F = det_F_symb.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point)
@@ -146,20 +141,10 @@ namespace Step44
             qph.get_data(cell);
           return lqph[q_point]->get_d2Psi_vol_dJ2();
         });
-    const auto C_inv = C_inv_symb.template value<double, dim>(
-      [this](const FEValuesBase<dim, spacedim> &fe_values,
-             const unsigned int                 q_point)
-      {
-        const auto &cell = fe_values.get_cell();
-        const auto &qph  = this->quadrature_point_history;
-        const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
-          qph.get_data(cell);
-        return lqph[q_point]->get_C_inv();
-      });
     const auto I = I_symb.template value<double, dim>(
-      [](const FEValuesBase<dim, spacedim> &fe_values, const unsigned int)
-      { return Physics::Elasticity::StandardTensors<dim>::I; });
-    const auto S = S_symb.template value<double, dim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return StandardTensors<spacedim>::I; });
+    const auto F_inv = F_inv_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point)
       {
@@ -167,9 +152,9 @@ namespace Step44
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
           qph.get_data(cell);
-        return lqph[q_point]->get_S();
+        return lqph[q_point]->get_F_inv();
       });
-    const auto H_mat = H_mat_symb.template value<double, dim>(
+    const auto tau = tau_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point)
       {
@@ -177,9 +162,9 @@ namespace Step44
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
           qph.get_data(cell);
-        return lqph[q_point]->get_H();
+        return lqph[q_point]->get_tau();
       });
-    const auto H_geo = H_geo_symb.template value<double, dim>(
+    const auto Jc_mat = Jc_mat_symb.template value<double, dim>(
       [this](const FEValuesBase<dim, spacedim> &fe_values,
              const unsigned int                 q_point)
       {
@@ -187,8 +172,24 @@ namespace Step44
         const auto &qph  = this->quadrature_point_history;
         const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
           qph.get_data(cell);
-        return lqph[q_point]->get_H_geo();
+        return lqph[q_point]->get_Jc();
       });
+    const auto Jc_geo = Jc_geo_symb.template value<double, dim>(
+      [this](const FEValuesBase<dim, spacedim> &fe_values,
+             const unsigned int                 q_point)
+      {
+        const auto &cell = fe_values.get_cell();
+        const auto &qph  = this->quadrature_point_history;
+        const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
+          qph.get_data(cell);
+        return lqph[q_point]->get_Jc_geo();
+      });
+
+    // Push-forward of shape function gradients
+    const auto grad_test_u       = Grad_test_u * F_inv;
+    const auto grad_trial_u      = Grad_trial_u * F_inv;
+    const auto symm_grad_test_u  = symmetrize(grad_test_u);
+    const auto symm_grad_trial_u = symmetrize(grad_trial_u);
 
     // Boundary conditions
     const dealii::types::boundary_id traction_boundary_id = 6;
@@ -206,26 +207,24 @@ namespace Step44
       });
     const auto N = normal.value();
 
-    // Variations and linearisations
-    const auto F  = I + grad_u;
-    const auto dF = Grad_test_u;
-    const auto DF = Grad_trial_u;
-    const auto dE = symmetrize(transpose(F) * dF);
-    const auto DE = symmetrize(transpose(F) * DF);
-
     // Assembly
     MatrixBasedAssembler<dim> assembler;
-    assembler += bilinear_form(dE, H_mat, DE).dV()                // K_uu (mat)
-                 + bilinear_form(dF, H_geo, DF).dV()              // K_uu (geo)
-                 + bilinear_form(dE, det_F * C_inv, trial_p).dV() // K_up
-                 + bilinear_form(test_p, det_F * C_inv, DE).dV()  // K_pu
-                 - bilinear_form(test_p, 1.0, trial_J).dV()       // K_pJ
-                 - bilinear_form(test_J, 1.0, trial_p).dV()       // K_Jp
-                 + bilinear_form(test_J, d2Psi_vol_dJ2, trial_J).dV(); // K_JJ
-    assembler += linear_form(dE, S).dV()                               // r_u
-                 + linear_form(test_p, det_F - J_tilde).dV()           // r_p
-                 + linear_form(test_J, dPsi_vol_dJ - p_tilde).dV();    // r_J
-    assembler -= linear_form(test_u, N * p).dA(traction_boundary_id);  // f_u
+    assembler +=
+      bilinear_form(symm_grad_test_u, Jc_mat, symm_grad_trial_u)
+        .symmetrize()
+        .dV() // K_uu (mat)
+      + bilinear_form(grad_test_u, Jc_geo, grad_trial_u)
+          .symmetrize()
+          .dV()                                                  // K_uu (geo)
+      + bilinear_form(symm_grad_test_u, det_F * I, trial_p).dV() // K_up
+      + bilinear_form(test_p, det_F * I, symm_grad_trial_u).dV() // K_pu
+      - bilinear_form(test_p, unity, trial_J).dV()               // K_pJ
+      - bilinear_form(test_J, unity, trial_p).dV()               // K_Jp
+      + bilinear_form(test_J, d2Psi_vol_dJ2, trial_J).symmetrize().dV(); // K_JJ
+    assembler += linear_form(symm_grad_test_u, tau).dV()                 // r_u
+                 + linear_form(test_p, det_F - J_tilde).dV()             // r_p
+                 + linear_form(test_J, dPsi_vol_dJ - p_tilde).dV();      // r_J
+    assembler -= linear_form(test_u, N * p).dA(traction_boundary_id);    // f_u
     assembler.symmetrize();
 
     // Look at what we're going to compute

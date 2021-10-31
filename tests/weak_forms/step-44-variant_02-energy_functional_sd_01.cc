@@ -78,13 +78,13 @@ namespace Step44
 
     // Field solution (subspaces)
     const auto u       = field_solution[subspace_extractor_u].value();
-    const auto grad_u  = field_solution[subspace_extractor_u].gradient();
+    const auto Grad_u  = field_solution[subspace_extractor_u].gradient();
     const auto p_tilde = field_solution[subspace_extractor_p].value();
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Field variables: Internal energy
     const auto internal_energy_func =
-      energy_functor("e^{int}", "\\Psi^{int}", grad_u, p_tilde, J_tilde);
+      energy_functor("e^{int}", "\\Psi^{int}", Grad_u, p_tilde, J_tilde);
 
     const SDNumber_t symb_c_1   = Differentiation::SD::make_symbol("c1");
     const SDNumber_t symb_kappa = Differentiation::SD::make_symbol("kappa");
@@ -92,12 +92,12 @@ namespace Step44
       internal_energy_func.template value<SDNumber_t, dim, spacedim>(
         [symb_c_1,
          symb_kappa,
-         &spacedim](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+         &spacedim](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
                     const SDNumber_t &                     p_tilde,
                     const SDNumber_t &                     J_tilde)
         {
           const Tensor<2, spacedim, SDNumber_t> F =
-            unit_symmetric_tensor<spacedim>() + grad_u;
+            unit_symmetric_tensor<spacedim>() + Grad_u;
           const SymmetricTensor<2, spacedim, SDNumber_t> C =
             symmetrize(transpose(F) * F);
           const SDNumber_t                         det_F = determinant(F);
@@ -114,7 +114,7 @@ namespace Step44
 
           return psi_CpJ;
         },
-        [symb_c_1, symb_kappa](const Tensor<2, spacedim, SDNumber_t> &grad_u,
+        [symb_c_1, symb_kappa](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
                                const SDNumber_t &                     p_tilde,
                                const SDNumber_t &                     J_tilde)
         { return Differentiation::SD::make_symbol_map(symb_c_1, symb_kappa); },
