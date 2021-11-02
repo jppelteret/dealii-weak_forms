@@ -53,6 +53,7 @@
 
 // Self-linearizing functors and forms
 // (using template meta-programming in conjunction with AD/SD)
+#include <weak_forms/ad_sd_functor_cache.h>
 #include <weak_forms/energy_functor.h>
 #include <weak_forms/residual_functor.h>
 #include <weak_forms/self_linearizing_forms.h>

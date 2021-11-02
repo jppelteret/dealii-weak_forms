@@ -48,8 +48,9 @@ namespace Step44
     using namespace WeakForms;
     using namespace Differentiation;
 
-    constexpr int  spacedim    = dim;
-    constexpr auto ad_typecode = Differentiation::AD::NumberTypes::adolc_tapeless;
+    constexpr int  spacedim = dim;
+    constexpr auto ad_typecode =
+      Differentiation::AD::NumberTypes::adolc_tapeless;
     using ADNumber_t =
       typename Differentiation::AD::NumberTraits<double, ad_typecode>::ad_type;
 
@@ -123,8 +124,7 @@ namespace Step44
             qph.get_data(cell);
           const Tensor<2, spacedim, ADNumber_t> F =
             Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
-          return
-            lqph[q_point]->get_P(F, p_tilde);
+          return lqph[q_point]->get_P(F, p_tilde);
         },
         UpdateFlags::update_default);
 

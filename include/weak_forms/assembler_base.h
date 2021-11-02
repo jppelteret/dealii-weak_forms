@@ -38,6 +38,7 @@
 
 #include <deal.II/meshworker/scratch_data.h>
 
+#include <weak_forms/ad_sd_functor_cache.h>
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/binary_integral_operators.h>
 #include <weak_forms/binary_operators.h>
@@ -1077,6 +1078,26 @@ namespace WeakForms
 
 
     template <typename ScratchDataType,
+              typename FiniteElementType,
+              typename CellQuadratureType>
+    ScratchDataType
+    construct_scratch_data(const FiniteElementType &        finite_element,
+                           const CellQuadratureType &       cell_quadrature,
+                           const UpdateFlags &              cell_update_flags,
+                           const AD_SD_Functor_Cache *const ad_sd_cache)
+    {
+      ScratchDataType scratch(finite_element,
+                              cell_quadrature,
+                              cell_update_flags);
+
+      AD_SD_Functor_Cache::initialize(scratch, ad_sd_cache);
+
+      return scratch;
+    }
+
+
+
+    template <typename ScratchDataType,
               typename FaceQuadratureType,
               typename FiniteElementType,
               typename CellQuadratureType>
@@ -1084,18 +1105,23 @@ namespace WeakForms
       std::is_same<typename std::decay<FaceQuadratureType>::type,
                    std::nullptr_t>::value,
       ScratchDataType>::type
-    construct_scratch_data(const FiniteElementType &       finite_element,
-                           const CellQuadratureType &      cell_quadrature,
-                           const UpdateFlags &             cell_update_flags,
-                           const FaceQuadratureType *const face_quadrature,
-                           const UpdateFlags &             face_update_flags)
+    construct_scratch_data(const FiniteElementType &        finite_element,
+                           const CellQuadratureType &       cell_quadrature,
+                           const UpdateFlags &              cell_update_flags,
+                           const FaceQuadratureType *const  face_quadrature,
+                           const UpdateFlags &              face_update_flags,
+                           const AD_SD_Functor_Cache *const ad_sd_cache)
     {
       (void)face_quadrature;
       (void)face_update_flags;
       AssertThrow(false, ExcUnexpectedFunctionCall());
-      return ScratchDataType(finite_element,
-                             cell_quadrature,
-                             cell_update_flags);
+      ScratchDataType scratch(finite_element,
+                              cell_quadrature,
+                              cell_update_flags);
+
+      AD_SD_Functor_Cache::initialize(scratch, ad_sd_cache);
+
+      return scratch;
     }
 
     template <typename ScratchDataType,
@@ -1106,17 +1132,22 @@ namespace WeakForms
       !std::is_same<typename std::decay<FaceQuadratureType>::type,
                     std::nullptr_t>::value,
       ScratchDataType>::type
-    construct_scratch_data(const FiniteElementType &       finite_element,
-                           const CellQuadratureType &      cell_quadrature,
-                           const UpdateFlags &             cell_update_flags,
-                           const FaceQuadratureType *const face_quadrature,
-                           const UpdateFlags &             face_update_flags)
+    construct_scratch_data(const FiniteElementType &        finite_element,
+                           const CellQuadratureType &       cell_quadrature,
+                           const UpdateFlags &              cell_update_flags,
+                           const FaceQuadratureType *const  face_quadrature,
+                           const UpdateFlags &              face_update_flags,
+                           const AD_SD_Functor_Cache *const ad_sd_cache)
     {
-      return ScratchDataType(finite_element,
-                             cell_quadrature,
-                             cell_update_flags,
-                             *face_quadrature,
-                             face_update_flags);
+      ScratchDataType scratch(finite_element,
+                              cell_quadrature,
+                              cell_update_flags,
+                              *face_quadrature,
+                              face_update_flags);
+
+      AD_SD_Functor_Cache::initialize(scratch, ad_sd_cache);
+
+      return scratch;
     }
 
 
@@ -1553,7 +1584,6 @@ namespace WeakForms
            const FEInterfaceValues<dim, spacedim> &fe_interface_values,
            const unsigned int                      face,
            const unsigned int                      neighbour_face)>;
-
 
     virtual ~AssemblerBase() = default;
 
@@ -2099,6 +2129,7 @@ namespace WeakForms
     std::vector<StringOperation> as_latex_operations;
 
     // AD/SD support
+    AD_SD_Functor_Cache *               ad_sd_functor_cache;
     std::vector<CellADSDOperation>      cell_ad_sd_operations;
     std::vector<BoundaryADSDOperation>  boundary_face_ad_sd_operations;
     std::vector<InterfaceADSDOperation> interface_face_ad_sd_operations;
@@ -2130,7 +2161,17 @@ namespace WeakForms
 
 
     explicit AssemblerBase()
-      : cell_update_flags(update_default)
+      : ad_sd_functor_cache(nullptr)
+      , cell_update_flags(update_default)
+      , boundary_face_update_flags(update_default)
+      , interface_face_update_flags(update_default)
+      , global_system_symmetry_flag(false)
+    {}
+
+
+    explicit AssemblerBase(AD_SD_Functor_Cache &user_ad_sd_cache)
+      : ad_sd_functor_cache(&user_ad_sd_cache)
+      , cell_update_flags(update_default)
       , boundary_face_update_flags(update_default)
       , interface_face_update_flags(update_default)
       , global_system_symmetry_flag(false)

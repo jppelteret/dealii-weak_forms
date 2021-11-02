@@ -127,6 +127,10 @@ namespace WeakForms
     explicit MatrixBasedAssembler()
       : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(){};
 
+    explicit MatrixBasedAssembler(AD_SD_Functor_Cache &user_ad_sd_cache)
+      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(
+          user_ad_sd_cache){};
+
     /**
      * Assemble the linear system matrix, excluding boundary and internal
      * face contributions.
@@ -1101,10 +1105,13 @@ namespace WeakForms
              cell_quadrature,
              this->get_cell_update_flags(),
              face_quadrature,
-             this->get_face_update_flags()) :
-           ScratchData(dof_handler.get_fe(),
-                       cell_quadrature,
-                       this->get_cell_update_flags()));
+             this->get_face_update_flags(),
+             this->ad_sd_functor_cache) :
+           internal::construct_scratch_data<ScratchData>(
+             dof_handler.get_fe(),
+             cell_quadrature,
+             this->get_cell_update_flags(),
+             this->ad_sd_functor_cache));
       const CopyData sample_copy_data(dof_handler.get_fe().dofs_per_cell);
 
       // Set the assembly flags, based off of the operations that we intend to

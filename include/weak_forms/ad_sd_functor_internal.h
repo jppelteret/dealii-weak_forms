@@ -320,7 +320,7 @@ namespace WeakForms
       // ===================
       // SD helper functions
       // ===================
-      std::string
+      inline std::string
       get_deal_II_prefix()
       {
         return "__DEAL_II__";
