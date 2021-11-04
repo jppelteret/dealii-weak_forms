@@ -18,6 +18,7 @@
 // exactly.
 // - Optimizer type: LLVM
 // - Optimization method: All
+// - AD/SD Cache
 
 #include <deal.II/base/function.h>
 

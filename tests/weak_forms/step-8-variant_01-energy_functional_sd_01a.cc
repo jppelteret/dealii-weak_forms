@@ -18,6 +18,7 @@
 // step-8 exactly.
 // - Optimizer type: Dictionary
 // - Optimization method: Default (none)
+// - AD/SD Cache
 
 #include <deal.II/base/function.h>
 
