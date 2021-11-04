@@ -20,6 +20,8 @@
 
 #include <deal.II/algorithms/general_data_storage.h>
 
+#include <deal.II/base/multithread_info.h>
+
 #include <deal.II/differentiation/ad.h>
 #include <deal.II/differentiation/sd.h>
 
@@ -43,70 +45,97 @@ namespace WeakForms
   class AD_SD_Functor_Cache
   {
   public:
+    // The queue_length matches that used by default for WorkStream::run(), and
+    // hence mesh_loop().
+    AD_SD_Functor_Cache(
+      const unsigned int queue_length = 2 * MultithreadInfo::n_threads())
+      : n_source_caches(queue_length)
+      , source_lock(n_source_caches, false)
+      , source_cache(n_source_caches)
+    {}
+
     template <int dim, int spacedim>
     static void
     initialize(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                const AD_SD_Functor_Cache *const        ad_sd_functor_cache)
     {
-      GeneralDataStorage &scratch_cache =
-        scratch_data.get_general_data_storage();
-
       // If the user has provided a persistent data then we can leverage that
       // for the cache. Otherwise, the general data storage provided by the
       // scratch data object can simply reference itself as the cache.
-      if (ad_sd_functor_cache != nullptr)
-        {
+      if (ad_sd_functor_cache == nullptr)
+      return;
+
+          GeneralDataStorage &scratch_cache =
+            scratch_data.get_general_data_storage();
+          
           GeneralDataStorage &cache =
             const_cast<GeneralDataStorage &>(ad_sd_functor_cache->cache);
           scratch_cache.add_unique_reference<GeneralDataStorage>(
             get_name_ad_sd_cache(), cache);
           scratch_cache.add_unique_copy<bool>(get_name_ad_sd_cache_flag(),
                                               true);
-        }
-      else
-        {
-          scratch_cache.add_unique_reference<GeneralDataStorage>(
-            get_name_ad_sd_cache(), scratch_cache);
-        }
-    }
-
-    template <int dim, int spacedim>
-    static bool
-    has_user_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
-    {
-      return scratch_data.stores_object_with_name(get_name_ad_sd_cache_flag());
-    }
-
-    template <int dim, int spacedim>
-    static bool
-    has_user_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
-    {
-      return scratch_data.stores_object_with_name(get_name_ad_sd_cache_flag());
     }
 
     template <int dim, int spacedim>
     static GeneralDataStorage &
     get_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
-      GeneralDataStorage &scratch_cache =
-        scratch_data.get_general_data_storage();
+      if (has_user_cache(scratch_data))
+      {
+        GeneralDataStorage &scratch_cache =
+          scratch_data.get_general_data_storage();
 
-      return scratch_cache.get_object_with_name<GeneralDataStorage>(
-        get_name_ad_sd_cache());
+        return scratch_cache.get_object_with_name<GeneralDataStorage>(
+          get_name_ad_sd_cache());
+      }
+      else
+      {
+        return scratch_data.get_general_data_storage();
+      }
     }
 
     template <int dim, int spacedim>
     static const GeneralDataStorage &
     get_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
-      const GeneralDataStorage &scratch_cache =
-        scratch_data.get_general_data_storage();
+      if (has_user_cache(scratch_data))
+      {
+        const GeneralDataStorage &scratch_cache =
+          scratch_data.get_general_data_storage();
 
-      return scratch_cache.get_object_with_name<GeneralDataStorage>(
-        get_name_ad_sd_cache());
+        return scratch_cache.get_object_with_name<GeneralDataStorage>(
+          get_name_ad_sd_cache());
+      }
+      else
+      {
+        return scratch_data.get_general_data_storage();
+      }
+    }
+
+    template <int dim, int spacedim>
+    static GeneralDataStorage &
+    get_destination_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      return scratch_data.get_general_data_storage();
+    }
+
+    template <int dim, int spacedim>
+    static const GeneralDataStorage &
+    get_destination_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      return scratch_data.get_general_data_storage();
+    }
+
+    unsigned int
+    queue_length () const{
+      return n_source_caches;
     }
 
   private:
+    unsigned int       n_source_caches;
+    std::vector<bool> source_lock;
+    std::vector<GeneralDataStorage> source_cache;
+
     GeneralDataStorage cache;
 
     static std::string
@@ -116,9 +145,33 @@ namespace WeakForms
     }
 
     static std::string
+    get_name_ad_sd_source_cache(const unsigned int entry)
+    {
+      return get_name_ad_sd_cache + "_" + std::to_string(entry);
+    }
+
+    static std::string
     get_name_ad_sd_cache_flag()
     {
       return get_name_ad_sd_cache() + "_Flag";
+    }
+
+    template <int dim, int spacedim>
+    static bool
+    has_user_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+        const GeneralDataStorage &scratch_cache =
+          scratch_data.get_general_data_storage();
+      return scratch_cache.stores_object_with_name(get_name_ad_sd_cache_flag());
+    }
+
+    template <int dim, int spacedim>
+    static bool
+    has_user_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+        const GeneralDataStorage &scratch_cache =
+          scratch_data.get_general_data_storage();
+      return scratch_cache.stores_object_with_name(get_name_ad_sd_cache_flag());
     }
   };
 } // namespace WeakForms
