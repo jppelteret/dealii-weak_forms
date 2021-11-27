@@ -21,7 +21,6 @@
 #include <deal.II/algorithms/general_data_storage.h>
 
 #include <deal.II/base/exceptions.h>
-#include <deal.II/base/thread_management.h>
 
 #include <deal.II/differentiation/ad.h>
 #include <deal.II/differentiation/sd.h>
@@ -420,7 +419,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
 
         return cache.get_object_with_name<ad_helper_type>(get_name_ad_helper());
       }
@@ -444,7 +443,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<Vector<scalar_type>>>(
           get_name_gradient());
@@ -455,7 +454,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<FullMatrix<scalar_type>>>(
           get_name_hessian());
@@ -469,12 +468,6 @@ namespace WeakForms
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
                  const std::vector<std::string> &         solution_names) const
       {
-        // This only really comes into play when there is a user cache, as we
-        // must ensure that we do not try to evaluate from multiple threads at
-        // once.
-        const std::lock_guard<Threads::Mutex> lock(
-          const_cast<Threads::Mutex &>(mutex));
-
         // Follow the recipe described in the documentation:
         // - Initialize helper.
         // - Register independent variables and set the values for all fields.
@@ -575,10 +568,6 @@ namespace WeakForms
       // evaluate their AD function (e.g. UpdateFlags::update_quadrature_points)
       const UpdateFlags update_flags;
 
-      // We need to be careful when a shared cache is used: We cannot evaluate
-      // this operator in parallel; it must be done in a sequential fashion.
-      Threads::Mutex mutex;
-
       const typename OpHelper_t::field_extractors_t
         extractors; // FEValuesExtractors to work with multi-component fields
 
@@ -612,7 +601,7 @@ namespace WeakForms
         MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
         const std::string name_ad_helper = get_name_ad_helper();
 
         // Unfortunately we cannot perform a check like this because the
@@ -636,7 +625,7 @@ namespace WeakForms
         const ad_helper_type &                  ad_helper) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -652,7 +641,7 @@ namespace WeakForms
                            const ad_helper_type &ad_helper) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -791,7 +780,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
 
         return cache.get_object_with_name<sd_helper_type<ResultScalarType>>(
           get_name_sd_batch_optimizer());
@@ -826,7 +815,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
 
         return cache
           .get_object_with_name<std::vector<std::vector<ResultScalarType>>>(
@@ -841,11 +830,8 @@ namespace WeakForms
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
                  const std::vector<std::string> &         solution_names) const
       {
-        // This only really comes into play when there is a user cache, as we
-        // must ensure that we do not try to evaluate from multiple threads at
-        // once.
-        const std::lock_guard<Threads::Mutex> lock(
-          const_cast<Threads::Mutex &>(mutex));
+        GeneralDataStorage &source_cache =
+          AD_SD_Functor_Cache::check_out_source_cache_from_pool(scratch_data);
 
         // Follow the recipe described in the documentation:
         // - Define some independent variables.
@@ -867,7 +853,7 @@ namespace WeakForms
         // current implementation restricts the user to use the same definition
         // for the energy itself at each QP.
         sd_helper_type<ResultScalarType> &batch_optimizer =
-          get_mutable_sd_batch_optimizer<ResultScalarType>(scratch_data);
+          get_mutable_sd_batch_optimizer<ResultScalarType>(source_cache);
         if (batch_optimizer.optimized() == false)
           {
             Assert(batch_optimizer.n_independent_variables() == 0,
@@ -927,6 +913,33 @@ namespace WeakForms
         Assert(batch_optimizer.n_dependent_variables() > 0,
                ExcMessage("Expected the batch optimizer to be initialized."));
 
+        // Now check to see if the destination holds a batch optimiser
+        // instance that can correctly extract the evaluated symbolic
+        // functions. If not, then we initialize one, but only with the
+        // minimal necessary data.
+        {
+          GeneralDataStorage &destination_cache =
+            AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+
+          if (&destination_cache != &source_cache)
+            {
+              sd_helper_type<ResultScalarType> &destination_batch_optimizer =
+                get_mutable_sd_batch_optimizer<ResultScalarType>(
+                  destination_cache);
+
+              Assert(
+                destination_batch_optimizer.optimized() == false,
+                ExcMessage(
+                  "We expect to never optimize the destination SD batch optimizer when the user has one in cache."));
+
+              if (destination_batch_optimizer.n_independent_variables() == 0 ||
+                  destination_batch_optimizer.n_dependent_variables() == 0)
+                {
+                  destination_batch_optimizer.copy_from(batch_optimizer);
+                }
+            }
+        }
+
         std::vector<std::vector<ResultScalarType>>
           &evaluated_dependent_functions =
             get_mutable_evaluated_dependent_functions<ResultScalarType>(
@@ -974,6 +987,9 @@ namespace WeakForms
             // Extract evaluated data to be retrieved later.
             evaluated_dependent_functions[q_point] = batch_optimizer.evaluate();
           }
+
+        AD_SD_Functor_Cache::return_source_cache_to_pool(scratch_data,
+                                                         source_cache);
       }
 
       const typename OpHelper_t::template field_values_t<sd_type> &
@@ -1005,10 +1021,6 @@ namespace WeakForms
       // Some additional update flags that the user might require in order to
       // evaluate their SD function (e.g. UpdateFlags::update_quadrature_points)
       const UpdateFlags update_flags;
-
-      // We need to be careful when a shared cache is used: We cannot evaluate
-      // this operator in parallel; it must be done in a sequential fashion.
-      Threads::Mutex mutex;
 
       // Independent variables
       const typename OpHelper_t::template field_values_t<sd_type>
@@ -1042,11 +1054,8 @@ namespace WeakForms
 
       template <typename ResultScalarType>
       sd_helper_type<ResultScalarType> &
-      get_mutable_sd_batch_optimizer(
-        MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
+      get_mutable_sd_batch_optimizer(GeneralDataStorage &cache) const
       {
-        GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
         const std::string name_sd_batch_optimizer =
           get_name_sd_batch_optimizer();
 
@@ -1072,7 +1081,7 @@ namespace WeakForms
         const sd_helper_type<ResultScalarType> &batch_optimizer) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_cache(scratch_data);
+          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
