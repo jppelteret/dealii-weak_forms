@@ -38,6 +38,8 @@ namespace Step44
     {}
 
   protected:
+    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+
     void
     assemble_system(const BlockVector<double> &solution_delta) override;
   };
@@ -174,7 +176,7 @@ namespace Step44
     const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
-    MatrixBasedAssembler<dim> assembler;
+    MatrixBasedAssembler<dim> assembler(ad_sd_cache);
     assembler +=
       energy_functional_form(internal_energy).dV() +
       energy_functional_form(external_energy).dA(traction_boundary_id);

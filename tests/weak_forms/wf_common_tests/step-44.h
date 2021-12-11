@@ -867,7 +867,7 @@ namespace Step44
   class Step44_Base
   {
   public:
-    Step44_Base(const std::string &input_file);
+    Step44_Base(const std::string &input_file, const bool timer_output = false);
     virtual ~Step44_Base();
     void
     run();
@@ -1004,11 +1004,11 @@ namespace Step44
     print_conv_footer();
   };
   template <int dim>
-  Step44_Base<dim>::Step44_Base(const std::string &input_file)
+  Step44_Base<dim>::Step44_Base(const std::string &input_file, const bool timer_output)
     : parameters(input_file)
     , triangulation(Triangulation<dim>::maximum_smoothing)
     , time(parameters.end_time, parameters.delta_t)
-    , timer(std::cout, TimerOutput::never, TimerOutput::wall_times)
+    , timer(std::cout, timer_output ? TimerOutput::summary : TimerOutput::never, TimerOutput::wall_times)
     , degree(parameters.poly_degree)
     , fe(FE_Q<dim>(parameters.poly_degree),
          dim, // displacement

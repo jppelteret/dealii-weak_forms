@@ -39,6 +39,8 @@ namespace Step44
     {}
 
   protected:
+    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+
     void
     assemble_system(const BlockVector<double> &solution_delta) override;
   };
@@ -221,7 +223,8 @@ namespace Step44
     const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
-    MatrixBasedAssembler<dim> assembler;
+    MatrixBasedAssembler<dim> assembler(ad_sd_cache);
+    // MatrixBasedAssembler<dim> assembler;
     assembler += residual_form(residual_u).dV() +
                  residual_form(residual_p).dV() +
                  residual_form(residual_J).dV() -
