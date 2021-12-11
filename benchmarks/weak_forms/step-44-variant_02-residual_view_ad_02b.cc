@@ -33,7 +33,7 @@ namespace Step44
   {
   public:
     Step44(const std::string &input_file)
-      : Step44_Base<dim>(input_file)
+      : Step44_Base<dim>(input_file, true /*timer_output*/)
     {}
 
   protected:
