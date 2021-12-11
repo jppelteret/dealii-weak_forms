@@ -1065,56 +1065,69 @@ namespace WeakForms
         // theory the user can encode the QPoint into the field function: this
         // current implementation restricts the user to use the same definition
         // for the field itself at each QP.
+        const auto initialize_optimizer = [this](sd_helper_type<ResultScalarType> &batch_optimizer)
+        {
+          Assert(batch_optimizer.n_independent_variables() == 0,
+                  ExcMessage(
+                    "Expected the batch optimizer to be uninitialized."));
+          Assert(batch_optimizer.n_dependent_variables() == 0,
+                  ExcMessage(
+                    "Expected the batch optimizer to be uninitialized."));
+          Assert(batch_optimizer.values_substituted() == false,
+                  ExcMessage(
+                    "Expected the batch optimizer to be uninitialized."));
+
+          // Create and register field variables (the independent variables).
+          // We deal with the fields before the user data just in case
+          // the users try to overwrite these field symbols. It shouldn't
+          // happen, but this way its not possible to do overwrite what's
+          // already in the map.
+          Differentiation::SD::types::substitution_map symbol_map =
+            OpHelper_t::template sd_get_symbol_map<sd_type>(
+              get_symbolic_fields());
+          if (user_symbol_registration_map)
+            {
+              Differentiation::SD::add_to_symbol_map(
+                symbol_map,
+                OpHelper_t::template sd_call_function<sd_type>(
+                  user_symbol_registration_map, get_symbolic_fields()));
+            }
+          batch_optimizer.register_symbols(symbol_map);
+
+          // The next typical few steps that precede function resistration
+          // have already been performed in the class constructor:
+          // - Evaluate the functor to compute the total stored field.
+          // - Compute the first derivatives of the field function.
+          // - If there's some intermediate substitution to be done (modifying
+          // the first derivatives), then do it before computing the second
+          // derivatives.
+          // (Why the intermediate substitution? If the first derivatives
+          // represent the partial derivatives, then this substitution may be
+          // done to ensure that the consistent linearization is given by the
+          // second derivatives.)
+          // - Differentiate the first derivatives (perhaps a modified form)
+          // to get the second derivatives.
+
+          // Register the dependent variables.
+          OpHelper_t::template sd_register_functions<sd_type, residual_type>(
+            batch_optimizer, residual);
+          OpHelper_t::template sd_register_functions<sd_type, residual_type>(
+            batch_optimizer, first_derivatives);
+        };
+
+        // Create and, if necessary, optimize a BatchOptimizer instance.
+        // If the user has specified a cache, then this is only done once
+        // per number of ScratchData times over the entire lifetime of the
+        // cache.
+        // If the user has not specified a cache, then this is done once
+        // per number of ScratchData times for each assembly step (i.e.
+        // with an additional multiplication factor like number of timesteps
+        // times number of Newton iterations).
         sd_helper_type<ResultScalarType> &batch_optimizer =
           get_mutable_sd_batch_optimizer<ResultScalarType>(source_cache);
         if (batch_optimizer.optimized() == false)
           {
-            Assert(batch_optimizer.n_independent_variables() == 0,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-            Assert(batch_optimizer.n_dependent_variables() == 0,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-            Assert(batch_optimizer.values_substituted() == false,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-
-            // Create and register field variables (the independent variables).
-            // We deal with the fields before the user data just in case
-            // the users try to overwrite these field symbols. It shouldn't
-            // happen, but this way its not possible to do overwrite what's
-            // already in the map.
-            Differentiation::SD::types::substitution_map symbol_map =
-              OpHelper_t::template sd_get_symbol_map<sd_type>(
-                get_symbolic_fields());
-            if (user_symbol_registration_map)
-              {
-                Differentiation::SD::add_to_symbol_map(
-                  symbol_map,
-                  OpHelper_t::template sd_call_function<sd_type>(
-                    user_symbol_registration_map, get_symbolic_fields()));
-              }
-            batch_optimizer.register_symbols(symbol_map);
-
-            // The next typical few steps that precede function resistration
-            // have already been performed in the class constructor:
-            // - Evaluate the functor to compute the total stored field.
-            // - Compute the first derivatives of the field function.
-            // - If there's some intermediate substitution to be done (modifying
-            // the first derivatives), then do it before computing the second
-            // derivatives.
-            // (Why the intermediate substitution? If the first derivatives
-            // represent the partial derivatives, then this substitution may be
-            // done to ensure that the consistent linearization is given by the
-            // second derivatives.)
-            // - Differentiate the first derivatives (perhaps a modified form)
-            // to get the second derivatives.
-
-            // Register the dependent variables.
-            OpHelper_t::template sd_register_functions<sd_type, residual_type>(
-              batch_optimizer, residual);
-            OpHelper_t::template sd_register_functions<sd_type, residual_type>(
-              batch_optimizer, first_derivatives);
+            initialize_optimizer(batch_optimizer);
 
             // Finalize the optimizer.
             batch_optimizer.optimize();
@@ -1140,6 +1153,7 @@ namespace WeakForms
                 get_mutable_sd_batch_optimizer<ResultScalarType>(
                   destination_cache);
 
+              Assert(&destination_batch_optimizer != &batch_optimizer, ExcInternalError());
               Assert(
                 destination_batch_optimizer.optimized() == false,
                 ExcMessage(
@@ -1148,7 +1162,13 @@ namespace WeakForms
               if (destination_batch_optimizer.n_independent_variables() == 0 ||
                   destination_batch_optimizer.n_dependent_variables() == 0)
                 {
-                  destination_batch_optimizer.copy_from(batch_optimizer);
+                  // For complex expressions, its actually quicker to re-init
+                  // the optimiser (to compute the dependent functions, without
+                  // subsequent optimization) than by copying the optimiser using
+                  //   destination_batch_optimizer.copy_from(batch_optimizer);
+                  // So, we do that here as we expect this to be used in
+                  // applications with non-trivial constitutive laws.
+                  initialize_optimizer(destination_batch_optimizer);
                 }
             }
         }
