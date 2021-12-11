@@ -129,7 +129,11 @@ namespace WeakForms
 
     explicit MatrixBasedAssembler(AD_SD_Functor_Cache &user_ad_sd_cache)
       : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(
-          user_ad_sd_cache){};
+          user_ad_sd_cache)
+    {
+      Assert(user_ad_sd_cache.all_entries_unlocked(),
+             ExcMessage("Expected all cache entries to be unlocked."));
+    };
 
     /**
      * Assemble the linear system matrix, excluding boundary and internal

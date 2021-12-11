@@ -75,13 +75,8 @@ namespace WeakForms
         get_name_ad_sd_cache(), source_cache);
 
       // Check that all cache entries are unlocked
-      for (auto &lock_and_cache : source_cache.source_lock_and_cache)
-        {
-          (void)lock_and_cache;
-          Assert(lock_and_cache.first == false,
-                 ExcMessage(
-                   "Cache entry is already locked upon initialisation."));
-        }
+      Assert(source_cache.all_entries_unlocked(),
+             ExcMessage("Cache entry is already locked upon initialisation."));
     }
 
     template <int dim, int spacedim>
@@ -139,28 +134,11 @@ namespace WeakForms
                 }
             }
 
-          Assert(false,
-                 ExcMessage("Source cache not found in this data structure."));
+          AssertThrow(false,
+                      ExcMessage(
+                        "Source cache not found in this data structure."));
         }
     }
-
-    // template <int dim, int spacedim>
-    // static const GeneralDataStorage &
-    // get_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
-    // {
-    //   // if (has_user_cache(scratch_data))
-    //   //   {
-    //   //     const GeneralDataStorage &scratch_cache =
-    //   //       scratch_data.get_general_data_storage();
-
-    //   //     return scratch_cache.get_object_with_name<GeneralDataStorage>(
-    //   //       get_name_ad_sd_cache());
-    //   //   }
-    //   // else
-    //   //   {
-    //   return scratch_data.get_general_data_storage();
-    //   // }
-    // }
 
     template <int dim, int spacedim>
     static GeneralDataStorage &
@@ -175,6 +153,18 @@ namespace WeakForms
       const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       return scratch_data.get_general_data_storage();
+    }
+
+    bool
+    all_entries_unlocked() const
+    {
+      for (const auto &lock_and_cache : source_lock_and_cache)
+        {
+          if (lock_and_cache.first == true)
+            return false;
+        }
+
+      return true;
     }
 
     std::size_t
