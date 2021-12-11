@@ -68,13 +68,14 @@ namespace Step44
 
     // Symbolic types for test function, and the field solution.
     const FieldSolution<dim, spacedim> field_solution;
-    const SubSpaceExtractors::Vector   subspace_extractor_u(0,
-                                                          "u",
-                                                          "\\mathbf{u}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_p(spacedim,
+    const SubSpaceExtractors::Vector   subspace_extractor_u(
+      this->u_dof, this->first_u_component, "u", "\\mathbf{u}");
+    const SubSpaceExtractors::Scalar subspace_extractor_p(this->p_dof,
+                                                          this->p_component,
                                                           "p_tilde",
                                                           "\\tilde{p}");
-    const SubSpaceExtractors::Scalar   subspace_extractor_J(spacedim + 1,
+    const SubSpaceExtractors::Scalar subspace_extractor_J(this->J_dof,
+                                                          this->J_component,
                                                           "J_tilde",
                                                           "\\tilde{J}");
 
