@@ -54,6 +54,9 @@ namespace WeakForms
                               std::make_pair(false, GeneralDataStorage()))
     {}
 
+    AD_SD_Functor_Cache(const AD_SD_Functor_Cache &) = delete;
+    AD_SD_Functor_Cache(AD_SD_Functor_Cache &&)      = delete;
+
     template <int dim, int spacedim>
     static void
     initialize(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -68,7 +71,7 @@ namespace WeakForms
       GeneralDataStorage &scratch_cache =
         scratch_data.get_general_data_storage();
 
-      // Register the user cache in a central and always accessible place
+      // Register the user cache in a central and always accessible place.
       AD_SD_Functor_Cache &source_cache =
         const_cast<AD_SD_Functor_Cache &>(*ad_sd_functor_cache);
       scratch_cache.add_unique_reference<AD_SD_Functor_Cache>(
@@ -89,19 +92,29 @@ namespace WeakForms
           // We must ensure that we do not try to evaluate from multiple threads
           // at once.
           AD_SD_Functor_Cache &source_cache = get_source_cache(scratch_data);
-          const std::lock_guard<Threads::Mutex> lock(source_cache.mutex);
 
           // We use an infinite loop because we cannot be sure when the next
           // entry will become free for use.
           while (true)
             {
+            try_to_acquire_resource:
               for (auto &lock_and_cache : source_cache.source_lock_and_cache)
                 {
                   if (lock_and_cache.first == false)
                     {
-                      // Mark this entry as no longer being available for use.
-                      lock_and_cache.first = true;
-                      return lock_and_cache.second;
+                      const std::lock_guard<std::recursive_mutex> lock(
+                        source_cache.mutex);
+                      if (lock_and_cache.first == false)
+                        {
+                          // Mark this entry as no longer being available for
+                          // use.
+                          lock_and_cache.first = true;
+                          return lock_and_cache.second;
+                        }
+                      else
+                        {
+                          goto try_to_acquire_resource;
+                        }
                     }
                 }
             }
@@ -176,8 +189,9 @@ namespace WeakForms
   private:
     // We need to be careful when a shared cache is used: We cannot evaluate
     // this operator in parallel; it must be done in a sequential fashion.
-    Threads::Mutex mutex;
+    std::recursive_mutex mutex;
 
+    // TODO: Make the bool a std::mutex? Then can use mutex::try_lock()
     using CacheWithLock = std::pair<bool, GeneralDataStorage>;
     std::vector<CacheWithLock> source_lock_and_cache;
 

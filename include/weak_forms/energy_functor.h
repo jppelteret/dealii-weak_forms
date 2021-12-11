@@ -852,17 +852,18 @@ namespace WeakForms
         // theory the user can encode the QPoint into the energy function: this
         // current implementation restricts the user to use the same definition
         // for the energy itself at each QP.
-        const auto initialize_optimizer = [this](sd_helper_type<ResultScalarType> &batch_optimizer)
+        const auto initialize_optimizer =
+          [this](sd_helper_type<ResultScalarType> &batch_optimizer)
         {
           Assert(batch_optimizer.n_independent_variables() == 0,
-                  ExcMessage(
-                    "Expected the batch optimizer to be uninitialized."));
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
           Assert(batch_optimizer.n_dependent_variables() == 0,
-                  ExcMessage(
-                    "Expected the batch optimizer to be uninitialized."));
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
           Assert(batch_optimizer.values_substituted() == false,
-                  ExcMessage(
-                    "Expected the batch optimizer to be uninitialized."));
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
 
           // Create and register field variables (the independent variables).
           // We deal with the fields before the user data just in case
@@ -940,7 +941,8 @@ namespace WeakForms
                 get_mutable_sd_batch_optimizer<ResultScalarType>(
                   destination_cache);
 
-              Assert(&destination_batch_optimizer != &batch_optimizer, ExcInternalError());
+              Assert(&destination_batch_optimizer != &batch_optimizer,
+                     ExcInternalError());
               Assert(
                 destination_batch_optimizer.optimized() == false,
                 ExcMessage(
@@ -951,7 +953,8 @@ namespace WeakForms
                 {
                   // For complex expressions, its actually quicker to re-init
                   // the optimiser (to compute the dependent functions, without
-                  // subsequent optimization) than by copying the optimiser using
+                  // subsequent optimization) than by copying the optimiser
+                  // using
                   //   destination_batch_optimizer.copy_from(batch_optimizer);
                   // So, we do that here as we expect this to be used in
                   // applications with non-trivial constitutive laws.
