@@ -92,12 +92,19 @@ namespace Step44
     const auto J_tilde = field_solution[subspace_extractor_J].value();
 
     // Residual
-    const auto residual_func_u = residual_functor("R", "R", Grad_u, p_tilde);
-    const auto residual_func_p = residual_functor("R", "R", Grad_u, J_tilde);
-    const auto residual_func_J = residual_functor("R", "R", p_tilde, J_tilde);
-    const auto residual_ss_u   = residual_func_u[Grad_test_u];
-    const auto residual_ss_p   = residual_func_p[test_p];
-    const auto residual_ss_J   = residual_func_J[test_J];
+    // ADOL-C does not support the number of directional derivatives changing,
+    // so we have to parameterise all of the AD functors identically.
+    // (Not even using AD::HelperBase::configure_tapeless_mode() allows us to
+    // simplify this.)
+    const auto residual_func_u =
+      residual_functor("R", "R", u, Grad_u, p_tilde, J_tilde);
+    const auto residual_func_p =
+      residual_functor("R", "R", u, Grad_u, p_tilde, J_tilde);
+    const auto residual_func_J =
+      residual_functor("R", "R", u, Grad_u, p_tilde, J_tilde);
+    const auto residual_ss_u = residual_func_u[Grad_test_u];
+    const auto residual_ss_p = residual_func_p[test_p];
+    const auto residual_ss_J = residual_func_J[test_J];
 
     using ResidualADNumber_t =
       typename decltype(residual_ss_u)::template ad_type<double, ad_typecode>;
@@ -116,9 +123,14 @@ namespace Step44
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
+                    const Tensor<1, spacedim, ADNumber_t> &u,
                     const Tensor<2, spacedim, ADNumber_t> &Grad_u,
-                    const ADNumber_t &                     p_tilde)
+                    const ADNumber_t &                     p_tilde,
+                    const ADNumber_t &                     J_tilde)
         {
+          (void)u;
+          (void)J_tilde;
+
           const auto &cell = scratch_data.get_current_fe_values().get_cell();
           const auto &qph  = this->quadrature_point_history;
           const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -134,9 +146,14 @@ namespace Step44
         [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                     const std::vector<std::string> &       solution_names,
                     const unsigned int                     q_point,
+                    const Tensor<1, spacedim, ADNumber_t> &u,
                     const Tensor<2, spacedim, ADNumber_t> &Grad_u,
+                    const ADNumber_t &                     p_tilde,
                     const ADNumber_t &                     J_tilde)
         {
+          (void)u;
+          (void)p_tilde;
+
           const Tensor<2, spacedim, ADNumber_t> F =
             Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
           return determinant(F) - J_tilde;
@@ -148,9 +165,14 @@ namespace Step44
         [this](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                const std::vector<std::string> &              solution_names,
                const unsigned int                            q_point,
+               const Tensor<1, spacedim, ADNumber_t> &       u,
+               const Tensor<2, spacedim, ADNumber_t> &       Grad_u,
                const ADNumber_t &                            p_tilde,
                const ADNumber_t &                            J_tilde)
         {
+          (void)u;
+          (void)Grad_u;
+
           const auto &cell = scratch_data.get_current_fe_values().get_cell();
           const auto &qph  = this->quadrature_point_history;
           const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
@@ -162,8 +184,9 @@ namespace Step44
         UpdateFlags::update_default);
 
     // Field variables: External force
-    const auto force_func_u = residual_functor("F", "F", u);
-    const auto force_ss_u   = force_func_u[test_u];
+    const auto force_func_u =
+      residual_functor("F", "F", u, Grad_u, p_tilde, J_tilde);
+    const auto force_ss_u = force_func_u[test_u];
 
     using ForceADNumber_t =
       typename decltype(force_ss_u)::template ad_type<double, ad_typecode>;
@@ -175,8 +198,15 @@ namespace Step44
        &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                   const std::vector<std::string> &              solution_names,
                   const unsigned int                            q_point,
-                  const Tensor<1, spacedim, ADNumber_t> &       u)
+                  const Tensor<1, spacedim, ADNumber_t> &       u,
+                  const Tensor<2, spacedim, ADNumber_t> &       Grad_u,
+                  const ADNumber_t &                            p_tilde,
+                  const ADNumber_t &                            J_tilde)
       {
+        (void)Grad_u;
+        (void)p_tilde;
+        (void)J_tilde;
+
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);
         const double time_ramp = (this->time.current() / this->time.end());
@@ -235,8 +265,10 @@ main(int argc, char **argv)
   initlog();
   deallog << std::setprecision(9);
 
-  Utilities::MPI::MPI_InitFinalize mpi_initialization(
-    argc, argv, numbers::invalid_unsigned_int);
+  // ADOL-C doesn't support multithreading
+  constexpr unsigned int n_threads = 1;
+  // constexpr unsigned int n_threads = numbers::invalid_unsigned_int;
+  Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, n_threads);
 
   using namespace dealii;
   try

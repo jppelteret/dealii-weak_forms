@@ -160,6 +160,15 @@ namespace Step44
         },
         UpdateFlags::update_default);
 
+    // ADOL-C does not support the number of directional derivatives changing.
+    // So we set them in a persistent state here.
+    constexpr unsigned int n_total_independent_components =
+      WeakForms::Utilities::ValueHelper<Result_t_u>::n_components +
+      WeakForms::Utilities::ValueHelper<Result_t_p>::n_components +
+      WeakForms::Utilities::ValueHelper<Result_t_J>::n_components;
+    Differentiation::AD::HelperBase<ad_typecode, double>::
+      configure_tapeless_mode(n_total_independent_components, true);
+
     // Field variables: External force
     const auto force_func_u = residual_functor("F", "F", u);
     const auto force_ss_u   = force_func_u[test_u];
@@ -233,8 +242,10 @@ main(int argc, char **argv)
   initlog();
   deallog << std::setprecision(9);
 
-  Utilities::MPI::MPI_InitFinalize mpi_initialization(
-    argc, argv, testing_max_num_threads());
+  // ADOL-C doesn't support multithreading
+  constexpr unsigned int n_threads = 1;
+  // constexpr unsigned int n_threads = numbers::invalid_unsigned_int;
+  Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, n_threads);
 
   using namespace dealii;
   try
