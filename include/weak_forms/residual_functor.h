@@ -1000,7 +1000,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_source_cache(scratch_data);
 
         return cache.get_object_with_name<sd_helper_type<ResultScalarType>>(
           get_name_sd_batch_optimizer());
@@ -1043,9 +1043,6 @@ namespace WeakForms
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
                  const std::vector<std::string> &         solution_names) const
       {
-        GeneralDataStorage &source_cache =
-          AD_SD_Functor_Cache::check_out_source_cache_from_pool(scratch_data);
-
         // Follow the recipe described in the documentation:
         // - Define some independent variables.
         // - Compute symbolic expressions that are dependent on the independent
@@ -1125,7 +1122,7 @@ namespace WeakForms
         // with an additional multiplication factor like number of timesteps
         // times number of Newton iterations).
         sd_helper_type<ResultScalarType> &batch_optimizer =
-          get_mutable_sd_batch_optimizer<ResultScalarType>(source_cache);
+          get_mutable_sd_batch_optimizer<ResultScalarType>(scratch_data);
         if (batch_optimizer.optimized() == false)
           {
             initialize_optimizer(batch_optimizer);
@@ -1139,42 +1136,6 @@ namespace WeakForms
                ExcMessage("Expected the batch optimizer to be initialized."));
         Assert(batch_optimizer.n_dependent_variables() > 0,
                ExcMessage("Expected the batch optimizer to be initialized."));
-
-        // Now check to see if the destination holds a batch optimiser
-        // instance that can correctly extract the evaluated symbolic
-        // functions. If not, then we initialize one, but only with the
-        // minimal necessary data.
-        {
-          GeneralDataStorage &destination_cache =
-            AD_SD_Functor_Cache::get_destination_cache(scratch_data);
-
-          if (&destination_cache != &source_cache)
-            {
-              sd_helper_type<ResultScalarType> &destination_batch_optimizer =
-                get_mutable_sd_batch_optimizer<ResultScalarType>(
-                  destination_cache);
-
-              Assert(&destination_batch_optimizer != &batch_optimizer,
-                     ExcInternalError());
-              Assert(
-                destination_batch_optimizer.optimized() == false,
-                ExcMessage(
-                  "We expect to never optimize the destination SD batch optimizer when the user has one in cache."));
-
-              if (destination_batch_optimizer.n_independent_variables() == 0 ||
-                  destination_batch_optimizer.n_dependent_variables() == 0)
-                {
-                  // For complex expressions, its actually quicker to re-init
-                  // the optimiser (to compute the dependent functions, without
-                  // subsequent optimization) than by copying the optimiser
-                  // using
-                  //   destination_batch_optimizer.copy_from(batch_optimizer);
-                  // So, we do that here as we expect this to be used in
-                  // applications with non-trivial constitutive laws.
-                  initialize_optimizer(destination_batch_optimizer);
-                }
-            }
-        }
 
         std::vector<std::vector<ResultScalarType>>
           &evaluated_dependent_functions =
@@ -1223,9 +1184,6 @@ namespace WeakForms
             // Extract evaluated data to be retrieved later.
             evaluated_dependent_functions[q_point] = batch_optimizer.evaluate();
           }
-
-        AD_SD_Functor_Cache::return_source_cache_to_pool(scratch_data,
-                                                         source_cache);
       }
 
       const TestSpaceOp &
@@ -1294,8 +1252,12 @@ namespace WeakForms
 
       template <typename ResultScalarType>
       sd_helper_type<ResultScalarType> &
-      get_mutable_sd_batch_optimizer(GeneralDataStorage &cache) const
+      get_mutable_sd_batch_optimizer(
+        MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_source_cache(scratch_data);
+
         const std::string name_sd_batch_optimizer =
           get_name_sd_batch_optimizer();
 

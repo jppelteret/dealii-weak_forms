@@ -326,6 +326,37 @@ namespace WeakForms
         return "__DEAL_II__";
       }
 
+      inline std::string
+      replace_protected_characters(const std::string &name)
+      {
+        // Allow SymEngine to parse this field as a string:
+        // Required for deserialization.
+        // It gets confused when there are numbers in the string name, and
+        // we have numbers and some protected characters in the expression
+        // name.
+        std::string out = name;
+        const auto  replace_chars =
+          [&out](const char &old_char, const char &new_char)
+        { std::replace(out.begin(), out.end(), old_char, new_char); };
+        // replace_chars('0', 'A');
+        // replace_chars('1', 'B');
+        // replace_chars('2', 'C');
+        // replace_chars('3', 'D');
+        // replace_chars('4', 'E');
+        // replace_chars('5', 'F');
+        // replace_chars('6', 'G');
+        // replace_chars('7', 'H');
+        // replace_chars('8', 'I');
+        // replace_chars('9', 'J');
+        replace_chars(' ', '_');
+        replace_chars('(', '_');
+        replace_chars(')', '_');
+        replace_chars('{', '_');
+        replace_chars('}', '_');
+
+        return out;
+      }
+
       template <typename ReturnType>
       typename std::enable_if<
         std::is_same<ReturnType, Differentiation::SD::Expression>::value,
@@ -374,7 +405,8 @@ namespace WeakForms
 
         const std::string name =
           get_deal_II_prefix() + "Field_" + field.as_ascii(decorator);
-        return make_symbolic<ReturnType>(name);
+        // return make_symbolic<ReturnType>(name);
+        return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
 
       // Check that all types in a parameter pack are not tuples

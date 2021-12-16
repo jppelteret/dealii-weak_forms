@@ -21,6 +21,7 @@
 #include <deal.II/algorithms/general_data_storage.h>
 
 #include <deal.II/base/multithread_info.h>
+#include <deal.II/base/thread_local_storage.h>
 #include <deal.II/base/thread_management.h>
 
 #include <deal.II/differentiation/ad.h>
@@ -52,6 +53,7 @@ namespace WeakForms
       const unsigned int queue_length = 2 * MultithreadInfo::n_threads())
       : source_lock_and_cache(queue_length,
                               std::make_pair(false, GeneralDataStorage()))
+      , thread_storage(nullptr /*exemplar*/)
     {}
 
     AD_SD_Functor_Cache(const AD_SD_Functor_Cache &) = delete;
@@ -72,52 +74,121 @@ namespace WeakForms
         scratch_data.get_general_data_storage();
 
       // Register the user cache in a central and always accessible place.
-      AD_SD_Functor_Cache &source_cache =
+      AD_SD_Functor_Cache &user_cache =
         const_cast<AD_SD_Functor_Cache &>(*ad_sd_functor_cache);
       scratch_cache.add_unique_reference<AD_SD_Functor_Cache>(
-        get_name_ad_sd_cache(), source_cache);
+        get_name_ad_sd_cache(), user_cache);
 
       // Check that all cache entries are unlocked
-      Assert(source_cache.all_entries_unlocked(),
+      Assert(user_cache.all_entries_unlocked(),
              ExcMessage("Cache entry is already locked upon initialisation."));
     }
 
     template <int dim, int spacedim>
     static GeneralDataStorage &
-    check_out_source_cache_from_pool(
+    bind_user_cache_to_thread(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
-      if (has_user_cache(scratch_data))
-        {
-          // We must ensure that we do not try to evaluate from multiple threads
-          // at once.
-          AD_SD_Functor_Cache &source_cache = get_source_cache(scratch_data);
+      if (has_user_cache(scratch_data) == false)
+        return get_destination_cache(scratch_data);
 
-          // We use an infinite loop because we cannot be sure when the next
-          // entry will become free for use.
-          while (true)
+      // We must ensure that we do not try to evaluate from multiple threads
+      // at once.
+      AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
+
+      // We use an infinite loop because we cannot be sure when the next
+      // entry will become free for use.
+      while (true)
+        {
+        try_to_acquire_resource:
+          for (auto &lock_and_cache : user_cache.source_lock_and_cache)
             {
-            try_to_acquire_resource:
-              for (auto &lock_and_cache : source_cache.source_lock_and_cache)
+              if (lock_and_cache.first == false)
                 {
+                  const std::lock_guard<std::recursive_mutex> lock(
+                    user_cache.mutex);
                   if (lock_and_cache.first == false)
                     {
-                      const std::lock_guard<std::recursive_mutex> lock(
-                        source_cache.mutex);
-                      if (lock_and_cache.first == false)
-                        {
-                          // Mark this entry as no longer being available for
-                          // use.
-                          lock_and_cache.first = true;
-                          return lock_and_cache.second;
-                        }
-                      else
-                        {
-                          goto try_to_acquire_resource;
-                        }
+                      Assert(
+                        user_cache.thread_storage.get() == nullptr,
+                        ExcMessage(
+                          "Expected source cache to be initialised for this thread."));
+
+                      // Mark this entry as no longer being available for
+                      // use, and point the current thread towards its entry.
+                      lock_and_cache.first = true;
+                      user_cache.thread_storage.get() =
+                        &(lock_and_cache.second);
+
+                      const std::thread::id my_id = std::this_thread::get_id();
+                      const int worker_index = tbb::task_arena::current_thread_index();
+                      // const int tbb_id = tbb::this_tbb_thread::get_id()
+                      std::cout 
+                        << "Bound on thread " << my_id 
+                        << "  worker_index: " << worker_index
+                        // << "  tbb_id: " << tbb_id
+                        << std::endl;
+
+                      return lock_and_cache.second;
+                    }
+                  else
+                    {
+                      goto try_to_acquire_resource;
                     }
                 }
             }
+        }
+    }
+
+    template <int dim, int spacedim>
+    static void
+    unbind_user_cache_from_thread(
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+      const GeneralDataStorage &              cache)
+    {
+      if (has_user_cache(scratch_data) == false)
+        return;
+
+      AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
+      for (auto &lock_and_cache : user_cache.source_lock_and_cache)
+        {
+          if (&cache == &lock_and_cache.second)
+            {
+              Assert(lock_and_cache.first == true,
+                     ExcMessage("Cache entry was not locked upon return."));
+
+              // Invalidate pointer in thread pool and mark this entry as being
+              // available for re-use.
+              user_cache.thread_storage.get() = nullptr;
+              lock_and_cache.first            = false;
+              return;
+            }
+        }
+
+      AssertThrow(false,
+                  ExcMessage("Source cache not found in this data structure."));
+    }
+
+    template <int dim, int spacedim>
+    static GeneralDataStorage &
+    get_source_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      if (has_user_cache(scratch_data))
+        {
+          AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
+
+          bool                exists = false;
+          GeneralDataStorage *data_cache =
+            user_cache.thread_storage.get(exists);
+
+          Assert(exists,
+                 ExcMessage(
+                   "Source cache was not initialised for this thread."));
+          Assert(data_cache,
+                 ExcMessage(
+                   "Source cache was not initialised for this thread."));
+
+          return *data_cache;
         }
       else
         {
@@ -126,30 +197,30 @@ namespace WeakForms
     }
 
     template <int dim, int spacedim>
-    static void
-    return_source_cache_to_pool(
-      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const GeneralDataStorage &              cache)
+    static const GeneralDataStorage &
+    get_source_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       if (has_user_cache(scratch_data))
         {
-          AD_SD_Functor_Cache &source_cache = get_source_cache(scratch_data);
-          for (auto &lock_and_cache : source_cache.source_lock_and_cache)
-            {
-              if (&cache == &lock_and_cache.second)
-                {
-                  Assert(lock_and_cache.first == true,
-                         ExcMessage("Cache entry was not locked upon return."));
+          const AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
 
-                  // Mark this entry as being available for use.
-                  lock_and_cache.first = false;
-                  return;
-                }
-            }
+          bool                            exists = false;
+          const GeneralDataStorage *const data_cache =
+            const_cast<AD_SD_Functor_Cache &>(user_cache)
+              .thread_storage.get(exists);
 
-          AssertThrow(false,
-                      ExcMessage(
-                        "Source cache not found in this data structure."));
+          Assert(exists,
+                 ExcMessage(
+                   "Source cache was not initialised for this thread."));
+          Assert(data_cache,
+                 ExcMessage(
+                   "Source cache was not initialised for this thread."));
+
+          return *data_cache;
+        }
+      else
+        {
+          return get_destination_cache(scratch_data);
         }
     }
 
@@ -195,17 +266,15 @@ namespace WeakForms
     using CacheWithLock = std::pair<bool, GeneralDataStorage>;
     std::vector<CacheWithLock> source_lock_and_cache;
 
+    // Some thread-aware storage that will link the locked source cache
+    // with a thread.
+    Threads::ThreadLocalStorage<GeneralDataStorage *> thread_storage;
+
     static std::string
     get_name_ad_sd_cache()
     {
       return Operators::internal::get_deal_II_prefix() + "AD_SD_Functor_Cache";
     }
-
-    // static std::string
-    // get_name_ad_sd_source_cache(const unsigned int entry)
-    // {
-    //   return get_name_ad_sd_cache + "_" + std::to_string(entry);
-    // }
 
     template <int dim, int spacedim>
     static bool
@@ -227,11 +296,23 @@ namespace WeakForms
 
     template <int dim, int spacedim>
     static AD_SD_Functor_Cache &
-    get_source_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    get_user_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       Assert(has_user_cache(scratch_data),
              ExcMessage("No user cache exists in this scratch data object."));
       GeneralDataStorage &scratch_cache =
+        scratch_data.get_general_data_storage();
+      return scratch_cache.template get_object_with_name<AD_SD_Functor_Cache>(
+        get_name_ad_sd_cache());
+    }
+
+    template <int dim, int spacedim>
+    static const AD_SD_Functor_Cache &
+    get_user_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      Assert(has_user_cache(scratch_data),
+             ExcMessage("No user cache exists in this scratch data object."));
+      const GeneralDataStorage &scratch_cache =
         scratch_data.get_general_data_storage();
       return scratch_cache.template get_object_with_name<AD_SD_Functor_Cache>(
         get_name_ad_sd_cache());
