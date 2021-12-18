@@ -40,51 +40,24 @@ namespace WeakForms
 {
   namespace internal
   {
-    // A specialised Scratch data object that will bind an instance of the
-    // AD/SD user cache to the current thread, and release it when we're
-    // done with the data.
+    // Utility functions to associate one of shared user data structures with
+    // the thread that a ScratchData object occupies.
     template <int dim, int spacedim>
-    class ScratchDataWithADSDThreadBinding
-      : public MeshWorker::ScratchData<dim, spacedim>
+    void
+    bind_user_cache_to_thread(
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
-      using Base = MeshWorker::ScratchData<dim, spacedim>;
+      AD_SD_Functor_Cache::bind_user_cache_to_thread(scratch_data);
+    }
 
-    public:
-      template <typename... Args>
-      ScratchDataWithADSDThreadBinding(Args &...args)
-        : Base(args...)
-      {
-        // bind_user_cache_to_thread();
-      }
-
-      // TODO: Potential memory leak due to non-virtual destructor
-      // in base class
-      ~ScratchDataWithADSDThreadBinding()
-      {
-        unbind_user_cache_from_thread();
-      }
-
-      void
-      bind_user_cache_to_thread()
-      {
-        AD_SD_Functor_Cache::bind_user_cache_to_thread(*this);
-        is_bound_to_user_cache = true;
-      }
-
-      void
-      unbind_user_cache_from_thread()
-      {
-        if (is_bound_to_user_cache)
-          {
-            auto &cache = AD_SD_Functor_Cache::get_source_cache(*this);
-            AD_SD_Functor_Cache::unbind_user_cache_from_thread(*this, cache);
-            is_bound_to_user_cache = false;
-          }
-      }
-
-    private:
-      bool is_bound_to_user_cache = false;
-    };
+    template <int dim, int spacedim>
+    void
+    unbind_user_cache_from_thread(
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      auto &cache = AD_SD_Functor_Cache::get_source_cache(scratch_data);
+      AD_SD_Functor_Cache::unbind_user_cache_from_thread(scratch_data, cache);
+    }
 
 
     template <int n_matrices    = 1,
@@ -786,8 +759,7 @@ namespace WeakForms
         }
 
       using CellIteratorType = typename DoFHandlerType::active_cell_iterator;
-      using ScratchData =
-        internal::ScratchDataWithADSDThreadBinding<dim, spacedim>;
+      using ScratchData      = MeshWorker::ScratchData<dim, spacedim>;
       using CopyData = internal::CopyDataWithInterfaceSupport<1, 1, 1>;
 
       // Define a cell worker
@@ -808,7 +780,7 @@ namespace WeakForms
                                            ScratchData &           scratch_data,
                                            CopyData &              copy_data)
           {
-            scratch_data.bind_user_cache_to_thread();
+            internal::bind_user_cache_to_thread(scratch_data);
 
             const auto &fe_values = scratch_data.reinit(cell);
             copy_data             = CopyData(fe_values.dofs_per_cell);
@@ -868,7 +840,7 @@ namespace WeakForms
                   }
               }
 
-            scratch_data.unbind_user_cache_from_thread();
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 
@@ -898,7 +870,7 @@ namespace WeakForms
             Assert((cell->face(face)->at_boundary()),
                    ExcMessage("Cell face is not at the boundary."));
 
-            scratch_data.bind_user_cache_to_thread();
+            internal::bind_user_cache_to_thread(scratch_data);
 
             const auto &fe_values      = scratch_data.reinit(cell);
             const auto &fe_face_values = scratch_data.reinit(cell, face);
@@ -957,7 +929,7 @@ namespace WeakForms
                   }
               }
 
-            scratch_data.unbind_user_cache_from_thread();
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 
@@ -991,7 +963,7 @@ namespace WeakForms
             Assert((!cell->face(face)->at_boundary()),
                    ExcMessage("Cell face is at the boundary."));
 
-            scratch_data.bind_user_cache_to_thread();
+            internal::bind_user_cache_to_thread(scratch_data);
 
             const FEInterfaceValues<dim> &fe_interface_values =
               scratch_data.reinit(cell,
@@ -1068,7 +1040,7 @@ namespace WeakForms
                   }
               }
 
-            scratch_data.unbind_user_cache_from_thread();
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 

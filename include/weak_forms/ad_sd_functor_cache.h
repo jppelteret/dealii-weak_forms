@@ -51,9 +51,7 @@ namespace WeakForms
     // hence mesh_loop().
     AD_SD_Functor_Cache(
       const unsigned int queue_length = 2 * MultithreadInfo::n_threads())
-      : source_lock_and_cache(queue_length,
-                              std::make_pair(false, GeneralDataStorage()))
-      , thread_storage(nullptr /*exemplar*/)
+      : source_lock_and_cache(queue_length)
     {}
 
     AD_SD_Functor_Cache(const AD_SD_Functor_Cache &) = delete;
@@ -85,12 +83,12 @@ namespace WeakForms
     }
 
     template <int dim, int spacedim>
-    static GeneralDataStorage &
+    static void
     bind_user_cache_to_thread(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       if (has_user_cache(scratch_data) == false)
-        return get_destination_cache(scratch_data);
+        return;
 
       // We must ensure that we do not try to evaluate from multiple threads
       // at once.
@@ -100,41 +98,32 @@ namespace WeakForms
       // entry will become free for use.
       while (true)
         {
-        try_to_acquire_resource:
           for (auto &lock_and_cache : user_cache.source_lock_and_cache)
             {
-              if (lock_and_cache.first == false)
+              if (lock_and_cache.first.try_lock())
                 {
-                  const std::lock_guard<std::recursive_mutex> lock(
-                    user_cache.mutex);
-                  if (lock_and_cache.first == false)
+                  // Now that we've marked this entry as no longer being
+                  // available for use, and point the current thread towards
+                  // its associated cache data.
+                  GeneralDataStorage &destination_cache =
+                    get_destination_cache(scratch_data);
+
+#ifdef DEBUG
+                  if (destination_cache.stores_object_with_name(
+                        get_name_active_data_cache()))
                     {
                       Assert(
-                        user_cache.thread_storage.get() == nullptr,
+                        destination_cache
+                            .get_object_with_name<GeneralDataStorage *>(
+                              get_name_active_data_cache()) == nullptr,
                         ExcMessage(
-                          "Expected source cache to be initialised for this thread."));
-
-                      // Mark this entry as no longer being available for
-                      // use, and point the current thread towards its entry.
-                      lock_and_cache.first = true;
-                      user_cache.thread_storage.get() =
-                        &(lock_and_cache.second);
-
-                      const std::thread::id my_id = std::this_thread::get_id();
-                      const int worker_index = tbb::task_arena::current_thread_index();
-                      // const int tbb_id = tbb::this_tbb_thread::get_id()
-                      std::cout 
-                        << "Bound on thread " << my_id 
-                        << "  worker_index: " << worker_index
-                        // << "  tbb_id: " << tbb_id
-                        << std::endl;
-
-                      return lock_and_cache.second;
+                          "Expected to find an uninitialised pointer to an active data storage object."));
                     }
-                  else
-                    {
-                      goto try_to_acquire_resource;
-                    }
+#endif
+
+                  destination_cache.add_or_overwrite_copy<GeneralDataStorage *>(
+                    get_name_active_data_cache(), &lock_and_cache.second);
+                  return;
                 }
             }
         }
@@ -154,13 +143,23 @@ namespace WeakForms
         {
           if (&cache == &lock_and_cache.second)
             {
-              Assert(lock_and_cache.first == true,
+              Assert(lock_and_cache.first.try_lock() == false,
                      ExcMessage("Cache entry was not locked upon return."));
 
-              // Invalidate pointer in thread pool and mark this entry as being
-              // available for re-use.
-              user_cache.thread_storage.get() = nullptr;
-              lock_and_cache.first            = false;
+              GeneralDataStorage &destination_cache =
+                get_destination_cache(scratch_data);
+              Assert(
+                destination_cache.stores_object_with_name(
+                  get_name_active_data_cache()),
+                ExcMessage(
+                  "Expected to find a pointer to an active data storage object."));
+
+
+              // Invalidate pointer in common storage and mark this entry as
+              // being available for re-use.
+              destination_cache.add_or_overwrite_copy<GeneralDataStorage *>(
+                get_name_active_data_cache(), nullptr);
+              lock_and_cache.first.unlock();
               return;
             }
         }
@@ -175,20 +174,23 @@ namespace WeakForms
     {
       if (has_user_cache(scratch_data))
         {
-          AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
+          GeneralDataStorage &destination_cache =
+            get_destination_cache(scratch_data);
 
-          bool                exists = false;
-          GeneralDataStorage *data_cache =
-            user_cache.thread_storage.get(exists);
+          Assert(
+            destination_cache.stores_object_with_name(
+              get_name_active_data_cache()),
+            ExcMessage(
+              "Expected to find a pointer to an active data storage object."));
+          GeneralDataStorage *active_data_cache =
+            destination_cache.get_object_with_name<GeneralDataStorage *>(
+              get_name_active_data_cache());
 
-          Assert(exists,
-                 ExcMessage(
-                   "Source cache was not initialised for this thread."));
-          Assert(data_cache,
-                 ExcMessage(
-                   "Source cache was not initialised for this thread."));
-
-          return *data_cache;
+          Assert(
+            active_data_cache != nullptr,
+            ExcMessage(
+              "Expected to find an initialised pointer to an active data storage object."));
+          return *active_data_cache;
         }
       else
         {
@@ -202,21 +204,25 @@ namespace WeakForms
     {
       if (has_user_cache(scratch_data))
         {
-          const AD_SD_Functor_Cache &user_cache = get_user_cache(scratch_data);
+          // GeneralDataStorage does not have any non-const member functions.
+          GeneralDataStorage &destination_cache = get_destination_cache(
+            const_cast<MeshWorker::ScratchData<dim, spacedim> &>(scratch_data));
 
-          bool                            exists = false;
-          const GeneralDataStorage *const data_cache =
-            const_cast<AD_SD_Functor_Cache &>(user_cache)
-              .thread_storage.get(exists);
+          Assert(
+            destination_cache.stores_object_with_name(
+              get_name_active_data_cache()),
+            ExcMessage(
+              "Expected to find a pointer to an active data storage object."));
 
-          Assert(exists,
-                 ExcMessage(
-                   "Source cache was not initialised for this thread."));
-          Assert(data_cache,
-                 ExcMessage(
-                   "Source cache was not initialised for this thread."));
+          const GeneralDataStorage *const active_data_cache =
+            destination_cache.get_object_with_name<GeneralDataStorage *>(
+              get_name_active_data_cache());
+          Assert(
+            active_data_cache != nullptr,
+            ExcMessage(
+              "Expected to find an initialised pointer to an active data storage object."));
 
-          return *data_cache;
+          return *active_data_cache;
         }
       else
         {
@@ -242,11 +248,11 @@ namespace WeakForms
     bool
     all_entries_unlocked() const
     {
-      for (const auto &lock_and_cache : source_lock_and_cache)
-        {
-          if (lock_and_cache.first == true)
-            return false;
-        }
+      // for (const auto &lock_and_cache : source_lock_and_cache)
+      //   {
+      //     if (lock_and_cache.first == true)
+      //       return false;
+      //   }
 
       return true;
     }
@@ -260,20 +266,19 @@ namespace WeakForms
   private:
     // We need to be careful when a shared cache is used: We cannot evaluate
     // this operator in parallel; it must be done in a sequential fashion.
-    std::recursive_mutex mutex;
-
-    // TODO: Make the bool a std::mutex? Then can use mutex::try_lock()
-    using CacheWithLock = std::pair<bool, GeneralDataStorage>;
+    using CacheWithLock = std::pair<std::mutex, GeneralDataStorage>;
     std::vector<CacheWithLock> source_lock_and_cache;
-
-    // Some thread-aware storage that will link the locked source cache
-    // with a thread.
-    Threads::ThreadLocalStorage<GeneralDataStorage *> thread_storage;
 
     static std::string
     get_name_ad_sd_cache()
     {
       return Operators::internal::get_deal_II_prefix() + "AD_SD_Functor_Cache";
+    }
+
+    static std::string
+    get_name_active_data_cache()
+    {
+      return get_name_ad_sd_cache() + "_Active_Data_Cache";
     }
 
     template <int dim, int spacedim>
