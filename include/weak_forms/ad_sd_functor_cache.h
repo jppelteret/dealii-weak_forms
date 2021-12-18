@@ -76,10 +76,6 @@ namespace WeakForms
         const_cast<AD_SD_Functor_Cache &>(*ad_sd_functor_cache);
       scratch_cache.add_unique_reference<AD_SD_Functor_Cache>(
         get_name_ad_sd_cache(), user_cache);
-
-      // Check that all cache entries are unlocked
-      Assert(user_cache.all_entries_unlocked(),
-             ExcMessage("Cache entry is already locked upon initialisation."));
     }
 
     template <int dim, int spacedim>
@@ -105,24 +101,23 @@ namespace WeakForms
                   // Now that we've marked this entry as no longer being
                   // available for use, and point the current thread towards
                   // its associated cache data.
-                  GeneralDataStorage &destination_cache =
-                    get_destination_cache(scratch_data);
+                  GeneralDataStorage &data_storage =
+                    get_data_storage(scratch_data);
 
 #ifdef DEBUG
-                  if (destination_cache.stores_object_with_name(
-                        get_name_active_data_cache()))
+                  if (data_storage.stores_object_with_name(
+                        get_name_active_data_storage()))
                     {
                       Assert(
-                        destination_cache
-                            .get_object_with_name<GeneralDataStorage *>(
-                              get_name_active_data_cache()) == nullptr,
+                        data_storage.get_object_with_name<GeneralDataStorage *>(
+                          get_name_active_data_storage()) == nullptr,
                         ExcMessage(
                           "Expected to find an uninitialised pointer to an active data storage object."));
                     }
 #endif
 
-                  destination_cache.add_or_overwrite_copy<GeneralDataStorage *>(
-                    get_name_active_data_cache(), &lock_and_cache.second);
+                  data_storage.add_or_overwrite_copy<GeneralDataStorage *>(
+                    get_name_active_data_storage(), &lock_and_cache.second);
                   return;
                 }
             }
@@ -146,19 +141,18 @@ namespace WeakForms
               Assert(lock_and_cache.first.try_lock() == false,
                      ExcMessage("Cache entry was not locked upon return."));
 
-              GeneralDataStorage &destination_cache =
-                get_destination_cache(scratch_data);
+              GeneralDataStorage &data_storage = get_data_storage(scratch_data);
               Assert(
-                destination_cache.stores_object_with_name(
-                  get_name_active_data_cache()),
+                data_storage.stores_object_with_name(
+                  get_name_active_data_storage()),
                 ExcMessage(
                   "Expected to find a pointer to an active data storage object."));
 
 
               // Invalidate pointer in common storage and mark this entry as
               // being available for re-use.
-              destination_cache.add_or_overwrite_copy<GeneralDataStorage *>(
-                get_name_active_data_cache(), nullptr);
+              data_storage.add_or_overwrite_copy<GeneralDataStorage *>(
+                get_name_active_data_storage(), nullptr);
               lock_and_cache.first.unlock();
               return;
             }
@@ -170,91 +164,63 @@ namespace WeakForms
 
     template <int dim, int spacedim>
     static GeneralDataStorage &
-    get_source_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    get_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       if (has_user_cache(scratch_data))
         {
-          GeneralDataStorage &destination_cache =
-            get_destination_cache(scratch_data);
+          GeneralDataStorage &data_storage = get_data_storage(scratch_data);
 
           Assert(
-            destination_cache.stores_object_with_name(
-              get_name_active_data_cache()),
+            data_storage.stores_object_with_name(
+              get_name_active_data_storage()),
             ExcMessage(
               "Expected to find a pointer to an active data storage object."));
-          GeneralDataStorage *active_data_cache =
-            destination_cache.get_object_with_name<GeneralDataStorage *>(
-              get_name_active_data_cache());
+          GeneralDataStorage *active_data_storage =
+            data_storage.get_object_with_name<GeneralDataStorage *>(
+              get_name_active_data_storage());
 
           Assert(
-            active_data_cache != nullptr,
+            active_data_storage != nullptr,
             ExcMessage(
               "Expected to find an initialised pointer to an active data storage object."));
-          return *active_data_cache;
+          return *active_data_storage;
         }
       else
         {
-          return get_destination_cache(scratch_data);
+          return get_data_storage(scratch_data);
         }
     }
 
     template <int dim, int spacedim>
     static const GeneralDataStorage &
-    get_source_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    get_cache(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
       if (has_user_cache(scratch_data))
         {
           // GeneralDataStorage does not have any non-const member functions.
-          GeneralDataStorage &destination_cache = get_destination_cache(
+          GeneralDataStorage &data_storage = get_data_storage(
             const_cast<MeshWorker::ScratchData<dim, spacedim> &>(scratch_data));
 
           Assert(
-            destination_cache.stores_object_with_name(
-              get_name_active_data_cache()),
+            data_storage.stores_object_with_name(
+              get_name_active_data_storage()),
             ExcMessage(
               "Expected to find a pointer to an active data storage object."));
 
-          const GeneralDataStorage *const active_data_cache =
-            destination_cache.get_object_with_name<GeneralDataStorage *>(
-              get_name_active_data_cache());
+          const GeneralDataStorage *const active_data_storage =
+            data_storage.get_object_with_name<GeneralDataStorage *>(
+              get_name_active_data_storage());
           Assert(
-            active_data_cache != nullptr,
+            active_data_storage != nullptr,
             ExcMessage(
               "Expected to find an initialised pointer to an active data storage object."));
 
-          return *active_data_cache;
+          return *active_data_storage;
         }
       else
         {
-          return get_destination_cache(scratch_data);
+          return get_data_storage(scratch_data);
         }
-    }
-
-    template <int dim, int spacedim>
-    static GeneralDataStorage &
-    get_destination_cache(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
-    {
-      return scratch_data.get_general_data_storage();
-    }
-
-    template <int dim, int spacedim>
-    static const GeneralDataStorage &
-    get_destination_cache(
-      const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
-    {
-      return scratch_data.get_general_data_storage();
-    }
-
-    bool
-    all_entries_unlocked() const
-    {
-      // for (const auto &lock_and_cache : source_lock_and_cache)
-      //   {
-      //     if (lock_and_cache.first == true)
-      //       return false;
-      //   }
-
-      return true;
     }
 
     std::size_t
@@ -276,9 +242,9 @@ namespace WeakForms
     }
 
     static std::string
-    get_name_active_data_cache()
+    get_name_active_data_storage()
     {
-      return get_name_ad_sd_cache() + "_Active_Data_Cache";
+      return get_name_ad_sd_cache() + "_active_data_storage";
     }
 
     template <int dim, int spacedim>
@@ -321,6 +287,20 @@ namespace WeakForms
         scratch_data.get_general_data_storage();
       return scratch_cache.template get_object_with_name<AD_SD_Functor_Cache>(
         get_name_ad_sd_cache());
+    }
+
+    template <int dim, int spacedim>
+    static GeneralDataStorage &
+    get_data_storage(MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      return scratch_data.get_general_data_storage();
+    }
+
+    template <int dim, int spacedim>
+    static const GeneralDataStorage &
+    get_data_storage(const MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      return scratch_data.get_general_data_storage();
     }
   };
 } // namespace WeakForms

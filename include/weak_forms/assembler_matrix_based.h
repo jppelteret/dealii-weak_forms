@@ -55,7 +55,7 @@ namespace WeakForms
     unbind_user_cache_from_thread(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data)
     {
-      auto &cache = AD_SD_Functor_Cache::get_source_cache(scratch_data);
+      auto &cache = AD_SD_Functor_Cache::get_cache(scratch_data);
       AD_SD_Functor_Cache::unbind_user_cache_from_thread(scratch_data, cache);
     }
 
@@ -150,10 +150,7 @@ namespace WeakForms
     explicit MatrixBasedAssembler(AD_SD_Functor_Cache &user_ad_sd_cache)
       : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(
           user_ad_sd_cache)
-    {
-      Assert(user_ad_sd_cache.all_entries_unlocked(),
-             ExcMessage("Expected all cache entries to be unlocked."));
-    };
+    {}
 
     /**
      * Assemble the linear system matrix, excluding boundary and internal
@@ -760,7 +757,7 @@ namespace WeakForms
 
       using CellIteratorType = typename DoFHandlerType::active_cell_iterator;
       using ScratchData      = MeshWorker::ScratchData<dim, spacedim>;
-      using CopyData = internal::CopyDataWithInterfaceSupport<1, 1, 1>;
+      using CopyData         = internal::CopyDataWithInterfaceSupport<1, 1, 1>;
 
       // Define a cell worker
       const auto &cell_matrix_operations = this->cell_matrix_operations;

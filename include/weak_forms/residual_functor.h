@@ -596,7 +596,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<ad_helper_type>(get_name_ad_helper());
       }
@@ -628,7 +628,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<Vector<scalar_type>>>(
           get_name_value());
@@ -639,7 +639,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<FullMatrix<scalar_type>>>(
           get_name_jacobian());
@@ -789,7 +789,7 @@ namespace WeakForms
         MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const std::string name_ad_helper = get_name_ad_helper();
 
         // Unfortunately we cannot perform a check like this because the
@@ -814,7 +814,7 @@ namespace WeakForms
                          const ad_helper_type &ad_helper) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -831,7 +831,7 @@ namespace WeakForms
         const ad_helper_type &                  ad_helper) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -1000,7 +1000,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_source_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<sd_helper_type<ResultScalarType>>(
           get_name_sd_batch_optimizer());
@@ -1028,7 +1028,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache
           .get_object_with_name<std::vector<std::vector<ResultScalarType>>>(
@@ -1256,7 +1256,7 @@ namespace WeakForms
         MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_source_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         const std::string name_sd_batch_optimizer =
           get_name_sd_batch_optimizer();
@@ -1283,7 +1283,7 @@ namespace WeakForms
         const sd_helper_type<ResultScalarType> &batch_optimizer) const
       {
         GeneralDataStorage &cache =
-          AD_SD_Functor_Cache::get_destination_cache(scratch_data);
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
