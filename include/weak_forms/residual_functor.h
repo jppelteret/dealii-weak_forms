@@ -1088,7 +1088,9 @@ namespace WeakForms
               Differentiation::SD::add_to_symbol_map(
                 symbol_map,
                 OpHelper_t::template sd_call_function<sd_type>(
-                  user_symbol_registration_map, get_symbolic_fields()));
+                  user_symbol_registration_map,
+                  get_symbolic_fields(),
+                  false /*compute_hash*/));
             }
           batch_optimizer.register_symbols(symbol_map);
 
