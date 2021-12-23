@@ -19,6 +19,7 @@
 // external energy is also supplied. This test replicates step-44 exactly.
 // - Optimizer type: LLVM
 // - Optimization method: All
+// - AD/SD Cache
 
 #include <deal.II/differentiation/sd.h>
 
@@ -35,10 +36,15 @@ namespace Step44
   public:
     Step44(const std::string &input_file)
       : Step44_Base<dim>(input_file, true /*timer_output*/)
+      , assembler(ad_sd_cache)
     {}
 
   protected:
-    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+    WeakForms::AD_SD_Functor_Cache       ad_sd_cache;
+    WeakForms::MatrixBasedAssembler<dim> assembler;
+
+    void
+    build_assembler();
 
     void
     assemble_system(const BlockVector<double> &solution_delta) override;
@@ -46,7 +52,7 @@ namespace Step44
 
   template <int dim>
   void
-  Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
+  Step44<dim>::build_assembler()
   {
     using namespace WeakForms;
     using namespace Differentiation;
@@ -59,12 +65,7 @@ namespace Step44
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
       Differentiation::SD::OptimizationFlags::optimize_all;
 
-    this->timer.enter_subsection("Assemble system");
-    std::cout << " ASM_SYS " << std::flush;
-    this->tangent_matrix = 0.0;
-    this->system_rhs     = 0.0;
-    const BlockVector<double> solution_total(
-      this->get_total_solution(solution_delta));
+    this->timer.enter_subsection("Construct assembler");
 
     // Symbolic types for test function, and the field solution.
     const FieldSolution<dim, spacedim> field_solution;
@@ -177,7 +178,6 @@ namespace Step44
     const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
-    MatrixBasedAssembler<dim> assembler(ad_sd_cache);
     assembler +=
       energy_functional_form(internal_energy).dV() +
       energy_functional_form(external_energy).dA(traction_boundary_id);
@@ -196,6 +196,33 @@ namespace Step44
     //     deallog << "\n" << std::endl;
     //     output = false;
     //   }
+
+    this->timer.leave_subsection();
+  }
+
+  template <int dim>
+  void
+  Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
+  {
+    // Initialise the assembler. This is done once up front to
+    // any impact of the overhead of creating the differential forms.
+    // We need to do it here because the need to have the grid built
+    // first (we fetch the LQPH for a cell).
+    {
+      static bool assembler_initialised = false;
+      if (!assembler_initialised)
+        {
+          build_assembler();
+          assembler_initialised = true;
+        }
+    }
+
+    this->timer.enter_subsection("Assemble system");
+    std::cout << " ASM_SYS " << std::flush;
+    this->tangent_matrix = 0.0;
+    this->system_rhs     = 0.0;
+    const BlockVector<double> solution_total(
+      this->get_total_solution(solution_delta));
 
     // Now we pass in concrete objects to get data from
     // and assemble into.

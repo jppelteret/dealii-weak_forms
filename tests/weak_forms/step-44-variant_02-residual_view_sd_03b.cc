@@ -26,8 +26,8 @@
 
 #include <weak_forms/weak_forms.h>
 
-#include "../../tests/weak_forms/wf_common_tests/step-44.h"
-#include "../../tests/weak_forms_tests.h"
+#include "../weak_forms_tests.h"
+#include "wf_common_tests/step-44.h"
 
 namespace Step44
 {
@@ -36,12 +36,12 @@ namespace Step44
   {
   public:
     Step44(const std::string &input_file)
-      : Step44_Base<dim>(input_file, true /*timer_output*/)
+      : Step44_Base<dim>(input_file)
       , assembler(ad_sd_cache)
-    {}
+    { }
 
   protected:
-    WeakForms::AD_SD_Functor_Cache       ad_sd_cache;
+    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
     WeakForms::MatrixBasedAssembler<dim> assembler;
 
     void
@@ -71,14 +71,13 @@ namespace Step44
     // Symbolic types for test function, and the field solution.
     const TestFunction<dim, spacedim>  test;
     const FieldSolution<dim, spacedim> field_solution;
-    const SubSpaceExtractors::Vector   subspace_extractor_u(
-      this->u_dof, this->first_u_component, "u", "\\mathbf{u}");
-    const SubSpaceExtractors::Scalar subspace_extractor_p(this->p_dof,
-                                                          this->p_component,
+    const SubSpaceExtractors::Vector   subspace_extractor_u(0,
+                                                          "u",
+                                                          "\\mathbf{u}");
+    const SubSpaceExtractors::Scalar   subspace_extractor_p(spacedim,
                                                           "p_tilde",
                                                           "\\tilde{p}");
-    const SubSpaceExtractors::Scalar subspace_extractor_J(this->J_dof,
-                                                          this->J_component,
+    const SubSpaceExtractors::Scalar   subspace_extractor_J(spacedim + 1,
                                                           "J_tilde",
                                                           "\\tilde{J}");
 
@@ -229,21 +228,20 @@ namespace Step44
                  residual_form(residual_p).dV() +
                  residual_form(residual_J).dV() -
                  residual_form(force_u).dA(traction_boundary_id);
-    assembler.symmetrize();
 
-    // // Look at what we're going to compute
-    // const SymbolicDecorations decorator;
-    // static bool               output = true;
-    // if (output)
-    //   {
-    //     deallog << "\n" << std::endl;
-    //     deallog << "Weak form (ascii):\n"
-    //             << assembler.as_ascii(decorator) << std::endl;
-    //     deallog << "Weak form (LaTeX):\n"
-    //             << assembler.as_latex(decorator) << std::endl;
-    //     deallog << "\n" << std::endl;
-    //     output = false;
-    //   }
+    // Look at what we're going to compute
+    const SymbolicDecorations decorator;
+    static bool               output = true;
+    if (output)
+      {
+        deallog << "\n" << std::endl;
+        deallog << "Weak form (ascii):\n"
+                << assembler.as_ascii(decorator) << std::endl;
+        deallog << "Weak form (LaTeX):\n"
+                << assembler.as_latex(decorator) << std::endl;
+        deallog << "\n" << std::endl;
+        output = false;
+      }
 
     this->timer.leave_subsection();
   }
@@ -252,17 +250,16 @@ namespace Step44
   void
   Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
   {
-    // Initialise the assembler. This is done once up front to
-    // any impact of the overhead of creating the differential forms.
+    // Initialise the assembler.
     // We need to do it here because the need to have the grid built
-    // first (we fetch the LQPH for a cell).
+    // first (we fetch the lqph for a cell).
     {
       static bool assembler_initialised = false;
       if (!assembler_initialised)
-        {
-          build_assembler();
-          assembler_initialised = true;
-        }
+      {
+        build_assembler();
+        assembler_initialised = true;
+      }
     }
 
     this->timer.enter_subsection("Assemble system");
@@ -295,7 +292,7 @@ main(int argc, char **argv)
   deallog << std::setprecision(9);
 
   Utilities::MPI::MPI_InitFinalize mpi_initialization(
-    argc, argv, numbers::invalid_unsigned_int);
+    argc, argv, testing_max_num_threads());
 
   using namespace dealii;
   try
