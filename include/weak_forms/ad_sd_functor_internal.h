@@ -788,6 +788,13 @@ namespace WeakForms
             batch_optimizer, derivatives, check_hash_computed);
         }
 
+        template <typename T>
+        static void
+        sd_assert_hash_computed(const T &expressions)
+        {
+          assert_hash_computed(expressions);
+        }
+
         template <typename SDNumberType,
                   typename ScalarType,
                   int dim,
@@ -1074,15 +1081,12 @@ namespace WeakForms
           const bool                          compute_hash,
           const std::index_sequence<I...>)
         {
+          auto result = sd_function(std::get<I>(symbolic_field_values)...);
+
           if (compute_hash)
-            {
-              return compute_hash_in_place(
-                sd_function(std::get<I>(symbolic_field_values)...));
-            }
-          else
-            {
-              return sd_function(std::get<I>(symbolic_field_values)...);
-            }
+            compute_hash_in_place(result);
+
+          return result;
         }
 
         // Expect SDSubstitutionFunctionType to be a std::function
@@ -1109,16 +1113,14 @@ namespace WeakForms
           const bool                          compute_hash,
           const std::index_sequence<I...>)
         {
+          first_derivatives_value_t<SDNumberType, SDExpressionType> result = {
+            Differentiation::SD::differentiate(
+              sd_expression, std::get<I>(symbolic_field_values))...};
+
           if (compute_hash)
-            {
-              return {compute_hash_in_place(Differentiation::SD::differentiate(
-                sd_expression, std::get<I>(symbolic_field_values)))...};
-            }
-          else
-            {
-              return {Differentiation::SD::differentiate(
-                sd_expression, std::get<I>(symbolic_field_values))...};
-            }
+            compute_hash_in_place(result);
+
+          return result;
         }
 
         template <typename SDNumberType,
@@ -1169,58 +1171,79 @@ namespace WeakForms
           (void)substitution_map;
         }
 
-        static Differentiation::SD::Expression
-        compute_hash_in_place(Differentiation::SD::Expression expression)
+        static void
+        compute_hash_in_place(Differentiation::SD::Expression &expression)
         {
           expression.compute_hash();
-          return expression;
         }
 
         template <int rank, int dim>
-        static Tensor<rank, dim, Differentiation::SD::Expression>
+        static void
         compute_hash_in_place(Tensor<rank, dim, Differentiation::SD::Expression>
-                                tensor_of_expressions)
+                                &tensor_of_expressions)
         {
           for (Differentiation::SD::Expression *e =
                  tensor_of_expressions.begin_raw();
                e != tensor_of_expressions.end_raw();
                ++e)
             {
-              e->compute_hash();
+              compute_hash_in_place(*e);
             }
-
-          return tensor_of_expressions;
         }
 
         template <int rank, int dim>
-        static SymmetricTensor<rank, dim, Differentiation::SD::Expression>
+        static void
         compute_hash_in_place(
           SymmetricTensor<rank, dim, Differentiation::SD::Expression>
-            tensor_of_expressions)
+            &tensor_of_expressions)
         {
           for (Differentiation::SD::Expression *e =
                  tensor_of_expressions.begin_raw();
                e != tensor_of_expressions.end_raw();
                ++e)
             {
-              e->compute_hash();
+              compute_hash_in_place(*e);
             }
-
-          return tensor_of_expressions;
         }
 
-        static Differentiation::SD::types::substitution_map
+        static void
         compute_hash_in_place(
-          Differentiation::SD::types::substitution_map substitution_map)
+          Differentiation::SD::types::substitution_map &substitution_map)
         {
-          return substitution_map;
+          (void)substitution_map;
+        }
+
+        template <typename T, typename... Args>
+        static void
+        compute_hash_in_place(T &expression, Args &...other_expressions)
+        {
+          compute_hash_in_place(expression);
+          compute_hash_in_place(other_expressions...);
+        }
+
+        template <typename... SDExpressions>
+        static void
+        compute_hash_in_place(std::tuple<SDExpressions...> &expressions)
+        {
+          unpack_compute_hash_in_place(
+            expressions,
+            std::make_index_sequence<
+              std::tuple_size<std::tuple<SDExpressions...>>::value>());
+        }
+
+        template <typename... SDExpressions, std::size_t... I>
+        static void
+        unpack_compute_hash_in_place(std::tuple<SDExpressions...> &expressions,
+                                     const std::index_sequence<I...>)
+        {
+          compute_hash_in_place(std::get<I>(expressions)...);
         }
 
         static void
         assert_hash_computed(const Differentiation::SD::Expression &expression)
         {
-          AssertThrow(expression.is_hashed(),
-                      ExcMessage("Expression has not been hashed."));
+          Assert(expression.is_hashed(),
+                 ExcMessage("Scalar expression has not been hashed."));
           (void)expression;
         }
 
@@ -1235,7 +1258,9 @@ namespace WeakForms
                e != tensor_of_expressions.end_raw();
                ++e)
             {
-              assert_hash_computed(*e);
+              Assert(e->is_hashed(),
+                     ExcMessage(
+                       "Tensor element expression has not been hashed."));
             }
         }
 
@@ -1250,7 +1275,10 @@ namespace WeakForms
                e != tensor_of_expressions.end_raw();
                ++e)
             {
-              assert_hash_computed(*e);
+              Assert(
+                e->is_hashed(),
+                ExcMessage(
+                  "SymmetricTensor element expression has not been hashed."));
             }
         }
 
@@ -1261,6 +1289,25 @@ namespace WeakForms
         {
           assert_hash_computed(expression);
           assert_hash_computed(other_expressions...);
+        }
+
+        template <typename... SDExpressions>
+        static void
+        assert_hash_computed(const std::tuple<SDExpressions...> &expressions)
+        {
+          unpack_assert_hash_computed(
+            expressions,
+            std::make_index_sequence<
+              std::tuple_size<std::tuple<SDExpressions...>>::value>());
+        }
+
+        template <typename... SDExpressions, std::size_t... I>
+        static void
+        unpack_assert_hash_computed(
+          const std::tuple<SDExpressions...> &expressions,
+          const std::index_sequence<I...>)
+        {
+          assert_hash_computed(std::get<I>(expressions)...);
         }
 
         // Registration for first derivatives (stored in a single tuple)

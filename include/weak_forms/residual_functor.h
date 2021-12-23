@@ -966,7 +966,10 @@ namespace WeakForms
         , first_derivatives(
             OpHelper_t::template sd_differentiate<sd_type>(residual,
                                                            symbolic_fields))
-      {}
+      {
+        OpHelper_t::sd_assert_hash_computed(residual);
+        OpHelper_t::sd_assert_hash_computed(first_derivatives);
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -1113,6 +1116,12 @@ namespace WeakForms
             batch_optimizer, residual);
           OpHelper_t::template sd_register_functions<sd_type, residual_type>(
             batch_optimizer, first_derivatives);
+
+          for (const auto &f : batch_optimizer.get_dependent_functions())
+            {
+              Assert(f.is_hashed(),
+                     ExcMessage("Dependent function not hashed: 2"));
+            }
         };
 
         // Create and, if necessary, optimize a BatchOptimizer instance.
