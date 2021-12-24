@@ -37,6 +37,7 @@
 #include <weak_forms/type_traits.h>
 #include <weak_forms/utilities.h>
 
+#include <functional>
 #include <thread>
 #include <tuple>
 
@@ -731,6 +732,9 @@ namespace WeakForms
         , optimization_method(optimization_method)
         , optimization_flags(optimization_flags)
         , update_flags(update_flags)
+        , name_sd_batch_optimizer(get_name_sd_batch_optimizer(operand))
+        , name_evaluated_dependent_functions(
+            get_name_evaluated_dependent_functions(operand))
         , symbolic_fields(OpHelper_t::template get_symbolic_fields<sd_type>(
             get_field_args(),
             SymbolicDecorations()))
@@ -786,7 +790,7 @@ namespace WeakForms
           AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<sd_helper_type<ResultScalarType>>(
-          get_name_sd_batch_optimizer());
+          name_sd_batch_optimizer);
       }
 
       template <std::size_t FieldIndex>
@@ -822,7 +826,7 @@ namespace WeakForms
 
         return cache
           .get_object_with_name<std::vector<std::vector<ResultScalarType>>>(
-            get_name_evaluated_dependent_functions());
+            name_evaluated_dependent_functions);
       }
 
       /**
@@ -1012,6 +1016,10 @@ namespace WeakForms
       // evaluate their SD function (e.g. UpdateFlags::update_quadrature_points)
       const UpdateFlags update_flags;
 
+      // Naming
+      const std::string name_sd_batch_optimizer;
+      const std::string name_evaluated_dependent_functions;
+
       // Independent variables
       const typename OpHelper_t::template field_values_t<sd_type>
         symbolic_fields;
@@ -1025,21 +1033,24 @@ namespace WeakForms
         template second_derivatives_value_t<sd_type, energy_type>
           second_derivatives;
 
-      std::string
-      get_name_sd_batch_optimizer() const
+      static std::string
+      get_name_sd_batch_optimizer(const Op &operand)
       {
-        const SymbolicDecorations decorator;
+        const std::hash<std::string> hash_fn;
+        const SymbolicDecorations    decorator;
         return internal::get_deal_II_prefix() +
-               "EnergyFunctor_SDBatchOptimizer_" + operand.as_ascii(decorator);
+               "EnergyFunctor_SDBatchOptimizer_" +
+               std::to_string(hash_fn(operand.as_ascii(decorator)));
       }
 
-      std::string
-      get_name_evaluated_dependent_functions() const
+      static std::string
+      get_name_evaluated_dependent_functions(const Op &operand)
       {
-        const SymbolicDecorations decorator;
+        const std::hash<std::string> hash_fn;
+        const SymbolicDecorations    decorator;
         return internal::get_deal_II_prefix() +
-               "EnergyFunctor_ADHelper_Evaluated_Dependent_Functions" +
-               operand.as_ascii(decorator);
+               "EnergyFunctor_ADHelper_Evaluated_Dependent_Functions_" +
+               std::to_string(hash_fn(operand.as_ascii(decorator)));
       }
 
       template <typename ResultScalarType>
@@ -1049,9 +1060,6 @@ namespace WeakForms
       {
         GeneralDataStorage &cache =
           AD_SD_Functor_Cache::get_cache(scratch_data);
-
-        const std::string name_sd_batch_optimizer =
-          get_name_sd_batch_optimizer();
 
         // Unfortunately we cannot perform a check like this because the
         // ScratchData is reused by many cells during the mesh loop. So
@@ -1081,7 +1089,7 @@ namespace WeakForms
 
         return cache.get_or_add_object_with_name<
           std::vector<std::vector<ResultScalarType>>>(
-          get_name_evaluated_dependent_functions(),
+          name_evaluated_dependent_functions,
           fe_values.n_quadrature_points,
           std::vector<ResultScalarType>(
             batch_optimizer.n_dependent_variables()));
