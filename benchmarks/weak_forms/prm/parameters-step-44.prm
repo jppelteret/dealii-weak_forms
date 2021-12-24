@@ -24,24 +24,24 @@ end
 subsection Linear solver
   # Linear solver iterations (multiples of the system matrix size)
   # In 2-d, this value is best set at 2. In 3-d, a value of 1 work fine.
-  set Max iteration multiplier = 2
+  set Max iteration multiplier   = 2
 
   # Linear solver residual (scaled by residual norm)
-  set Residual                 = 1e-6
+  set Residual                   = 1e-6
 
   # Use static condensation and solve a 1-block system, or solve
   # the full 3-block system using Linear Operators and the Schur
   # complement
-  set Use static condensation = false
+  set Use static condensation    = false
 
   # Preconditioner type
-  set Preconditioner type  = ssor
+  set Preconditioner type        = ssor
 
   # Preconditioner relaxation value
   set Preconditioner relaxation  = 0.65
 
   # Type of solver used to solve the linear system
-  set Solver type              = CG
+  set Solver type                = CG
 end
 
 

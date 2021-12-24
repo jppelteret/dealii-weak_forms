@@ -38,10 +38,10 @@ namespace Step44
     Step44(const std::string &input_file)
       : Step44_Base<dim>(input_file)
       , assembler(ad_sd_cache)
-    { }
+    {}
 
   protected:
-    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+    WeakForms::AD_SD_Functor_Cache       ad_sd_cache;
     WeakForms::MatrixBasedAssembler<dim> assembler;
 
     void
@@ -256,10 +256,10 @@ namespace Step44
     {
       static bool assembler_initialised = false;
       if (!assembler_initialised)
-      {
-        build_assembler();
-        assembler_initialised = true;
-      }
+        {
+          build_assembler();
+          assembler_initialised = true;
+        }
     }
 
     this->timer.enter_subsection("Assemble system");
