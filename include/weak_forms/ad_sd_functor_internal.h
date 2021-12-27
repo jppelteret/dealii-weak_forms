@@ -1174,7 +1174,7 @@ namespace WeakForms
         static void
         compute_hash_in_place(Differentiation::SD::Expression &expression)
         {
-          expression.compute_hash();
+          expression.get_value().hash();
         }
 
         template <int rank, int dim>
@@ -1242,9 +1242,10 @@ namespace WeakForms
         static void
         assert_hash_computed(const Differentiation::SD::Expression &expression)
         {
-          Assert(expression.is_hashed(),
-                 ExcMessage("Scalar expression has not been hashed."));
           (void)expression;
+
+          // Assert(expression.is_hashed(),
+          //        ExcMessage("Scalar expression has not been hashed."));
         }
 
         template <int rank, int dim>
@@ -1253,15 +1254,17 @@ namespace WeakForms
           const Tensor<rank, dim, Differentiation::SD::Expression>
             &tensor_of_expressions)
         {
-          for (const Differentiation::SD::Expression *e =
-                 tensor_of_expressions.begin_raw();
-               e != tensor_of_expressions.end_raw();
-               ++e)
-            {
-              Assert(e->is_hashed(),
-                     ExcMessage(
-                       "Tensor element expression has not been hashed."));
-            }
+          (void)tensor_of_expressions;
+
+          // for (const Differentiation::SD::Expression *e =
+          //        tensor_of_expressions.begin_raw();
+          //      e != tensor_of_expressions.end_raw();
+          //      ++e)
+          //   {
+          //     Assert(e->is_hashed(),
+          //            ExcMessage(
+          //              "Tensor element expression has not been hashed."));
+          //   }
         }
 
         template <int rank, int dim>
@@ -1270,16 +1273,19 @@ namespace WeakForms
           const SymmetricTensor<rank, dim, Differentiation::SD::Expression>
             &tensor_of_expressions)
         {
-          for (const Differentiation::SD::Expression *e =
-                 tensor_of_expressions.begin_raw();
-               e != tensor_of_expressions.end_raw();
-               ++e)
-            {
-              Assert(
-                e->is_hashed(),
-                ExcMessage(
-                  "SymmetricTensor element expression has not been hashed."));
-            }
+          (void)tensor_of_expressions;
+
+          // for (const Differentiation::SD::Expression *e =
+          //        tensor_of_expressions.begin_raw();
+          //      e != tensor_of_expressions.end_raw();
+          //      ++e)
+          //   {
+          //     Assert(
+          //       e->is_hashed(),
+          //       ExcMessage(
+          //         "SymmetricTensor element expression has not been
+          //         hashed."));
+          //   }
         }
 
         template <typename T, typename... Args>
