@@ -17,6 +17,8 @@
 // This test replicates step-44 exactly.
 //
 // In this variant:
+// - the Piola-Kirchhoff stress is used for the problem parameterisation
+//   (i.e. this is an application of the fully referential formulation).
 // - the shape function slots in the bilinear and linear forms
 // have the solution field embedded in a binary operation. So the
 // implementation takes place in the fully referential setting.

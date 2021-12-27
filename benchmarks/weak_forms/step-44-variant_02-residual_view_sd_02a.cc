@@ -20,6 +20,7 @@
 // step-44-variant_02-residual_view_ad_02.
 // - Optimizer type: Lambda
 // - Optimization method: All
+// - AD/SD Cache
 
 #include <deal.II/differentiation/sd.h>
 

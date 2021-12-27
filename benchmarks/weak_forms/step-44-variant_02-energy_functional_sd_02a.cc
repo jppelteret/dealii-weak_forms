@@ -19,6 +19,7 @@
 // external energy is also supplied. This test replicates step-44 exactly.
 // - Optimizer type: Lambda
 // - Optimization method: All
+// - AD/SD Cache
 
 #include <deal.II/differentiation/sd.h>
 
