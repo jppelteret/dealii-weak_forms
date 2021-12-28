@@ -987,14 +987,15 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("sin", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "sin", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("sin"), operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("sin"), operand);
       }
 
       template <typename ScalarType>
@@ -1041,14 +1042,15 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("cos", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "cos", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("cos"), operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("cos"), operand);
       }
 
       template <typename ScalarType>
@@ -1095,14 +1097,15 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("tan", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "tan", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("tan"), operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("tan"), operand);
       }
 
       template <typename ScalarType>
@@ -1149,14 +1152,15 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("exp", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "exp", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("exp"), operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("exp"), operand);
       }
 
       template <typename ScalarType>
@@ -1203,14 +1207,15 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("log", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "log", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("log"), operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("log"), operand);
       }
 
       template <typename ScalarType>
@@ -1311,14 +1316,16 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_ascii("abs", operand);
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "abs", operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.mathop_symbolic_op_operand_as_latex(
-          Utilities::LaTeX::decorate_latex_op("abs"), operand);
+        const std::string &lvert = Utilities::LaTeX::l_vert;
+        const std::string &rvert = Utilities::LaTeX::r_vert;
+        return lvert + operand.as_latex(decorator) + rvert;
       }
 
       template <typename ScalarType>
@@ -1603,9 +1610,41 @@ DEAL_II_UNARY_OP_OF_UNARY_OP(symmetrize, symmetrize)
 
 namespace WeakForms
 {
+  // Scalar operations
+
   template <typename Op, typename UnderlyingType>
   struct is_unary_op<
     Operators::UnaryOp<Op, Operators::UnaryOpCodes::negate, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::sine, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::cosine, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::tangent, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<Operators::UnaryOp<Op,
+                                        Operators::UnaryOpCodes::exponential,
+                                        UnderlyingType>> : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::logarithm, UnderlyingType>>
     : std::true_type
   {};
 
@@ -1614,6 +1653,14 @@ namespace WeakForms
                                         Operators::UnaryOpCodes::square_root,
                                         UnderlyingType>> : std::true_type
   {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<Operators::UnaryOp<Op,
+                                        Operators::UnaryOpCodes::absolute_value,
+                                        UnderlyingType>> : std::true_type
+  {};
+
+  // Tensor operations
 
   template <typename Op, typename UnderlyingType>
   struct is_unary_op<Operators::UnaryOp<Op,

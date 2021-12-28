@@ -442,6 +442,9 @@ namespace WeakForms
       static constexpr char l_curly_brace[] = "\\left\\lbrace";
       static constexpr char r_curly_brace[] = "\\right\\rbrace";
 
+      static constexpr char l_vert[] = "\\left\\vert";
+      static constexpr char r_vert[] = "\\right\\vert";
+
       static constexpr char decrease_space[] = "\\!";
 
       static std::string

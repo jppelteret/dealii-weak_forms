@@ -233,16 +233,6 @@ run()
         return t;
       });
 
-    const FieldSolution<dim, spacedim> field_solution;
-    const SubSpaceExtractors::Scalar   subspace_extractor(0, "s", "s");
-    const auto field_solution_ss = field_solution[subspace_extractor];
-
-    const auto value            = field_solution_ss.value();
-    const auto gradient         = field_solution_ss.gradient();
-    const auto laplacian        = field_solution_ss.laplacian();
-    const auto hessian          = field_solution_ss.hessian();
-    const auto third_derivative = field_solution_ss.third_derivative();
-
     std::cout << "SymmetricTensor negation: "
               << ((-f1).template operator()<NumberType, width>(fe_values,
                                                                q_point_range))
