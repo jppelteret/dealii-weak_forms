@@ -132,11 +132,12 @@ Author: Jean-Paul Pelteret, 2020 - 2021
        - maximum, minimum
        - [TODO] Other math functions
      - Tensor operations
-       - [TODO] Cross product
-       - [TODO] Outer product
-       - [TODO] Scalar product
+       - Scalar product
+       - Cross product
+       - Schur product
        - [TODO] Contract
        - [TODO] Double contract
+       - Outer product
   - Implicit conversions to functors
     - Arithmetic types
     - Tensor

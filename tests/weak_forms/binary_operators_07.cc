@@ -42,6 +42,42 @@
 #include "../weak_forms_tests.h"
 
 
+// Work around the issue that the cross product is not available
+// in 2d.
+template <int spacedim>
+struct CrossProductCheck;
+
+template <>
+struct CrossProductCheck<2>
+{
+  template <typename NumberType, typename... Args>
+  static void
+  run(const Args &...)
+  {}
+};
+
+template <>
+struct CrossProductCheck<3>
+{
+  template <typename NumberType,
+            typename F1,
+            typename F2,
+            typename FEValuesType,
+            typename QPointType>
+  static void
+  run(const F1 &          f1,
+      const F2 &          f2,
+      const FEValuesType &fe_values,
+      const QPointType &  q_point)
+  {
+    std::cout << "Vector cross product: "
+              << ((cross_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+  }
+};
+
+
 template <int dim, int spacedim = dim, typename NumberType = double>
 void
 run()
@@ -131,8 +167,9 @@ run()
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<1, dim> t;
+        unsigned int   i = 0;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
-          *it = 2.0;
+          *it = 2.0 + (i++);
         return t;
       });
 
@@ -142,14 +179,31 @@ run()
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<1, dim> t;
+        unsigned int   i = 0;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
-          *it = 3.0;
+          *it = 3.0 + (i++);
         return t;
       });
 
-    // std::cout << "Vector negation: "
-    //           << ((-f1).template operator()<NumberType>(fe_values))[q_point]
-    //           << std::endl;
+    CrossProductCheck<spacedim>::template run<NumberType>(f1,
+                                                          f2,
+                                                          fe_values,
+                                                          q_point);
+
+    std::cout << "Vector outer product: "
+              << ((outer_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Vector Schur product: "
+              << ((schur_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Vector scalar product: "
+              << ((scalar_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
 
     deallog << "OK" << std::endl;
   }
@@ -187,9 +241,20 @@ run()
         return t;
       });
 
-    // std::cout << "Tensor negation: "
-    //           << ((-f1).template operator()<NumberType>(fe_values))[q_point]
-    //           << std::endl;
+    std::cout << "Tensor outer product: "
+              << ((outer_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Tensor Schur product: "
+              << ((schur_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Tensor scalar product: "
+              << ((scalar_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
 
     deallog << "OK" << std::endl;
   }
@@ -227,9 +292,20 @@ run()
         return t;
       });
 
-    // std::cout << "SymmetricTensor negation: "
-    //           << ((-f1).template operator()<NumberType>(fe_values))[q_point]
+    std::cout << "Symmetric tensor outer product: "
+              << ((outer_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    // std::cout << "Symmetric tensor Schur product: "
+    //           << ((schur_product(f1,f2)).template
+    //           operator()<NumberType>(fe_values))[q_point]
     //           << std::endl;
+
+    std::cout << "Symmetric tensor scalar product: "
+              << ((scalar_product(f1, f2))
+                    .template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
 
     deallog << "OK" << std::endl;
   }

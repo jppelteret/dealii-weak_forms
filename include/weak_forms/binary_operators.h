@@ -75,7 +75,6 @@ namespace WeakForms
       divide,
 
       // --- Scalar operations ---
-      // Supported by vectorisation: pow, max, min
       /**
        * Raise one operand to the power of a second operand.
        */
@@ -87,23 +86,31 @@ namespace WeakForms
       /**
        * Find the minimum value of two operands.
        */
-      minimum
+      minimum,
       // atan2
 
       // --- Tensor operations ---
       /**
        * Cross product (between two vector operands)
        */
-      // cross_product
+      cross_product,
+      /**
+       * Schur product (of two tensor operands)
+       */
+      schur_product,
       /**
        * Outer product (between two tensor operands)
        */
-      // outer_product
+      outer_product,
 
       // --- Tensor contractions ---
-      // scalar product,
+      /**
+       * Scalar product (of two tensor operands)
+       */
+      scalar_product
       // double contract,
       // contract,
+      // full_contraction (reduce as many indices as possible)?
     };
 
 
@@ -574,6 +581,34 @@ namespace WeakForms
         using std::min;
         return min(t1, t2);
       }
+
+      template <typename T1, typename T2>
+      auto
+      cross_product_impl(const T1 &t1, const T2 &t2)
+      {
+        return cross_product_3d(t1, t2);
+      }
+
+      template <typename T1, typename T2>
+      auto
+      schur_product_impl(const T1 &t1, const T2 &t2)
+      {
+        return schur_product(t1, t2);
+      }
+
+      template <typename T1, typename T2>
+      auto
+      outer_product_impl(const T1 &t1, const T2 &t2)
+      {
+        return outer_product(t1, t2);
+      }
+
+      template <typename T1, typename T2>
+      auto
+      scalar_product_impl(const T1 &t1, const T2 &t2)
+      {
+        return scalar_product(t1, t2);
+      }
     } // namespace internal
 
 
@@ -643,6 +678,98 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = decltype(internal::min_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp, RhsOp, BinaryOpCodes::cross_product>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::cross_product;
+
+      static_assert(
+        LhsOp::space_dimension == 3,
+        "Cross product requires that the LHS operand has a spatial dimension of 3.");
+
+      static_assert(
+        RhsOp::space_dimension == 3,
+        "Cross product requires that the RHS operand  has a spatial dimension of 3.");
+
+      static_assert(
+        LhsOp::rank == 1,
+        "Cross product requires that the LHS operand is of rank-1 (i.e. vector valued).");
+
+      static_assert(
+        RhsOp::rank == 1,
+        "Cross product requires that the RHS operand is of rank-1 (i.e. vector valued).");
+
+      static const int rank = 1;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::cross_product_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp, RhsOp, BinaryOpCodes::schur_product>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::schur_product;
+
+      static_assert(
+        LhsOp::rank == RhsOp::rank,
+        "Scalar product requires that the LHS and RHS operands are of equal rank.");
+
+      static const int rank = LhsOp::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::schur_product_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp, RhsOp, BinaryOpCodes::outer_product>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::outer_product;
+
+      static const int rank = LhsOp::rank + RhsOp::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::outer_product_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp, RhsOp, BinaryOpCodes::scalar_product>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::scalar_product;
+
+      static_assert(
+        LhsOp::rank == RhsOp::rank,
+        "Scalar product requires that the LHS and RHS operands are of equal rank.");
+
+      static const int rank = 0;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::scalar_product_impl(
         std::declval<typename LhsOp::template value_type<ScalarType>>(),
         std::declval<typename RhsOp::template value_type<ScalarType>>()));
 
@@ -1758,6 +1885,229 @@ private:                                                                   \
     };
 
 
+
+    /**
+     * Cross product operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::cross_product,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp, RhsOp, BinaryOpCodes::cross_product>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::cross_product)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " x " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_latex(decorator) + "\\times" +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::cross_product_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::cross_product_impl(lhs_value, rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Schur product operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::schur_product,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp, RhsOp, BinaryOpCodes::schur_product>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::schur_product)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " .o " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        // https://math.stackexchange.com/questions/20412/element-wise-or-pointwise-operations-notation/601545#601545
+        return lhs_operand.as_latex(decorator) + "\\odot" +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::schur_product_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::schur_product_impl(lhs_value, rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Outer product operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::outer_product,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp, RhsOp, BinaryOpCodes::outer_product>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::outer_product)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " ox " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_latex(decorator) + "\\otimes" +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::outer_product_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::outer_product_impl(lhs_value, rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Scalar product operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::scalar_product,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp, RhsOp, BinaryOpCodes::scalar_product>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::scalar_product)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " . " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        constexpr unsigned int n_contracting_indices = WeakForms::Utilities::
+          FullIndexContraction<LhsOp, RhsOp>::n_contracting_indices;
+
+        const std::string symb_contraction =
+          Utilities::LaTeX::get_symbol_multiply(n_contracting_indices);
+
+        return lhs_operand.as_latex(decorator) + symb_contraction +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::scalar_product_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::scalar_product_impl(lhs_value, rhs_value);
+      }
+    };
+
+
 #undef DEAL_II_BINARY_OP_COMMON_IMPL
 
   } // namespace Operators
@@ -1806,6 +2156,14 @@ DEAL_II_BINARY_OP_OF_BINARY_OP(operator/, divide)
 DEAL_II_BINARY_OP_OF_BINARY_OP(pow, power)
 DEAL_II_BINARY_OP_OF_BINARY_OP(max, maximum)
 DEAL_II_BINARY_OP_OF_BINARY_OP(min, minimum)
+
+// Tensor operations
+DEAL_II_BINARY_OP_OF_BINARY_OP(cross_product, cross_product)
+DEAL_II_BINARY_OP_OF_BINARY_OP(schur_product, schur_product)
+DEAL_II_BINARY_OP_OF_BINARY_OP(outer_product, outer_product)
+
+// Tensor contractions
+DEAL_II_BINARY_OP_OF_BINARY_OP(scalar_product, scalar_product)
 
 #undef DEAL_II_BINARY_OP_OF_BINARY_OP
 
@@ -1875,6 +2233,42 @@ namespace WeakForms
     Operators::
       BinaryOp<LhsOp, RhsOp, Operators::BinaryOpCodes::minimum, UnderlyingType>>
     : std::true_type
+  {};
+
+  // Tensor operations
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::cross_product,
+                        UnderlyingType>> : std::true_type
+  {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::schur_product,
+                        UnderlyingType>> : std::true_type
+  {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::outer_product,
+                        UnderlyingType>> : std::true_type
+  {};
+
+  // Tensor contractions
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::scalar_product,
+                        UnderlyingType>> : std::true_type
   {};
 
   // Other

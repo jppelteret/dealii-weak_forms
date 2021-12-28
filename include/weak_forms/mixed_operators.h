@@ -217,6 +217,14 @@ DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(pow, power)
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(max, maximum)
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(min, minimum)
 
+// Tensor operations
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(cross_product, cross_product)
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(schur_product, schur_product)
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(outer_product, outer_product)
+
+// Tensor contractions
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(scalar_product, scalar_product)
+
 #undef DEAL_II_BINARY_OP_OF_SYMBOLIC_OP
 
 
@@ -310,6 +318,14 @@ DEAL_II_BINARY_OP_OF_UNARY_OP(operator/, divide)
 DEAL_II_BINARY_OP_OF_UNARY_OP(pow, power)
 DEAL_II_BINARY_OP_OF_UNARY_OP(max, maximum)
 DEAL_II_BINARY_OP_OF_UNARY_OP(min, minimum)
+
+// Tensor operations
+DEAL_II_BINARY_OP_OF_UNARY_OP(cross_product, cross_product)
+DEAL_II_BINARY_OP_OF_UNARY_OP(schur_product, schur_product)
+DEAL_II_BINARY_OP_OF_UNARY_OP(outer_product, outer_product)
+
+// Tensor contractions
+DEAL_II_BINARY_OP_OF_UNARY_OP(scalar_product, scalar_product)
 
 #undef DEAL_II_BINARY_OP_OF_UNARY_OP
 
