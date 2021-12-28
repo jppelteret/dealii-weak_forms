@@ -206,11 +206,16 @@ DEAL_II_UNARY_OP_OF_BINARY_OP(symmetrize, symmetrize)
     return OpType(lhs_op, rhs_op);                                           \
   }
 
+// Arithmetic operations
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator+, add)
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator-, subtract)
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator*, multiply)
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator/, divide)
+
+// Scalar operations
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(pow, power)
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(max, maximum)
+DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(min, minimum)
 
 #undef DEAL_II_BINARY_OP_OF_SYMBOLIC_OP
 
@@ -295,11 +300,16 @@ DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(pow, power)
     return OpType(lhs_op, rhs_op);                                             \
   }
 
+// Arithmetic operations
 DEAL_II_BINARY_OP_OF_UNARY_OP(operator+, add)
 DEAL_II_BINARY_OP_OF_UNARY_OP(operator-, subtract)
 DEAL_II_BINARY_OP_OF_UNARY_OP(operator*, multiply)
 DEAL_II_BINARY_OP_OF_UNARY_OP(operator/, divide)
+
+// Scalar operations
 DEAL_II_BINARY_OP_OF_UNARY_OP(pow, power)
+DEAL_II_BINARY_OP_OF_UNARY_OP(max, maximum)
+DEAL_II_BINARY_OP_OF_UNARY_OP(min, minimum)
 
 #undef DEAL_II_BINARY_OP_OF_UNARY_OP
 

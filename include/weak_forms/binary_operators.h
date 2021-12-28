@@ -54,6 +54,7 @@ namespace WeakForms
   {
     enum class BinaryOpCodes
     {
+      // --- Arithmetic operations ---
       /**
        * Add two operands together.
        */
@@ -78,10 +79,16 @@ namespace WeakForms
       /**
        * Raise one operand to the power of a second operand.
        */
-      power
+      power,
+      /**
+       * Find the maximum value of two operands.
+       */
+      maximum,
+      /**
+       * Find the minimum value of two operands.
+       */
+      minimum
       // atan2
-      // max
-      // min
 
       // --- Tensor operations ---
       /**
@@ -551,6 +558,22 @@ namespace WeakForms
         using std::pow;
         return pow(t1, t2);
       }
+
+      template <typename T1, typename T2>
+      auto
+      max_impl(const T1 &t1, const T2 &t2)
+      {
+        using std::max;
+        return max(t1, t2);
+      }
+
+      template <typename T1, typename T2>
+      auto
+      min_impl(const T1 &t1, const T2 &t2)
+      {
+        using std::min;
+        return min(t1, t2);
+      }
     } // namespace internal
 
 
@@ -572,6 +595,54 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = decltype(internal::pow_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::maximum>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::maximum;
+
+      static_assert(
+        LhsOp::rank == 0,
+        "Maximum requires that the LHS operand is of rank-0 (i.e. scalar valued).");
+
+      static_assert(
+        RhsOp::rank == 0,
+        "Maximum requires that the RHS operand is of rank-0 (i.e. scalar valued).");
+
+      static const int rank = 0;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::max_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::minimum>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::minimum;
+
+      static_assert(
+        LhsOp::rank == 0,
+        "Minimum requires that the LHS operand is of rank-0 (i.e. scalar valued).");
+
+      static_assert(
+        RhsOp::rank == 0,
+        "Minimum requires that the RHS operand is of rank-0 (i.e. scalar valued).");
+
+      static const int rank = 0;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::min_impl(
         std::declval<typename LhsOp::template value_type<ScalarType>>(),
         std::declval<typename RhsOp::template value_type<ScalarType>>()));
 
@@ -1577,6 +1648,116 @@ private:                                                                   \
     };
 
 
+
+    /**
+     * Maximum operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::maximum,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::maximum>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::maximum)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return "max(" + lhs_operand.as_ascii(decorator) + "," +
+               rhs_operand.as_ascii(decorator) + ")";
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return Utilities::LaTeX::decorate_function_with_arguments(
+          "\\max",
+          lhs_operand.as_latex(decorator) + "," +
+            rhs_operand.as_latex(decorator));
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::max_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::max_impl(lhs_value, rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Minimum operator for integrands of symbolic integrals
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::minimum,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCodes::minimum>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCodes::minimum)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return "min(" + lhs_operand.as_ascii(decorator) + "," +
+               rhs_operand.as_ascii(decorator) + ")";
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return Utilities::LaTeX::decorate_function_with_arguments(
+          "\\min",
+          lhs_operand.as_latex(decorator) + "," +
+            rhs_operand.as_latex(decorator));
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::min_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::min_impl(lhs_value, rhs_value);
+      }
+    };
+
+
 #undef DEAL_II_BINARY_OP_COMMON_IMPL
 
   } // namespace Operators
@@ -1615,11 +1796,16 @@ private:                                                                   \
     return OpType(lhs_op, rhs_op);                                           \
   }
 
+// Arithmetic operations
 DEAL_II_BINARY_OP_OF_BINARY_OP(operator+, add)
 DEAL_II_BINARY_OP_OF_BINARY_OP(operator-, subtract)
 DEAL_II_BINARY_OP_OF_BINARY_OP(operator*, multiply)
 DEAL_II_BINARY_OP_OF_BINARY_OP(operator/, divide)
+
+// Scalar operations
 DEAL_II_BINARY_OP_OF_BINARY_OP(pow, power)
+DEAL_II_BINARY_OP_OF_BINARY_OP(max, maximum)
+DEAL_II_BINARY_OP_OF_BINARY_OP(min, minimum)
 
 #undef DEAL_II_BINARY_OP_OF_BINARY_OP
 
@@ -1637,6 +1823,8 @@ namespace WeakForms
   // template <typename... Args>
   // struct is_binary_op<Operators::BinaryOp<Args...>> : std::true_type
   // {};
+
+  // Arithmetic operations
 
   template <typename LhsOp, typename RhsOp, typename UnderlyingType>
   struct is_binary_op<
@@ -1666,12 +1854,30 @@ namespace WeakForms
     : std::true_type
   {};
 
+  // Scalar operations
+
   template <typename LhsOp, typename RhsOp, typename UnderlyingType>
   struct is_binary_op<
     Operators::
       BinaryOp<LhsOp, RhsOp, Operators::BinaryOpCodes::power, UnderlyingType>>
     : std::true_type
   {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::
+      BinaryOp<LhsOp, RhsOp, Operators::BinaryOpCodes::maximum, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::
+      BinaryOp<LhsOp, RhsOp, Operators::BinaryOpCodes::minimum, UnderlyingType>>
+    : std::true_type
+  {};
+
+  // Other
 
   template <typename LhsOp,
             typename RhsOp,

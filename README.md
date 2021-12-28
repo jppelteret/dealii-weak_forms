@@ -129,6 +129,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
       - Tensor
     -  Scalar operations
        - power
+       - maximum, minimum
        - [TODO] Other math functions
      - Tensor operations
        - [TODO] Cross product
