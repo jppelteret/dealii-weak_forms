@@ -58,8 +58,6 @@
 #include <weak_forms/residual_functor.h>
 #include <weak_forms/self_linearizing_forms.h>
 // #include <weak_forms/symbolic_functors.h>
-// #include <weak_forms/auto_differentiable_forms.h>
-// #include <weak_forms/symbolic_forms.h>
 
 // Common tools for assembly
 #include <weak_forms/integrator.h>
