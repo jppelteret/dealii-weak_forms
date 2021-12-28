@@ -867,7 +867,7 @@ namespace Step44
   class Step44_Base
   {
   public:
-    Step44_Base(const std::string &input_file);
+    Step44_Base(const std::string &input_file, const bool timer_output = false);
     virtual ~Step44_Base();
     void
     run();
@@ -1004,11 +1004,14 @@ namespace Step44
     print_conv_footer();
   };
   template <int dim>
-  Step44_Base<dim>::Step44_Base(const std::string &input_file)
+  Step44_Base<dim>::Step44_Base(const std::string &input_file,
+                                const bool         timer_output)
     : parameters(input_file)
     , triangulation(Triangulation<dim>::maximum_smoothing)
     , time(parameters.end_time, parameters.delta_t)
-    , timer(std::cout, TimerOutput::never, TimerOutput::wall_times)
+    , timer(std::cout,
+            timer_output ? TimerOutput::summary : TimerOutput::never,
+            TimerOutput::wall_times)
     , degree(parameters.poly_degree)
     , fe(FE_Q<dim>(parameters.poly_degree),
          dim, // displacement
@@ -1852,7 +1855,9 @@ namespace Step44
               static_cast<unsigned int>(tangent_matrix.block(J_dof, p_dof).m() *
                                         parameters.max_iterations_lin),
               1.0e-30,
-              parameters.tol_lin);
+              parameters.tol_lin,
+              false,
+              false);
             SolverSelector<Vector<double>> solver_K_Jp_inv;
             solver_K_Jp_inv.select("cg");
             solver_K_Jp_inv.set_control(solver_control_K_Jp_inv);
@@ -1871,7 +1876,9 @@ namespace Step44
               static_cast<unsigned int>(tangent_matrix.block(u_dof, u_dof).m() *
                                         parameters.max_iterations_lin),
               1.0e-30,
-              parameters.tol_lin);
+              parameters.tol_lin,
+              false,
+              false);
             SolverSelector<Vector<double>> solver_K_con_inv;
             solver_K_con_inv.select("cg");
             solver_K_con_inv.set_control(solver_control_K_con_inv);

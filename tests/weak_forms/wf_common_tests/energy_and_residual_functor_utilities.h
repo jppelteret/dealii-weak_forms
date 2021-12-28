@@ -36,6 +36,7 @@ namespace WeakForms
     {
       (void)field_args;
       (void)field_extractors;
+      (void)decorator;
     }
 
 
@@ -141,6 +142,7 @@ namespace WeakForms
     {
       (void)field_args;
       (void)symbolic_fields;
+      (void)decorator;
     }
 
 

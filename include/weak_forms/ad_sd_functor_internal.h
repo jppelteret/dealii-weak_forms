@@ -320,10 +320,41 @@ namespace WeakForms
       // ===================
       // SD helper functions
       // ===================
-      std::string
+      inline std::string
       get_deal_II_prefix()
       {
         return "__DEAL_II__";
+      }
+
+      inline std::string
+      replace_protected_characters(const std::string &name)
+      {
+        // Allow SymEngine to parse this field as a string:
+        // Required for deserialization.
+        // It gets confused when there are numbers in the string name, and
+        // we have numbers and some protected characters in the expression
+        // name.
+        std::string out = name;
+        const auto  replace_chars =
+          [&out](const char &old_char, const char &new_char)
+        { std::replace(out.begin(), out.end(), old_char, new_char); };
+        // replace_chars('0', 'A');
+        // replace_chars('1', 'B');
+        // replace_chars('2', 'C');
+        // replace_chars('3', 'D');
+        // replace_chars('4', 'E');
+        // replace_chars('5', 'F');
+        // replace_chars('6', 'G');
+        // replace_chars('7', 'H');
+        // replace_chars('8', 'I');
+        // replace_chars('9', 'J');
+        replace_chars(' ', '_');
+        replace_chars('(', '_');
+        replace_chars(')', '_');
+        replace_chars('{', '_');
+        replace_chars('}', '_');
+
+        return out;
       }
 
       template <typename ReturnType>
@@ -374,7 +405,8 @@ namespace WeakForms
 
         const std::string name =
           get_deal_II_prefix() + "Field_" + field.as_ascii(decorator);
-        return make_symbolic<ReturnType>(name);
+        // return make_symbolic<ReturnType>(name);
+        return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
 
       // Check that all types in a parameter pack are not tuples
@@ -597,11 +629,13 @@ namespace WeakForms
         static auto
         sd_call_function(
           const SDFunctionType &              sd_function,
-          const field_values_t<SDNumberType> &symbolic_field_values)
+          const field_values_t<SDNumberType> &symbolic_field_values,
+          const bool                          compute_hash = true)
         {
           return unpack_sd_call_function<SDNumberType>(
             sd_function,
             symbolic_field_values,
+            compute_hash,
             std::make_index_sequence<
               std::tuple_size<field_values_t<SDNumberType>>::value>());
         }
@@ -635,11 +669,13 @@ namespace WeakForms
         static first_derivatives_value_t<SDNumberType, SDExpressionType>
         sd_differentiate(
           const SDExpressionType &            sd_expression,
-          const field_values_t<SDNumberType> &symbolic_field_values)
+          const field_values_t<SDNumberType> &symbolic_field_values,
+          const bool                          compute_hash = true)
         {
           return unpack_sd_differentiate<SDNumberType>(
             sd_expression,
             symbolic_field_values,
+            compute_hash,
             std::make_index_sequence<
               std::tuple_size<field_values_t<SDNumberType>>::value>());
         }
@@ -649,11 +685,13 @@ namespace WeakForms
           first_derivatives_value_t<SDNumberType, SDExpressionTypes>...>
         sd_differentiate(
           const std::tuple<SDExpressionTypes...> &sd_expressions,
-          const field_values_t<SDNumberType> &    symbolic_field_values)
+          const field_values_t<SDNumberType> &    symbolic_field_values,
+          const bool                              compute_hash = true)
         {
           return unpack_sd_differentiate<SDNumberType>(
             sd_expressions,
             symbolic_field_values,
+            compute_hash,
             std::make_index_sequence<
               std::tuple_size<std::tuple<SDExpressionTypes...>>::value>(),
             std::make_index_sequence<
@@ -684,18 +722,21 @@ namespace WeakForms
         sd_substitute_and_differentiate(
           const SDExpressionType &                            sd_expression,
           const Differentiation::SD::types::substitution_map &substitution_map,
-          const field_values_t<SDNumberType> &symbolic_field_values)
+          const field_values_t<SDNumberType> &symbolic_field_values,
+          const bool                          compute_hash = true)
         {
           if (substitution_map.size() > 0)
             {
               SDExpressionType sd_expression_subs{sd_expression};
               sd_substitute(sd_expression_subs, substitution_map);
               return sd_differentiate<SDNumberType>(sd_expression_subs,
-                                                    symbolic_field_values);
+                                                    symbolic_field_values,
+                                                    compute_hash);
             }
           else
             return sd_differentiate<SDNumberType>(sd_expression,
-                                                  symbolic_field_values);
+                                                  symbolic_field_values,
+                                                  compute_hash);
         }
 
         template <typename /*SDNumberType*/,
@@ -703,8 +744,12 @@ namespace WeakForms
                   typename BatchOptimizerType>
         static void
         sd_register_functions(BatchOptimizerType &    batch_optimizer,
-                              const SDExpressionType &values)
+                              const SDExpressionType &values,
+                              const bool check_hash_computed = true)
         {
+          if (check_hash_computed)
+            assert_hash_computed(values);
+
           batch_optimizer.register_function(values);
         }
 
@@ -715,12 +760,14 @@ namespace WeakForms
         sd_register_functions(
           BatchOptimizerType &batch_optimizer,
           const first_derivatives_value_t<SDNumberType, SDExpressionType>
-            &derivatives)
+            &        derivatives,
+          const bool check_hash_computed = true)
         {
           return unpack_sd_register_1st_order_functions<SDNumberType,
                                                         SDExpressionType>(
             batch_optimizer,
             derivatives,
+            check_hash_computed,
             std::make_index_sequence<std::tuple_size<
               first_derivatives_value_t<SDNumberType,
                                         SDExpressionType>>::value>());
@@ -733,11 +780,19 @@ namespace WeakForms
         sd_register_functions(
           BatchOptimizerType &batch_optimizer,
           const second_derivatives_value_t<SDNumberType, SDExpressionType>
-            &derivatives)
+            &        derivatives,
+          const bool check_hash_computed = true)
         {
           return unpack_sd_register_2nd_order_functions<SDNumberType,
                                                         SDExpressionType>(
-            batch_optimizer, derivatives);
+            batch_optimizer, derivatives, check_hash_computed);
+        }
+
+        template <typename T>
+        static void
+        sd_assert_hash_computed(const T &expressions)
+        {
+          assert_hash_computed(expressions);
         }
 
         template <typename SDNumberType,
@@ -1023,9 +1078,15 @@ namespace WeakForms
         unpack_sd_call_function(
           const SDFunctionType &              sd_function,
           const field_values_t<SDNumberType> &symbolic_field_values,
+          const bool                          compute_hash,
           const std::index_sequence<I...>)
         {
-          return sd_function(std::get<I>(symbolic_field_values)...);
+          auto result = sd_function(std::get<I>(symbolic_field_values)...);
+
+          if (compute_hash)
+            compute_hash_in_place(result);
+
+          return result;
         }
 
         // Expect SDSubstitutionFunctionType to be a std::function
@@ -1049,10 +1110,17 @@ namespace WeakForms
         unpack_sd_differentiate(
           const SDExpressionType &            sd_expression,
           const field_values_t<SDNumberType> &symbolic_field_values,
+          const bool                          compute_hash,
           const std::index_sequence<I...>)
         {
-          return {Differentiation::SD::differentiate(
-            sd_expression, std::get<I>(symbolic_field_values))...};
+          first_derivatives_value_t<SDNumberType, SDExpressionType> result = {
+            Differentiation::SD::differentiate(
+              sd_expression, std::get<I>(symbolic_field_values))...};
+
+          if (compute_hash)
+            compute_hash_in_place(result);
+
+          return result;
         }
 
         template <typename SDNumberType,
@@ -1064,13 +1132,17 @@ namespace WeakForms
         unpack_sd_differentiate(
           const std::tuple<SDExpressionTypes...> &sd_expressions,
           const field_values_t<SDNumberType> &    symbolic_field_values,
+          const bool                              compute_hash,
           const std::index_sequence<I...>,
           const std::index_sequence<J...> &seq_j)
         {
           // For a fixed row "I", expand all the derivatives of expression "I"
           // with respect to fields "J"
-          return {unpack_sd_differentiate<SDNumberType>(
-            std::get<I>(sd_expressions), symbolic_field_values, seq_j)...};
+          return {
+            unpack_sd_differentiate<SDNumberType>(std::get<I>(sd_expressions),
+                                                  symbolic_field_values,
+                                                  compute_hash,
+                                                  seq_j)...};
         }
 
         template <std::size_t I = 0, typename... SDExpressionTypes>
@@ -1099,6 +1171,151 @@ namespace WeakForms
           (void)substitution_map;
         }
 
+        static void
+        compute_hash_in_place(Differentiation::SD::Expression &expression)
+        {
+          expression.get_value().hash();
+        }
+
+        template <int rank, int dim>
+        static void
+        compute_hash_in_place(Tensor<rank, dim, Differentiation::SD::Expression>
+                                &tensor_of_expressions)
+        {
+          for (Differentiation::SD::Expression *e =
+                 tensor_of_expressions.begin_raw();
+               e != tensor_of_expressions.end_raw();
+               ++e)
+            {
+              compute_hash_in_place(*e);
+            }
+        }
+
+        template <int rank, int dim>
+        static void
+        compute_hash_in_place(
+          SymmetricTensor<rank, dim, Differentiation::SD::Expression>
+            &tensor_of_expressions)
+        {
+          for (Differentiation::SD::Expression *e =
+                 tensor_of_expressions.begin_raw();
+               e != tensor_of_expressions.end_raw();
+               ++e)
+            {
+              compute_hash_in_place(*e);
+            }
+        }
+
+        static void
+        compute_hash_in_place(
+          Differentiation::SD::types::substitution_map &substitution_map)
+        {
+          (void)substitution_map;
+        }
+
+        template <typename T, typename... Args>
+        static void
+        compute_hash_in_place(T &expression, Args &...other_expressions)
+        {
+          compute_hash_in_place(expression);
+          compute_hash_in_place(other_expressions...);
+        }
+
+        template <typename... SDExpressions>
+        static void
+        compute_hash_in_place(std::tuple<SDExpressions...> &expressions)
+        {
+          unpack_compute_hash_in_place(
+            expressions,
+            std::make_index_sequence<
+              std::tuple_size<std::tuple<SDExpressions...>>::value>());
+        }
+
+        template <typename... SDExpressions, std::size_t... I>
+        static void
+        unpack_compute_hash_in_place(std::tuple<SDExpressions...> &expressions,
+                                     const std::index_sequence<I...>)
+        {
+          compute_hash_in_place(std::get<I>(expressions)...);
+        }
+
+        static void
+        assert_hash_computed(const Differentiation::SD::Expression &expression)
+        {
+          (void)expression;
+
+          // Assert(expression.is_hashed(),
+          //        ExcMessage("Scalar expression has not been hashed."));
+        }
+
+        template <int rank, int dim>
+        static void
+        assert_hash_computed(
+          const Tensor<rank, dim, Differentiation::SD::Expression>
+            &tensor_of_expressions)
+        {
+          (void)tensor_of_expressions;
+
+          // for (const Differentiation::SD::Expression *e =
+          //        tensor_of_expressions.begin_raw();
+          //      e != tensor_of_expressions.end_raw();
+          //      ++e)
+          //   {
+          //     Assert(e->is_hashed(),
+          //            ExcMessage(
+          //              "Tensor element expression has not been hashed."));
+          //   }
+        }
+
+        template <int rank, int dim>
+        static void
+        assert_hash_computed(
+          const SymmetricTensor<rank, dim, Differentiation::SD::Expression>
+            &tensor_of_expressions)
+        {
+          (void)tensor_of_expressions;
+
+          // for (const Differentiation::SD::Expression *e =
+          //        tensor_of_expressions.begin_raw();
+          //      e != tensor_of_expressions.end_raw();
+          //      ++e)
+          //   {
+          //     Assert(
+          //       e->is_hashed(),
+          //       ExcMessage(
+          //         "SymmetricTensor element expression has not been
+          //         hashed."));
+          //   }
+        }
+
+        template <typename T, typename... Args>
+        static void
+        assert_hash_computed(const T &expression,
+                             const Args &...other_expressions)
+        {
+          assert_hash_computed(expression);
+          assert_hash_computed(other_expressions...);
+        }
+
+        template <typename... SDExpressions>
+        static void
+        assert_hash_computed(const std::tuple<SDExpressions...> &expressions)
+        {
+          unpack_assert_hash_computed(
+            expressions,
+            std::make_index_sequence<
+              std::tuple_size<std::tuple<SDExpressions...>>::value>());
+        }
+
+        template <typename... SDExpressions, std::size_t... I>
+        static void
+        unpack_assert_hash_computed(
+          const std::tuple<SDExpressions...> &expressions,
+          const std::index_sequence<I...>)
+        {
+          assert_hash_computed(std::get<I>(expressions)...);
+        }
+
         // Registration for first derivatives (stored in a single tuple)
         // Register a single expression
         template <typename /*SDNumberType*/,
@@ -1112,8 +1329,12 @@ namespace WeakForms
           unpack_sd_register_1st_order_functions(
             BatchOptimizerType &                batch_optimizer,
             const std::tuple<SDExpressions...> &derivatives,
+            const bool                          check_hash_computed,
             const std::index_sequence<I...>)
         {
+          if (check_hash_computed)
+            assert_hash_computed(std::get<I>(derivatives)...);
+
           batch_optimizer.register_function(std::get<I>(derivatives)...);
         }
 
@@ -1130,8 +1351,12 @@ namespace WeakForms
           unpack_sd_register_1st_order_functions(
             BatchOptimizerType &                batch_optimizer,
             const std::tuple<SDExpressions...> &derivatives,
+            const bool                          check_hash_computed,
             const std::index_sequence<I...>)
         {
+          if (check_hash_computed)
+            assert_hash_computed(std::get<I>(derivatives)...);
+
           batch_optimizer.register_functions(std::get<I>(derivatives)...);
         }
 
@@ -1144,7 +1369,8 @@ namespace WeakForms
         static typename std::enable_if<(I < sizeof...(Ts)), void>::type
         unpack_sd_register_2nd_order_functions(
           BatchOptimizerType &     batch_optimizer,
-          const std::tuple<Ts...> &higher_order_derivatives)
+          const std::tuple<Ts...> &higher_order_derivatives,
+          const bool               check_hash_computed)
         {
           static_assert(are_tuples<Ts...>::value,
                         "Expected all inner objects to be tuples");
@@ -1162,11 +1388,12 @@ namespace WeakForms
                                                  SDExpressionType>(
             batch_optimizer,
             std::get<I>(higher_order_derivatives),
+            check_hash_computed,
             std::make_index_sequence<std::tuple_size<InnerTupleType>::value>());
           unpack_sd_register_2nd_order_functions<SDNumberType,
                                                  SDExpressionType,
                                                  I + 1>(
-            batch_optimizer, higher_order_derivatives);
+            batch_optimizer, higher_order_derivatives, check_hash_computed);
         }
 
 
@@ -1178,11 +1405,13 @@ namespace WeakForms
         static typename std::enable_if<(I == sizeof...(Ts)), void>::type
         unpack_sd_register_2nd_order_functions(
           BatchOptimizerType &     batch_optimizer,
-          const std::tuple<Ts...> &higher_order_derivatives)
+          const std::tuple<Ts...> &higher_order_derivatives,
+          const bool               check_hash_computed)
         {
           // Do nothing
           (void)batch_optimizer;
           (void)higher_order_derivatives;
+          (void)check_hash_computed;
         }
 
         template <typename SDNumberType,

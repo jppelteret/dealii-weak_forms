@@ -181,6 +181,9 @@ Author: Jean-Paul Pelteret, 2020 - 2021
   
 # Examples
 Some examples and output can be found [here](doc/readme/examples.md).
+  
+# Benchmarks
+The results of some preliminary benchmarks can be found [here](doc/readme/benchmarks.md).
 
 # Similar projects that inspired this work
 - deal.II

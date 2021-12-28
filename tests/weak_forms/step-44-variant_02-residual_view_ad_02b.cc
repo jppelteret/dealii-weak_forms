@@ -48,8 +48,9 @@ namespace Step44
     using namespace WeakForms;
     using namespace Differentiation;
 
-    constexpr int  spacedim    = dim;
-    constexpr auto ad_typecode = Differentiation::AD::NumberTypes::adolc_tapeless;
+    constexpr int  spacedim = dim;
+    constexpr auto ad_typecode =
+      Differentiation::AD::NumberTypes::adolc_tapeless;
     using ADNumber_t =
       typename Differentiation::AD::NumberTraits<double, ad_typecode>::ad_type;
 
@@ -123,8 +124,7 @@ namespace Step44
             qph.get_data(cell);
           const Tensor<2, spacedim, ADNumber_t> F =
             Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
-          return
-            lqph[q_point]->get_P(F, p_tilde);
+          return lqph[q_point]->get_P(F, p_tilde);
         },
         UpdateFlags::update_default);
 
@@ -159,6 +159,15 @@ namespace Step44
           return dPsi_vol_dJ - p_tilde;
         },
         UpdateFlags::update_default);
+
+    // ADOL-C does not support the number of directional derivatives changing.
+    // So we set them in a persistent state here.
+    constexpr unsigned int n_total_independent_components =
+      WeakForms::Utilities::ValueHelper<Result_t_u>::n_components +
+      WeakForms::Utilities::ValueHelper<Result_t_p>::n_components +
+      WeakForms::Utilities::ValueHelper<Result_t_J>::n_components;
+    Differentiation::AD::HelperBase<ad_typecode, double>::
+      configure_tapeless_mode(n_total_independent_components, true);
 
     // Field variables: External force
     const auto force_func_u = residual_functor("F", "F", u);
@@ -233,8 +242,10 @@ main(int argc, char **argv)
   initlog();
   deallog << std::setprecision(9);
 
-  Utilities::MPI::MPI_InitFinalize mpi_initialization(
-    argc, argv, testing_max_num_threads());
+  // ADOL-C doesn't support multithreading
+  constexpr unsigned int n_threads = 1;
+  // constexpr unsigned int n_threads = numbers::invalid_unsigned_int;
+  Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv, n_threads);
 
   using namespace dealii;
   try

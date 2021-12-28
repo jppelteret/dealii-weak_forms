@@ -2085,6 +2085,7 @@ public:                                                                         
       &fe_interface_values_dofs == &fe_interface_values_op,                                \
       ExcMessage(                                                                          \
         "Expected exactly the same FEInterfaceValues object for the DoFs and Operator.")); \
+    (void)fe_interface_values_op;                                                          \
     return this->template operator()<ScalarType>(fe_interface_values_dofs);                \
   }                                                                                        \
                                                                                            \
@@ -2126,6 +2127,7 @@ public:                                                                         
       &fe_interface_values_dofs == &fe_interface_values_op,                                \
       ExcMessage(                                                                          \
         "Expected exactly the same FEInterfaceValues object for the DoFs and Operator.")); \
+    (void)fe_interface_values_op;                                                          \
     return this->template operator()<ScalarType, width>(                                   \
       fe_interface_values_dofs, q_point_range);                                            \
   }                                                                                        \

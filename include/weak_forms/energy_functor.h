@@ -29,6 +29,7 @@
 
 #include <deal.II/meshworker/scratch_data.h>
 
+#include <weak_forms/ad_sd_functor_cache.h>
 #include <weak_forms/ad_sd_functor_internal.h>
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
@@ -37,6 +38,8 @@
 #include <weak_forms/type_traits.h>
 #include <weak_forms/utilities.h>
 
+#include <functional>
+#include <thread>
 #include <tuple>
 
 
@@ -418,7 +421,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          scratch_data.get_general_data_storage();
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<ad_helper_type>(get_name_ad_helper());
       }
@@ -442,7 +445,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          scratch_data.get_general_data_storage();
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<Vector<scalar_type>>>(
           get_name_gradient());
@@ -453,7 +456,7 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          scratch_data.get_general_data_storage();
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<std::vector<FullMatrix<scalar_type>>>(
           get_name_hessian());
@@ -599,8 +602,9 @@ namespace WeakForms
       get_mutable_ad_helper(
         MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
-        GeneralDataStorage &cache = scratch_data.get_general_data_storage();
-        const std::string   name_ad_helper = get_name_ad_helper();
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_cache(scratch_data);
+        const std::string name_ad_helper = get_name_ad_helper();
 
         // Unfortunately we cannot perform a check like this because the
         // ScratchData is reused by many cells during the mesh loop. So
@@ -622,7 +626,8 @@ namespace WeakForms
         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
         const ad_helper_type &                  ad_helper) const
       {
-        GeneralDataStorage &cache = scratch_data.get_general_data_storage();
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -637,7 +642,8 @@ namespace WeakForms
       get_mutable_hessians(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
                            const ad_helper_type &ad_helper) const
       {
-        GeneralDataStorage &cache = scratch_data.get_general_data_storage();
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
@@ -727,6 +733,9 @@ namespace WeakForms
         , optimization_method(optimization_method)
         , optimization_flags(optimization_flags)
         , update_flags(update_flags)
+        , name_sd_batch_optimizer(get_name_sd_batch_optimizer(operand))
+        , name_evaluated_dependent_functions(
+            get_name_evaluated_dependent_functions(operand))
         , symbolic_fields(OpHelper_t::template get_symbolic_fields<sd_type>(
             get_field_args(),
             SymbolicDecorations()))
@@ -742,7 +751,10 @@ namespace WeakForms
                 user_intermediate_substitution_map,
                 symbolic_fields),
               symbolic_fields))
-      {}
+      {
+        OpHelper_t::sd_assert_hash_computed(first_derivatives);
+        OpHelper_t::sd_assert_hash_computed(second_derivatives);
+      }
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
@@ -776,10 +788,10 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          scratch_data.get_general_data_storage();
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache.get_object_with_name<sd_helper_type<ResultScalarType>>(
-          get_name_sd_batch_optimizer());
+          name_sd_batch_optimizer);
       }
 
       template <std::size_t FieldIndex>
@@ -811,11 +823,11 @@ namespace WeakForms
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
         const GeneralDataStorage &cache =
-          scratch_data.get_general_data_storage();
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         return cache
           .get_object_with_name<std::vector<std::vector<ResultScalarType>>>(
-            get_name_evaluated_dependent_functions());
+            name_evaluated_dependent_functions);
       }
 
       /**
@@ -845,56 +857,70 @@ namespace WeakForms
         // theory the user can encode the QPoint into the energy function: this
         // current implementation restricts the user to use the same definition
         // for the energy itself at each QP.
+        const auto initialize_optimizer =
+          [this](sd_helper_type<ResultScalarType> &batch_optimizer)
+        {
+          Assert(batch_optimizer.n_independent_variables() == 0,
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
+          Assert(batch_optimizer.n_dependent_variables() == 0,
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
+          Assert(batch_optimizer.values_substituted() == false,
+                 ExcMessage(
+                   "Expected the batch optimizer to be uninitialized."));
+
+          // Create and register field variables (the independent variables).
+          // We deal with the fields before the user data just in case
+          // the users try to overwrite these field symbols. It shouldn't
+          // happen, but this way its not possible to do overwrite what's
+          // already in the map.
+          Differentiation::SD::types::substitution_map symbol_map =
+            OpHelper_t::template sd_get_symbol_map<sd_type>(
+              get_symbolic_fields());
+          if (user_symbol_registration_map)
+            {
+              Differentiation::SD::add_to_symbol_map(
+                symbol_map,
+                OpHelper_t::template sd_call_function<sd_type>(
+                  user_symbol_registration_map, get_symbolic_fields()));
+            }
+          batch_optimizer.register_symbols(symbol_map);
+
+          // The next typical few steps that precede function resistration
+          // have already been performed in the class constructor:
+          // - Evaluate the functor to compute the total stored energy.
+          // - Compute the first derivatives of the energy function.
+          // - If there's some intermediate substitution to be done (modifying
+          // the first derivatives), then do it before computing the second
+          // derivatives.
+          // (Why the intermediate substitution? If the first derivatives
+          // represent the partial derivatives, then this substitution may be
+          // done to ensure that the consistent linearization is given by the
+          // second derivatives.)
+          // - Differentiate the first derivatives (perhaps a modified form)
+          // to get the second derivatives.
+
+          // Register the dependent variables.
+          OpHelper_t::template sd_register_functions<sd_type, energy_type>(
+            batch_optimizer, first_derivatives);
+          OpHelper_t::template sd_register_functions<sd_type, energy_type>(
+            batch_optimizer, second_derivatives);
+        };
+
+        // Create and, if necessary, optimize a BatchOptimizer instance.
+        // If the user has specified a cache, then this is only done once
+        // per number of ScratchData times over the entire lifetime of the
+        // cache.
+        // If the user has not specified a cache, then this is done once
+        // per number of ScratchData times for each assembly step (i.e.
+        // with an additional multiplication factor like number of timesteps
+        // times number of Newton iterations).
         sd_helper_type<ResultScalarType> &batch_optimizer =
           get_mutable_sd_batch_optimizer<ResultScalarType>(scratch_data);
         if (batch_optimizer.optimized() == false)
           {
-            Assert(batch_optimizer.n_independent_variables() == 0,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-            Assert(batch_optimizer.n_dependent_variables() == 0,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-            Assert(batch_optimizer.values_substituted() == false,
-                   ExcMessage(
-                     "Expected the batch optimizer to be uninitialized."));
-
-            // Create and register field variables (the independent variables).
-            // We deal with the fields before the user data just in case
-            // the users try to overwrite these field symbols. It shouldn't
-            // happen, but this way its not possible to do overwrite what's
-            // already in the map.
-            Differentiation::SD::types::substitution_map symbol_map =
-              OpHelper_t::template sd_get_symbol_map<sd_type>(
-                get_symbolic_fields());
-            if (user_symbol_registration_map)
-              {
-                Differentiation::SD::add_to_symbol_map(
-                  symbol_map,
-                  OpHelper_t::template sd_call_function<sd_type>(
-                    user_symbol_registration_map, get_symbolic_fields()));
-              }
-            batch_optimizer.register_symbols(symbol_map);
-
-            // The next typical few steps that precede function resistration
-            // have already been performed in the class constructor:
-            // - Evaluate the functor to compute the total stored energy.
-            // - Compute the first derivatives of the energy function.
-            // - If there's some intermediate substitution to be done (modifying
-            // the first derivatives), then do it before computing the second
-            // derivatives.
-            // (Why the intermediate substitution? If the first derivatives
-            // represent the partial derivatives, then this substitution may be
-            // done to ensure that the consistent linearization is given by the
-            // second derivatives.)
-            // - Differentiate the first derivatives (perhaps a modified form)
-            // to get the second derivatives.
-
-            // Register the dependent variables.
-            OpHelper_t::template sd_register_functions<sd_type, energy_type>(
-              batch_optimizer, first_derivatives);
-            OpHelper_t::template sd_register_functions<sd_type, energy_type>(
-              batch_optimizer, second_derivatives);
+            initialize_optimizer(batch_optimizer);
 
             // Finalize the optimizer.
             batch_optimizer.optimize();
@@ -985,6 +1011,10 @@ namespace WeakForms
       // evaluate their SD function (e.g. UpdateFlags::update_quadrature_points)
       const UpdateFlags update_flags;
 
+      // Naming
+      const std::string name_sd_batch_optimizer;
+      const std::string name_evaluated_dependent_functions;
+
       // Independent variables
       const typename OpHelper_t::template field_values_t<sd_type>
         symbolic_fields;
@@ -998,21 +1028,24 @@ namespace WeakForms
         template second_derivatives_value_t<sd_type, energy_type>
           second_derivatives;
 
-      std::string
-      get_name_sd_batch_optimizer() const
+      static std::string
+      get_name_sd_batch_optimizer(const Op &operand)
       {
-        const SymbolicDecorations decorator;
+        const std::hash<std::string> hash_fn;
+        const SymbolicDecorations    decorator;
         return internal::get_deal_II_prefix() +
-               "EnergyFunctor_SDBatchOptimizer_" + operand.as_ascii(decorator);
+               "EnergyFunctor_SDBatchOptimizer_" +
+               std::to_string(hash_fn(operand.as_ascii(decorator)));
       }
 
-      std::string
-      get_name_evaluated_dependent_functions() const
+      static std::string
+      get_name_evaluated_dependent_functions(const Op &operand)
       {
-        const SymbolicDecorations decorator;
+        const std::hash<std::string> hash_fn;
+        const SymbolicDecorations    decorator;
         return internal::get_deal_II_prefix() +
-               "EnergyFunctor_ADHelper_Evaluated_Dependent_Functions" +
-               operand.as_ascii(decorator);
+               "EnergyFunctor_ADHelper_Evaluated_Dependent_Functions_" +
+               std::to_string(hash_fn(operand.as_ascii(decorator)));
       }
 
       template <typename ResultScalarType>
@@ -1020,9 +1053,8 @@ namespace WeakForms
       get_mutable_sd_batch_optimizer(
         MeshWorker::ScratchData<dim, spacedim> &scratch_data) const
       {
-        GeneralDataStorage &cache = scratch_data.get_general_data_storage();
-        const std::string   name_sd_batch_optimizer =
-          get_name_sd_batch_optimizer();
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_cache(scratch_data);
 
         // Unfortunately we cannot perform a check like this because the
         // ScratchData is reused by many cells during the mesh loop. So
@@ -1045,13 +1077,14 @@ namespace WeakForms
         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
         const sd_helper_type<ResultScalarType> &batch_optimizer) const
       {
-        GeneralDataStorage &cache = scratch_data.get_general_data_storage();
+        GeneralDataStorage &cache =
+          AD_SD_Functor_Cache::get_cache(scratch_data);
         const FEValuesBase<dim, spacedim> &fe_values =
           scratch_data.get_current_fe_values();
 
         return cache.get_or_add_object_with_name<
           std::vector<std::vector<ResultScalarType>>>(
-          get_name_evaluated_dependent_functions(),
+          name_evaluated_dependent_functions,
           fe_values.n_quadrature_points,
           std::vector<ResultScalarType>(
             batch_optimizer.n_dependent_variables()));

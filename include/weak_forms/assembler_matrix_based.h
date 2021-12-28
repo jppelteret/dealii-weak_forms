@@ -40,6 +40,26 @@ namespace WeakForms
 {
   namespace internal
   {
+    // Utility functions to associate one of shared user data structures with
+    // the thread that a ScratchData object occupies.
+    template <int dim, int spacedim>
+    void
+    bind_user_cache_to_thread(
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      AD_SD_Functor_Cache::bind_user_cache_to_thread(scratch_data);
+    }
+
+    template <int dim, int spacedim>
+    void
+    unbind_user_cache_from_thread(
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data)
+    {
+      auto &cache = AD_SD_Functor_Cache::get_cache(scratch_data);
+      AD_SD_Functor_Cache::unbind_user_cache_from_thread(scratch_data, cache);
+    }
+
+
     template <int n_matrices    = 1,
               int n_vectors     = n_matrices,
               int n_dof_indices = n_matrices>
@@ -126,6 +146,11 @@ namespace WeakForms
   public:
     explicit MatrixBasedAssembler()
       : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(){};
+
+    explicit MatrixBasedAssembler(AD_SD_Functor_Cache &user_ad_sd_cache)
+      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(
+          user_ad_sd_cache)
+    {}
 
     /**
      * Assemble the linear system matrix, excluding boundary and internal
@@ -752,6 +777,8 @@ namespace WeakForms
                                            ScratchData &           scratch_data,
                                            CopyData &              copy_data)
           {
+            internal::bind_user_cache_to_thread(scratch_data);
+
             const auto &fe_values = scratch_data.reinit(cell);
             copy_data             = CopyData(fe_values.dofs_per_cell);
             copy_data.local_dof_indices[0] =
@@ -809,6 +836,8 @@ namespace WeakForms
                                    fe_values);
                   }
               }
+
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 
@@ -837,6 +866,8 @@ namespace WeakForms
           {
             Assert((cell->face(face)->at_boundary()),
                    ExcMessage("Cell face is not at the boundary."));
+
+            internal::bind_user_cache_to_thread(scratch_data);
 
             const auto &fe_values      = scratch_data.reinit(cell);
             const auto &fe_face_values = scratch_data.reinit(cell, face);
@@ -894,6 +925,8 @@ namespace WeakForms
                       face);
                   }
               }
+
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 
@@ -926,6 +959,8 @@ namespace WeakForms
           {
             Assert((!cell->face(face)->at_boundary()),
                    ExcMessage("Cell face is at the boundary."));
+
+            internal::bind_user_cache_to_thread(scratch_data);
 
             const FEInterfaceValues<dim> &fe_interface_values =
               scratch_data.reinit(cell,
@@ -1001,6 +1036,8 @@ namespace WeakForms
                       neighbour_face);
                   }
               }
+
+            internal::unbind_user_cache_from_thread(scratch_data);
           };
         }
 
@@ -1101,10 +1138,13 @@ namespace WeakForms
              cell_quadrature,
              this->get_cell_update_flags(),
              face_quadrature,
-             this->get_face_update_flags()) :
-           ScratchData(dof_handler.get_fe(),
-                       cell_quadrature,
-                       this->get_cell_update_flags()));
+             this->get_face_update_flags(),
+             this->ad_sd_functor_cache) :
+           internal::construct_scratch_data<ScratchData>(
+             dof_handler.get_fe(),
+             cell_quadrature,
+             this->get_cell_update_flags(),
+             this->ad_sd_functor_cache));
       const CopyData sample_copy_data(dof_handler.get_fe().dofs_per_cell);
 
       // Set the assembly flags, based off of the operations that we intend to
