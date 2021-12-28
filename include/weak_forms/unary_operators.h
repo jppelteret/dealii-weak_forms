@@ -54,14 +54,33 @@ namespace WeakForms
 
       // --- Scalar operations ---
       /**
+       * Compute the trigonometric sine of a scalar
+       */
+      sine,
+      /**
+       * Compute the trigonometric cosine of a scalar
+       */
+      cosine,
+      /**
+       * Compute the trigonometric tangent of a scalar
+       */
+      tangent,
+      /**
+       * Compute the exponential of a scalar
+       */
+      exponential,
+      /**
+       * Compute the logarithm of a scalar
+       */
+      logarithm,
+      /**
        * Compute the square root of a scalar
        */
       square_root,
-      // exp
-      // log
-      // sin
-      // cos
-      // tan
+      /**
+       * Compute the absolute value of a scalar
+       */
+      absolute_value,
       // asin
       // acos
       // atan
@@ -73,7 +92,6 @@ namespace WeakForms
       // atanh
       // erf
       // erfc
-      // abs
 
       // --- Tensor operations ---
       /**
@@ -291,17 +309,131 @@ namespace WeakForms
 
 
     template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::sine>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::sine;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        sin(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::cosine>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::cosine;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        cos(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::tangent>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::tangent;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        tan(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::exponential>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::exponential;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        exp(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::logarithm>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::logarithm;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        log(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::square_root>>
     {
       static const enum UnaryOpCodes op_code = UnaryOpCodes::square_root;
 
       static_assert(Op::rank == 0,
                     "Invalid operator rank"); // Can only act on scalars
-      static const int rank = 0;              // Square root is scalar valued
+      static const int rank = 0;              // Result is scalar valued
 
       template <typename ScalarType>
       using value_type = decltype(
         sqrt(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::absolute_value>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::absolute_value;
+
+      static_assert(Op::rank == 0,
+                    "Invalid operator rank"); // Can only act on scalars
+      static const int rank = 0;              // Result is scalar valued
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        abs(std::declval<typename Op::template value_type<ScalarType>>()));
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -832,6 +964,275 @@ private:                                                                 \
 
     /* ------------------------- Scalar operations ------------------------- */
 
+    /**
+     * Trigonometric sine operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::sine,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::sine>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::sine)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("sin", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("sin"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return sin(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return sin(value);
+      }
+    };
+
+
+    /**
+     * Trigonometric cosine operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::cosine,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::cosine>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::cosine)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("cos", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("cos"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return cos(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return cos(value);
+      }
+    };
+
+
+    /**
+     * Trigonometric tangent operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::tangent,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::tangent>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::tangent)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("tan", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("tan"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return tan(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return tan(value);
+      }
+    };
+
+
+    /**
+     * Exponential operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::exponential,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::exponential>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::exponential)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("exp", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("exp"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return exp(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return exp(value);
+      }
+    };
+
+
+    /**
+     * Logarithm operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::logarithm,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::logarithm>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::logarithm)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("log", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("log"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return log(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return log(value);
+      }
+    };
+
 
     /**
      * Square root operator for integrands of symbolic integrals
@@ -883,6 +1284,60 @@ private:                                                                 \
       {
         using namespace std;
         return sqrt(value);
+      }
+    };
+
+
+    /**
+     * Absolute value operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::absolute_value,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::absolute_value>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The square root operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::absolute_value)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_ascii("abs", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.mathop_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_latex_op("abs"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        using namespace std;
+        return abs(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        using namespace std;
+        return abs(value);
       }
     };
 
@@ -1119,8 +1574,17 @@ private:                                                                 \
     return OpType(operand);                                                \
   }
 
+// Scalar operations
 DEAL_II_UNARY_OP_OF_UNARY_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_UNARY_OP(sin, sine)
+DEAL_II_UNARY_OP_OF_UNARY_OP(cos, cosine)
+DEAL_II_UNARY_OP_OF_UNARY_OP(tan, tangent)
+DEAL_II_UNARY_OP_OF_UNARY_OP(exp, exponential)
+DEAL_II_UNARY_OP_OF_UNARY_OP(log, logarithm)
 DEAL_II_UNARY_OP_OF_UNARY_OP(sqrt, square_root)
+DEAL_II_UNARY_OP_OF_UNARY_OP(abs, absolute_value)
+
+// Tensor operations
 DEAL_II_UNARY_OP_OF_UNARY_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_UNARY_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_UNARY_OP(transpose, transpose)

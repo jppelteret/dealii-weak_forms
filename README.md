@@ -103,7 +103,10 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - General
       -  negation
     -  Scalar operations
+       - trignometric operations: sine, cosine, tangent
+       - exponential, logarithm
        - square root
+       - absolute value
        - [TODO] Other math functions
     - Tensor operations
       - determinant

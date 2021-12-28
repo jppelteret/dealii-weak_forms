@@ -74,6 +74,7 @@ namespace WeakForms
       divide,
 
       // --- Scalar operations ---
+      // Supported by vectorisation: pow, max, min
       /**
        * Raise one operand to the power of a second operand.
        */

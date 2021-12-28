@@ -104,9 +104,34 @@ run()
                                                                q_point_range))
               << std::endl;
 
+    std::cout << "Scalar trignometric sine: "
+              << ((sin(f1)).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Scalar trignometric cosine: "
+              << ((cos(f1)).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Scalar trignometric tangent: "
+              << ((tan(f1)).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Scalar exponential: "
+              << ((exp(f1)).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Scalar logarithm: "
+              << ((log(f1)).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
     std::cout << "Scalar square root: "
-              << ((sqrt(f1)).template operator()<NumberType, width>(
-                   fe_values, q_point_range))
+              << ((sqrt(f1)).template operator()<NumberType>(
+                   fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Scalar absolute value: "
+              << ((abs(-f1)).template operator()<NumberType>(
+                   fe_values))[q_point]
               << std::endl;
 
     deallog << "OK" << std::endl;
@@ -153,6 +178,8 @@ run()
         Tensor<2, dim> t;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
           *it = 2.0;
+        for (unsigned int i = 0; i < dim; ++i)
+          t[i][i] += 1.0;
         return t;
       });
 
@@ -201,6 +228,8 @@ run()
         SymmetricTensor<2, dim> t;
         for (auto it = t.begin_raw(); it != t.end_raw(); ++it)
           *it = 2.0;
+        for (unsigned int i = 0; i < dim; ++i)
+          t[i][i] += 1.0;
         return t;
       });
 

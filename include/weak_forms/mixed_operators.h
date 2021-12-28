@@ -57,8 +57,17 @@ WEAK_FORMS_NAMESPACE_OPEN
     return OpType(operand);                                                      \
   }
 
+// Scalar operations
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(sin, sine)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(cos, cosine)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(tan, tangent)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(exp, exponential)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(log, logarithm)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(sqrt, square_root)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(abs, absolute_value)
+
+// Tensor operations
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(transpose, transpose)
@@ -89,8 +98,17 @@ DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(symmetrize, symmetrize)
     return OpType(operand);                                                  \
   }
 
+// Scalar operations
 DEAL_II_UNARY_OP_OF_BINARY_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_BINARY_OP(sin, sine)
+DEAL_II_UNARY_OP_OF_BINARY_OP(cos, cosine)
+DEAL_II_UNARY_OP_OF_BINARY_OP(tan, tangent)
+DEAL_II_UNARY_OP_OF_BINARY_OP(exp, exponential)
+DEAL_II_UNARY_OP_OF_BINARY_OP(log, logarithm)
 DEAL_II_UNARY_OP_OF_BINARY_OP(sqrt, square_root)
+DEAL_II_UNARY_OP_OF_BINARY_OP(abs, absolute_value)
+
+// Tensor operations
 DEAL_II_UNARY_OP_OF_BINARY_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_BINARY_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_BINARY_OP(transpose, transpose)
