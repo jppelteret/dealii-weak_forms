@@ -29,6 +29,7 @@
 
 #include <deal.II/meshworker/scratch_data.h>
 
+#include <weak_forms/ad_sd_functor_cache.h>
 #include <weak_forms/ad_sd_functor_internal.h>
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
@@ -905,12 +906,6 @@ namespace WeakForms
             batch_optimizer, first_derivatives);
           OpHelper_t::template sd_register_functions<sd_type, energy_type>(
             batch_optimizer, second_derivatives);
-
-          for (const auto &f : batch_optimizer.get_dependent_functions())
-            {
-              Assert(f.is_hashed(),
-                     ExcMessage("Dependent function not hashed: 2"));
-            }
         };
 
         // Create and, if necessary, optimize a BatchOptimizer instance.
