@@ -21,6 +21,10 @@
 // - Optimizer type: Lambda
 // - Optimization method: All
 // - AD/SD Cache
+//
+// Note: The performance of this implementation is very much sub-optimal.
+// With the AD/SD cache, the assembler should be constructed once up-front
+// like is done in step-44-variant_02-residual_view_sd_03b.
 
 #include <deal.II/differentiation/sd.h>
 
@@ -273,7 +277,7 @@ main(int argc, char **argv)
   try
     {
       const unsigned int  dim = 3;
-      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44.prm");
+      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44-short.prm");
       solid.run();
     }
   catch (std::exception &exc)
