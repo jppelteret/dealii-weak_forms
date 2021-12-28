@@ -9,11 +9,11 @@ e({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
 DEAL::Energy functor (LaTeX):
 {\Psi}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
 DEAL::Number of components: 16
-DEAL::Field index  0: {s} -> __DEAL_II__Field_{s}
-DEAL::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1
-DEAL::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11
-DEAL::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
-DEAL::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111
+DEAL::Field index  0: {s} -> __DEAL_II__Field__s_
+DEAL::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad__s___0 __DEAL_II__Field_Grad__s___1
+DEAL::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian__s___00 __DEAL_II__Field_Hessian__s___01 __DEAL_II__Field_Hessian__s___10 __DEAL_II__Field_Hessian__s___11
+DEAL::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian__s__
+DEAL::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative__s___000 __DEAL_II__Field_3rd_Derivative__s___001 __DEAL_II__Field_3rd_Derivative__s___010 __DEAL_II__Field_3rd_Derivative__s___011 __DEAL_II__Field_3rd_Derivative__s___100 __DEAL_II__Field_3rd_Derivative__s___101 __DEAL_II__Field_3rd_Derivative__s___110 __DEAL_II__Field_3rd_Derivative__s___111
 DEAL::OK
 DEAL::Dim: 3
 DEAL::Energy (ascii):
@@ -25,10 +25,10 @@ e({s}, Grad({s}), Hessian({s}), Laplacian({s}), 3rd_Derivative({s}))
 DEAL::Energy functor (LaTeX):
 {\Psi}\left({s}, \nabla\left({s}\right), \nabla\nabla\left({s}\right), \nabla^{2}\left({s}\right), \nabla\nabla\nabla\left({s}\right)\right)
 DEAL::Number of components: 41
-DEAL::Field index  0: {s} -> __DEAL_II__Field_{s}
-DEAL::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad({s})_0 __DEAL_II__Field_Grad({s})_1 __DEAL_II__Field_Grad({s})_2
-DEAL::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian({s})_00 __DEAL_II__Field_Hessian({s})_01 __DEAL_II__Field_Hessian({s})_02 __DEAL_II__Field_Hessian({s})_10 __DEAL_II__Field_Hessian({s})_11 __DEAL_II__Field_Hessian({s})_12 __DEAL_II__Field_Hessian({s})_20 __DEAL_II__Field_Hessian({s})_21 __DEAL_II__Field_Hessian({s})_22
-DEAL::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian({s})
-DEAL::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative({s})_000 __DEAL_II__Field_3rd_Derivative({s})_001 __DEAL_II__Field_3rd_Derivative({s})_002 __DEAL_II__Field_3rd_Derivative({s})_010 __DEAL_II__Field_3rd_Derivative({s})_011 __DEAL_II__Field_3rd_Derivative({s})_012 __DEAL_II__Field_3rd_Derivative({s})_020 __DEAL_II__Field_3rd_Derivative({s})_021 __DEAL_II__Field_3rd_Derivative({s})_022 __DEAL_II__Field_3rd_Derivative({s})_100 __DEAL_II__Field_3rd_Derivative({s})_101 __DEAL_II__Field_3rd_Derivative({s})_102 __DEAL_II__Field_3rd_Derivative({s})_110 __DEAL_II__Field_3rd_Derivative({s})_111 __DEAL_II__Field_3rd_Derivative({s})_112 __DEAL_II__Field_3rd_Derivative({s})_120 __DEAL_II__Field_3rd_Derivative({s})_121 __DEAL_II__Field_3rd_Derivative({s})_122 __DEAL_II__Field_3rd_Derivative({s})_200 __DEAL_II__Field_3rd_Derivative({s})_201 __DEAL_II__Field_3rd_Derivative({s})_202 __DEAL_II__Field_3rd_Derivative({s})_210 __DEAL_II__Field_3rd_Derivative({s})_211 __DEAL_II__Field_3rd_Derivative({s})_212 __DEAL_II__Field_3rd_Derivative({s})_220 __DEAL_II__Field_3rd_Derivative({s})_221 __DEAL_II__Field_3rd_Derivative({s})_222
+DEAL::Field index  0: {s} -> __DEAL_II__Field__s_
+DEAL::Field index  1: Grad({s}) -> __DEAL_II__Field_Grad__s___0 __DEAL_II__Field_Grad__s___1 __DEAL_II__Field_Grad__s___2
+DEAL::Field index  2: Hessian({s}) -> __DEAL_II__Field_Hessian__s___00 __DEAL_II__Field_Hessian__s___01 __DEAL_II__Field_Hessian__s___02 __DEAL_II__Field_Hessian__s___10 __DEAL_II__Field_Hessian__s___11 __DEAL_II__Field_Hessian__s___12 __DEAL_II__Field_Hessian__s___20 __DEAL_II__Field_Hessian__s___21 __DEAL_II__Field_Hessian__s___22
+DEAL::Field index  3: Laplacian({s}) -> __DEAL_II__Field_Laplacian__s__
+DEAL::Field index  4: 3rd_Derivative({s}) -> __DEAL_II__Field_3rd_Derivative__s___000 __DEAL_II__Field_3rd_Derivative__s___001 __DEAL_II__Field_3rd_Derivative__s___002 __DEAL_II__Field_3rd_Derivative__s___010 __DEAL_II__Field_3rd_Derivative__s___011 __DEAL_II__Field_3rd_Derivative__s___012 __DEAL_II__Field_3rd_Derivative__s___020 __DEAL_II__Field_3rd_Derivative__s___021 __DEAL_II__Field_3rd_Derivative__s___022 __DEAL_II__Field_3rd_Derivative__s___100 __DEAL_II__Field_3rd_Derivative__s___101 __DEAL_II__Field_3rd_Derivative__s___102 __DEAL_II__Field_3rd_Derivative__s___110 __DEAL_II__Field_3rd_Derivative__s___111 __DEAL_II__Field_3rd_Derivative__s___112 __DEAL_II__Field_3rd_Derivative__s___120 __DEAL_II__Field_3rd_Derivative__s___121 __DEAL_II__Field_3rd_Derivative__s___122 __DEAL_II__Field_3rd_Derivative__s___200 __DEAL_II__Field_3rd_Derivative__s___201 __DEAL_II__Field_3rd_Derivative__s___202 __DEAL_II__Field_3rd_Derivative__s___210 __DEAL_II__Field_3rd_Derivative__s___211 __DEAL_II__Field_3rd_Derivative__s___212 __DEAL_II__Field_3rd_Derivative__s___220 __DEAL_II__Field_3rd_Derivative__s___221 __DEAL_II__Field_3rd_Derivative__s___222
 DEAL::OK
 DEAL::OK
