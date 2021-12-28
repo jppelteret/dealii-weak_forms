@@ -110,6 +110,13 @@ namespace WeakForms
        * Symmetrize a tensor
        */
       symmetrize,
+      // trace
+      // adjugate
+      // cofactor
+      // l1_norm
+      // linfty_norm
+
+      // --- Symmetric tensor operations ---
 
       // --- Interface operations ---
       /**
