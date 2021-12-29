@@ -143,19 +143,19 @@ run()
                                    [](const FEValuesBase<dim, spacedim> &,
                                       const unsigned int) { return 3.0; });
 
-    std::cout << "Scalar power: "
+    std::cout << "Power: "
               << ((pow(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Scalar maximum: "
+    std::cout << "Maximum: "
               << ((max(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Scalar minimum: "
+    std::cout << "Minimum: "
               << ((min(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
@@ -200,19 +200,19 @@ run()
                                                                  fe_values,
                                                                  q_point_range);
 
-    std::cout << "Vector outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Vector Schur product: "
+    std::cout << "VSchur product: "
               << ((schur_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Vector scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
@@ -254,19 +254,19 @@ run()
         return t;
       });
 
-    std::cout << "Tensor outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Tensor Schur product: "
+    std::cout << "Schur product: "
               << ((schur_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    std::cout << "Tensor scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
@@ -308,19 +308,19 @@ run()
         return t;
       });
 
-    std::cout << "Symmetric tensor outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;
 
-    // std::cout << "Symmetric tensor Schur product: "
+    // std::cout << "Schur product: "
     //           << ((schur_product(f1,f2)).template operator()<NumberType,
     //           width>(fe_values,
     //                                                            q_point_range))
     //           << std::endl;
 
-    std::cout << "Symmetric tensor scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
