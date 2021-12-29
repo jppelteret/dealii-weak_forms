@@ -113,11 +113,6 @@ Author: Jean-Paul Pelteret, 2020 - 2021
       - invert
       - transpose
       - symmetrize
-    - Tensor contractions
-      - Operator * (single contraction for Tensor, double contraction for SymmetricTensor)
-      - [TODO] scalar product
-      - [TODO] double contract
-      - [TODO] general contraction
     - Interface operations (evaluating a function across an interface)
       - [TODO] jump
       - [TODO] average 
@@ -132,12 +127,15 @@ Author: Jean-Paul Pelteret, 2020 - 2021
        - maximum, minimum
        - [TODO] Other math functions
      - Tensor operations
-       - Scalar product
-       - Cross product
+       - cross product
        - Schur product
-       - [TODO] Contract
-       - [TODO] Double contract
-       - Outer product
+       - outer product
+     - Tensor contractions
+       - operator * (single contraction for Tensor, double contraction for SymmetricTensor)
+       - scalar product
+       - contract
+       - double contract
+       - [TODO] general contraction
   - Implicit conversions to functors
     - Arithmetic types
     - Tensor

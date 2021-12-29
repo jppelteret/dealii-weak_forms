@@ -107,9 +107,15 @@ namespace WeakForms
       /**
        * Scalar product (of two tensor operands)
        */
-      scalar_product
-      // double contract,
-      // contract,
+      scalar_product,
+      /**
+       * Single index contraction (of two tensor operands)
+       */
+      contract,
+      /**
+       * Double index contraction (of two tensor operands)
+       */
+      double_contract
       // full_contraction (reduce as many indices as possible)?
     };
 
@@ -160,11 +166,14 @@ namespace WeakForms
      * This is necessary because some specializations of the class do not use
      * the number type in the specialization itself, but they may rely on the
      * type in their definitions (e.g. class members).
+     * @tparam Args A dumping ground for any other arguments that may be necessary
+     * to form a concrete class instance.
      */
     template <typename LhsOp,
               typename RhsOp,
               enum BinaryOpCodes OpCode,
-              typename UnderlyingType = void>
+              typename UnderlyingType = void,
+              typename... Args>
     class BinaryOp
     {
     public:
@@ -410,6 +419,30 @@ namespace WeakForms
         using vectorized_return_type = AlignedVector<
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
+
+
+
+      // Used to work around the restriction that template arguments
+      // for template type parameter must be a type
+      template <int _index_1, int _index_2>
+      struct TwoIndexPack
+      {
+        static const unsigned int index_1 = _index_1;
+        static const unsigned int index_2 = _index_2;
+      };
+
+
+
+      // Used to work around the restriction that template arguments
+      // for template type parameter must be a type
+      template <int _index_1, int _index_2, int _index_3, int _index_4>
+      struct FourIndexPack
+      {
+        static const unsigned int index_1 = _index_1;
+        static const unsigned int index_2 = _index_2;
+        static const unsigned int index_3 = _index_3;
+        static const unsigned int index_4 = _index_4;
+      };
     } // namespace internal
 
 
@@ -582,16 +615,26 @@ namespace WeakForms
         return min(t1, t2);
       }
 
-      template <typename T1, typename T2>
+      template <int rank_1,
+                int rank_2,
+                int dim,
+                typename Number_1,
+                typename Number_2>
       auto
-      cross_product_impl(const T1 &t1, const T2 &t2)
+      cross_product_impl(const Tensor<rank_1, dim, Number_1> &t1,
+                         const Tensor<rank_2, dim, Number_2> &t2)
       {
         return cross_product_3d(t1, t2);
       }
 
-      template <typename T1, typename T2>
+      template <int rank_1,
+                int rank_2,
+                int dim,
+                typename Number_1,
+                typename Number_2>
       auto
-      schur_product_impl(const T1 &t1, const T2 &t2)
+      schur_product_impl(const Tensor<rank_1, dim, Number_1> &t1,
+                         const Tensor<rank_2, dim, Number_2> &t2)
       {
         return schur_product(t1, t2);
       }
@@ -600,6 +643,7 @@ namespace WeakForms
       auto
       outer_product_impl(const T1 &t1, const T2 &t2)
       {
+        // Valid for Tensors and SymmetricTensors
         return outer_product(t1, t2);
       }
 
@@ -607,7 +651,54 @@ namespace WeakForms
       auto
       scalar_product_impl(const T1 &t1, const T2 &t2)
       {
+        // Valid for Tensors and SymmetricTensors
         return scalar_product(t1, t2);
+      }
+
+      template <int lhs_index,
+                int rhs_index,
+                int rank_1,
+                int rank_2,
+                int dim,
+                typename Number_1,
+                typename Number_2>
+      auto
+      contract_impl(const Tensor<rank_1, dim, Number_1> &t1,
+                    const Tensor<rank_2, dim, Number_2> &t2)
+      {
+        return contract<lhs_index, rhs_index>(t1, t2);
+      }
+
+      template <int lhs_index_1,
+                int rhs_index_1,
+                int lhs_index_2,
+                int rhs_index_2,
+                int rank_1,
+                int rank_2,
+                int dim,
+                typename Number_1,
+                typename Number_2>
+      auto
+      double_contract_impl(const Tensor<rank_1, dim, Number_1> &t1,
+                           const Tensor<rank_2, dim, Number_2> &t2)
+      {
+        return double_contract<lhs_index_1,
+                               rhs_index_1,
+                               lhs_index_2,
+                               rhs_index_2>(t1, t2);
+      }
+
+      template <int rank_1,
+                int rank_2,
+                int dim,
+                typename Number_1,
+                typename Number_2>
+      auto
+      double_contract_impl(const SymmetricTensor<rank_1, dim, Number_1> &t1,
+                           const SymmetricTensor<rank_2, dim, Number_2> &t2)
+      {
+        // return double_contract(t1, t2);
+        return t1 * t2;
       }
     } // namespace internal
 
@@ -770,6 +861,106 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = decltype(internal::scalar_product_impl(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    template <int lhs_index, int rhs_index, typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp,
+               RhsOp,
+               BinaryOpCodes::contract,
+               void,
+               internal::TwoIndexPack<lhs_index, rhs_index>>>
+    {
+    public:
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::contract;
+
+      static_assert(
+        LhsOp::rank >= 1,
+        "Contraction requires that the LHS operand is, at a minimum, of rank-1.");
+
+      static_assert(
+        RhsOp::rank >= 1,
+        "Contraction requires that the RHS operand is, at a minimum, of rank-1.");
+
+      static const int rank = LhsOp::rank + RhsOp::rank - 2;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::contract_impl<lhs_index, rhs_index>(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+
+    /**
+     * Implementation for Tensors
+     */
+    template <int lhs_index_1,
+              int rhs_index_1,
+              int lhs_index_2,
+              int rhs_index_2,
+              typename LhsOp,
+              typename RhsOp>
+    struct BinaryOpTypeTraits<BinaryOp<
+      LhsOp,
+      RhsOp,
+      BinaryOpCodes::double_contract,
+      void,
+      internal::
+        FourIndexPack<lhs_index_1, rhs_index_1, lhs_index_2, rhs_index_2>>>
+    {
+    public:
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::double_contract;
+
+      static_assert(
+        LhsOp::rank >= 2,
+        "Tensor contraction requires that the LHS operand is, at a minimum, of rank-2.");
+
+      static_assert(
+        RhsOp::rank >= 2,
+        "Tensor contraction requires that the RHS operand is, at a minimum, of rank-2.");
+
+
+      static const int rank = LhsOp::rank + RhsOp::rank - 4;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::double_contract_impl<lhs_index_1,
+                                                                 rhs_index_1,
+                                                                 lhs_index_2,
+                                                                 rhs_index_2>(
+        std::declval<typename LhsOp::template value_type<ScalarType>>(),
+        std::declval<typename RhsOp::template value_type<ScalarType>>()));
+
+      DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL(LhsOp, RhsOp)
+    };
+
+    /**
+     * Implementation for SymmetricTensors
+     */
+    template <typename LhsOp, typename RhsOp>
+    struct BinaryOpTypeTraits<
+      BinaryOp<LhsOp, RhsOp, BinaryOpCodes::double_contract>>
+    {
+      static const enum BinaryOpCodes op_code = BinaryOpCodes::double_contract;
+
+      static_assert(
+        LhsOp::rank >= 2,
+        "TSymmetricensor contraction requires that the LHS operand is, at a minimum, of rank-2.");
+
+      static_assert(
+        RhsOp::rank >= 2,
+        "SymmetricTensor contraction requires that the RHS operand is, at a minimum, of rank-2.");
+
+      static const int rank = LhsOp::rank + RhsOp::rank - 4;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::double_contract_impl(
         std::declval<typename LhsOp::template value_type<ScalarType>>(),
         std::declval<typename RhsOp::template value_type<ScalarType>>()));
 
@@ -1282,71 +1473,77 @@ namespace WeakForms
  * @note It is intended that this should used immediately after class
  * definition is opened.
  */
+#define DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED(LhsOp,         \
+                                                          RhsOp,         \
+                                                          BinaryOpCode)  \
+public:                                                                  \
+  using LhsOpType = typename Traits::LhsOpType;                          \
+  using RhsOpType = typename Traits::RhsOpType;                          \
+                                                                         \
+  template <typename ScalarType>                                         \
+  using value_type = typename Traits::template value_type<ScalarType>;   \
+                                                                         \
+  template <typename ScalarType>                                         \
+  using return_type = typename Traits::template return_type<ScalarType>; \
+                                                                         \
+  template <typename ScalarType, std::size_t width>                      \
+  using vectorized_value_type =                                          \
+    typename Traits::template vectorized_value_type<ScalarType, width>;  \
+                                                                         \
+  template <typename ScalarType, std::size_t width>                      \
+  using vectorized_return_type =                                         \
+    typename Traits::template vectorized_return_type<ScalarType, width>; \
+                                                                         \
+  using Base::dimension;                                                 \
+  using Base::op_code;                                                   \
+  using Base::rank;                                                      \
+  using Base::space_dimension;                                           \
+  using Base::get_update_flags;                                          \
+  using Base::operator();                                                \
+                                                                         \
+  explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)  \
+    : Base(*this)                                                        \
+    , lhs_operand(lhs_operand)                                           \
+    , rhs_operand(rhs_operand)                                           \
+  {}                                                                     \
+                                                                         \
+  /**                                                                    \
+   * Required to support operands that access objects with a limited     \
+   * lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor         \
+   */                                                                    \
+  BinaryOp(const BinaryOp &rhs)                                          \
+    : Base(*this)                                                        \
+    , lhs_operand(rhs.lhs_operand)                                       \
+    , rhs_operand(rhs.rhs_operand)                                       \
+  {}                                                                     \
+                                                                         \
+  /**                                                                    \
+   * Needs to be exposed for the base class to use                       \
+   */                                                                    \
+  const LhsOp &get_lhs_operand() const                                   \
+  {                                                                      \
+    return lhs_operand;                                                  \
+  }                                                                      \
+                                                                         \
+  /**                                                                    \
+   * Needs to be exposed for the base class to use                       \
+   */                                                                    \
+  const RhsOp &get_rhs_operand() const                                   \
+  {                                                                      \
+    return rhs_operand;                                                  \
+  }                                                                      \
+                                                                         \
+private:                                                                 \
+  const LhsOp lhs_operand;                                               \
+  const RhsOp rhs_operand;
+
+
 #define DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp, RhsOp, BinaryOpCode)          \
 private:                                                                   \
   using Base   = BinaryOpBase<BinaryOp<LhsOp, RhsOp, BinaryOpCode>>;       \
   using Traits = BinaryOpTypeTraits<BinaryOp<LhsOp, RhsOp, BinaryOpCode>>; \
                                                                            \
-public:                                                                    \
-  using LhsOpType = typename Traits::LhsOpType;                            \
-  using RhsOpType = typename Traits::RhsOpType;                            \
-                                                                           \
-  template <typename ScalarType>                                           \
-  using value_type = typename Traits::template value_type<ScalarType>;     \
-                                                                           \
-  template <typename ScalarType>                                           \
-  using return_type = typename Traits::template return_type<ScalarType>;   \
-                                                                           \
-  template <typename ScalarType, std::size_t width>                        \
-  using vectorized_value_type =                                            \
-    typename Traits::template vectorized_value_type<ScalarType, width>;    \
-                                                                           \
-  template <typename ScalarType, std::size_t width>                        \
-  using vectorized_return_type =                                           \
-    typename Traits::template vectorized_return_type<ScalarType, width>;   \
-                                                                           \
-  using Base::dimension;                                                   \
-  using Base::op_code;                                                     \
-  using Base::rank;                                                        \
-  using Base::space_dimension;                                             \
-  using Base::get_update_flags;                                            \
-  using Base::operator();                                                  \
-                                                                           \
-  explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)    \
-    : Base(*this)                                                          \
-    , lhs_operand(lhs_operand)                                             \
-    , rhs_operand(rhs_operand)                                             \
-  {}                                                                       \
-                                                                           \
-  /**                                                                      \
-   * Required to support operands that access objects with a limited       \
-   * lifetime, e.g. ScalarFunctionFunctor, TensorFunctionFunctor           \
-   */                                                                      \
-  BinaryOp(const BinaryOp &rhs)                                            \
-    : Base(*this)                                                          \
-    , lhs_operand(rhs.lhs_operand)                                         \
-    , rhs_operand(rhs.rhs_operand)                                         \
-  {}                                                                       \
-                                                                           \
-  /**                                                                      \
-   * Needs to be exposed for the base class to use                         \
-   */                                                                      \
-  const LhsOp &get_lhs_operand() const                                     \
-  {                                                                        \
-    return lhs_operand;                                                    \
-  }                                                                        \
-                                                                           \
-  /**                                                                      \
-   * Needs to be exposed for the base class to use                         \
-   */                                                                      \
-  const RhsOp &get_rhs_operand() const                                     \
-  {                                                                        \
-    return rhs_operand;                                                    \
-  }                                                                        \
-                                                                           \
-private:                                                                   \
-  const LhsOp lhs_operand;                                                 \
-  const RhsOp rhs_operand;
+  DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED(LhsOp, RhsOp, BinaryOpCode)
 
 
 
@@ -2108,7 +2305,237 @@ private:                                                                   \
     };
 
 
+
+    /**
+     * Single index contraction operator for integrands of symbolic integrals
+     */
+    template <int lhs_index, int rhs_index, typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::contract,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type,
+                   internal::TwoIndexPack<lhs_index, rhs_index>>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::contract,
+                   void,
+                   internal::TwoIndexPack<lhs_index, rhs_index>>>
+    {
+    private:
+      using BinaryOpType =
+        BinaryOp<LhsOp,
+                 RhsOp,
+                 BinaryOpCodes::contract,
+                 void,
+                 internal::TwoIndexPack<lhs_index, rhs_index>>;
+      using Base   = BinaryOpBase<BinaryOpType>;
+      using Traits = BinaryOpTypeTraits<BinaryOpType>;
+
+      DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED(LhsOp,
+                                                        RhsOp,
+                                                        BinaryOpCodes::contract)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " . " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const std::string symb_contraction =
+          Utilities::LaTeX::get_symbol_multiply(1);
+
+        return lhs_operand.as_latex(decorator) + symb_contraction +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::contract_impl<lhs_index, rhs_index>(lhs_value,
+                                                             rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::contract_impl<lhs_index, rhs_index>(lhs_value,
+                                                             rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Double index contraction operator for integrands of symbolic integrals
+     * (Implementation for Tensors)
+     */
+    template <int lhs_index_1,
+              int rhs_index_1,
+              int lhs_index_2,
+              int rhs_index_2,
+              typename LhsOp,
+              typename RhsOp>
+    class BinaryOp<
+      LhsOp,
+      RhsOp,
+      BinaryOpCodes::double_contract,
+      typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                              !is_integral_op<RhsOp>::value>::type,
+      internal::
+        FourIndexPack<lhs_index_1, rhs_index_1, lhs_index_2, rhs_index_2>>
+      : public BinaryOpBase<BinaryOp<
+          LhsOp,
+          RhsOp,
+          BinaryOpCodes::double_contract,
+          void,
+          internal::
+            FourIndexPack<lhs_index_1, rhs_index_1, lhs_index_2, rhs_index_2>>>
+    {
+    private:
+      using BinaryOpType = BinaryOp<
+        LhsOp,
+        RhsOp,
+        BinaryOpCodes::double_contract,
+        void,
+        internal::
+          FourIndexPack<lhs_index_1, rhs_index_1, lhs_index_2, rhs_index_2>>;
+      using Base   = BinaryOpBase<BinaryOpType>;
+      using Traits = BinaryOpTypeTraits<BinaryOpType>;
+
+      DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED(
+        LhsOp,
+        RhsOp,
+        BinaryOpCodes::double_contract)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " : " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const std::string symb_contraction =
+          Utilities::LaTeX::get_symbol_multiply(2);
+
+        return lhs_operand.as_latex(decorator) + symb_contraction +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::double_contract_impl<lhs_index_1,
+                                              rhs_index_1,
+                                              lhs_index_2,
+                                              rhs_index_2>(lhs_value,
+                                                           rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::double_contract_impl<lhs_index_1,
+                                              rhs_index_1,
+                                              lhs_index_2,
+                                              rhs_index_2>(lhs_value,
+                                                           rhs_value);
+      }
+    };
+
+
+
+    /**
+     * Double index contraction operator for integrands of symbolic integrals
+     * (Implementation for SymmetricTensors)
+     */
+    template <typename LhsOp, typename RhsOp>
+    class BinaryOp<LhsOp,
+                   RhsOp,
+                   BinaryOpCodes::double_contract,
+                   typename std::enable_if<!is_integral_op<LhsOp>::value &&
+                                           !is_integral_op<RhsOp>::value>::type>
+      : public BinaryOpBase<
+          BinaryOp<LhsOp, RhsOp, BinaryOpCodes::double_contract>>
+    {
+      DEAL_II_BINARY_OP_COMMON_IMPL(LhsOp,
+                                    RhsOp,
+                                    BinaryOpCodes::double_contract)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return lhs_operand.as_ascii(decorator) + " : " +
+               rhs_operand.as_ascii(decorator);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const std::string symb_contraction =
+          Utilities::LaTeX::get_symbol_multiply(2);
+
+        return lhs_operand.as_latex(decorator) + symb_contraction +
+               rhs_operand.as_latex(decorator);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename LhsOp::template value_type<ScalarType> &lhs_value,
+        const typename RhsOp::template value_type<ScalarType> &rhs_value) const
+      {
+        return internal::double_contract_impl(lhs_value, rhs_value);
+      }
+
+      // ----- VECTORIZATION -----
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename LhsOp::template vectorized_value_type<ScalarType, width>
+          &lhs_value,
+        const typename RhsOp::template vectorized_value_type<ScalarType, width>
+          &rhs_value) const
+      {
+        return internal::double_contract_impl(lhs_value, rhs_value);
+      }
+    };
+
+
 #undef DEAL_II_BINARY_OP_COMMON_IMPL
+#undef DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED
 
   } // namespace Operators
 } // namespace WeakForms
@@ -2164,8 +2591,76 @@ DEAL_II_BINARY_OP_OF_BINARY_OP(outer_product, outer_product)
 
 // Tensor contractions
 DEAL_II_BINARY_OP_OF_BINARY_OP(scalar_product, scalar_product)
+DEAL_II_BINARY_OP_OF_BINARY_OP(double_contract,
+                               double_contract) // SymmetricTensor
 
 #undef DEAL_II_BINARY_OP_OF_BINARY_OP
+
+
+// Tensor contractions with extra template arguments
+
+#define DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_BINARY_OP(operator_name,     \
+                                                          binary_op_code)    \
+  template <INDEX_PACK_TEMPLATE,                                             \
+            typename LhsOp1,                                                 \
+            typename LhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename RhsOp1,                                                 \
+            typename RhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode>              \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>,               \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,               \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
+    typename std::enable_if<                                                 \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>>::value && \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>>::value>:: \
+      type,                                                                  \
+    INDEX_PACK_EXPANDED>                                                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode> &lhs_op, \
+    const WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode> &rhs_op) \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode>;                   \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode>;                   \
+    using OpType    = BinaryOp<                                              \
+      LhsOpType,                                                          \
+      RhsOpType,                                                          \
+      BinaryOpCodes::binary_op_code,                                      \
+      typename std::enable_if<!is_integral_op<LhsOpType>::value &&        \
+                              !is_integral_op<RhsOpType>::value>::type,   \
+      INDEX_PACK_EXPANDED>;                                               \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
+  }
+
+// https://stackoverflow.com/questions/44268316/passing-a-template-type-into-a-macro
+#define COMMA ,
+#define INDEX_PACK_TEMPLATE int lhs_index COMMA int rhs_index
+#define INDEX_PACK_EXPANDED \
+  WeakForms::Operators::internal::TwoIndexPack<lhs_index COMMA rhs_index>
+DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_BINARY_OP(contract, contract)
+#undef INDEX_PACK_EXPANDED
+#undef INDEX_PACK_TEMPLATE
+
+#define INDEX_PACK_TEMPLATE                                   \
+  int lhs_index_1 COMMA int rhs_index_1 COMMA int lhs_index_2 \
+    COMMA int rhs_index_2
+#define INDEX_PACK_EXPANDED                      \
+  WeakForms::Operators::internal::FourIndexPack< \
+    lhs_index_1 COMMA rhs_index_1 COMMA lhs_index_2 COMMA rhs_index_2>
+DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_BINARY_OP(double_contract,
+                                                  double_contract)
+#undef INDEX_PACK_EXPANDED
+#undef INDEX_PACK_TEMPLATE
+#undef COMMA
+
+#undef DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_BINARY_OP
 
 
 
@@ -2268,6 +2763,46 @@ namespace WeakForms
     Operators::BinaryOp<LhsOp,
                         RhsOp,
                         Operators::BinaryOpCodes::scalar_product,
+                        UnderlyingType>> : std::true_type
+  {};
+
+  template <typename LhsOp,
+            typename RhsOp,
+            typename UnderlyingType,
+            int lhs_index,
+            int rhs_index>
+  struct is_binary_op<Operators::BinaryOp<
+    LhsOp,
+    RhsOp,
+    Operators::BinaryOpCodes::contract,
+    UnderlyingType,
+    Operators::internal::TwoIndexPack<lhs_index, rhs_index>>> : std::true_type
+  {};
+
+  // Implementation for Tensors
+  template <typename LhsOp,
+            typename RhsOp,
+            typename UnderlyingType,
+            int lhs_index_1,
+            int rhs_index_1,
+            int lhs_index_2,
+            int rhs_index_2>
+  struct is_binary_op<Operators::BinaryOp<
+    LhsOp,
+    RhsOp,
+    Operators::BinaryOpCodes::double_contract,
+    UnderlyingType,
+    Operators::internal::
+      FourIndexPack<lhs_index_1, rhs_index_1, lhs_index_2, rhs_index_2>>>
+    : std::true_type
+  {};
+
+  // Implementation for SymmetricTensors
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct is_binary_op<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::double_contract,
                         UnderlyingType>> : std::true_type
   {};
 

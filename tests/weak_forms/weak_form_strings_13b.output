@@ -3,9 +3,11 @@ DEAL::Dim: 2
 DEAL:string::Outer product: <v> ox <w>
 DEAL:string::Schur product: <v> .o <w>
 DEAL:string::Scalar product: <v> . <w>
+DEAL:string::Contract: <v> . <w>
 DEAL:LaTeX::Outer product: \mathrm{v} \otimes \mathrm{w}
 DEAL:LaTeX::Schur product: \mathrm{v} \odot \mathrm{w}
 DEAL:LaTeX::Scalar product: \mathrm{v} \cdot \mathrm{w}
+DEAL:LaTeX::Contract: \mathrm{v} \cdot \mathrm{w}
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
@@ -13,10 +15,12 @@ DEAL:string::Cross product: <v> x <w>
 DEAL:string::Outer product: <v> ox <w>
 DEAL:string::Schur product: <v> .o <w>
 DEAL:string::Scalar product: <v> . <w>
+DEAL:string::Contract: <v> . <w>
 DEAL:LaTeX::Cross product: \mathrm{v} \times \mathrm{w}
 DEAL:LaTeX::Outer product: \mathrm{v} \otimes \mathrm{w}
 DEAL:LaTeX::Schur product: \mathrm{v} \odot \mathrm{w}
 DEAL:LaTeX::Scalar product: \mathrm{v} \cdot \mathrm{w}
+DEAL:LaTeX::Contract: \mathrm{v} \cdot \mathrm{w}
 DEAL::OK
 DEAL::
 DEAL::OK
