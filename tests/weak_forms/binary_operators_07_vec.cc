@@ -218,6 +218,12 @@ run()
                                                             q_point_range))
               << std::endl;
 
+    std::cout << "Contract: "
+              << ((contract<0, 0>(f1, f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
     deallog << "OK" << std::endl;
   }
 
@@ -272,6 +278,18 @@ run()
                                                             q_point_range))
               << std::endl;
 
+    std::cout << "Contract: "
+              << ((contract<1, 0>(f1, f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
+    std::cout << "Doubel contract: "
+              << ((double_contract<1, 0, 0, 1>(f1, f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
     deallog << "OK" << std::endl;
   }
 
@@ -322,6 +340,12 @@ run()
 
     std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
+    std::cout << "Doubel contract: "
+              << ((double_contract(f1, f2))
                     .template operator()<NumberType, width>(fe_values,
                                                             q_point_range))
               << std::endl;

@@ -3,18 +3,26 @@ DEAL::Dim: 2
 DEAL:string::Outer product: <<T>> ox <<U>>
 DEAL:string::Schur product: <<T>> .o <<U>>
 DEAL:string::Scalar product: <<T>> . <<U>>
+DEAL:string::Contract: <<T>> . <<U>>
+DEAL:string::Double contract: <<T>> : <<U>>
 DEAL:LaTeX::Outer product: \mathbf{T} \otimes \mathbf{U}
 DEAL:LaTeX::Schur product: \mathbf{T} \odot \mathbf{U}
 DEAL:LaTeX::Scalar product: \mathbf{T} \colon \mathbf{U}
+DEAL:LaTeX::Contract: \mathbf{T} \cdot \mathbf{U}
+DEAL:LaTeX::Double contract: \mathbf{T} \colon \mathbf{U}
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
 DEAL:string::Outer product: <<T>> ox <<U>>
 DEAL:string::Schur product: <<T>> .o <<U>>
 DEAL:string::Scalar product: <<T>> . <<U>>
+DEAL:string::Contract: <<T>> . <<U>>
+DEAL:string::Double contract: <<T>> : <<U>>
 DEAL:LaTeX::Outer product: \mathbf{T} \otimes \mathbf{U}
 DEAL:LaTeX::Schur product: \mathbf{T} \odot \mathbf{U}
 DEAL:LaTeX::Scalar product: \mathbf{T} \colon \mathbf{U}
+DEAL:LaTeX::Contract: \mathbf{T} \cdot \mathbf{U}
+DEAL:LaTeX::Double contract: \mathbf{T} \colon \mathbf{U}
 DEAL::OK
 DEAL::
 DEAL::OK

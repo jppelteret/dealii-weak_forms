@@ -120,6 +120,9 @@ run()
 
     deallog << "Scalar product: " << scalar_product(f1, f2).as_ascii(decorator)
             << std::endl;
+
+    deallog << "Contract: " << contract<0, 0>(f1, f2).as_ascii(decorator)
+            << std::endl;
   }
 
   // Test LaTeX
@@ -135,6 +138,9 @@ run()
             << std::endl;
 
     deallog << "Scalar product: " << scalar_product(f1, f2).as_latex(decorator)
+            << std::endl;
+
+    deallog << "Contract: " << contract<0, 0>(f1, f2).as_latex(decorator)
             << std::endl;
   }
 

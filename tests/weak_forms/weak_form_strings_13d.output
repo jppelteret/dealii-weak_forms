@@ -2,15 +2,19 @@
 DEAL::Dim: 2
 DEAL:string::Outer product: <<S>> ox <<U>>
 DEAL:string::Scalar product: <<S>> . <<U>>
+DEAL:string::Double contract: <<S>> : <<U>>
 DEAL:LaTeX::Outer product: \mathbf{S} \otimes \mathbf{U}
 DEAL:LaTeX::Scalar product: \mathbf{S} \colon \mathbf{U}
+DEAL:LaTeX::Double contract: \mathbf{S} \colon \mathbf{U}
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
 DEAL:string::Outer product: <<S>> ox <<U>>
 DEAL:string::Scalar product: <<S>> . <<U>>
+DEAL:string::Double contract: <<S>> : <<U>>
 DEAL:LaTeX::Outer product: \mathbf{S} \otimes \mathbf{U}
 DEAL:LaTeX::Scalar product: \mathbf{S} \colon \mathbf{U}
+DEAL:LaTeX::Double contract: \mathbf{S} \colon \mathbf{U}
 DEAL::OK
 DEAL::
 DEAL::OK
