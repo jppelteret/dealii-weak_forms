@@ -29,6 +29,8 @@ namespace WeakForms
     constexpr char LaTeX::r_square_brace[];
     constexpr char LaTeX::l_curly_brace[];
     constexpr char LaTeX::r_curly_brace[];
+    constexpr char LaTeX::l_vert[];
+    constexpr char LaTeX::r_vert[];
     constexpr char LaTeX::decrease_space[];
   } // namespace Utilities
 } // namespace WeakForms
