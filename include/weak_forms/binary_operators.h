@@ -1911,7 +1911,7 @@ private:                                                                   \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_latex(decorator) + "\\times" +
+        return lhs_operand.as_latex(decorator) + " \\times " +
                rhs_operand.as_latex(decorator);
       }
 
@@ -1966,7 +1966,7 @@ private:                                                                   \
       as_latex(const SymbolicDecorations &decorator) const
       {
         // https://math.stackexchange.com/questions/20412/element-wise-or-pointwise-operations-notation/601545#601545
-        return lhs_operand.as_latex(decorator) + "\\odot" +
+        return lhs_operand.as_latex(decorator) + " \\odot " +
                rhs_operand.as_latex(decorator);
       }
 
@@ -2020,7 +2020,7 @@ private:                                                                   \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_latex(decorator) + "\\otimes" +
+        return lhs_operand.as_latex(decorator) + " \\otimes " +
                rhs_operand.as_latex(decorator);
       }
 
