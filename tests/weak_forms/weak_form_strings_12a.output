@@ -1,0 +1,40 @@
+
+DEAL::Dim: 2
+DEAL:string::Negation: -c
+DEAL:string::Trigonometric sine: sin(c)
+DEAL:string::Trigonometric cosine: cos(c)
+DEAL:string::Trigonometric tangent: tan(c)
+DEAL:string::Exponential: exp(c)
+DEAL:string::Logarithm: log(c)
+DEAL:string::Square root: sqrt(c)
+DEAL:string::Absolute value: abs(-c)
+DEAL:LaTeX::Negation: -{c}
+DEAL:LaTeX::Trigonometric sine: \text{sin}\left(c\right)
+DEAL:LaTeX::Trigonometric cosine: \text{cos}\left(c\right)
+DEAL:LaTeX::Trigonometric tangent: \text{tan}\left(c\right)
+DEAL:LaTeX::Exponential: \text{exp}\left(c\right)
+DEAL:LaTeX::Logarithm: \text{log}\left(c\right)
+DEAL:LaTeX::Square root: \sqrt{{c}}
+DEAL:LaTeX::Absolute value: \left\vert-{c}\right\vert
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::Negation: -c
+DEAL:string::Trigonometric sine: sin(c)
+DEAL:string::Trigonometric cosine: cos(c)
+DEAL:string::Trigonometric tangent: tan(c)
+DEAL:string::Exponential: exp(c)
+DEAL:string::Logarithm: log(c)
+DEAL:string::Square root: sqrt(c)
+DEAL:string::Absolute value: abs(-c)
+DEAL:LaTeX::Negation: -{c}
+DEAL:LaTeX::Trigonometric sine: \text{sin}\left(c\right)
+DEAL:LaTeX::Trigonometric cosine: \text{cos}\left(c\right)
+DEAL:LaTeX::Trigonometric tangent: \text{tan}\left(c\right)
+DEAL:LaTeX::Exponential: \text{exp}\left(c\right)
+DEAL:LaTeX::Logarithm: \text{log}\left(c\right)
+DEAL:LaTeX::Square root: \sqrt{{c}}
+DEAL:LaTeX::Absolute value: \left\vert-{c}\right\vert
+DEAL::OK
+DEAL::
+DEAL::OK

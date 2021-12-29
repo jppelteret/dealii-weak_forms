@@ -1,0 +1,20 @@
+
+DEAL::Dim: 2
+DEAL:string::Power: [c]^[d]
+DEAL:string::Maximum: max(c,d)
+DEAL:string::Minimum: min(c,d)
+DEAL:LaTeX::Power: {{c}}^{{d}}
+DEAL:LaTeX::Maximum: \max\left({c},{d}\right)
+DEAL:LaTeX::Minimum: \min\left({c},{d}\right)
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::Power: [c]^[d]
+DEAL:string::Maximum: max(c,d)
+DEAL:string::Minimum: min(c,d)
+DEAL:LaTeX::Power: {{c}}^{{d}}
+DEAL:LaTeX::Maximum: \max\left({c},{d}\right)
+DEAL:LaTeX::Minimum: \min\left({c},{d}\right)
+DEAL::OK
+DEAL::
+DEAL::OK
