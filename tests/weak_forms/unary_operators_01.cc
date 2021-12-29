@@ -94,36 +94,36 @@ run()
                                    [](const FEValuesBase<dim, spacedim> &,
                                       const unsigned int) { return 2.0; });
 
-    std::cout << "Scalar negation: "
+    std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar trignometric sine: "
+    std::cout << "Trigonometric sine: "
               << ((sin(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar trignometric cosine: "
+    std::cout << "Trigonometric cosine: "
               << ((cos(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar trignometric tangent: "
+    std::cout << "Trigonometric tangent: "
               << ((tan(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar exponential: "
+    std::cout << "SExponential: "
               << ((exp(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar logarithm: "
+    std::cout << "Logarithm: "
               << ((log(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar square root: "
+    std::cout << "Square root: "
               << ((sqrt(f1)).template operator()<NumberType>(
                    fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Scalar absolute value: "
+    std::cout << "Absolute value: "
               << ((abs(-f1)).template operator()<NumberType>(
                    fe_values))[q_point]
               << std::endl;
@@ -149,7 +149,7 @@ run()
         return t;
       });
 
-    std::cout << "Vector negation: "
+    std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
@@ -176,23 +176,27 @@ run()
         return t;
       });
 
-    std::cout << "Tensor negation: "
+    std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
+
     std::cout
-      << "Tensor determinant: "
+      << "Determinant: "
       << ((determinant(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
+
     std::cout
-      << "Tensor inverse: "
+      << "Inverse: "
       << ((invert(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
+
     std::cout
-      << "Tensor transpose: "
+      << "Transpose: "
       << ((transpose(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
+
     std::cout
-      << "Tensor symmetrized: "
+      << "Symmetrization: "
       << ((symmetrize(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
 
@@ -231,19 +235,22 @@ run()
     const auto hessian          = field_solution_ss.hessian();
     const auto third_derivative = field_solution_ss.third_derivative();
 
-    std::cout << "SymmetricTensor negation: "
+    std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
+
     std::cout
-      << "SymmetricTensor determinant: "
+      << "Determinant: "
       << ((determinant(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
+
     std::cout
-      << "SymmetricTensor inverse: "
+      << "Inverse: "
       << ((invert(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
+
     std::cout
-      << "SymmetricTensor transpose: "
+      << "Transpose: "
       << ((transpose(f1)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
 
@@ -267,25 +274,29 @@ run()
     const auto hessian          = field_solution_ss.hessian();
     const auto third_derivative = field_solution_ss.third_derivative();
 
-    std::cout << "value negation: "
+    std::cout << "Value negation: "
               << ((-value).template operator()<NumberType>(
                    fe_values, scratch_data, solution_names))[q_point]
               << std::endl;
-    std::cout << "gradient negation: "
+
+    std::cout << "Gradient negation: "
               << ((-gradient).template operator()<NumberType>(
                    fe_values, scratch_data, solution_names))[q_point]
               << std::endl;
+
     std::cout << "Laplacian negation: "
               << ((-laplacian)
                     .template operator()<NumberType>(fe_values,
                                                      scratch_data,
                                                      solution_names))[q_point]
               << std::endl;
+
     std::cout << "Hessian negation: "
               << ((-hessian).template operator()<NumberType>(
                    fe_values, scratch_data, solution_names))[q_point]
               << std::endl;
-    std::cout << "third derivative negation: "
+
+    std::cout << "Third derivative negation: "
               << ((-third_derivative)
                     .template operator()<NumberType>(fe_values,
                                                      scratch_data,
@@ -299,12 +310,14 @@ run()
                                                      scratch_data,
                                                      solution_names))[q_point]
               << std::endl;
+
     std::cout << "Hessian inverse: "
               << ((invert(hessian))
                     .template operator()<NumberType>(fe_values,
                                                      scratch_data,
                                                      solution_names))[q_point]
               << std::endl;
+
     std::cout << "Hessian transpose: "
               << ((transpose(hessian))
                     .template operator()<NumberType>(fe_values,

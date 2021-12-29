@@ -70,7 +70,7 @@ struct CrossProductCheck<3>
       const FEValuesType &fe_values,
       const QPointType &  q_point)
   {
-    std::cout << "Vector cross product: "
+    std::cout << "Cross product: "
               << ((cross_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -137,17 +137,17 @@ run()
                                       const unsigned int) { return 3.0; });
 
     std::cout
-      << "Scalar power: "
+      << "Power: "
       << ((pow(f1, f2)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
 
     std::cout
-      << "Scalar maximum: "
+      << "Maximum: "
       << ((max(f1, f2)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
 
     std::cout
-      << "Scalar minimum: "
+      << "Minimum: "
       << ((min(f1, f2)).template operator()<NumberType>(fe_values))[q_point]
       << std::endl;
 
@@ -190,17 +190,17 @@ run()
                                                           fe_values,
                                                           q_point);
 
-    std::cout << "Vector outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Vector Schur product: "
+    std::cout << "Schur product: "
               << ((schur_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Vector scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -241,17 +241,17 @@ run()
         return t;
       });
 
-    std::cout << "Tensor outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Tensor Schur product: "
+    std::cout << "Schur product: "
               << ((schur_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    std::cout << "Tensor scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -292,17 +292,17 @@ run()
         return t;
       });
 
-    std::cout << "Symmetric tensor outer product: "
+    std::cout << "Outer product: "
               << ((outer_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
-    // std::cout << "Symmetric tensor Schur product: "
+    // std::cout << "Schur product: "
     //           << ((schur_product(f1,f2)).template
     //           operator()<NumberType>(fe_values))[q_point]
     //           << std::endl;
 
-    std::cout << "Symmetric tensor scalar product: "
+    std::cout << "Scalar product: "
               << ((scalar_product(f1, f2))
                     .template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -327,7 +327,7 @@ run()
     const auto hessian          = field_solution_ss.hessian();
     const auto third_derivative = field_solution_ss.third_derivative();
 
-    // std::cout << "value negation: "
+    // std::cout << "Value negation: "
     //           << ((-value).template operator()<NumberType>(
     //                fe_values, scratch_data, solution_names))[q_point]
     //           << std::endl;
