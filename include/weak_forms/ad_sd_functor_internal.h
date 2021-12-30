@@ -26,6 +26,7 @@
 
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/types.h>
 #include <weak_forms/utilities.h>
@@ -320,11 +321,6 @@ namespace WeakForms
       // ===================
       // SD helper functions
       // ===================
-      inline std::string
-      get_deal_II_prefix()
-      {
-        return "__DEAL_II__";
-      }
 
       inline std::string
       replace_protected_characters(const std::string &name)
@@ -403,8 +399,8 @@ namespace WeakForms
         using ReturnType =
           typename SymbolicOpField::template value_type<ExpressionType>;
 
-        const std::string name =
-          get_deal_II_prefix() + "Field_" + field.as_ascii(decorator);
+        const std::string name = Utilities::get_deal_II_prefix() + "Field_" +
+                                 field.as_ascii(decorator);
         // return make_symbolic<ReturnType>(name);
         return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
@@ -557,10 +553,11 @@ namespace WeakForms
         ad_register_independent_variables(
           ADHelperType &                          ad_helper,
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<std::string> &        solution_names,
-          const unsigned int                      q_point,
-          const field_args_t &                    field_args,
-          const field_extractors_t &              field_extractors)
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                       solution_extraction_data,
+          const unsigned int        q_point,
+          const field_args_t &      field_args,
+          const field_extractors_t &field_extractors)
         {
           unpack_ad_register_independent_variables<
             0,
@@ -569,7 +566,7 @@ namespace WeakForms
             spacedim,
             SymbolicOpsSubSpaceFieldSolution...>(ad_helper,
                                                  scratch_data,
-                                                 solution_names,
+                                                 solution_extraction_data,
                                                  q_point,
                                                  field_args,
                                                  field_extractors);
@@ -580,19 +577,21 @@ namespace WeakForms
                   int dim,
                   int spacedim>
         static auto
-        ad_call_function(const ADHelperType &                    ad_helper,
-                         const ADFunctionType &                  ad_function,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const unsigned int                      q_point,
-                         const field_extractors_t &field_extractors)
+        ad_call_function(
+          const ADHelperType &                    ad_helper,
+          const ADFunctionType &                  ad_function,
+          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                       solution_extraction_data,
+          const unsigned int        q_point,
+          const field_extractors_t &field_extractors)
         {
           // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
           return unpack_ad_call_function(
             ad_helper,
             ad_function,
             scratch_data,
-            solution_names,
+            solution_extraction_data,
             q_point,
             field_extractors,
             std::make_index_sequence<
@@ -802,10 +801,11 @@ namespace WeakForms
         static Differentiation::SD::types::substitution_map
         sd_get_substitution_map(
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<std::string> &        solution_names,
-          const unsigned int                      q_point,
-          const field_values_t<SDNumberType> &    symbolic_field_values,
-          const field_args_t &                    field_args)
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                                 solution_extraction_data,
+          const unsigned int                  q_point,
+          const field_values_t<SDNumberType> &symbolic_field_values,
+          const field_args_t &                field_args)
         {
           static_assert(std::tuple_size<field_values_t<SDNumberType>>::value ==
                           std::tuple_size<field_args_t>::value,
@@ -816,7 +816,7 @@ namespace WeakForms
           unpack_sd_add_to_substitution_map<SDNumberType, ScalarType>(
             substitution_map,
             scratch_data,
-            solution_names,
+            solution_extraction_data,
             q_point,
             symbolic_field_values,
             field_args);
@@ -961,10 +961,11 @@ namespace WeakForms
           unpack_ad_register_independent_variables(
             ADHelperType &                          ad_helper,
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names,
-            const unsigned int                      q_point,
-            const std::tuple<SymbolicOpType...> &   symbolic_op_field_solutions,
-            const std::tuple<FieldExtractors...> &  field_extractors)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                   solution_extraction_data,
+            const unsigned int                    q_point,
+            const std::tuple<SymbolicOpType...> & symbolic_op_field_solutions,
+            const std::tuple<FieldExtractors...> &field_extractors)
         {
           using scalar_type = typename ADHelperType::scalar_type;
 
@@ -972,7 +973,8 @@ namespace WeakForms
             std::get<I>(symbolic_op_field_solutions);
           const auto &                          field_solutions =
             symbolic_op_field_solution.template operator()<scalar_type>(
-              scratch_data, solution_names); // Cached solution at all QPs
+              scratch_data,
+              solution_extraction_data); // Cached solution at all QPs
           Assert(q_point < field_solutions.size(),
                  ExcIndexRange(q_point, 0, field_solutions.size()));
           const auto &field_solution  = field_solutions[q_point];
@@ -988,7 +990,7 @@ namespace WeakForms
                                                    SymbolicOpType...>(
             ad_helper,
             scratch_data,
-            solution_names,
+            solution_extraction_data,
             q_point,
             symbolic_op_field_solutions,
             field_extractors);
@@ -1006,15 +1008,16 @@ namespace WeakForms
           unpack_ad_register_independent_variables(
             ADHelperType &                          ad_helper,
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names,
-            const unsigned int                      q_point,
-            const std::tuple<SymbolicOpType...> &   symbolic_op_field_solution,
-            const std::tuple<FieldExtractors...> &  field_extractors)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                   solution_extraction_data,
+            const unsigned int                    q_point,
+            const std::tuple<SymbolicOpType...> & symbolic_op_field_solution,
+            const std::tuple<FieldExtractors...> &field_extractors)
         {
           // Do nothing
           (void)ad_helper;
           (void)scratch_data;
-          (void)solution_names;
+          (void)solution_extraction_data;
           (void)q_point;
           (void)symbolic_op_field_solution;
           (void)field_extractors;
@@ -1031,14 +1034,15 @@ namespace WeakForms
           const ADHelperType &                    ad_helper,
           const ADFunctionType &                  ad_function,
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<std::string> &        solution_names,
-          const unsigned int &                    q_point,
-          const std::tuple<FieldExtractors...> &  field_extractors,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                                   solution_extraction_data,
+          const unsigned int &                  q_point,
+          const std::tuple<FieldExtractors...> &field_extractors,
           const std::index_sequence<I...>)
         {
           // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
           return ad_function(scratch_data,
-                             solution_names,
+                             solution_extraction_data,
                              q_point,
                              ad_helper.get_sensitive_variables(
                                std::get<I>(field_extractors))...);
@@ -1425,9 +1429,10 @@ namespace WeakForms
           unpack_sd_add_to_substitution_map(
             Differentiation::SD::types::substitution_map &substitution_map,
             MeshWorker::ScratchData<dim, spacedim> &      scratch_data,
-            const std::vector<std::string> &              solution_names,
-            const unsigned int                            q_point,
-            const field_values_t<SDNumberType> &          symbolic_field_values,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                  solution_extraction_data,
+            const unsigned int                   q_point,
+            const field_values_t<SDNumberType> & symbolic_field_values,
             const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
         {
           static_assert(std::tuple_size<field_values_t<SDNumberType>>::value ==
@@ -1439,7 +1444,8 @@ namespace WeakForms
             std::get<I>(symbolic_op_field_solutions);
           const auto &                          field_solutions =
             symbolic_op_field_solution.template operator()<ScalarType>(
-              scratch_data, solution_names); // Cached solution at all QPs
+              scratch_data,
+              solution_extraction_data); // Cached solution at all QPs
           Assert(q_point < field_solutions.size(),
                  ExcIndexRange(q_point, 0, field_solutions.size()));
           const auto &field_solution = field_solutions[q_point];
@@ -1455,7 +1461,7 @@ namespace WeakForms
           unpack_sd_add_to_substitution_map<SDNumberType, ScalarType, I + 1>(
             substitution_map,
             scratch_data,
-            solution_names,
+            solution_extraction_data,
             q_point,
             symbolic_field_values,
             symbolic_op_field_solutions);
@@ -1472,15 +1478,16 @@ namespace WeakForms
           unpack_sd_add_to_substitution_map(
             Differentiation::SD::types::substitution_map &substitution_map,
             MeshWorker::ScratchData<dim, spacedim> &      scratch_data,
-            const std::vector<std::string> &              solution_names,
-            const unsigned int                            q_point,
-            const field_values_t<SDNumberType> &          symbolic_field_values,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                  solution_extraction_data,
+            const unsigned int                   q_point,
+            const field_values_t<SDNumberType> & symbolic_field_values,
             const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
         {
           // Do nothing
           (void)substitution_map;
           (void)scratch_data;
-          (void)solution_names;
+          (void)solution_extraction_data;
           (void)q_point;
           (void)symbolic_field_values;
           (void)symbolic_op_field_solutions;

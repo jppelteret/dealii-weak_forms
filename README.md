@@ -32,7 +32,8 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 - Test function
 - Trial solution
 - Field solution
-  - Indexed storage for time history or other solution fields 
+  - Indexed storage for time history or other solution fields
+  - Indexed storage also supports multiple DoFHandlers (e.g. when a field solution for another discretisation is used in the RHS of the one being assembled)
 - Sub-space extractors and views
 
 

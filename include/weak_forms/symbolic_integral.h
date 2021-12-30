@@ -66,6 +66,8 @@ namespace WeakForms
     std::string
     get_subdomain_as_ascii(const SymbolicDecorations &decorator) const
     {
+      (void)decorator;
+
       // Expand the set of subdomains as a comma separated list
       return Utilities::get_comma_separated_string_from(get_subdomains());
     }
@@ -88,6 +90,8 @@ namespace WeakForms
     std::string
     get_subdomain_as_latex(const SymbolicDecorations &decorator) const
     {
+      (void)decorator;
+
       // Expand the set of subdomains as a comma separated list
       return Utilities::get_comma_separated_string_from(get_subdomains());
     }

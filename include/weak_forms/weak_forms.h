@@ -61,6 +61,7 @@
 
 // Common tools for assembly
 #include <weak_forms/integrator.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_integral.h>
 // Operate on symbolic integrals

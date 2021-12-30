@@ -44,6 +44,7 @@
 #include <weak_forms/binary_operators.h>
 #include <weak_forms/linear_forms.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/symbolic_integral.h>
 #include <weak_forms/symbolic_operators.h>
@@ -1051,28 +1052,133 @@ namespace WeakForms
     // Utility functions to help with template arguments of the
     // assemble_system() method being void / std::null_ptr_t.
 
-    template <typename ScratchDataType, typename VectorType>
+    template <typename FEValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
     typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
                                          std::nullptr_t>::value>::type
-    extract_solution_local_dof_values(
-      ScratchDataType &                  scratch_data,
-      const SolutionStorage<VectorType> &solution_storage)
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
     {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
       (void)scratch_data;
+      (void)fe_values;
+      (void)dof_handler;
       (void)solution_storage;
 
       // Void pointer; do nothing.
       AssertThrow(false, ExcUnexpectedFunctionCall());
     }
 
-    template <typename ScratchDataType, typename VectorType>
+    // Valid for both FEValues and FEInterfaceValues
+    template <typename FEValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
+                                          std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      solution_storage.initialize(scratch_data, fe_values, dof_handler);
+    }
+
+    template <typename FEValuesType,
+              typename FEFaceValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
+                                         std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const FEFaceValuesType &                    fe_face_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
+      (void)scratch_data;
+      (void)fe_values;
+      (void)fe_face_values;
+      (void)dof_handler;
+      (void)solution_storage;
+
+      // Void pointer; do nothing.
+      AssertThrow(false, ExcUnexpectedFunctionCall());
+    }
+
+    template <typename FEValuesType,
+              typename FEFaceValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
+                                          std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const FEFaceValuesType &                    fe_face_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      solution_storage.initialize(scratch_data,
+                                  fe_values,
+                                  fe_face_values,
+                                  dof_handler);
+    }
+
+    template <typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
+                                         std::nullptr_t>::value>::type
+    extract_solution_local_dof_values(
+      MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+      const DoFHandlerType &                      dof_handler,
+      const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
+      (void)scratch_data;
+      (void)dof_handler;
+      (void)solution_storage;
+
+      // Void pointer; do nothing.
+      AssertThrow(false, ExcUnexpectedFunctionCall());
+    }
+
+    template <typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
     typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
                                           std::nullptr_t>::value>::type
     extract_solution_local_dof_values(
-      ScratchDataType &                  scratch_data,
-      const SolutionStorage<VectorType> &solution_storage)
+      MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+      const DoFHandlerType &                      dof_handler,
+      const SolutionStorage<VectorType, SSDType> &solution_storage)
     {
-      solution_storage.extract_local_dof_values(scratch_data);
+      solution_storage.extract_local_dof_values(scratch_data, dof_handler);
     }
 
 
@@ -1155,22 +1261,24 @@ namespace WeakForms
               typename TestOrTrialSpaceOp,
               typename FEValuesDofsType,
               typename FEValuesOpType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       !WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
       std::vector<std::vector<
         typename TestOrTrialSpaceOp::template value_type<ScalarType>>>>::type
-    evaluate_fe_space(const TestOrTrialSpaceOp &      test_or_trial_space_op,
-                      const FEValuesDofsType &        fe_values_dofs,
-                      const FEValuesOpType &          fe_values_op,
-                      ScratchDataType &               scratch_data,
-                      const std::vector<std::string> &solution_names)
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data)
     {
       static_assert(
         is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
         "Expected a test function or trial solution.");
       (void)scratch_data;
-      (void)solution_names;
+      (void)solution_extraction_data;
 
       return test_or_trial_space_op.template operator()<ScalarType>(
         fe_values_dofs, fe_values_op);
@@ -1181,23 +1289,25 @@ namespace WeakForms
               typename TestOrTrialSpaceOp,
               typename FEValuesDofsType,
               typename FEValuesOpType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
       std::vector<std::vector<
         typename TestOrTrialSpaceOp::template value_type<ScalarType>>>>::type
-    evaluate_fe_space(const TestOrTrialSpaceOp &      test_or_trial_space_op,
-                      const FEValuesDofsType &        fe_values_dofs,
-                      const FEValuesOpType &          fe_values_op,
-                      ScratchDataType &               scratch_data,
-                      const std::vector<std::string> &solution_names)
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data)
     {
       static_assert(
         is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
         "Expected a test function or trial solution.");
 
       return test_or_trial_space_op.template operator()<ScalarType>(
-        fe_values_dofs, fe_values_op, scratch_data, solution_names);
+        fe_values_dofs, fe_values_op, scratch_data, solution_extraction_data);
     }
 
 
@@ -1206,23 +1316,25 @@ namespace WeakForms
               typename TestOrTrialSpaceOp,
               typename FEValuesDofsType,
               typename FEValuesOpType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       !WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
       AlignedVector<typename TestOrTrialSpaceOp::
                       template vectorized_value_type<ScalarType, width>>>::type
-    evaluate_fe_space(const TestOrTrialSpaceOp &      test_or_trial_space_op,
-                      const FEValuesDofsType &        fe_values_dofs,
-                      const FEValuesOpType &          fe_values_op,
-                      ScratchDataType &               scratch_data,
-                      const std::vector<std::string> &solution_names,
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data,
                       const types::vectorized_qp_range_t &q_point_range)
     {
       static_assert(
         is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
         "Expected a test function or trial solution.");
       (void)scratch_data;
-      (void)solution_names;
+      (void)solution_extraction_data;
 
       return test_or_trial_space_op.template operator()<ScalarType, width>(
         fe_values_dofs, fe_values_op, q_point_range);
@@ -1234,16 +1346,18 @@ namespace WeakForms
               typename TestOrTrialSpaceOp,
               typename FEValuesDofsType,
               typename FEValuesOpType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
       AlignedVector<typename TestOrTrialSpaceOp::
                       template vectorized_value_type<ScalarType, width>>>::type
-    evaluate_fe_space(const TestOrTrialSpaceOp &      test_or_trial_space_op,
-                      const FEValuesDofsType &        fe_values_dofs,
-                      const FEValuesOpType &          fe_values_op,
-                      ScratchDataType &               scratch_data,
-                      const std::vector<std::string> &solution_names,
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data,
                       const types::vectorized_qp_range_t &q_point_range)
     {
       static_assert(
@@ -1254,7 +1368,7 @@ namespace WeakForms
         fe_values_dofs,
         fe_values_op,
         scratch_data,
-        solution_names,
+        solution_extraction_data,
         q_point_range);
     }
 
@@ -1262,17 +1376,19 @@ namespace WeakForms
     template <typename ScalarType,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       !WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value,
       std::vector<typename FunctorType::template value_type<ScalarType>>>::type
-    evaluate_functor(const FunctorType &             functor,
-                     const FEValuesType &            fe_values,
-                     ScratchDataType &               scratch_data,
-                     const std::vector<std::string> &solution_names)
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
     {
       (void)scratch_data;
-      (void)solution_names;
+      (void)solution_extraction_data;
       return functor.template operator()<ScalarType>(fe_values);
     }
 
@@ -1280,38 +1396,44 @@ namespace WeakForms
     template <typename ScalarType,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
-        !WeakForms::is_binary_op<FunctorType>::value,
+        !(WeakForms::is_unary_op<FunctorType>::value ||
+          WeakForms::is_binary_op<FunctorType>::value),
       std::vector<typename FunctorType::template value_type<ScalarType>>>::type
-    evaluate_functor(const FunctorType &             functor,
-                     const FEValuesType &            fe_values,
-                     ScratchDataType &               scratch_data,
-                     const std::vector<std::string> &solution_names)
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
     {
       (void)fe_values;
       return functor.template operator()<ScalarType>(scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
     }
 
 
     template <typename ScalarType,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
-        WeakForms::is_binary_op<FunctorType>::value,
+        (WeakForms::is_unary_op<FunctorType>::value ||
+         WeakForms::is_binary_op<FunctorType>::value),
       std::vector<typename FunctorType::template value_type<ScalarType>>>::type
-    evaluate_functor(const FunctorType &             functor,
-                     const FEValuesType &            fe_values,
-                     ScratchDataType &               scratch_data,
-                     const std::vector<std::string> &solution_names)
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
     {
       return functor.template operator()<ScalarType>(fe_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
     }
 
 
@@ -1319,19 +1441,21 @@ namespace WeakForms
               std::size_t width,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       !WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value,
       typename FunctorType::template vectorized_value_type<ScalarType,
                                                            width>>::type
-    evaluate_functor(const FunctorType &                 functor,
-                     const FEValuesType &                fe_values,
-                     ScratchDataType &                   scratch_data,
-                     const std::vector<std::string> &    solution_names,
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
                      const types::vectorized_qp_range_t &q_point_range)
     {
       (void)scratch_data;
-      (void)solution_names;
+      (void)solution_extraction_data;
       return functor.template operator()<ScalarType, width>(fe_values,
                                                             q_point_range);
     }
@@ -1341,22 +1465,24 @@ namespace WeakForms
               std::size_t width,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
-        !WeakForms::is_binary_op<FunctorType>::value,
+        !(WeakForms::is_unary_op<FunctorType>::value ||
+          WeakForms::is_binary_op<FunctorType>::value),
       typename FunctorType::template vectorized_value_type<ScalarType,
                                                            width>>::type
-    evaluate_functor(const FunctorType &                 functor,
-                     const FEValuesType &                fe_values,
-                     ScratchDataType &                   scratch_data,
-                     const std::vector<std::string> &    solution_names,
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
                      const types::vectorized_qp_range_t &q_point_range)
     {
       (void)fe_values;
-      return functor.template operator()<ScalarType, width>(scratch_data,
-                                                            solution_names,
-                                                            q_point_range);
+      return functor.template operator()<ScalarType, width>(
+        scratch_data, solution_extraction_data, q_point_range);
     }
 
 
@@ -1364,22 +1490,23 @@ namespace WeakForms
               std::size_t width,
               typename FunctorType,
               typename FEValuesType,
-              typename ScratchDataType>
+              int dim,
+              int spacedim>
     typename std::enable_if<
       WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
-        WeakForms::is_binary_op<FunctorType>::value,
+        (WeakForms::is_unary_op<FunctorType>::value ||
+         WeakForms::is_binary_op<FunctorType>::value),
       typename FunctorType::template vectorized_value_type<ScalarType,
                                                            width>>::type
-    evaluate_functor(const FunctorType &                 functor,
-                     const FEValuesType &                fe_values,
-                     ScratchDataType &                   scratch_data,
-                     const std::vector<std::string> &    solution_names,
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
                      const types::vectorized_qp_range_t &q_point_range)
     {
-      return functor.template operator()<ScalarType, width>(fe_values,
-                                                            scratch_data,
-                                                            solution_names,
-                                                            q_point_range);
+      return functor.template operator()<ScalarType, width>(
+        fe_values, scratch_data, solution_extraction_data, q_point_range);
     }
 
 
@@ -1532,55 +1659,64 @@ namespace WeakForms
     using StringOperation = std::function<
       std::pair<AsciiLatexOperation, enum internal::AccumulationSign>(void)>;
 
-    using CellADSDOperation =
-      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &solution_names)>;
+    using CellADSDOperation = std::function<
+      void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &solution_extraction_data)>;
 
-    using BoundaryADSDOperation =
-      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &solution_names)>;
+    using BoundaryADSDOperation = std::function<
+      void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &solution_extraction_data)>;
 
-    using InterfaceADSDOperation =
-      std::function<void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &solution_names)>;
+    using InterfaceADSDOperation = std::function<
+      void(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &solution_extraction_data)>;
 
-    using CellMatrixOperation =
-      std::function<void(FullMatrix<ScalarType> &                cell_matrix,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values)>;
-    using CellVectorOperation =
-      std::function<void(Vector<ScalarType> &                    cell_vector,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values)>;
+    using CellMatrixOperation = std::function<
+      void(FullMatrix<ScalarType> &                cell_matrix,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                solution_extraction_data,
+           const FEValuesBase<dim, spacedim> &fe_values)>;
+    using CellVectorOperation = std::function<
+      void(Vector<ScalarType> &                    cell_vector,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                solution_extraction_data,
+           const FEValuesBase<dim, spacedim> &fe_values)>;
 
-    using BoundaryMatrixOperation =
-      std::function<void(FullMatrix<ScalarType> &                cell_matrix,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values,
-                         const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                         const unsigned int                      face)>;
-    using BoundaryVectorOperation =
-      std::function<void(Vector<ScalarType> &                    cell_vector,
-                         MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                         const std::vector<std::string> &        solution_names,
-                         const FEValuesBase<dim, spacedim> &     fe_values,
-                         const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                         const unsigned int                      face)>;
+    using BoundaryMatrixOperation = std::function<
+      void(FullMatrix<ScalarType> &                cell_matrix,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                    solution_extraction_data,
+           const FEValuesBase<dim, spacedim> &    fe_values,
+           const FEFaceValuesBase<dim, spacedim> &fe_face_values,
+           const unsigned int                     face)>;
+    using BoundaryVectorOperation = std::function<
+      void(Vector<ScalarType> &                    cell_vector,
+           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                    solution_extraction_data,
+           const FEValuesBase<dim, spacedim> &    fe_values,
+           const FEFaceValuesBase<dim, spacedim> &fe_face_values,
+           const unsigned int                     face)>;
 
     using InterfaceMatrixOperation = std::function<
       void(FullMatrix<ScalarType> &                cell_matrix,
            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<std::string> &        solution_names,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                     solution_extraction_data,
            const FEInterfaceValues<dim, spacedim> &fe_interface_values,
            const unsigned int                      face,
            const unsigned int                      neighbour_face)>;
     using InterfaceVectorOperation = std::function<
       void(Vector<ScalarType> &                    cell_vector,
            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<std::string> &        solution_names,
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                                     solution_extraction_data,
            const FEInterfaceValues<dim, spacedim> &fe_interface_values,
            const unsigned int                      face,
            const unsigned int                      neighbour_face)>;
@@ -1745,9 +1881,12 @@ namespace WeakForms
       // layer corrected in the accumulate_into() operation.
       const auto f =
         [functor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                  const std::vector<std::string> &        solution_names) {
-          functor.template operator()<ScalarType>(scratch_data, solution_names);
-        };
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &solution_extraction_data)
+      {
+        functor.template operator()<ScalarType>(scratch_data,
+                                                solution_extraction_data);
+      };
       if (is_volume_integral_op<SymbolicOpType>::value)
         {
           cell_update_flags |= functor.get_update_flags();
@@ -1894,9 +2033,12 @@ namespace WeakForms
       // layer corrected in the accumulate_into() operation.
       const auto f =
         [functor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                  const std::vector<std::string> &        solution_names) {
-          functor.template operator()<ScalarType>(scratch_data, solution_names);
-        };
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &solution_extraction_data)
+      {
+        functor.template operator()<ScalarType>(scratch_data,
+                                                solution_extraction_data);
+      };
       if (is_volume_integral_op<SymbolicOpType>::value)
         {
           cell_update_flags |= functor.get_update_flags();
@@ -2354,8 +2496,9 @@ namespace WeakForms
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values)
+                       const std::vector<SolutionExtractionData<dim, spacedim>>
+                         &solution_extraction_data,
+                       const FEValuesBase<dim, spacedim> &fe_values)
       {
         // Early exit: Don't form the cell contribution if it will add below
         // the diagonal.
@@ -2424,27 +2567,30 @@ namespace WeakForms
                                                                  batch_end};
 
                 const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(test_space_op,
-                                                                 fe_values,
-                                                                 fe_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    test_space_op,
+                    fe_values,
+                    fe_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-                  internal::evaluate_fe_space<ScalarType, width>(trial_space_op,
-                                                                 fe_values,
-                                                                 fe_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    trial_space_op,
+                    fe_values,
+                    fe_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(functor,
-                                                                fe_values,
-                                                                scratch_data,
-                                                                solution_names,
-                                                                q_point_range);
+                  internal::evaluate_functor<ScalarType, width>(
+                    functor,
+                    fe_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 VectorizedArray<double, width> JxW =
                   volume_integral.template     operator()<ScalarType, width>(
@@ -2484,21 +2630,21 @@ namespace WeakForms
                                                       fe_values,
                                                       fe_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
               internal::evaluate_fe_space<ScalarType>(trial_space_op,
                                                       fe_values,
                                                       fe_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
             const std::vector<double> &JxW =
               volume_integral.template operator()<ScalarType>(fe_values);
 
@@ -2678,10 +2824,11 @@ namespace WeakForms
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values,
-                       const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                       const unsigned int                      face)
+                       const std::vector<SolutionExtractionData<dim, spacedim>>
+                         &solution_extraction_data,
+                       const FEValuesBase<dim, spacedim> &    fe_values,
+                       const FEFaceValuesBase<dim, spacedim> &fe_face_values,
+                       const unsigned int                     face)
       {
         // Early exit: Don't form the cell contribution if it will add below
         // the diagonal.
@@ -2750,27 +2897,30 @@ namespace WeakForms
                                                                  batch_end};
 
                 const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(test_space_op,
-                                                                 fe_values,
-                                                                 fe_face_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    test_space_op,
+                    fe_values,
+                    fe_face_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-                  internal::evaluate_fe_space<ScalarType, width>(trial_space_op,
-                                                                 fe_values,
-                                                                 fe_face_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    trial_space_op,
+                    fe_values,
+                    fe_face_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(functor,
-                                                                fe_face_values,
-                                                                scratch_data,
-                                                                solution_names,
-                                                                q_point_range);
+                  internal::evaluate_functor<ScalarType, width>(
+                    functor,
+                    fe_face_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 VectorizedArray<double, width> JxW =
                   boundary_integral.template   operator()<ScalarType, width>(
@@ -2810,21 +2960,21 @@ namespace WeakForms
                                                       fe_values,
                                                       fe_face_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
               internal::evaluate_fe_space<ScalarType>(trial_space_op,
                                                       fe_values,
                                                       fe_face_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_face_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
 
             const std::vector<double> &  JxW =
               boundary_integral.template operator()<ScalarType>(fe_face_values);
@@ -3008,7 +3158,8 @@ namespace WeakForms
          skip_contribution_due_to_global_symmetry](
           FullMatrix<ScalarType> &                cell_matrix,
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<std::string> &        solution_names,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                                     solution_extraction_data,
           const FEInterfaceValues<dim, spacedim> &fe_interface_values,
           const unsigned int                      face,
           const unsigned int                      neighbour_face)
@@ -3088,7 +3239,7 @@ namespace WeakForms
                     fe_interface_values,
                     fe_interface_values,
                     scratch_data,
-                    solution_names,
+                    solution_extraction_data,
                     q_point_range);
 
                 const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
@@ -3097,7 +3248,7 @@ namespace WeakForms
                     fe_interface_values,
                     fe_interface_values,
                     scratch_data,
-                    solution_names,
+                    solution_extraction_data,
                     q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
@@ -3105,7 +3256,7 @@ namespace WeakForms
                     functor,
                     fe_interface_values,
                     scratch_data,
-                    solution_names,
+                    solution_extraction_data,
                     q_point_range);
 
                 VectorizedArray<double, width> JxW =
@@ -3146,21 +3297,21 @@ namespace WeakForms
                                                       fe_interface_values,
                                                       fe_interface_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
               internal::evaluate_fe_space<ScalarType>(trial_space_op,
                                                       fe_interface_values,
                                                       fe_interface_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_interface_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
 
             const std::vector<double> &   JxW =
               interface_integral.template operator()<ScalarType>(
@@ -3268,8 +3419,9 @@ namespace WeakForms
       const auto f = [volume_integral, test_space_op, functor](
                        Vector<ScalarType> &                    cell_vector,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values)
+                       const std::vector<SolutionExtractionData<dim, spacedim>>
+                         &solution_extraction_data,
+                       const FEValuesBase<dim, spacedim> &fe_values)
       {
         // Skip this cell if it doesn't match the criteria set for the
         // integration domain.
@@ -3307,19 +3459,21 @@ namespace WeakForms
                                                                  batch_end};
 
                 const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(test_space_op,
-                                                                 fe_values,
-                                                                 fe_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    test_space_op,
+                    fe_values,
+                    fe_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(functor,
-                                                                fe_values,
-                                                                scratch_data,
-                                                                solution_names,
-                                                                q_point_range);
+                  internal::evaluate_functor<ScalarType, width>(
+                    functor,
+                    fe_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 VectorizedArray<double, width> JxW =
                   volume_integral.template     operator()<ScalarType, width>(
@@ -3354,14 +3508,14 @@ namespace WeakForms
                                                       fe_values,
                                                       fe_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
 
             const std::vector<double> &JxW =
               volume_integral.template operator()<ScalarType>(fe_values);
@@ -3434,10 +3588,11 @@ namespace WeakForms
       const auto f = [boundary_integral, test_space_op, functor](
                        Vector<ScalarType> &                    cell_vector,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                       const std::vector<std::string> &        solution_names,
-                       const FEValuesBase<dim, spacedim> &     fe_values,
-                       const FEFaceValuesBase<dim, spacedim> & fe_face_values,
-                       const unsigned int                      face)
+                       const std::vector<SolutionExtractionData<dim, spacedim>>
+                         &solution_extraction_data,
+                       const FEValuesBase<dim, spacedim> &    fe_values,
+                       const FEFaceValuesBase<dim, spacedim> &fe_face_values,
+                       const unsigned int                     face)
       {
         // Skip this cell face if it doesn't match the criteria set for the
         // integration domain.
@@ -3475,19 +3630,21 @@ namespace WeakForms
                                                                  batch_end};
 
                 const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(test_space_op,
-                                                                 fe_values,
-                                                                 fe_face_values,
-                                                                 scratch_data,
-                                                                 solution_names,
-                                                                 q_point_range);
+                  internal::evaluate_fe_space<ScalarType, width>(
+                    test_space_op,
+                    fe_values,
+                    fe_face_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(functor,
-                                                                fe_face_values,
-                                                                scratch_data,
-                                                                solution_names,
-                                                                q_point_range);
+                  internal::evaluate_functor<ScalarType, width>(
+                    functor,
+                    fe_face_values,
+                    scratch_data,
+                    solution_extraction_data,
+                    q_point_range);
 
                 VectorizedArray<double, width> JxW =
                   boundary_integral.template   operator()<ScalarType, width>(
@@ -3522,14 +3679,14 @@ namespace WeakForms
                                                       fe_values,
                                                       fe_face_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_face_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
 
             const std::vector<double> &  JxW =
               boundary_integral.template operator()<ScalarType>(fe_face_values);
@@ -3609,7 +3766,8 @@ namespace WeakForms
          test_space_op,
          functor](Vector<ScalarType> &                    cell_vector,
                   MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                  const std::vector<std::string> &        solution_names,
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &solution_extraction_data,
                   const FEInterfaceValues<dim, spacedim> &fe_interface_values,
                   const unsigned int                      face,
                   const unsigned int                      neighbour_face)
@@ -3658,7 +3816,7 @@ namespace WeakForms
                     fe_interface_values,
                     fe_interface_values,
                     scratch_data,
-                    solution_names,
+                    solution_extraction_data,
                     q_point_range);
 
                 const VectorizedValueTypeFunctor values_functor =
@@ -3666,7 +3824,7 @@ namespace WeakForms
                     functor,
                     fe_interface_values,
                     scratch_data,
-                    solution_names,
+                    solution_extraction_data,
                     q_point_range);
 
                 VectorizedArray<double, width> JxW =
@@ -3705,14 +3863,14 @@ namespace WeakForms
                                                       fe_interface_values,
                                                       fe_interface_values,
                                                       scratch_data,
-                                                      solution_names);
+                                                      solution_extraction_data);
 
             // Get all values at the quadrature points
             const std::vector<ValueTypeFunctor> values_functor =
               internal::evaluate_functor<ScalarType>(functor,
                                                      fe_interface_values,
                                                      scratch_data,
-                                                     solution_names);
+                                                     solution_extraction_data);
 
             const std::vector<double> &   JxW =
               interface_integral.template operator()<ScalarType>(

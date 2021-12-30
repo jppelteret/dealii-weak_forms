@@ -593,7 +593,8 @@ namespace WeakForms
         }
       else
         {
-          const std::string str_subdomains = infinitesimal_element.get_subdomain_as_ascii(decorator);
+          const std::string str_subdomains =
+            infinitesimal_element.get_subdomain_as_ascii(decorator);
 
           return prefix + functor.as_ascii(decorator) + suffix +
                  infinitesimal_element.get_infinitesimal_symbol_ascii(
@@ -624,7 +625,8 @@ namespace WeakForms
         }
       else
         {
-          const std::string str_subdomains = infinitesimal_element.get_subdomain_as_latex(decorator);
+          const std::string str_subdomains =
+            infinitesimal_element.get_subdomain_as_latex(decorator);
 
           return Utilities::LaTeX::decorate_integral(
             functor.as_latex(decorator),

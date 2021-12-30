@@ -25,7 +25,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/numbers.h>
-#include <weak_forms/solution_storage.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
@@ -69,14 +69,16 @@ namespace WeakForms
     template <typename ScalarType, int dim, int spacedim = dim>
     using function_type = std::function<std::vector<value_type<ScalarType>>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &solution_extraction_data)>;
 
     // Return value at one quadrature point
     template <typename ScalarType, int dim, int spacedim = dim>
     using qp_function_type = std::function<value_type<ScalarType>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names,
-      const unsigned int                      q_point)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                solution_extraction_data,
+      const unsigned int q_point)>;
 
     ScalarCacheFunctor(const std::string &symbol_ascii,
                        const std::string &symbol_latex)
@@ -135,14 +137,16 @@ namespace WeakForms
     template <typename ScalarType, int dim = spacedim>
     using function_type = std::function<std::vector<value_type<ScalarType>>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &solution_extraction_data)>;
 
     // Return value at one quadrature point
     template <typename ScalarType, int dim = spacedim>
     using qp_function_type = std::function<value_type<ScalarType>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names,
-      const unsigned int                      q_point)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                solution_extraction_data,
+      const unsigned int q_point)>;
 
     TensorCacheFunctor(const std::string &symbol_ascii,
                        const std::string &symbol_latex)
@@ -199,14 +203,16 @@ namespace WeakForms
     template <typename ScalarType, int dim = spacedim>
     using function_type = std::function<std::vector<value_type<ScalarType>>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &solution_extraction_data)>;
 
     // Return value at one quadrature point
     template <typename ScalarType, int dim = spacedim>
     using qp_function_type = std::function<value_type<ScalarType>(
       MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &        solution_names,
-      const unsigned int                      q_point)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                solution_extraction_data,
+      const unsigned int q_point)>;
 
     SymmetricTensorCacheFunctor(const std::string &symbol_ascii,
                                 const std::string &symbol_latex)
@@ -367,11 +373,12 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       return_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &solution_extraction_data) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names);
+            return function(scratch_data, solution_extraction_data);
           }
         else
           {
@@ -384,7 +391,7 @@ namespace WeakForms
 
             for (const auto q_point : fe_values.quadrature_point_indices())
               out.emplace_back(
-                qp_function(scratch_data, solution_names, q_point));
+                qp_function(scratch_data, solution_extraction_data, q_point));
 
             return out;
           }
@@ -393,26 +400,28 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       value_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const unsigned int                       q_point) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                solution_extraction_data,
+                 const unsigned int q_point) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names)[q_point];
+            return function(scratch_data, solution_extraction_data)[q_point];
           }
         else
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return qp_function(scratch_data, solution_names, q_point);
+            return qp_function(scratch_data, solution_extraction_data, q_point);
           }
       }
 
       template <typename ResultScalarType, std::size_t width, int dim2>
       vectorized_return_type<ResultScalarType, width>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const types::vectorized_qp_range_t &     q_point_range) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                                 solution_extraction_data,
+                 const types::vectorized_qp_range_t &q_point_range) const
       {
         vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
@@ -424,9 +433,8 @@ namespace WeakForms
           numbers::set_vectorized_values(
             out,
             i,
-            this->template operator()<ResultScalarType>(scratch_data,
-                                                        solution_names,
-                                                        q_point_range[i]));
+            this->template operator()<ResultScalarType>(
+              scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -544,11 +552,12 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       return_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &solution_extraction_data) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names);
+            return function(scratch_data, solution_extraction_data);
           }
         else
           {
@@ -561,7 +570,7 @@ namespace WeakForms
 
             for (const auto q_point : fe_values.quadrature_point_indices())
               out.emplace_back(
-                qp_function(scratch_data, solution_names, q_point));
+                qp_function(scratch_data, solution_extraction_data, q_point));
 
             return out;
           }
@@ -570,26 +579,28 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       value_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const unsigned int                       q_point) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                solution_extraction_data,
+                 const unsigned int q_point) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names)[q_point];
+            return function(scratch_data, solution_extraction_data)[q_point];
           }
         else
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return qp_function(scratch_data, solution_names, q_point);
+            return qp_function(scratch_data, solution_extraction_data, q_point);
           }
       }
 
       template <typename ResultScalarType, std::size_t width, int dim2>
       vectorized_return_type<ResultScalarType, width>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const types::vectorized_qp_range_t &     q_point_range) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                                 solution_extraction_data,
+                 const types::vectorized_qp_range_t &q_point_range) const
       {
         vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
@@ -601,9 +612,8 @@ namespace WeakForms
           numbers::set_vectorized_values(
             out,
             i,
-            this->template operator()<ResultScalarType>(scratch_data,
-                                                        solution_names,
-                                                        q_point_range[i]));
+            this->template operator()<ResultScalarType>(
+              scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -721,11 +731,12 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       return_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &solution_extraction_data) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names);
+            return function(scratch_data, solution_extraction_data);
           }
         else
           {
@@ -738,7 +749,7 @@ namespace WeakForms
 
             for (const auto q_point : fe_values.quadrature_point_indices())
               out.emplace_back(
-                qp_function(scratch_data, solution_names, q_point));
+                qp_function(scratch_data, solution_extraction_data, q_point));
 
             return out;
           }
@@ -747,26 +758,28 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       value_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const unsigned int                       q_point) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                solution_extraction_data,
+                 const unsigned int q_point) const
       {
         if (function)
           {
-            return function(scratch_data, solution_names)[q_point];
+            return function(scratch_data, solution_extraction_data)[q_point];
           }
         else
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return qp_function(scratch_data, solution_names, q_point);
+            return qp_function(scratch_data, solution_extraction_data, q_point);
           }
       }
 
       template <typename ResultScalarType, std::size_t width, int dim2>
       vectorized_return_type<ResultScalarType, width>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names,
-                 const types::vectorized_qp_range_t &     q_point_range) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &                                 solution_extraction_data,
+                 const types::vectorized_qp_range_t &q_point_range) const
       {
         vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
@@ -778,9 +791,8 @@ namespace WeakForms
           numbers::set_vectorized_values(
             out,
             i,
-            this->template operator()<ResultScalarType>(scratch_data,
-                                                        solution_names,
-                                                        q_point_range[i]));
+            this->template operator()<ResultScalarType>(
+              scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
