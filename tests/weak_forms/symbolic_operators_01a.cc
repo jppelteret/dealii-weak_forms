@@ -74,13 +74,13 @@ run()
   const auto cell = dof_handler.begin_active();
 
   const WeakForms::SolutionStorage<Vector<double>> solution_storage(solution);
-  solution_storage.extract_local_dof_values(scratch_data);
-  const std::vector<std::string> &solution_names =
-    solution_storage.get_solution_names();
+  solution_storage.extract_local_dof_values(scratch_data, dof_handler);
+  const std::vector<WeakForms::SolutionExtractionData<dim, spacedim>>
+    &solution_extraction_data =
+      solution_storage.get_solution_extraction_data(scratch_data, dof_handler);
 
-  const auto test =
-    [&scratch_data,
-     &solution_names](const FEValuesBase<dim, spacedim> &fe_values_dofs,
+  const auto test = [&scratch_data, &solution_extraction_data](
+                      const FEValuesBase<dim, spacedim> &fe_values_dofs,
                       const FEValuesBase<dim, spacedim> &fe_values_op,
                       const std::string &                type)
   {
@@ -177,28 +177,28 @@ run()
       std::cout << "Value: "
                 << (field_solution[subspace_extractor].value().template
                     operator()<NumberType>(scratch_data,
-                                           solution_names))[q_point]
+                                           solution_extraction_data))[q_point]
                 << std::endl;
       std::cout << "Gradient: "
                 << (field_solution[subspace_extractor].gradient().template
                     operator()<NumberType>(scratch_data,
-                                           solution_names))[q_point]
+                                           solution_extraction_data))[q_point]
                 << std::endl;
       std::cout << "Laplacian: "
                 << (field_solution[subspace_extractor].laplacian().template
                     operator()<NumberType>(scratch_data,
-                                           solution_names))[q_point]
+                                           solution_extraction_data))[q_point]
                 << std::endl;
       std::cout << "Hessian: "
                 << (field_solution[subspace_extractor].hessian().template
                     operator()<NumberType>(scratch_data,
-                                           solution_names))[q_point]
+                                           solution_extraction_data))[q_point]
                 << std::endl;
       std::cout << "Third derivative: "
                 << (field_solution[subspace_extractor]
                       .third_derivative()
-                      .template operator()<NumberType>(scratch_data,
-                                                       solution_names))[q_point]
+                      .template operator()<NumberType>(
+                        scratch_data, solution_extraction_data))[q_point]
                 << std::endl;
 
       deallog << "OK" << std::endl;

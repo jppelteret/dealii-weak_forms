@@ -34,7 +34,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
 #include <weak_forms/functors.h>
-#include <weak_forms/solution_storage.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/type_traits.h>
 #include <weak_forms/utilities.h>
 
@@ -66,8 +66,9 @@ namespace WeakForms
     template <typename ADNumberType, int dim, int spacedim = dim>
     using ad_function_type = std::function<value_type<ADNumberType>(
       const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &              solution_names,
-      const unsigned int                            q_point,
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                solution_extraction_data,
+      const unsigned int q_point,
       const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
         ADNumberType> &...field_solutions)>;
 
@@ -97,8 +98,9 @@ namespace WeakForms
     template <typename SDNumberType, int dim, int spacedim = dim>
     using sd_substitution_function_type = std::function<substitution_map_type(
       const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-      const std::vector<std::string> &              solution_names,
-      const unsigned int                            q_point)>;
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                solution_extraction_data,
+      const unsigned int q_point)>;
 
 
     EnergyFunctor(
@@ -468,7 +470,8 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       return_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &solution_extraction_data) const
       {
         // Follow the recipe described in the documentation:
         // - Initialize helper.
@@ -518,7 +521,7 @@ namespace WeakForms
             OpHelper_t::ad_register_independent_variables(
               ad_helper,
               scratch_data,
-              solution_names,
+              solution_extraction_data,
               q_point,
               get_field_args(),
               get_field_extractors());
@@ -530,7 +533,7 @@ namespace WeakForms
               OpHelper_t::ad_call_function(ad_helper,
                                            function,
                                            scratch_data,
-                                           solution_names,
+                                           solution_extraction_data,
                                            q_point,
                                            get_field_extractors());
 
@@ -577,7 +580,7 @@ namespace WeakForms
       get_name_ad_helper() const
       {
         const SymbolicDecorations decorator;
-        return internal::get_deal_II_prefix() + "EnergyFunctor_ADHelper_" +
+        return Utilities::get_deal_II_prefix() + "EnergyFunctor_ADHelper_" +
                operand.as_ascii(decorator);
       }
 
@@ -585,7 +588,7 @@ namespace WeakForms
       get_name_gradient() const
       {
         const SymbolicDecorations decorator;
-        return internal::get_deal_II_prefix() +
+        return Utilities::get_deal_II_prefix() +
                "EnergyFunctor_ADHelper_Gradients_" +
                operand.as_ascii(decorator);
       }
@@ -594,7 +597,7 @@ namespace WeakForms
       get_name_hessian() const
       {
         const SymbolicDecorations decorator;
-        return internal::get_deal_II_prefix() +
+        return Utilities::get_deal_II_prefix() +
                "EnergyFunctor_ADHelper_Hessians_" + operand.as_ascii(decorator);
       }
 
@@ -836,7 +839,8 @@ namespace WeakForms
       template <typename ResultScalarType, int dim2>
       return_type<ResultScalarType>
       operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<std::string> &         solution_names) const
+                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+                   &solution_extraction_data) const
       {
         // Follow the recipe described in the documentation:
         // - Define some independent variables.
@@ -962,7 +966,7 @@ namespace WeakForms
               OpHelper_t::template sd_get_substitution_map<sd_type,
                                                            ResultScalarType>(
                 scratch_data,
-                solution_names,
+                solution_extraction_data,
                 q_point,
                 get_symbolic_fields(),
                 get_field_args());
@@ -970,7 +974,9 @@ namespace WeakForms
               {
                 Differentiation::SD::add_to_substitution_map(
                   substitution_map,
-                  user_substitution_map(scratch_data, solution_names, q_point));
+                  user_substitution_map(scratch_data,
+                                        solution_extraction_data,
+                                        q_point));
               }
 
             // Perform the value substitution at this quadrature point
@@ -1033,7 +1039,7 @@ namespace WeakForms
       {
         const std::hash<std::string> hash_fn;
         const SymbolicDecorations    decorator;
-        return internal::get_deal_II_prefix() +
+        return Utilities::get_deal_II_prefix() +
                "EnergyFunctor_SDBatchOptimizer_" +
                std::to_string(hash_fn(operand.as_ascii(decorator)));
       }
@@ -1043,7 +1049,7 @@ namespace WeakForms
       {
         const std::hash<std::string> hash_fn;
         const SymbolicDecorations    decorator;
-        return internal::get_deal_II_prefix() +
+        return Utilities::get_deal_II_prefix() +
                "EnergyFunctor_ADHelper_Evaluated_Dependent_Functions_" +
                std::to_string(hash_fn(operand.as_ascii(decorator)));
       }

@@ -116,9 +116,10 @@ run()
   const unsigned int                 q_point   = 0;
 
   const WeakForms::SolutionStorage<Vector<double>> solution_storage(solution);
-  solution_storage.extract_local_dof_values(scratch_data);
-  const std::vector<std::string> &solution_names =
-    solution_storage.get_solution_names();
+  solution_storage.extract_local_dof_values(scratch_data, dof_handler);
+  const std::vector<WeakForms::SolutionExtractionData<dim, spacedim>>
+    &solution_extraction_data =
+      solution_storage.get_solution_extraction_data(scratch_data, dof_handler);
 
   constexpr std::size_t width =
     dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
@@ -372,7 +373,8 @@ run()
 
     // std::cout << "value negation: "
     //           << ((-value).template operator()<NumberType, width>(
-    //                fe_values, scratch_data, solution_names, q_point_range))
+    //                fe_values, scratch_data, solution_extraction_data,
+    //                q_point_range))
     //           << std::endl;
 
     deallog << "OK" << std::endl;

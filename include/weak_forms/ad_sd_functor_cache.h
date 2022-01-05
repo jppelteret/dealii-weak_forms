@@ -238,7 +238,7 @@ namespace WeakForms
     static std::string
     get_name_ad_sd_cache()
     {
-      return Operators::internal::get_deal_II_prefix() + "AD_SD_Functor_Cache";
+      return Utilities::get_deal_II_prefix() + "AD_SD_Functor_Cache";
     }
 
     static std::string

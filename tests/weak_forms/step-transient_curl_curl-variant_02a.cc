@@ -14,6 +14,9 @@
 // ---------------------------------------------------------------------
 
 // Transient, uncoupled curl-curl problem.
+//
+// This test uses an external field, associated with a second DoFHandler, as
+// a current source term on the RHS.
 
 #include "../weak_forms_tests.h"
 #include "wf_common_tests/step-transient_curl_curl.h"
@@ -26,7 +29,9 @@ namespace StepTransientCurlCurl
   public:
     StepTransientCurlCurl(const std::string &input_file)
       : StepTransientCurlCurl_Base<dim>(input_file)
-    {}
+    {
+      this->parameters.wire_excitation = "Voltage";
+    }
 
   protected:
     virtual void
@@ -52,7 +57,88 @@ namespace StepTransientCurlCurl
     TrilinosWrappers::MPI::Vector &  system_rhs_esp,
     const AffineConstraints<double> &constraints_esp)
   {
-    AssertThrow(false, ExcPureFunctionCalled());
+    TimerOutput::Scope timer_scope(this->computing_timer, "Assembly: ESP");
+    system_matrix_esp = 0.0;
+    system_rhs_esp    = 0.0;
+
+    FEValues<dim> fe_values(this->mapping,
+                            this->fe_esp,
+                            this->qf_cell_esp,
+                            update_gradients | update_quadrature_points |
+                              update_JxW_values);
+
+    typename DoFHandler<dim>::active_cell_iterator
+      cell = this->dof_handler_esp.begin_active(),
+      endc = this->dof_handler_esp.end();
+    for (; cell != endc; ++cell)
+      {
+        //    if (cell->is_locally_owned() == false) continue;
+        if (cell->subdomain_id() != this->this_mpi_process)
+          continue;
+
+        fe_values.reinit(cell);
+        const unsigned int &n_q_points      = fe_values.n_quadrature_points;
+        const unsigned int &n_dofs_per_cell = fe_values.dofs_per_cell;
+
+        FullMatrix<double> cell_matrix(n_dofs_per_cell, n_dofs_per_cell);
+        Vector<double>     cell_rhs(n_dofs_per_cell);
+
+        std::vector<double> conductivity_coefficient_values(n_q_points);
+        this->function_material_conductivity_coefficients.value_list(
+          fe_values.get_quadrature_points(), conductivity_coefficient_values);
+
+        // Pre-compute QP data
+        std::vector<std::vector<Tensor<1, dim>>> qp_grad_Nx(
+          n_q_points, std::vector<Tensor<1, dim>>(n_dofs_per_cell));
+        for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+          {
+            for (unsigned int k = 0; k < n_dofs_per_cell; ++k)
+              {
+                qp_grad_Nx[q_point][k] =
+                  fe_values[this->esp_extractor].gradient(k, q_point);
+              }
+          }
+
+        for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+          {
+            const std::vector<Tensor<1, dim>> &grad_Nx = qp_grad_Nx[q_point];
+            const double &                     JxW     = fe_values.JxW(q_point);
+
+            AssertThrow(
+              std::abs(conductivity_coefficient_values[q_point]) > 1e-9,
+              ExcMessage(
+                "Electric conductivity coefficient must be non-zero."));
+
+            const double &sigma = conductivity_coefficient_values[q_point];
+
+            for (unsigned int I = 0; I < n_dofs_per_cell; ++I)
+              {
+                for (unsigned int J = 0; J <= I; ++J)
+                  {
+                    cell_matrix(I, J) +=
+                      (grad_Nx[I] * sigma * grad_Nx[J]) * JxW;
+                  }
+              }
+          }
+
+
+        // Finally, we need to copy the lower half of the local matrix into the
+        // upper half:
+        for (unsigned int I = 0; I < n_dofs_per_cell; ++I)
+          for (unsigned int J = I + 1; J < n_dofs_per_cell; ++J)
+            cell_matrix(I, J) = cell_matrix(J, I);
+
+        std::vector<types::global_dof_index> local_dof_indices(n_dofs_per_cell);
+        cell->get_dof_indices(local_dof_indices);
+        constraints_esp.distribute_local_to_global(cell_matrix,
+                                                   cell_rhs,
+                                                   local_dof_indices,
+                                                   system_matrix_esp,
+                                                   system_rhs_esp);
+      }
+
+    system_matrix_esp.compress(VectorOperation::add);
+    system_rhs_esp.compress(VectorOperation::add);
   }
 
 
@@ -72,6 +158,11 @@ namespace StepTransientCurlCurl
                             this->qf_cell_mvp,
                             update_values | update_gradients |
                               update_quadrature_points | update_JxW_values);
+
+    FEValues<dim> fe_values_esp(this->mapping,
+                                this->fe_esp,
+                                this->qf_cell_esp,
+                                update_gradients);
 
     typename DoFHandler<dim>::active_cell_iterator
       cell = this->dof_handler_mvp.begin_active(),
@@ -96,8 +187,24 @@ namespace StepTransientCurlCurl
           fe_values.get_quadrature_points(), permeability_coefficient_values);
         this->function_material_conductivity_coefficients.value_list(
           fe_values.get_quadrature_points(), conductivity_coefficient_values);
-        this->function_free_current_density.value_list(
-          fe_values.get_quadrature_points(), source_values);
+
+        // this->function_free_current_density.value_list(
+        //   fe_values.get_quadrature_points(), source_values);
+        Assert(this->parameters.use_voltage_excitation(), ExcInternalError());
+        if (this->geometry.within_wire(cell->center()))
+          {
+            typename DoFHandler<dim>::active_cell_iterator cell_esp(
+              &this->triangulation,
+              cell->level(),
+              cell->index(),
+              &this->dof_handler_esp);
+            fe_values_esp.reinit(cell_esp);
+
+            fe_values_esp[this->esp_extractor].get_function_gradients(
+              this->solution_esp, source_values);
+            for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+              source_values[q_point] *= -1.0;
+          }
 
         // std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
         std::vector<Tensor<1, dim>> solution_mvp_values_t1(n_q_points);

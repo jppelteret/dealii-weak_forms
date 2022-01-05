@@ -91,8 +91,9 @@ namespace Step44
       internal_energy_func.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     p_tilde,
                     const ADNumber_t &                     J_tilde)
@@ -135,8 +136,9 @@ namespace Step44
       external_energy_func.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &u)
         {
           static const double p0 =

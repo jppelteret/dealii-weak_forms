@@ -88,9 +88,10 @@ Step8<dim>::assemble_system()
 
   const auto residual = residual_ss.template value<ADNumber_t, dim, spacedim>(
     [&coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                   const std::vector<std::string> &              solution_names,
-                   const unsigned int                            q_point,
-                   const Tensor<2, spacedim, ADNumber_t> &       grad_u)
+                   const std::vector<SolutionExtractionData<dim, spacedim>>
+                     &                solution_extraction_data,
+                   const unsigned int q_point,
+                   const Tensor<2, spacedim, ADNumber_t> &grad_u)
     {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const auto             C = coefficient.value(p);

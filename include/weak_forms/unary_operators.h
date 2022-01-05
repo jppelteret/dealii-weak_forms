@@ -28,7 +28,7 @@
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/operator_utilities.h>
-#include <weak_forms/solution_storage.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
@@ -631,7 +631,8 @@ namespace WeakForms
       auto
       operator()(const FEValuesType &                    fe_values,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &solution_names) const ->
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const ->
         typename std::enable_if<
           internal::is_fe_values_type<FEValuesType>::value &&
             !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
@@ -643,7 +644,7 @@ namespace WeakForms
           derived.get_operand(),
           fe_values,
           scratch_data,
-          solution_names);
+          solution_extraction_data);
       }
 
       // ----- VECTORIZATION -----
@@ -683,8 +684,9 @@ namespace WeakForms
       auto
       operator()(const FEValuesType &                    fe_values,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names,
-                 const types::vectorized_qp_range_t &    q_point_range) const ->
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &                                 solution_extraction_data,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
           internal::is_fe_values_type<FEValuesType>::value &&
             !is_or_has_test_function_or_trial_solution_op<OpType>::value &&
@@ -696,7 +698,7 @@ namespace WeakForms
                                                      derived.get_operand(),
                                                      fe_values,
                                                      scratch_data,
-                                                     solution_names,
+                                                     solution_extraction_data,
                                                      q_point_range);
       }
 
@@ -760,7 +762,8 @@ namespace WeakForms
       operator()(const FEValuesTypeDoFs &                fe_values_dofs,
                  const FEValuesTypeOp &                  fe_values_op,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &solution_names) const ->
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const ->
         typename std::enable_if<
           (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
            internal::is_fe_values_type<FEValuesTypeOp>::value) &&
@@ -774,7 +777,7 @@ namespace WeakForms
           fe_values_dofs,
           fe_values_op,
           scratch_data,
-          solution_names);
+          solution_extraction_data);
       }
 
       // ----- VECTORIZATION -----
@@ -833,8 +836,9 @@ namespace WeakForms
       operator()(const FEValuesTypeDoFs &                fe_values_dofs,
                  const FEValuesTypeOp &                  fe_values_op,
                  MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names,
-                 const types::vectorized_qp_range_t &    q_point_range) const ->
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &                                 solution_extraction_data,
+                 const types::vectorized_qp_range_t &q_point_range) const ->
         typename std::enable_if<
           (internal::is_fe_values_type<FEValuesTypeDoFs>::value &&
            internal::is_fe_values_type<FEValuesTypeOp>::value) &&
@@ -848,7 +852,7 @@ namespace WeakForms
                                                      fe_values_dofs,
                                                      fe_values_op,
                                                      scratch_data,
-                                                     solution_names,
+                                                     solution_extraction_data,
                                                      q_point_range);
       }
 

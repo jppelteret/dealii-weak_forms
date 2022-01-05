@@ -29,6 +29,7 @@
 
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/solution_storage.h>
 #include <weak_forms/subspace_extractors.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -2709,10 +2710,11 @@ public:                                                                    \
       template <typename ScalarType>
       return_type<ScalarType>
       operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names) const
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
       {
         (void)scratch_data;
-        (void)solution_names;
+        (void)solution_extraction_data;
 
         AssertThrow(
           false,
@@ -2751,10 +2753,11 @@ public:                                                                    \
       template <typename ScalarType>
       return_type<ScalarType>
       operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names) const
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
       {
         (void)scratch_data;
-        (void)solution_names;
+        (void)solution_extraction_data;
 
         AssertThrow(
           false,
@@ -2793,10 +2796,11 @@ public:                                                                    \
       template <typename ScalarType>
       return_type<ScalarType>
       operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names) const
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
       {
         (void)scratch_data;
-        (void)solution_names;
+        (void)solution_extraction_data;
 
         AssertThrow(
           false,
@@ -2835,10 +2839,11 @@ public:                                                                    \
       template <typename ScalarType>
       return_type<ScalarType>
       operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names) const
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
       {
         (void)scratch_data;
-        (void)solution_names;
+        (void)solution_extraction_data;
 
         AssertThrow(
           false,
@@ -2879,10 +2884,11 @@ public:                                                                    \
       template <typename ScalarType>
       return_type<ScalarType>
       operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                 const std::vector<std::string> &        solution_names) const
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
       {
         (void)scratch_data;
-        (void)solution_names;
+        (void)solution_extraction_data;
 
         AssertThrow(
           false,

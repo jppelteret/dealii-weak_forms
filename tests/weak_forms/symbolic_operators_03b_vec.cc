@@ -103,11 +103,12 @@ run()
     fe, qf_cell, update_default, qf_face, update_flags_interface);
 
   const WeakForms::SolutionStorage<Vector<double>> solution_storage(solution);
-  const std::vector<std::string> &                 solution_names =
-    solution_storage.get_solution_names();
+  const std::vector<WeakForms::SolutionExtractionData<dim, spacedim>>
+    &solution_extraction_data =
+      solution_storage.get_solution_extraction_data(scratch_data, dof_handler);
 
   const auto test =
-    [&scratch_data, &solution_names](
+    [&scratch_data, &solution_extraction_data](
       const FEInterfaceValues<dim, spacedim> &fe_interface_values,
       const std::string &                     type,
       const bool                              is_on_interface)
@@ -239,56 +240,57 @@ run()
                                                             "u",
                                                             "\\mathbf{u}");
 
-        std::cout << "Jump in values: "
-                  << (field_solution[subspace_extractor]
-                        .jump_in_values()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
-        std::cout << "Jump in gradients: "
-                  << (field_solution[subspace_extractor]
-                        .jump_in_gradients()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
-        std::cout << "Jump in Hessians: "
-                  << (field_solution[subspace_extractor]
-                        .jump_in_hessians()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
+        std::cout
+          << "Jump in values: "
+          << (field_solution[subspace_extractor].jump_in_values().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
+        std::cout
+          << "Jump in gradients: "
+          << (field_solution[subspace_extractor].jump_in_gradients().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
+        std::cout
+          << "Jump in Hessians: "
+          << (field_solution[subspace_extractor].jump_in_hessians().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
         std::cout << "Jump in third derivatives: "
                   << (field_solution[subspace_extractor]
                         .jump_in_third_derivatives()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
+                        .template operator()<NumberType, width>(
+                          scratch_data,
+                          solution_extraction_data,
+                          q_point_range))
                   << std::endl;
 
-        std::cout << "Average of values: "
-                  << (field_solution[subspace_extractor]
-                        .average_of_values()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
-        std::cout << "Average of gradients: "
-                  << (field_solution[subspace_extractor]
-                        .average_of_gradients()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
-        std::cout << "Average of Hessians: "
-                  << (field_solution[subspace_extractor]
-                        .average_of_hessians()
-                        .template operator()<NumberType, width>(scratch_data,
-                                                                solution_names,
-                                                                q_point_range))
-                  << std::endl;
+        std::cout
+          << "Average of values: "
+          << (field_solution[subspace_extractor].average_of_values().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
+        std::cout
+          << "Average of gradients: "
+          << (field_solution[subspace_extractor].average_of_gradients().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
+        std::cout
+          << "Average of Hessians: "
+          << (field_solution[subspace_extractor].average_of_hessians().template
+              operator()<NumberType, width>(scratch_data,
+                                            solution_extraction_data,
+                                            q_point_range))
+          << std::endl;
 
         deallog << "OK" << std::endl;
       }
@@ -305,7 +307,7 @@ run()
       }
     fe_interface_values.reinit(cell, face);
 
-    solution_storage.extract_local_dof_values(scratch_data);
+    solution_storage.extract_local_dof_values(scratch_data, dof_handler);
     test(fe_interface_values, "Face", false);
   }
 
@@ -328,7 +330,7 @@ run()
                           cell_neighbour_face,
                           cell_neighbour_subface);
 
-    solution_storage.extract_local_dof_values(scratch_data);
+    solution_storage.extract_local_dof_values(scratch_data, dof_handler);
     test(fe_interface_values, "Interface", true);
   }
 
