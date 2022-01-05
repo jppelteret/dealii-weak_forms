@@ -78,9 +78,10 @@ run()
   const unsigned int                 q_point   = 0;
 
   const WeakForms::SolutionStorage<Vector<double>> solution_storage(solution);
-  solution_storage.extract_local_dof_values(scratch_data);
-  const std::vector<std::string> &solution_names =
-    solution_storage.get_solution_names();
+  solution_storage.extract_local_dof_values(scratch_data, dof_handler);
+  const std::vector<WeakForms::SolutionExtractionData<dim, spacedim>>
+    &solution_extraction_data =
+      solution_storage.get_solution_extraction_data(scratch_data, dof_handler);
 
   constexpr std::size_t width =
     dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;
@@ -280,51 +281,59 @@ run()
     const auto hessian          = field_solution_ss.hessian();
     const auto third_derivative = field_solution_ss.third_derivative();
 
-    std::cout << "Value negation: "
-              << ((-value).template operator()<NumberType, width>(
-                   fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Value negation: "
+      << ((-value).template operator()<NumberType, width>(
+           fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Gradient negation: "
-              << ((-gradient).template operator()<NumberType, width>(
-                   fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Gradient negation: "
+      << ((-gradient).template operator()<NumberType, width>(
+           fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Laplacian negation: "
-              << ((-laplacian)
-                    .template operator()<NumberType, width>(
-                      fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Laplacian negation: "
+      << ((-laplacian)
+            .template operator()<NumberType, width>(
+              fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Hessian negation: "
-              << ((-hessian).template operator()<NumberType, width>(
-                   fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Hessian negation: "
+      << ((-hessian).template operator()<NumberType, width>(
+           fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Third derivative negation: "
-              << ((-third_derivative)
-                    .template operator()<NumberType, width>(
-                      fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Third derivative negation: "
+      << ((-third_derivative)
+            .template operator()<NumberType, width>(
+              fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
 
-    std::cout << "Hessian determinant: "
-              << ((determinant(hessian))
-                    .template operator()<NumberType, width>(
-                      fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Hessian determinant: "
+      << ((determinant(hessian))
+            .template operator()<NumberType, width>(
+              fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Hessian inverse: "
-              << ((invert(hessian))
-                    .template operator()<NumberType, width>(
-                      fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Hessian inverse: "
+      << ((invert(hessian))
+            .template operator()<NumberType, width>(
+              fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
-    std::cout << "Hessian transpose: "
-              << ((transpose(hessian))
-                    .template operator()<NumberType, width>(
-                      fe_values, scratch_data, solution_names, q_point_range))
-              << std::endl;
+    std::cout
+      << "Hessian transpose: "
+      << ((transpose(hessian))
+            .template operator()<NumberType, width>(
+              fe_values, scratch_data, solution_extraction_data, q_point_range))
+      << std::endl;
 
     deallog << "OK" << std::endl;
   }

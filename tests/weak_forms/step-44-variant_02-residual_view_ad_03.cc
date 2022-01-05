@@ -113,8 +113,9 @@ namespace Step44
       residual_ss_u.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     p_tilde)
         {
@@ -136,8 +137,9 @@ namespace Step44
     const auto residual_p =
       residual_ss_p.template value<ADNumber_t, dim, spacedim>(
         [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<2, spacedim, ADNumber_t> &Grad_u,
                     const ADNumber_t &                     J_tilde)
         {
@@ -154,10 +156,11 @@ namespace Step44
     const auto residual_J =
       residual_ss_J.template value<ADNumber_t, dim, spacedim>(
         [this](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-               const std::vector<std::string> &              solution_names,
-               const unsigned int                            q_point,
-               const ADNumber_t &                            p_tilde,
-               const ADNumber_t &                            J_tilde)
+               const std::vector<SolutionExtractionData<dim, spacedim>>
+                 &                solution_extraction_data,
+               const unsigned int q_point,
+               const ADNumber_t & p_tilde,
+               const ADNumber_t & J_tilde)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
@@ -185,9 +188,10 @@ namespace Step44
     const auto force_u = force_ss_u.template value<ADNumber_t, dim, spacedim>(
       [this,
        &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                  const std::vector<std::string> &              solution_names,
-                  const unsigned int                            q_point,
-                  const Tensor<2, spacedim, ADNumber_t> &       Grad_u)
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &                solution_extraction_data,
+                  const unsigned int q_point,
+                  const Tensor<2, spacedim, ADNumber_t> &Grad_u)
       {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);

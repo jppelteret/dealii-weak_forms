@@ -41,8 +41,13 @@ end
 
 
 subsection Source terms
+  set Excitation method = Current
+
   # Total current through wire
-  set Wire current = 10
+  set Wire current      = 10
+  
+  # Total voltage drop across the wire's length
+  set Wire voltage drop = 2.25e-4
 end
 
 

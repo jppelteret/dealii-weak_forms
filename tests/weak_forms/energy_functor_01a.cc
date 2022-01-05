@@ -67,12 +67,13 @@ run(const SubSpaceExtractorType &subspace_extractor)
 
   const auto energy_functor = energy.template value<ADNumber_t, dim, spacedim>(
     [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-       const std::vector<std::string> &              solution_names,
-       const unsigned int                            q_point,
-       const ADNumber_t &                            u,
-       const Tensor<1, dim, ADNumber_t> &            grad_u,
-       const Tensor<2, dim, ADNumber_t> &            hess_u,
-       const ADNumber_t &                            lap_u,
+       const std::vector<SolutionExtractionData<dim, spacedim>>
+         &                               solution_extraction_data,
+       const unsigned int                q_point,
+       const ADNumber_t &                u,
+       const Tensor<1, dim, ADNumber_t> &grad_u,
+       const Tensor<2, dim, ADNumber_t> &hess_u,
+       const ADNumber_t &                lap_u,
        const Tensor<3, dim, ADNumber_t> &d3_u) { return ADNumber_t(0.0); });
 
   deallog << "Energy functor (ascii):\n"

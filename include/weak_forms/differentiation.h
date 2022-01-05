@@ -602,14 +602,14 @@ namespace WeakForms
     : std::true_type
   {};
 
-  template <typename SymbolicFunctorOp,
-            typename FunctorOp,
-            typename... FieldOps>
-  struct is_unary_op<
-    internal::Differentiation::
-      SymbolicDiffOp<SymbolicFunctorOp, FunctorOp, FieldOps...>>
-    : std::true_type
-  {};
+  // template <typename SymbolicFunctorOp,
+  //           typename FunctorOp,
+  //           typename... FieldOps>
+  // struct is_unary_op<
+  //   internal::Differentiation::
+  //     SymbolicDiffOp<SymbolicFunctorOp, FunctorOp, FieldOps...>>
+  //   : std::true_type
+  // {};
 
 } // namespace WeakForms
 

@@ -131,8 +131,9 @@ namespace Step44
           return Differentiation::SD::types::substitution_map{};
         },
         [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<std::string> &              solution_names,
-           const unsigned int                            q_point)
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                solution_extraction_data,
+           const unsigned int q_point)
         { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
@@ -156,8 +157,9 @@ namespace Step44
           return Differentiation::SD::types::substitution_map{};
         },
         [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &solution_names,
-                    const unsigned int              q_point)
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point)
         { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
@@ -178,8 +180,9 @@ namespace Step44
           return Differentiation::SD::types::substitution_map{};
         },
         [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<std::string> &              solution_names,
-           const unsigned int                            q_point)
+           const std::vector<SolutionExtractionData<dim, spacedim>>
+             &                solution_extraction_data,
+           const unsigned int q_point)
         { return Differentiation::SD::types::substitution_map{}; },
         optimizer_type,
         optimization_flags,
@@ -201,8 +204,9 @@ namespace Step44
       { return Differentiation::SD::make_symbol_map(symb_pressure, symb_N); },
       [this, symb_pressure, symb_N, &spacedim](
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-        const std::vector<std::string> &              solution_names,
-        const unsigned int                            q_point)
+        const std::vector<SolutionExtractionData<dim, spacedim>>
+          &                solution_extraction_data,
+        const unsigned int q_point)
       {
         static const double p0 =
           -4.0 / (this->parameters.scale * this->parameters.scale);

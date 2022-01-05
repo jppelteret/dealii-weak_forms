@@ -104,8 +104,9 @@ namespace Step57
       residual_ss_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v)
         {
@@ -120,10 +121,11 @@ namespace Step57
       residual_ss_div_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &solution_names,
-                    const unsigned int              q_point,
-                    const ADNumber_t &              div_v,
-                    const ADNumber_t &              p)
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
+                    const ADNumber_t & div_v,
+                    const ADNumber_t & p)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.
@@ -136,8 +138,9 @@ namespace Step57
       residual_ss_grad_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
@@ -151,9 +154,10 @@ namespace Step57
       residual_ss_p.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &solution_names,
-                    const unsigned int              q_point,
-                    const ADNumber_t &              div_v)
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
+                    const ADNumber_t & div_v)
         {
           // Sacado is unbelievably annoying. If we don't explicitly
           // cast this return type then we get a segfault.

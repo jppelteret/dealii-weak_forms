@@ -83,8 +83,9 @@ Step6<dim>::assemble_system()
 
   const auto residual = residual_ss.template value<ADNumber_t, dim, spacedim>(
     [&spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                const std::vector<std::string> &              solution_names,
-                const unsigned int                            q_point,
+                const std::vector<SolutionExtractionData<dim, spacedim>>
+                  &                                    solution_extraction_data,
+                const unsigned int                     q_point,
                 const Tensor<1, spacedim, ADNumber_t> &grad_u) -> Result_t
     { return Tensor<1, spacedim, ADNumber_t>(grad_u); });
 

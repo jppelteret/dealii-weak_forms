@@ -30,6 +30,8 @@
 
 #include <weak_forms/assembler_base.h>
 #include <weak_forms/config.h>
+#include <weak_forms/solution_extraction_data.h>
+#include <weak_forms/solution_storage.h>
 
 
 
@@ -210,13 +212,15 @@ namespace WeakForms
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
-              typename CellQuadratureType>
+              typename CellQuadratureType,
+              typename SSDType>
     void
-    assemble_matrix(MatrixType &                         system_matrix,
-                    const SolutionStorage<VectorType> &  solution_storage,
-                    const AffineConstraints<ScalarType> &constraints,
-                    const DoFHandlerType &               dof_handler,
-                    const CellQuadratureType &           cell_quadrature) const
+    assemble_matrix(
+      MatrixType &                                system_matrix,
+      const SolutionStorage<VectorType, SSDType> &solution_storage,
+      const AffineConstraints<ScalarType> &       constraints,
+      const DoFHandlerType &                      dof_handler,
+      const CellQuadratureType &                  cell_quadrature) const
     {
       do_assemble_system<MatrixType, std::nullptr_t, std::nullptr_t>(
         &system_matrix,
@@ -291,14 +295,16 @@ namespace WeakForms
               typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
-              typename FaceQuadratureType>
+              typename FaceQuadratureType,
+              typename SSDType>
     void
-    assemble_matrix(MatrixType &                         system_matrix,
-                    const SolutionStorage<VectorType> &  solution_storage,
-                    const AffineConstraints<ScalarType> &constraints,
-                    const DoFHandlerType &               dof_handler,
-                    const CellQuadratureType &           cell_quadrature,
-                    const FaceQuadratureType &           face_quadrature) const
+    assemble_matrix(
+      MatrixType &                                system_matrix,
+      const SolutionStorage<VectorType, SSDType> &solution_storage,
+      const AffineConstraints<ScalarType> &       constraints,
+      const DoFHandlerType &                      dof_handler,
+      const CellQuadratureType &                  cell_quadrature,
+      const FaceQuadratureType &                  face_quadrature) const
     {
       do_assemble_system<MatrixType, std::nullptr_t, FaceQuadratureType>(
         &system_matrix,
@@ -365,11 +371,12 @@ namespace WeakForms
     // Same as the previous function, but with solution storage
     template <typename VectorType,
               typename DoFHandlerType,
-              typename CellQuadratureType>
+              typename CellQuadratureType,
+              typename SSDType>
     void
     assemble_rhs_vector(
       VectorType &system_vector,
-      const SolutionStorage<typename identity<VectorType>::type>
+      const SolutionStorage<typename identity<VectorType>::type, SSDType>
         &                                  solution_storage,
       const AffineConstraints<ScalarType> &constraints,
       const DoFHandlerType &               dof_handler,
@@ -446,11 +453,12 @@ namespace WeakForms
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
-              typename FaceQuadratureType>
+              typename FaceQuadratureType,
+              typename SSDType>
     void
     assemble_rhs_vector(
       VectorType &system_vector,
-      const SolutionStorage<typename identity<VectorType>::type>
+      const SolutionStorage<typename identity<VectorType>::type, SSDType>
         &                                  solution_storage,
       const AffineConstraints<ScalarType> &constraints,
       const DoFHandlerType &               dof_handler,
@@ -528,12 +536,13 @@ namespace WeakForms
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
-              typename CellQuadratureType>
+              typename CellQuadratureType,
+              typename SSDType>
     void
-    assemble_system(MatrixType &system_matrix,
-                    VectorType &system_vector,
-                    const SolutionStorage<typename identity<VectorType>::type>
-                      &                                  solution_storage,
+    assemble_system(MatrixType &                         system_matrix,
+                    VectorType &                         system_vector,
+                    const SolutionStorage<typename identity<VectorType>::type,
+                                          SSDType> &     solution_storage,
                     const AffineConstraints<ScalarType> &constraints,
                     const DoFHandlerType &               dof_handler,
                     const CellQuadratureType &           cell_quadrature) const
@@ -614,12 +623,13 @@ namespace WeakForms
               typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
-              typename FaceQuadratureType>
+              typename FaceQuadratureType,
+              typename SSDType>
     void
-    assemble_system(MatrixType &system_matrix,
-                    VectorType &system_vector,
-                    const SolutionStorage<typename identity<VectorType>::type>
-                      &                                  solution_storage,
+    assemble_system(MatrixType &                         system_matrix,
+                    VectorType &                         system_vector,
+                    const SolutionStorage<typename identity<VectorType>::type,
+                                          SSDType> &     solution_storage,
                     const AffineConstraints<ScalarType> &constraints,
                     const DoFHandlerType &               dof_handler,
                     const CellQuadratureType &           cell_quadrature,
@@ -681,14 +691,15 @@ namespace WeakForms
               typename VectorType,
               typename FaceQuadratureType,
               typename DoFHandlerType,
-              typename CellQuadratureType>
+              typename CellQuadratureType,
+              typename SSDType>
     void
     do_assemble_system(
       MatrixType *const                    system_matrix,
       VectorType *const                    system_vector,
       const AffineConstraints<ScalarType> &constraints,
       const DoFHandlerType &               dof_handler,
-      const SolutionStorage<typename identity<VectorType>::type>
+      const SolutionStorage<typename identity<VectorType>::type, SSDType>
         &                             solution_storage,
       const CellQuadratureType &      cell_quadrature,
       const FaceQuadratureType *const face_quadrature) const
@@ -771,6 +782,7 @@ namespace WeakForms
           cell_worker = [&cell_matrix_operations,
                          &cell_vector_operations,
                          &cell_ad_sd_operations,
+                         &dof_handler,
                          system_matrix,
                          system_vector,
                          solution_storage](const CellIteratorType &cell,
@@ -787,8 +799,25 @@ namespace WeakForms
             // Extract the local solution vector, if it has been provided by the
             // user.
             if (solution_storage.n_solution_vectors() > 0)
-              internal::extract_solution_local_dof_values(scratch_data,
-                                                          solution_storage);
+              {
+                internal::initialize(scratch_data,
+                                     fe_values,
+                                     dof_handler,
+                                     solution_storage);
+                internal::extract_solution_local_dof_values(scratch_data,
+                                                            dof_handler,
+                                                            solution_storage);
+              }
+
+            // Retrieve the association between the various solution vectors and
+            // an appropriate ScratchData object that can be used to extract
+            // data from them. This covers the case that the solution field is
+            // associated with a DoFHandler that is not the one used during
+            // assembly.
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              solution_extraction_data =
+                solution_storage.get_solution_extraction_data(scratch_data,
+                                                              dof_handler);
 
             // Next we perform all operations that use AD or SD functors.
             // Although the forms are self-linearizing, they reference the
@@ -805,8 +834,9 @@ namespace WeakForms
                     "computations using automatic or symbolic differentiation."));
               }
             for (const auto &cell_ad_sd_op : cell_ad_sd_operations)
-              cell_ad_sd_op(scratch_data,
-                            solution_storage.get_solution_names());
+              {
+                cell_ad_sd_op(scratch_data, solution_extraction_data);
+              }
 
             // Perform all operations that contribute to the local cell matrix
             if (system_matrix)
@@ -814,12 +844,12 @@ namespace WeakForms
                 FullMatrix<ScalarType> &cell_matrix = copy_data.matrices[0];
                 for (const auto &cell_matrix_op : cell_matrix_operations)
                   {
-                    // We pass in solution_storage.get_solution_names() here
+                    // We pass in solution extraction data here
                     // to decouple the VectorType that underlies SolutionStorage
                     // from the operation.
                     cell_matrix_op(cell_matrix,
                                    scratch_data,
-                                   solution_storage.get_solution_names(),
+                                   solution_extraction_data,
                                    fe_values);
                   }
               }
@@ -832,7 +862,7 @@ namespace WeakForms
                   {
                     cell_vector_op(cell_vector,
                                    scratch_data,
-                                   solution_storage.get_solution_names(),
+                                   solution_extraction_data,
                                    fe_values);
                   }
               }
@@ -857,6 +887,7 @@ namespace WeakForms
           boundary_worker = [&boundary_face_matrix_operations,
                              &boundary_face_vector_operations,
                              &boundary_face_ad_sd_operations,
+                             &dof_handler,
                              system_matrix,
                              system_vector,
                              solution_storage](const CellIteratorType &cell,
@@ -878,8 +909,26 @@ namespace WeakForms
 
             // Extract the local solution vector, if it's provided.
             if (solution_storage.n_solution_vectors() > 0)
-              internal::extract_solution_local_dof_values(scratch_data,
-                                                          solution_storage);
+              {
+                internal::initialize(scratch_data,
+                                     fe_values,
+                                     fe_face_values,
+                                     dof_handler,
+                                     solution_storage);
+                internal::extract_solution_local_dof_values(scratch_data,
+                                                            dof_handler,
+                                                            solution_storage);
+              }
+
+            // Retrieve the association between the various solution vectors and
+            // an appropriate ScratchData object that can be used to extract
+            // data from them. This covers the case that the solution field is
+            // associated with a DoFHandler that is not the one used during
+            // assembly.
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              solution_extraction_data =
+                solution_storage.get_solution_extraction_data(scratch_data,
+                                                              dof_handler);
 
             // Next we perform all operations that use AD or SD functors.
             // Although the forms are self-linearizing, they reference the
@@ -889,8 +938,9 @@ namespace WeakForms
             // can be invoked.
             for (const auto &boundary_face_ad_sd_op :
                  boundary_face_ad_sd_operations)
-              boundary_face_ad_sd_op(scratch_data,
-                                     solution_storage.get_solution_names());
+              {
+                boundary_face_ad_sd_op(scratch_data, solution_extraction_data);
+              }
 
             // Perform all operations that contribute to the local cell matrix
             if (system_matrix)
@@ -899,13 +949,12 @@ namespace WeakForms
                 for (const auto &boundary_face_matrix_op :
                      boundary_face_matrix_operations)
                   {
-                    boundary_face_matrix_op(
-                      cell_matrix,
-                      scratch_data,
-                      solution_storage.get_solution_names(),
-                      fe_values,
-                      fe_face_values,
-                      face);
+                    boundary_face_matrix_op(cell_matrix,
+                                            scratch_data,
+                                            solution_extraction_data,
+                                            fe_values,
+                                            fe_face_values,
+                                            face);
                   }
               }
 
@@ -916,13 +965,12 @@ namespace WeakForms
                 for (const auto &boundary_face_vector_op :
                      boundary_face_vector_operations)
                   {
-                    boundary_face_vector_op(
-                      cell_vector,
-                      scratch_data,
-                      solution_storage.get_solution_names(),
-                      fe_values,
-                      fe_face_values,
-                      face);
+                    boundary_face_vector_op(cell_vector,
+                                            scratch_data,
+                                            solution_extraction_data,
+                                            fe_values,
+                                            fe_face_values,
+                                            face);
                   }
               }
 
@@ -946,6 +994,7 @@ namespace WeakForms
             [&interface_face_matrix_operations,
              &interface_face_vector_operations,
              &interface_face_ad_sd_operations,
+             &dof_handler,
              system_matrix,
              system_vector,
              solution_storage](const CellIteratorType &cell,
@@ -983,8 +1032,25 @@ namespace WeakForms
 
             // Extract the local solution vector, if it's provided.
             if (solution_storage.n_solution_vectors() > 0)
-              internal::extract_solution_local_dof_values(scratch_data,
-                                                          solution_storage);
+              {
+                internal::initialize(scratch_data,
+                                     fe_interface_values,
+                                     dof_handler,
+                                     solution_storage);
+                internal::extract_solution_local_dof_values(scratch_data,
+                                                            dof_handler,
+                                                            solution_storage);
+              }
+
+            // Retrieve the association between the various solution vectors and
+            // an appropriate ScratchData object that can be used to extract
+            // data from them. This covers the case that the solution field is
+            // associated with a DoFHandler that is not the one used during
+            // assembly.
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              solution_extraction_data =
+                solution_storage.get_solution_extraction_data(scratch_data,
+                                                              dof_handler);
 
             // Next we perform all operations that use AD or SD functors.
             // Although the forms are self-linearizing, they reference the
@@ -994,8 +1060,9 @@ namespace WeakForms
             // can be invoked.
             for (const auto &interface_face_ad_sd_op :
                  interface_face_ad_sd_operations)
-              interface_face_ad_sd_op(scratch_data,
-                                      solution_storage.get_solution_names());
+              {
+                interface_face_ad_sd_op(scratch_data, solution_extraction_data);
+              }
 
             // Perform all operations that contribute to the local cell matrix
             if (system_matrix)
@@ -1007,13 +1074,12 @@ namespace WeakForms
                 for (const auto &interface_face_matrix_op :
                      interface_face_matrix_operations)
                   {
-                    interface_face_matrix_op(
-                      cell_matrix,
-                      scratch_data,
-                      solution_storage.get_solution_names(),
-                      fe_interface_values,
-                      face,
-                      neighbour_face);
+                    interface_face_matrix_op(cell_matrix,
+                                             scratch_data,
+                                             solution_extraction_data,
+                                             fe_interface_values,
+                                             face,
+                                             neighbour_face);
                   }
               }
 
@@ -1027,13 +1093,12 @@ namespace WeakForms
                 for (const auto &interface_face_vector_op :
                      interface_face_vector_operations)
                   {
-                    interface_face_vector_op(
-                      cell_vector,
-                      scratch_data,
-                      solution_storage.get_solution_names(),
-                      fe_interface_values,
-                      face,
-                      neighbour_face);
+                    interface_face_vector_op(cell_vector,
+                                             scratch_data,
+                                             solution_extraction_data,
+                                             fe_interface_values,
+                                             face,
+                                             neighbour_face);
                   }
               }
 

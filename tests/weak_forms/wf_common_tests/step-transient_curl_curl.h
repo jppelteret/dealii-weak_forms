@@ -15,7 +15,8 @@
 
 // This header implements the transient version of a curl-curl problem.
 // Only the magnetic vector potential is used (so, not coupled with an
-// electric scalar potential).
+// electric scalar potential). There is an option to use a gradient field
+// to supply (div-free) source terms to the RHS of the curl-curl equation.
 // It is used as a baseline for the weak form tests.
 //
 // Reference: Zaglmayr2006
@@ -33,8 +34,8 @@
 #include <deal.II/dofs/dof_renumbering.h>
 #include <deal.II/dofs/dof_tools.h>
 
-#include <deal.II/fe/fe_dgq.h>
 #include <deal.II/fe/fe_nedelec_sz.h>
+#include <deal.II/fe/fe_q.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/fe/mapping_q.h>
@@ -160,7 +161,9 @@ namespace StepTransientCurlCurl
 
     struct SourceTerms
     {
-      double wire_current;
+      std::string wire_excitation;
+      double      wire_current;
+      double      wire_voltage;
 
       static void
       declare_parameters(ParameterHandler &prm);
@@ -174,10 +177,20 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Source terms");
       {
+        prm.declare_entry("Excitation method",
+                          "Current",
+                          Patterns::Selection("Current|Voltage"),
+                          "Specification for how the wire is excited");
+
         prm.declare_entry("Wire current",
                           "1.0",
                           Patterns::Double(),
                           "Total current through the wire CSA (A/m2)");
+
+        prm.declare_entry("Wire voltage drop",
+                          "1.0",
+                          Patterns::Double(),
+                          "Total voltage drop across the wire length (V)");
       }
       prm.leave_subsection();
     }
@@ -187,7 +200,9 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Source terms");
       {
-        wire_current = prm.get_double("Wire current");
+        wire_excitation = prm.get("Excitation method");
+        wire_current    = prm.get_double("Wire current");
+        wire_voltage    = prm.get_double("Wire voltage drop");
       }
       prm.leave_subsection();
     }
@@ -201,9 +216,9 @@ namespace StepTransientCurlCurl
     // at the element level leads to the mean-dilatation method. The
     // discontinuous approximation allows $\widetilde{p}$ and $\widetilde{J}$ to
     // be condensed out and a classical displacement based method is recovered.
-    // Here we specify the polynomial order used to approximate the solution.
-    // The quadrature order should be adjusted accordingly, but this is done at
-    // a later stage.
+    // Here we specify the polynomial order used to approximate the
+    // solution_mvp. The quadrature order should be adjusted accordingly, but
+    // this is done at a later stage.
     struct FESystem
     {
       unsigned int poly_degree_min;
@@ -542,6 +557,12 @@ namespace StepTransientCurlCurl
 
       void
       parse_parameters(ParameterHandler &prm);
+
+      bool
+      use_voltage_excitation() const;
+
+      bool
+      use_current_excitation() const;
     };
 
     AllParameters::AllParameters(const std::string &input_file)
@@ -577,6 +598,23 @@ namespace StepTransientCurlCurl
       Refinement::parse_parameters(prm);
       Materials::parse_parameters(prm);
       LinearSolver::parse_parameters(prm);
+    }
+
+    bool
+    AllParameters::use_voltage_excitation() const
+    {
+      if (wire_excitation == "Voltage")
+        return true;
+
+      Assert(wire_excitation == "Current",
+             ExcMessage("Unknown wire excitation option selected."));
+      return false;
+    }
+
+    bool
+    AllParameters::use_current_excitation() const
+    {
+      return !use_voltage_excitation();
     }
   } // namespace Parameters
 
@@ -802,19 +840,19 @@ namespace StepTransientCurlCurl
       }
   }
 
-  // @sect3{Analytical solution}
-  // Analytical solution to a linearly magnetisable
+  // @sect3{Analytical solution_mvp}
+  // Analytical solution_mvp to a linearly magnetisable
   // straight wire, aligned in the z-direction,
   // immersed in a medium of infinite size.
-  // The fundamentals required to derive the solution
+  // The fundamentals required to derive the solution_mvp
   // can be found in:
   // [Griffiths1999a] Griffiths, D. J. & College, R.
   // Introduction to electrodynamics. Prentice Hall, 1999
-  // The analytical solution is the solution to questions
+  // The analytical solution_mvp is the solution_mvp to questions
   // 5.25 on page 239. Note that q5.22 is loosely related...
 
   template <int dim>
-  class AnalyticalSolution : public Function<dim>
+  class Analyticalsolution_mvp : public Function<dim>
   {
   public:
     enum e_Field
@@ -823,10 +861,11 @@ namespace StepTransientCurlCurl
       MI   // Magnetic induction
     };
 
-    AnalyticalSolution(const Geometry<dim> &                geometry,
-                       const PermeabilityCoefficient<dim> & coefficient,
-                       const SourceFreeCurrentDensity<dim> &source_free_current,
-                       const e_Field &                      field)
+    Analyticalsolution_mvp(
+      const Geometry<dim> &                geometry,
+      const PermeabilityCoefficient<dim> & coefficient,
+      const SourceFreeCurrentDensity<dim> &source_free_current,
+      const e_Field &                      field)
       : Function<dim>(dim)
       , geometry(geometry)
       , coefficient(coefficient)
@@ -834,7 +873,7 @@ namespace StepTransientCurlCurl
       , field(field)
     {}
 
-    virtual ~AnalyticalSolution()
+    virtual ~Analyticalsolution_mvp()
     {}
 
     virtual void
@@ -852,16 +891,16 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  AnalyticalSolution<dim>::vector_value(const Point<dim> &,
-                                        Vector<double> &) const
+  Analyticalsolution_mvp<dim>::vector_value(const Point<dim> &,
+                                            Vector<double> &) const
   {
     AssertThrow(false, ExcInternalError());
   }
 
   template <>
   void
-  AnalyticalSolution<3>::vector_value(const Point<3> &p,
-                                      Vector<double> &values) const
+  Analyticalsolution_mvp<3>::vector_value(const Point<3> &p,
+                                          Vector<double> &values) const
   {
     const unsigned int dim = 3;
     Assert(values.size() == dim, ExcDimensionMismatch(values.size(), dim));
@@ -1020,18 +1059,41 @@ namespace StepTransientCurlCurl
     verify_source_terms() const;
 
     virtual void
-    assemble_system(TrilinosWrappers::SparseMatrix & system_matrix,
-                    TrilinosWrappers::MPI::Vector &  system_rhs,
-                    const AffineConstraints<double> &constraints) = 0;
+    assemble_system_esp(TrilinosWrappers::SparseMatrix & system_matrix_esp,
+                        TrilinosWrappers::MPI::Vector &  system_rhs_esp,
+                        const AffineConstraints<double> &constraints_esp) = 0;
 
     void
-    solve(const TrilinosWrappers::SparseMatrix &system_matrix,
-          TrilinosWrappers::MPI::Vector &       solution,
-          const TrilinosWrappers::MPI::Vector & system_rhs,
-          const AffineConstraints<double> &     constraints);
+    solve_esp(const TrilinosWrappers::SparseMatrix &system_matrix_esp,
+              TrilinosWrappers::MPI::Vector &       solution_esp,
+              const TrilinosWrappers::MPI::Vector & system_rhs_esp,
+              const AffineConstraints<double> &     constraints_esp,
+              const IndexSet &                      locally_owned_dofs_esp,
+              const DoFHandler<dim> &               dof_handler_esp);
+
+    virtual void
+    assemble_system_mvp(TrilinosWrappers::SparseMatrix & system_matrix_mvp,
+                        TrilinosWrappers::MPI::Vector &  system_rhs_mvp,
+                        const AffineConstraints<double> &constraints_mvp) = 0;
 
     void
-    verify_solution() const;
+    solve_mvp(const TrilinosWrappers::SparseMatrix &system_matrix_mvp,
+              TrilinosWrappers::MPI::Vector &       solution_mvp,
+              const TrilinosWrappers::MPI::Vector & system_rhs_mvp,
+              const AffineConstraints<double> &     constraints_mvp,
+              const IndexSet &                      locally_owned_dofs_mvp,
+              const DoFHandler<dim> &               dof_handler_mvp);
+
+    void
+    solve_linear_system(const TrilinosWrappers::SparseMatrix &system_matrix,
+                        TrilinosWrappers::MPI::Vector &       solution,
+                        const TrilinosWrappers::MPI::Vector & system_rhs,
+                        const AffineConstraints<double> &     constraints,
+                        const IndexSet &       locally_owned_dofs,
+                        const DoFHandler<dim> &dof_handler);
+
+    void
+    verify_solution_mvp() const;
 
     void
     make_grid();
@@ -1049,8 +1111,8 @@ namespace StepTransientCurlCurl
     output_results(const unsigned int timestep, const unsigned int cycle) const;
 
     void
-    output_point_solution(const unsigned int timestep,
-                          const unsigned int cycle) const;
+    output_point_solution_mvp(const unsigned int timestep,
+                              const unsigned int cycle) const;
 
     MPI_Comm                   mpi_communicator;
     const unsigned int         n_mpi_processes;
@@ -1066,34 +1128,53 @@ namespace StepTransientCurlCurl
     Triangulation<dim>      triangulation;
     RefinementStrategy<dim> refinement_strategy;
 
-    const unsigned int      degree;
-    const unsigned int      degree_offset;
-    const FE_NedelecSZ<dim> fe;
-    const MappingQ<dim>     mapping;
-    const QGauss<dim>       qf_cell;
-    const QGauss<dim - 1>   qf_face;
-    DoFHandler<dim>         dof_handler;
+    const unsigned int  degree;
+    const unsigned int  degree_offset;
+    const MappingQ<dim> mapping;
+
+    // MVP system
+    const FE_NedelecSZ<dim> fe_mvp;
+    const QGauss<dim>       qf_cell_mvp;
+    const QGauss<dim - 1>   qf_face_mvp;
+    DoFHandler<dim>         dof_handler_mvp;
 
     const unsigned int               mvp_group;
     const unsigned int               first_mvp_dof;
-    const FEValuesExtractors::Vector mvp_fe;
+    const FEValuesExtractors::Vector mvp_extractor;
 
-    std::vector<IndexSet>     all_locally_owned_dofs;
-    IndexSet                  locally_owned_dofs;
-    IndexSet                  locally_relevant_dofs;
-    AffineConstraints<double> constraints;
+    IndexSet                  locally_owned_dofs_mvp;
+    IndexSet                  locally_relevant_dofs_mvp;
+    AffineConstraints<double> constraints_mvp;
 
-    TrilinosWrappers::SparseMatrix system_matrix;
-    TrilinosWrappers::MPI::Vector  system_rhs;
-    TrilinosWrappers::MPI::Vector  solution;
-    TrilinosWrappers::MPI::Vector  solution_t1;
-    TrilinosWrappers::MPI::Vector  d_solution_dt;
+    TrilinosWrappers::SparseMatrix system_matrix_mvp;
+    TrilinosWrappers::MPI::Vector  system_rhs_mvp;
+    TrilinosWrappers::MPI::Vector  solution_mvp;
+    TrilinosWrappers::MPI::Vector  solution_mvp_t1;
+    TrilinosWrappers::MPI::Vector  d_solution_mvp_dt;
 
+    // ESP system
+    const FE_Q<dim>   fe_esp;
+    const QGauss<dim> qf_cell_esp;
+    DoFHandler<dim>   dof_handler_esp;
+
+    const unsigned int               esp_group;
+    const unsigned int               first_esp_dof;
+    const FEValuesExtractors::Scalar esp_extractor;
+
+    IndexSet                  locally_owned_dofs_esp;
+    IndexSet                  locally_relevant_dofs_esp;
+    AffineConstraints<double> constraints_esp;
+
+    TrilinosWrappers::SparseMatrix system_matrix_esp;
+    TrilinosWrappers::MPI::Vector  system_rhs_esp;
+    TrilinosWrappers::MPI::Vector  solution_esp;
+
+    // Other
     const Geometry<dim>           geometry;
     PermeabilityCoefficient<dim>  function_material_permeability_coefficients;
     ConductivityCoefficient<dim>  function_material_conductivity_coefficients;
     SourceFreeCurrentDensity<dim> function_free_current_density;
-    AnalyticalSolution<dim>       function_analytical_solution_MI;
+    Analyticalsolution_mvp<dim>   function_analytical_solution_mvp_MI;
   };
 
 
@@ -1121,14 +1202,23 @@ namespace StepTransientCurlCurl
     , degree(parameters.poly_degree_min)
     , degree_offset(
         1) // Edge elements are weird... Account for Nedelec degree order
-    , fe(degree)
     , mapping(degree + degree_offset, /*use_mapping_q_on_all_cells=*/false)
-    , qf_cell(degree + 1 + degree_offset)
-    , qf_face(degree + 1 + degree_offset)
-    , dof_handler(triangulation)
+    // Magnetic vector potential
+    , fe_mvp(degree)
+    , qf_cell_mvp(degree + 1 + degree_offset)
+    , qf_face_mvp(degree + 1 + degree_offset)
+    , dof_handler_mvp(triangulation)
     , mvp_group(0)
     , first_mvp_dof(0)
-    , mvp_fe(first_mvp_dof)
+    , mvp_extractor(first_mvp_dof)
+    // Electric scalar potential
+    , fe_esp(degree + degree_offset)
+    , qf_cell_esp(degree + 1 + degree_offset)
+    , dof_handler_esp(triangulation)
+    , esp_group(0)
+    , first_esp_dof(0)
+    , esp_extractor(first_esp_dof)
+    // Other
     , geometry(parameters.radius_wire * parameters.grid_scale,
                parameters.side_length_surroundings * parameters.grid_scale,
                Point<dim>(0, 0, 1) /*direction*/,
@@ -1140,11 +1230,11 @@ namespace StepTransientCurlCurl
                                                   parameters.sigma_surroundings,
                                                   parameters.sigma_wire)
     , function_free_current_density(geometry, parameters.wire_current)
-    , function_analytical_solution_MI(
+    , function_analytical_solution_mvp_MI(
         geometry,
         function_material_permeability_coefficients,
         function_free_current_density,
-        AnalyticalSolution<dim>::MI)
+        Analyticalsolution_mvp<dim>::MI)
   {
     if (parameters.discretisation_type != "Cartesian")
       AssertThrow(parameters.radius_wire <
@@ -1159,7 +1249,8 @@ namespace StepTransientCurlCurl
   template <int dim>
   StepTransientCurlCurl_Base<dim>::~StepTransientCurlCurl_Base()
   {
-    dof_handler.clear();
+    dof_handler_mvp.clear();
+    dof_handler_esp.clear();
   }
 
   // @sect4{StepTransientCurlCurl_Base::setup_system}
@@ -1168,6 +1259,9 @@ namespace StepTransientCurlCurl
   void
   StepTransientCurlCurl_Base<dim>::setup_system()
   {
+    std::vector<IndexSet> all_locally_owned_dofs_mvp;
+    std::vector<IndexSet> all_locally_owned_dofs_esp;
+
     {
       TimerOutput::Scope timer_scope(computing_timer, "Setup: distribute DoFs");
 
@@ -1175,80 +1269,195 @@ namespace StepTransientCurlCurl
       GridTools::partition_triangulation(n_mpi_processes, triangulation);
 
       // Distribute DoFs
-      dof_handler.distribute_dofs(fe);
-      DoFRenumbering::subdomain_wise(dof_handler);
+      dof_handler_mvp.distribute_dofs(fe_mvp);
+      DoFRenumbering::subdomain_wise(dof_handler_mvp);
 
       // Construct DoF indices
-      locally_owned_dofs.clear();
-      locally_relevant_dofs.clear();
-      all_locally_owned_dofs =
-        DoFTools::locally_owned_dofs_per_subdomain(dof_handler);
-      locally_owned_dofs    = all_locally_owned_dofs[this_mpi_process];
-      locally_relevant_dofs = DoFTools::locally_relevant_dofs_per_subdomain(
-        dof_handler)[this_mpi_process];
+      locally_owned_dofs_mvp.clear();
+      locally_relevant_dofs_mvp.clear();
+      all_locally_owned_dofs_mvp =
+        DoFTools::locally_owned_dofs_per_subdomain(dof_handler_mvp);
+      locally_owned_dofs_mvp    = all_locally_owned_dofs_mvp[this_mpi_process];
+      locally_relevant_dofs_mvp = DoFTools::locally_relevant_dofs_per_subdomain(
+        dof_handler_mvp)[this_mpi_process];
+
+      if (parameters.use_voltage_excitation())
+        {
+          dof_handler_esp.distribute_dofs(fe_esp);
+          DoFRenumbering::subdomain_wise(dof_handler_esp);
+
+          locally_owned_dofs_esp.clear();
+          locally_relevant_dofs_esp.clear();
+          all_locally_owned_dofs_esp =
+            DoFTools::locally_owned_dofs_per_subdomain(dof_handler_esp);
+          locally_owned_dofs_esp = all_locally_owned_dofs_esp[this_mpi_process];
+          locally_relevant_dofs_esp =
+            DoFTools::locally_relevant_dofs_per_subdomain(
+              dof_handler_esp)[this_mpi_process];
+        }
     }
 
     {
       TimerOutput::Scope timer_scope(computing_timer, "Setup: constraints");
 
-      constraints.clear();
-      DoFTools::make_hanging_node_constraints(dof_handler, constraints);
+      constraints_mvp.clear();
+      DoFTools::make_hanging_node_constraints(dof_handler_mvp, constraints_mvp);
 
       // "Perfect electrical conductor" on top/bottom surfaces
       // See Zaglmayr 2006, p 10, eq. 2.14
-      VectorTools::project_boundary_values_curl_conforming_l2(
-        dof_handler,
-        first_mvp_dof,
-        Functions::ZeroFunction<dim>(dim),
-        2,
-        constraints,
-        mapping);
+      for (const auto b_id : {2, 3})
+        {
+          VectorTools::project_boundary_values_curl_conforming_l2(
+            dof_handler_mvp,
+            first_mvp_dof,
+            Functions::ZeroFunction<dim>(dim),
+            b_id,
+            constraints_mvp,
+            mapping);
+        }
 
-      constraints.close();
+      constraints_mvp.close();
+
+      if (parameters.use_voltage_excitation())
+        {
+          constraints_esp.clear();
+          DoFTools::make_hanging_node_constraints(dof_handler_esp,
+                                                  constraints_esp);
+
+          // Top face
+          VectorTools::interpolate_boundary_values(
+            mapping,
+            dof_handler_esp,
+            2,
+            Functions::ConstantFunction<dim>(+parameters.wire_voltage / 2.0),
+            constraints_esp);
+
+          // Bottom face
+          VectorTools::interpolate_boundary_values(
+            mapping,
+            dof_handler_esp,
+            3,
+            Functions::ConstantFunction<dim>(-parameters.wire_voltage / 2.0),
+            constraints_esp);
+
+          // Everywhere else
+          VectorTools::interpolate_boundary_values(
+            mapping,
+            dof_handler_esp,
+            1,
+            Functions::ZeroFunction<dim>(),
+            constraints_esp);
+
+          // Fix all DoF's that are not in the wire
+          IndexSet wire_dofs(dof_handler_esp.n_dofs());
+
+          typename DoFHandler<dim>::active_cell_iterator
+            cell = this->dof_handler_esp.begin_active(),
+            endc = this->dof_handler_esp.end();
+          for (; cell != endc; ++cell)
+            {
+              if (this->geometry.within_wire(cell->center()))
+                {
+                  const unsigned int &n_dofs_per_cell = fe_esp.dofs_per_cell;
+                  std::vector<types::global_dof_index> local_dof_indices(
+                    n_dofs_per_cell);
+                  cell->get_dof_indices(local_dof_indices);
+                  wire_dofs.add_indices(local_dof_indices.begin(),
+                                        local_dof_indices.end());
+                }
+            }
+
+          for (unsigned int dof = 0; dof < dof_handler_esp.n_dofs(); ++dof)
+            if (wire_dofs.is_element(dof) == false)
+              constraints_esp.add_line(dof);
+
+          constraints_esp.close();
+        }
     }
 
     {
       TimerOutput::Scope timer_scope(computing_timer, "Setup: matrix, vectors");
 
       std::vector<dealii::types::global_dof_index>
-        n_locally_owned_dofs_per_processor(n_mpi_processes);
+        n_locally_owned_dofs_mvp_per_processor(n_mpi_processes);
       {
-        AssertThrow(all_locally_owned_dofs.size() ==
-                      n_locally_owned_dofs_per_processor.size(),
+        AssertThrow(all_locally_owned_dofs_mvp.size() ==
+                      n_locally_owned_dofs_mvp_per_processor.size(),
                     ExcInternalError());
-        for (unsigned int i = 0; i < n_locally_owned_dofs_per_processor.size();
+        for (unsigned int i = 0;
+             i < n_locally_owned_dofs_mvp_per_processor.size();
              ++i)
-          n_locally_owned_dofs_per_processor[i] =
-            all_locally_owned_dofs[i].n_elements();
+          n_locally_owned_dofs_mvp_per_processor[i] =
+            all_locally_owned_dofs_mvp[i].n_elements();
       }
 
-      DynamicSparsityPattern dsp(locally_relevant_dofs);
-      DoFTools::make_sparsity_pattern(dof_handler,
+      DynamicSparsityPattern dsp(locally_relevant_dofs_mvp);
+      DoFTools::make_sparsity_pattern(dof_handler_mvp,
                                       dsp,
-                                      constraints,
+                                      constraints_mvp,
                                       /* keep constrained dofs */ false,
                                       Utilities::MPI::this_mpi_process(
                                         mpi_communicator));
       dealii::SparsityTools::distribute_sparsity_pattern(
         dsp,
-        n_locally_owned_dofs_per_processor,
+        n_locally_owned_dofs_mvp_per_processor,
         mpi_communicator,
-        locally_relevant_dofs);
+        locally_relevant_dofs_mvp);
 
-      system_matrix.reinit(locally_owned_dofs,
-                           locally_owned_dofs,
-                           dsp,
-                           mpi_communicator);
-      system_rhs.reinit(locally_owned_dofs, mpi_communicator);
-      solution.reinit(locally_owned_dofs,
-                      locally_relevant_dofs,
-                      mpi_communicator);
-      solution_t1.reinit(locally_owned_dofs,
-                         locally_relevant_dofs,
-                         mpi_communicator);
-      d_solution_dt.reinit(locally_owned_dofs,
-                           locally_relevant_dofs,
-                           mpi_communicator);
+      system_matrix_mvp.reinit(locally_owned_dofs_mvp,
+                               locally_owned_dofs_mvp,
+                               dsp,
+                               mpi_communicator);
+      system_rhs_mvp.reinit(locally_owned_dofs_mvp, mpi_communicator);
+      solution_mvp.reinit(locally_owned_dofs_mvp,
+                          locally_relevant_dofs_mvp,
+                          mpi_communicator);
+      solution_mvp_t1.reinit(locally_owned_dofs_mvp,
+                             locally_relevant_dofs_mvp,
+                             mpi_communicator);
+      d_solution_mvp_dt.reinit(locally_owned_dofs_mvp,
+                               locally_relevant_dofs_mvp,
+                               mpi_communicator);
+
+
+
+      if (parameters.use_voltage_excitation())
+        {
+          std::vector<dealii::types::global_dof_index>
+            n_locally_owned_dofs_esp_per_processor(n_mpi_processes);
+          {
+            AssertThrow(all_locally_owned_dofs_esp.size() ==
+                          n_locally_owned_dofs_esp_per_processor.size(),
+                        ExcInternalError());
+            for (unsigned int i = 0;
+                 i < n_locally_owned_dofs_esp_per_processor.size();
+                 ++i)
+              n_locally_owned_dofs_esp_per_processor[i] =
+                all_locally_owned_dofs_esp[i].n_elements();
+          }
+
+          DynamicSparsityPattern dsp(locally_relevant_dofs_esp);
+          DoFTools::make_sparsity_pattern(dof_handler_esp,
+                                          dsp,
+                                          constraints_esp,
+                                          /* keep constrained dofs */ false,
+                                          Utilities::MPI::this_mpi_process(
+                                            mpi_communicator));
+          dealii::SparsityTools::distribute_sparsity_pattern(
+            dsp,
+            n_locally_owned_dofs_esp_per_processor,
+            mpi_communicator,
+            locally_relevant_dofs_esp);
+
+          system_matrix_esp.reinit(locally_owned_dofs_esp,
+                                   locally_owned_dofs_esp,
+                                   dsp,
+                                   mpi_communicator);
+          system_rhs_esp.reinit(locally_owned_dofs_esp, mpi_communicator);
+          solution_esp.reinit(locally_owned_dofs_esp,
+                              locally_relevant_dofs_esp,
+                              mpi_communicator);
+        }
     }
   }
 
@@ -1261,8 +1470,8 @@ namespace StepTransientCurlCurl
     TimerOutput::Scope timer_scope(computing_timer, "Verify source terms");
 
     FEFaceValues<dim> fe_face_values(mapping,
-                                     fe,
-                                     qf_face,
+                                     fe_mvp,
+                                     qf_face_mvp,
                                      update_quadrature_points |
                                        update_normal_vectors |
                                        update_JxW_values);
@@ -1276,9 +1485,9 @@ namespace StepTransientCurlCurl
     // 0 = \int_{\Omega_{e}} div (J_f)
     //   = \int_{\partial\Omega_{e}} J_f . n
 
-    typename DoFHandler<dim>::active_cell_iterator cell =
-                                                     dof_handler.begin_active(),
-                                                   endc = dof_handler.end();
+    typename DoFHandler<dim>::active_cell_iterator cell = dof_handler_mvp
+                                                            .begin_active(),
+                                                   endc = dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
         //    if (cell->is_locally_owned() == false) continue;
@@ -1315,17 +1524,17 @@ namespace StepTransientCurlCurl
   }
 
 
-  // @sect4{StepTransientCurlCurl_Base::verify_solution}
+  // @sect4{StepTransientCurlCurl_Base::verify_solution_mvp}
 
   template <int dim>
   void
-  StepTransientCurlCurl_Base<dim>::verify_solution() const
+  StepTransientCurlCurl_Base<dim>::verify_solution_mvp() const
   {
-    TimerOutput::Scope timer_scope(computing_timer, "Verify solution");
+    TimerOutput::Scope timer_scope(computing_timer, "Verify solution_mvp");
 
     FEFaceValues<dim> fe_face_values(mapping,
-                                     fe,
-                                     qf_face,
+                                     fe_mvp,
+                                     qf_face_mvp,
                                      update_gradients |
                                        update_quadrature_points |
                                        update_normal_vectors |
@@ -1345,9 +1554,9 @@ namespace StepTransientCurlCurl
     //      the gauged degrees-of-freedom incorrectly then we might produce
     //      a magnetic induction field that is not divergence free
 
-    typename DoFHandler<dim>::active_cell_iterator cell =
-                                                     dof_handler.begin_active(),
-                                                   endc = dof_handler.end();
+    typename DoFHandler<dim>::active_cell_iterator cell = dof_handler_mvp
+                                                            .begin_active(),
+                                                   endc = dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
         //    if (cell->is_locally_owned() == false) continue;
@@ -1362,9 +1571,10 @@ namespace StepTransientCurlCurl
             const unsigned int &n_fq_points =
               fe_face_values.n_quadrature_points;
 
-            // Pre-compute solution at QPs
+            // Pre-compute solution_mvp at QPs
             std::vector<Tensor<1, dim>> qp_curl_A(n_fq_points);
-            fe_face_values[mvp_fe].get_function_curls(solution, qp_curl_A);
+            fe_face_values[mvp_extractor].get_function_curls(solution_mvp,
+                                                             qp_curl_A);
 
             for (unsigned int fq_point = 0; fq_point < n_fq_points; ++fq_point)
               {
@@ -1388,14 +1598,52 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  StepTransientCurlCurl_Base<dim>::solve(
+  StepTransientCurlCurl_Base<dim>::solve_esp(
+    const TrilinosWrappers::SparseMatrix &system_matrix_esp,
+    TrilinosWrappers::MPI::Vector &       solution_esp,
+    const TrilinosWrappers::MPI::Vector & system_rhs_esp,
+    const AffineConstraints<double> &     constraints_esp,
+    const IndexSet &                      locally_owned_dofs_esp,
+    const DoFHandler<dim> &               dof_handler_esp)
+  {
+    TimerOutput::Scope timer_scope(computing_timer, "Solve linear system: ESP");
+    solve_linear_system(system_matrix_esp,
+                        solution_esp,
+                        system_rhs_esp,
+                        constraints_esp,
+                        locally_owned_dofs_esp,
+                        dof_handler_esp);
+  }
+
+  template <int dim>
+  void
+  StepTransientCurlCurl_Base<dim>::solve_mvp(
+    const TrilinosWrappers::SparseMatrix &system_matrix_mvp,
+    TrilinosWrappers::MPI::Vector &       solution_mvp,
+    const TrilinosWrappers::MPI::Vector & system_rhs_mvp,
+    const AffineConstraints<double> &     constraints_mvp,
+    const IndexSet &                      locally_owned_dofs_mvp,
+    const DoFHandler<dim> &               dof_handler_mvp)
+  {
+    TimerOutput::Scope timer_scope(computing_timer, "Solve linear system: MVP");
+    solve_linear_system(system_matrix_mvp,
+                        solution_mvp,
+                        system_rhs_mvp,
+                        constraints_mvp,
+                        locally_owned_dofs_mvp,
+                        dof_handler_mvp);
+  }
+
+  template <int dim>
+  void
+  StepTransientCurlCurl_Base<dim>::solve_linear_system(
     const TrilinosWrappers::SparseMatrix &system_matrix,
     TrilinosWrappers::MPI::Vector &       solution,
     const TrilinosWrappers::MPI::Vector & system_rhs,
-    const AffineConstraints<double> &     constraints)
+    const AffineConstraints<double> &     constraints,
+    const IndexSet &                      locally_owned_dofs,
+    const DoFHandler<dim> &               dof_handler)
   {
-    TimerOutput::Scope timer_scope(computing_timer, "Solve linear system");
-
     TrilinosWrappers::MPI::Vector distributed_solution_increment(
       locally_owned_dofs, mpi_communicator);
 
@@ -1531,19 +1779,19 @@ namespace StepTransientCurlCurl
       }
     else // Adaptive mesh refinement
       {
-        const QGauss<dim - 1> EE_qf_face_QGauss(degree + 2);
+        const QGauss<dim - 1> EE_qf_face_mvp_QGauss(degree + 2);
 
-        // Refine based on eddy current solution
+        // Refine based on eddy current solution_mvp
         Vector<float> estimated_error_per_cell(triangulation.n_active_cells());
         using FunctionMap_type =
           std::map<types::boundary_id,
                    const Function<dim, typename Vector<double>::value_type> *>;
         estimated_error_per_cell = 0.0;
         KellyErrorEstimator<dim>::estimate(
-          dof_handler,
-          EE_qf_face_QGauss,
+          dof_handler_mvp,
+          EE_qf_face_mvp_QGauss,
           FunctionMap_type{},
-          d_solution_dt,
+          d_solution_mvp_dt,
           estimated_error_per_cell,
           ComponentMask(),
           /*coefficients = */ 0,
@@ -1579,8 +1827,8 @@ namespace StepTransientCurlCurl
                  refinement_strategy.use_p_refinement() == true) // p-refinement
           {
             typename DoFHandler<dim>::active_cell_iterator
-              cell = dof_handler.begin_active(),
-              endc = dof_handler.end();
+              cell = dof_handler_mvp.begin_active(),
+              endc = dof_handler_mvp.end();
             for (; cell != endc; ++cell)
               {
                 //    if (cell->is_locally_owned() == false) continue;
@@ -1633,7 +1881,7 @@ namespace StepTransientCurlCurl
     get_filename_vtu(const unsigned int process,
                      const unsigned int timestep,
                      const unsigned int cycle,
-                     const std::string  name     = "solution",
+                     const std::string  name     = "solution_mvp",
                      const unsigned int n_digits = 4)
     {
       std::ostringstream filename_vtu;
@@ -1647,7 +1895,7 @@ namespace StepTransientCurlCurl
     static std::string
     get_filename_pvtu(const unsigned int timestep,
                       const unsigned int cycle,
-                      const std::string  name     = "solution",
+                      const std::string  name     = "solution_mvp",
                       const unsigned int n_digits = 4)
     {
       std::ostringstream filename_vtu;
@@ -1658,7 +1906,7 @@ namespace StepTransientCurlCurl
     }
 
     static std::string
-    get_filename_pvd(const std::string name = "solution")
+    get_filename_pvd(const std::string name = "solution_mvp")
     {
       std::ostringstream filename_vtu;
       filename_vtu << name << "-" << (std::to_string(dim) + "d") << ".pvd";
@@ -1672,6 +1920,10 @@ namespace StepTransientCurlCurl
   StepTransientCurlCurl_Base<dim>::output_grid(const unsigned int timestep,
                                                const unsigned int cycle) const
   {
+    const bool output_vtk = false;
+    if (output_vtk == false)
+      return;
+
     TimerOutput::Scope timer_scope(computing_timer, "Grid output");
 
     // Write out main data file
@@ -1809,6 +2061,57 @@ namespace StepTransientCurlCurl
 
 
   template <int dim>
+  class SourceFEQFreeCurrentDensity : public DataPostprocessorVector<dim>
+  {
+  public:
+    SourceFEQFreeCurrentDensity(const Geometry<dim> &geometry,
+                                const double &       sigma_surroundings,
+                                const double &       sigma_wire)
+      : DataPostprocessorVector<dim>("J_free_grad_field",
+                                     update_gradients |
+                                       update_quadrature_points)
+      , function_material_conductivity_coefficients(geometry,
+                                                    sigma_surroundings,
+                                                    sigma_wire)
+    {}
+
+    virtual void
+    evaluate_scalar_field(
+      const DataPostprocessorInputs::Scalar<dim> &input_data,
+      std::vector<Vector<double>> &computed_quantities) const override
+    {
+      AssertDimension(input_data.evaluation_points.size(),
+                      computed_quantities.size());
+      AssertDimension(input_data.solution_gradients.size(),
+                      computed_quantities.size());
+
+      const std::vector<Point<dim>> &evaluation_points =
+        input_data.evaluation_points;
+      const std::vector<Tensor<1, dim>> &grad_esp =
+        input_data.solution_gradients;
+
+      const unsigned int n_evaluation_points = evaluation_points.size();
+
+      std::vector<double> conductivity_coefficient_values(n_evaluation_points);
+      function_material_conductivity_coefficients.value_list(
+        evaluation_points, conductivity_coefficient_values);
+
+      for (unsigned int p = 0; p < n_evaluation_points; ++p)
+        {
+          AssertDimension(computed_quantities[p].size(), dim);
+          const double &sigma = conductivity_coefficient_values[p];
+
+          for (unsigned int d = 0; d < dim; ++d)
+            computed_quantities[p][d] = -sigma * grad_esp[p][d];
+        }
+    }
+
+  private:
+    ConductivityCoefficient<dim> function_material_conductivity_coefficients;
+  };
+
+
+  template <int dim>
   void
   StepTransientCurlCurl_Base<dim>::output_results(
     const unsigned int timestep,
@@ -1821,7 +2124,7 @@ namespace StepTransientCurlCurl
     TimerOutput::Scope timer_scope(computing_timer, "Output results");
 
     DataOut<dim> data_out;
-    data_out.attach_dof_handler(dof_handler);
+    data_out.attach_dof_handler(dof_handler_mvp);
 
     const std::vector<DataComponentInterpretation::DataComponentInterpretation>
       data_component_interpretation_sclr(
@@ -1830,37 +2133,54 @@ namespace StepTransientCurlCurl
       data_component_interpretation_vec(
         dim, DataComponentInterpretation::component_is_part_of_vector);
 
-    // Solution
-    const std::vector<std::string> name_MVP_solution(dim, "A");
-    data_out.add_data_vector(solution,
-                             name_MVP_solution,
+    // solution_mvp
+    const std::vector<std::string> name_MVP_solution_mvp(dim, "A");
+    data_out.add_data_vector(solution_mvp,
+                             name_MVP_solution_mvp,
                              DataOut<dim>::type_dof_data,
                              data_component_interpretation_vec);
-    // Rate of change of solution
-    const std::vector<std::string> name_d_MVP_dt_solution(dim, "dA_dt");
-    data_out.add_data_vector(d_solution_dt,
-                             name_d_MVP_dt_solution,
+    // Rate of change of solution_mvp
+    const std::vector<std::string> name_d_MVP_dt_solution_mvp(dim, "dA_dt");
+    data_out.add_data_vector(d_solution_mvp_dt,
+                             name_d_MVP_dt_solution_mvp,
                              DataOut<dim>::type_dof_data,
                              data_component_interpretation_vec);
 
     // Magnetic induction
     const MagneticInductionPostprocessor<dim> magnetic_induction_postprocessor;
-    data_out.add_data_vector(solution, magnetic_induction_postprocessor);
+    data_out.add_data_vector(solution_mvp, magnetic_induction_postprocessor);
 
     // Eddy currents
     const EddyCurrentPostprocessor<dim> eddy_current_postprocessor(
       geometry, parameters.sigma_surroundings, parameters.sigma_wire);
-    data_out.add_data_vector(d_solution_dt, eddy_current_postprocessor);
+    data_out.add_data_vector(d_solution_mvp_dt, eddy_current_postprocessor);
 
     // Current source
     const SourceFreeCurrentPostprocessor<dim> source_free_current_postprocessor(
       geometry, parameters.wire_current);
-    data_out.add_data_vector(solution, source_free_current_postprocessor);
+    data_out.add_data_vector(solution_mvp, source_free_current_postprocessor);
 
-    // const std::vector<std::string> name_J_solution(dim, "J_free");
-    // data_out.add_data_vector(postprocessing.J.dof_handler,
-    //                          postprocessing.J.solution,
-    //                          name_J_solution,
+    const SourceFEQFreeCurrentDensity<dim>
+      source_feq_free_current_postprocessor(geometry,
+                                            parameters.sigma_surroundings,
+                                            parameters.sigma_wire);
+    if (parameters.use_voltage_excitation())
+      {
+        const std::vector<std::string> name_ESP_solution_esp(1, "phi");
+        data_out.add_data_vector(dof_handler_esp,
+                                 solution_esp,
+                                 name_ESP_solution_esp,
+                                 data_component_interpretation_sclr);
+
+        data_out.add_data_vector(dof_handler_esp,
+                                 solution_esp,
+                                 source_feq_free_current_postprocessor);
+      }
+
+    // const std::vector<std::string> name_J_solution_mvp(dim, "J_free");
+    // data_out.add_data_vector(postprocessing.J.dof_handler_mvp,
+    //                          postprocessing.J.solution_mvp,
+    //                          name_J_solution_mvp,
     //                          data_component_interpretation_vec);
 
     // // Current source: Verification of interpolation
@@ -1869,16 +2189,16 @@ namespace StepTransientCurlCurl
     // if (interpolate_source == true)
     // {
     //   // Compute source current by interpolation
-    //   source_terms_int_proj.reinit(postprocessing.J.locally_owned_dofs,
-    //                                postprocessing.J.locally_relevant_dofs,
+    //   source_terms_int_proj.reinit(postprocessing.J.locally_owned_dofs_mvp,
+    //                                postprocessing.J.locally_relevant_dofs_mvp,
     //                                mpi_communicator);
     //   VectorTools::interpolate(/*mapping_collection,*/
-    //                            postprocessing.J.dof_handler,
+    //                            postprocessing.J.dof_handler_mvp,
     //                            function_free_current_density,
     //                            source_terms_int_proj);
     //   const std::vector<std::string> name_source_free_current (dim,
     //   "source_free_current_int"); data_out.add_data_vector
-    //   (postprocessing.J.dof_handler,
+    //   (postprocessing.J.dof_handler_mvp,
     //                             source_terms_int_proj,
     //                             name_source_free_current,
     //                             data_component_interpretation_vec);
@@ -1886,29 +2206,29 @@ namespace StepTransientCurlCurl
     // else
     // {
     //   // Compute source current by projection
-    //   source_terms_int_proj.reinit(postprocessing.J.locally_owned_dofs,
-    //                                postprocessing.J.locally_relevant_dofs,
+    //   source_terms_int_proj.reinit(postprocessing.J.locally_owned_dofs_mvp,
+    //                                postprocessing.J.locally_relevant_dofs_mvp,
     //                                mpi_communicator);
     //   TrilinosWrappers::MPI::Vector distributed_source_terms;
-    //   distributed_source_terms.reinit(postprocessing.J.locally_owned_dofs,
+    //   distributed_source_terms.reinit(postprocessing.J.locally_owned_dofs_mvp,
     //                                   mpi_communicator);
-    //   AffineConstraints<double> constraints_source;
-    //   constraints_source.close();
+    //   AffineConstraints<double> constraints_mvp_source;
+    //   constraints_mvp_source.close();
     //   hp::QCollection<dim> qf_collection_cell_QGauss;
     //   for (unsigned int degree = parameters.poly_degree_min;
     //       degree <= parameters.poly_degree_max; ++degree)
     //   {
     //     qf_collection_cell_QGauss.push_back(QGauss<dim> (degree + 2));
     //   }
-    //   VectorTools::project (postprocessing.J.dof_handler,
-    //                         constraints_source,
+    //   VectorTools::project (postprocessing.J.dof_handler_mvp,
+    //                         constraints_mvp_source,
     //                         qf_collection_cell_QGauss,
     //                         function_free_current_density,
     //                         distributed_source_terms);
     //   source_terms_int_proj = distributed_source_terms;
     //   const std::vector<std::string> name_source_free_current (dim,
     //   "source_free_current_proj"); data_out.add_data_vector
-    //   (postprocessing.J.dof_handler,
+    //   (postprocessing.J.dof_handler_mvp,
     //                             source_terms_int_proj,
     //                             name_source_free_current,
     //                             data_component_interpretation_vec);
@@ -1993,14 +2313,14 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  StepTransientCurlCurl_Base<dim>::output_point_solution(
+  StepTransientCurlCurl_Base<dim>::output_point_solution_mvp(
     const unsigned int timestep,
     const unsigned int cycle) const
   {
     const QMidpoint<dim> soln_qrule;
 
     FEValues<dim> fe_values(mapping,
-                            fe,
+                            fe_mvp,
                             soln_qrule,
                             update_values | update_gradients |
                               update_quadrature_points);
@@ -2014,7 +2334,7 @@ namespace StepTransientCurlCurl
     for (const auto &p : points_of_interest)
       {
         const auto cell_iterator_and_point =
-          GridTools::find_active_cell_around_point(mapping, dof_handler, p);
+          GridTools::find_active_cell_around_point(mapping, dof_handler_mvp, p);
         const auto &cell = cell_iterator_and_point.first;
         fe_values.reinit(cell);
 
@@ -2030,15 +2350,16 @@ namespace StepTransientCurlCurl
         this->function_free_current_density.value_list(
           fe_values.get_quadrature_points(), source_values);
 
-        std::vector<Tensor<1, dim>> solution_curls(n_q_points);
-        std::vector<Tensor<1, dim>> d_solution_dt_values(n_q_points);
-        fe_values[mvp_fe].get_function_curls(solution, solution_curls);
-        fe_values[mvp_fe].get_function_values(d_solution_dt,
-                                              d_solution_dt_values);
+        std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
+        std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
+        fe_values[mvp_extractor].get_function_curls(solution_mvp,
+                                                    solution_mvp_curls);
+        fe_values[mvp_extractor].get_function_values(d_solution_mvp_dt,
+                                                     d_solution_mvp_dt_values);
 
         const double          sigma  = conductivity_coefficient_values[q_point];
-        const Tensor<1, dim>  B      = solution_curls[q_point];
-        const Tensor<1, dim>  dA_dt  = d_solution_dt_values[q_point];
+        const Tensor<1, dim>  B      = solution_mvp_curls[q_point];
+        const Tensor<1, dim>  dA_dt  = d_solution_mvp_dt_values[q_point];
         const Tensor<1, dim>  J_eddy = -sigma * dA_dt;
         const Tensor<1, dim> &J_free = source_values[q_point];
 
@@ -2276,12 +2597,13 @@ namespace StepTransientCurlCurl
                 // On the lateral surfaces , the boundary is traction free.
                 // This is the "perfect magnetic conductor" condition.
                 // See Zaglmayr 2006, p 10.
-                // ID = 1: Lateral faces (perpendicular to wire)
-                // ID = 2: Top/bottom faces (parallel to wire)
+                // ID = 1:   Lateral faces (perpendicular to wire)
+                // ID = 2/3: Top/bottom faces (parallel to wire)
                 const Point<dim> pt = cell->face(face)->center();
-                if (std::abs(pt[2] - half_length) < tol_b_id ||
-                    std::abs(pt[2] + half_length) < tol_b_id)
+                if (std::abs(pt[2] - half_length) < tol_b_id)
                   cell->face(face)->set_boundary_id(2);
+                else if (std::abs(pt[2] + half_length) < tol_b_id)
+                  cell->face(face)->set_boundary_id(3);
                 else
                   cell->face(face)->set_boundary_id(1);
               }
@@ -2353,8 +2675,8 @@ namespace StepTransientCurlCurl
 
             setup_system();
 
-            pcout << "   Number of degrees of freedom: " << dof_handler.n_dofs()
-                  << std::endl;
+            pcout << "   Number of degrees of freedom: "
+                  << dof_handler_mvp.n_dofs() << std::endl;
           }
 
 #ifdef DEBUG
@@ -2366,18 +2688,36 @@ namespace StepTransientCurlCurl
 #endif
 
         pcout << "   Assembling and solving... " << std::endl;
-        assemble_system(system_matrix, system_rhs, constraints);
-        solve(system_matrix, solution, system_rhs, constraints);
+        if (parameters.use_voltage_excitation())
+          {
+            assemble_system_esp(system_matrix_esp,
+                                system_rhs_esp,
+                                constraints_esp);
+            solve_esp(system_matrix_esp,
+                      solution_esp,
+                      system_rhs_esp,
+                      constraints_esp,
+                      locally_owned_dofs_esp,
+                      dof_handler_esp);
+          }
 
-        // Update solution rate / time derivative
-        d_solution_dt = solution;
-        d_solution_dt -= solution_t1;
-        d_solution_dt /= parameters.delta_t;
+        assemble_system_mvp(system_matrix_mvp, system_rhs_mvp, constraints_mvp);
+        solve_mvp(system_matrix_mvp,
+                  solution_mvp,
+                  system_rhs_mvp,
+                  constraints_mvp,
+                  locally_owned_dofs_mvp,
+                  dof_handler_mvp);
+
+        // Update solution_mvp rate / time derivative
+        d_solution_mvp_dt = solution_mvp;
+        d_solution_mvp_dt -= solution_mvp_t1;
+        d_solution_mvp_dt /= parameters.delta_t;
 
         pcout << "   Postprocessing... " << std::endl;
 
         output_results(time_step, cycle);
-        output_point_solution(time_step, cycle);
+        output_point_solution_mvp(time_step, cycle);
 
         if (time_step == 0 && cycle < n_cycles)
           {
@@ -2386,8 +2726,8 @@ namespace StepTransientCurlCurl
         else
           {
             pcout << "   Update at end of timestep... " << std::endl;
-            // Update old solution (history variable)
-            solution_t1 = solution;
+            // Update old solution_mvp (history variable)
+            solution_mvp_t1 = solution_mvp;
 
             current_time += parameters.delta_t;
             ++time_step;

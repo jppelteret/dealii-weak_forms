@@ -44,6 +44,12 @@ namespace WeakForms
 {
   namespace Utilities
   {
+    inline std::string
+    get_deal_II_prefix()
+    {
+      return "__DEAL_II__";
+    }
+
     // T must be an iterable type
     template <typename IterableObject>
     std::string

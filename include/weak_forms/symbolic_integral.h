@@ -54,18 +54,22 @@ namespace WeakForms
              (subdomains.size() == 1 && *subdomains.begin() == invalid_index);
     }
 
-    const std::set<SubDomainType> &
-    get_subdomains() const
-    {
-      return subdomains;
-    }
-
     // ----  Ascii ----
 
     std::string
     as_ascii(const SymbolicDecorations &decorator) const
     {
       return get_infinitesimal_symbol_ascii(decorator);
+    }
+
+
+    std::string
+    get_subdomain_as_ascii(const SymbolicDecorations &decorator) const
+    {
+      (void)decorator;
+
+      // Expand the set of subdomains as a comma separated list
+      return Utilities::get_comma_separated_string_from(get_subdomains());
     }
 
     virtual std::string
@@ -83,6 +87,15 @@ namespace WeakForms
       return get_infinitesimal_symbol_latex(decorator);
     }
 
+    std::string
+    get_subdomain_as_latex(const SymbolicDecorations &decorator) const
+    {
+      (void)decorator;
+
+      // Expand the set of subdomains as a comma separated list
+      return Utilities::get_comma_separated_string_from(get_subdomains());
+    }
+
     virtual std::string
     get_symbol_latex(const SymbolicDecorations &decorator) const = 0;
 
@@ -91,6 +104,13 @@ namespace WeakForms
       const SymbolicDecorations &decorator) const = 0;
 
   protected:
+    // Dictate whether to integrate over the whole
+    // volume / boundary / interface, or just a
+    // part of it. The invalid index SubDomainType(-1)
+    // also indicates that the entire domain is to be
+    // integrated over.
+    const std::set<SubDomainType> subdomains;
+
     bool
     integrate_on_subdomain(const SubDomainType &idx) const
     {
@@ -100,12 +120,11 @@ namespace WeakForms
       return subdomains.find(idx) != subdomains.end();
     }
 
-    // Dictate whether to integrate over the whole
-    // volume / boundary / interface, or just a
-    // part of it. The invalid index SubDomainType(-1)
-    // also indicates that the entire domain is to be
-    // integrated over.
-    const std::set<SubDomainType> subdomains;
+    const std::set<SubDomainType> &
+    get_subdomains() const
+    {
+      return subdomains;
+    }
   };
 
 
@@ -353,12 +372,6 @@ namespace WeakForms
         return integral_operation.integrate_over_entire_domain();
       }
 
-      const std::set<typename IntegralType::subdomain_t> &
-      get_subdomains() const
-      {
-        return integral_operation.get_subdomains();
-      }
-
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
@@ -371,6 +384,18 @@ namespace WeakForms
       {
         return decorator.symbolic_op_integral_as_latex(integrand,
                                                        integral_operation);
+      }
+
+      std::string
+      get_subdomain_as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return integral_operation.get_subdomain_as_ascii(decorator);
+      }
+
+      std::string
+      get_subdomain_as_latex(const SymbolicDecorations &decorator) const
+      {
+        return integral_operation.get_subdomain_as_latex(decorator);
       }
 
       // ===== Section: Construct assembly operation =====

@@ -593,13 +593,8 @@ namespace WeakForms
         }
       else
         {
-          Assert(!infinitesimal_element.get_subdomains().empty(),
-                 ExcInternalError());
-
-          // Expand the set of subdomains as a comma separated list
-          const auto &      subdomains = infinitesimal_element.get_subdomains();
           const std::string str_subdomains =
-            Utilities::get_comma_separated_string_from(subdomains);
+            infinitesimal_element.get_subdomain_as_ascii(decorator);
 
           return prefix + functor.as_ascii(decorator) + suffix +
                  infinitesimal_element.get_infinitesimal_symbol_ascii(
@@ -630,13 +625,8 @@ namespace WeakForms
         }
       else
         {
-          Assert(!infinitesimal_element.get_subdomains().empty(),
-                 ExcInternalError());
-
-          // Expand the set of subdomains as a comma separated list
-          const auto &      subdomains = infinitesimal_element.get_subdomains();
           const std::string str_subdomains =
-            Utilities::get_comma_separated_string_from(subdomains);
+            infinitesimal_element.get_subdomain_as_latex(decorator);
 
           return Utilities::LaTeX::decorate_integral(
             functor.as_latex(decorator),

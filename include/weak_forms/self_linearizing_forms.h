@@ -30,6 +30,7 @@
 #include <weak_forms/residual_functor.h>
 // #include <weak_forms/functors.h> // Needed?
 #include <weak_forms/linear_forms.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/subspace_extractors.h>
 #include <weak_forms/subspace_views.h>
 #include <weak_forms/symbolic_integral.h>
@@ -493,9 +494,10 @@ namespace WeakForms
           "D(f)",
           [functor, derivative_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -580,9 +582,10 @@ namespace WeakForms
           "D^{2}(f)",
           [functor, derivative_1_extractor, derivative_2_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -661,9 +664,10 @@ namespace WeakForms
           "D(f)",
           [functor, first_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -759,9 +763,10 @@ namespace WeakForms
           "D^{2}(f)",
           [functor, second_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -1188,9 +1193,10 @@ namespace WeakForms
           "f",
           [functor, residual_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -1267,9 +1273,10 @@ namespace WeakForms
           "D(f)",
           [functor, residual_extractor, derivative_extractor](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the helper from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -1343,10 +1350,12 @@ namespace WeakForms
         return ValueOpResult_t::template get_functor<dim, spacedim>(
           "f",
           "f",
-          [functor, value](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                           const std::vector<std::string> &solution_names)
+          [functor,
+           value](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
@@ -1436,9 +1445,10 @@ namespace WeakForms
           "D(f)",
           [functor, first_derivative](
             MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<std::string> &        solution_names)
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &solution_extraction_data)
           {
-            (void)solution_names;
+            (void)solution_extraction_data;
             // We need to fetch the optimizer from Scratch (rather than passing
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.

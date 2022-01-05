@@ -24,7 +24,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
-#include <weak_forms/solution_storage.h>
+#include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -2510,8 +2510,9 @@ public:                                                                        \
   template <typename ScalarType, std::size_t width>                            \
   vectorized_return_type<ScalarType, width> operator()(                        \
     MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,         \
-    const std::vector<std::string> &                     solution_names,       \
-    const types::vectorized_qp_range_t &                 q_point_range) const                   \
+    const std::vector<SolutionExtractionData<dimension, space_dimension>>      \
+      &                                 solution_extraction_data,              \
+    const types::vectorized_qp_range_t &q_point_range) const                   \
   {                                                                            \
     vectorized_return_type<ScalarType, width> out;                             \
     Assert(q_point_range.size() <= width,                                      \
@@ -2519,11 +2520,11 @@ public:                                                                        \
                                                                                \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(out,                                      \
-                                     i,                                        \
-                                     this->template operator()<ScalarType>(    \
-                                       scratch_data,                           \
-                                       solution_names)[q_point_range[i]]);     \
+      numbers::set_vectorized_values(                                          \
+        out,                                                                   \
+        i,                                                                     \
+        this->template operator()<ScalarType>(                                 \
+          scratch_data, solution_extraction_data)[q_point_range[i]]);          \
                                                                                \
     return out;                                                                \
   }                                                                            \
@@ -2566,14 +2567,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_values<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2606,14 +2626,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_gradients<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2655,14 +2694,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_symmetric_gradients<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2711,14 +2769,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_divergences<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2764,13 +2841,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data.template get_curls<view_extractor_type, ScalarType>(
-          solution_names[solution_index], get_extractor());
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
+          .template get_curls<view_extractor_type, ScalarType>(
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2811,14 +2908,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_laplacians<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2862,14 +2978,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_hessians<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2913,14 +3048,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_third_derivatives<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2950,14 +3104,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_jumps_in_values<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -2982,14 +3155,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_averages_of_values<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -3014,14 +3206,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_jumps_in_gradients<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -3046,14 +3257,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_averages_of_gradients<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -3078,14 +3308,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_jumps_in_hessians<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -3110,14 +3359,33 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_averages_of_hessians<view_extractor_type, ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
@@ -3143,15 +3411,34 @@ protected:                                                                     \
       const return_type<ScalarType> &
       operator()(
         MeshWorker::ScratchData<dimension, space_dimension> &scratch_data,
-        const std::vector<std::string> &solution_names) const
+        const std::vector<SolutionExtractionData<dimension, space_dimension>>
+          &solution_extraction_data) const
       {
-        Assert(solution_index < solution_names.size(),
-               ExcIndexRange(solution_index, 0, solution_names.size()));
+        Assert(solution_index < solution_extraction_data.size(),
+               ExcIndexRange(solution_index,
+                             0,
+                             solution_extraction_data.size()));
 
-        return scratch_data
+        (void)scratch_data;
+        if (solution_extraction_data[solution_index].uses_external_dofhandler)
+          {
+            Assert(&scratch_data != &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+        else
+          {
+            Assert(&scratch_data == &solution_extraction_data[solution_index]
+                                       .get_scratch_data(),
+                   ExcInternalError());
+          }
+
+        return solution_extraction_data[solution_index]
+          .get_scratch_data()
           .template get_jumps_in_third_derivatives<view_extractor_type,
                                                    ScalarType>(
-            solution_names[solution_index], get_extractor());
+            solution_extraction_data[solution_index].solution_name,
+            get_extractor());
       }
     };
 
