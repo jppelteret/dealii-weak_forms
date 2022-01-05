@@ -107,21 +107,25 @@ main()
     const SymmetricTensorCacheFunctor<2, dim> S("S", "T");
     const UpdateFlags update_flags = UpdateFlags::update_default;
 
-    const auto s_func = [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                           const std::vector<std::string> &solution_names,
-                           const unsigned int q_point) { return 0.0; };
-    const auto sc     = value<double, dim, spacedim>(s, s_func, update_flags);
+    const auto s_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return 0.0; };
+    const auto sc = value<double, dim, spacedim>(s, s_func, update_flags);
 
-    const auto T_func = [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                           const std::vector<std::string> &solution_names,
-                           const unsigned int              q_point)
-    { return Tensor<2, dim>(); };
+    const auto T_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return Tensor<2, dim>(); };
     const auto Tc = value<double, dim>(T, T_func, update_flags);
 
-    const auto S_func = [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                           const std::vector<std::string> &solution_names,
-                           const unsigned int              q_point)
-    { return SymmetricTensor<2, dim>(); };
+    const auto S_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return SymmetricTensor<2, dim>(); };
     const auto Sc = value<double, dim>(S, S_func, update_flags);
 
     // Multiply

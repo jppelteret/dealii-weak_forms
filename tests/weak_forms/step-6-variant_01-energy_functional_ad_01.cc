@@ -80,9 +80,10 @@ Step6<dim>::assemble_system()
 
   const auto energy = energy_func.template value<ADNumber_t, dim, spacedim>(
     [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-       const std::vector<std::string> &              solution_names,
-       const unsigned int                            q_point,
-       const Tensor<1, spacedim, ADNumber_t> &       grad_u)
+       const std::vector<SolutionExtractionData<dim, spacedim>>
+         &                                    solution_extraction_data,
+       const unsigned int                     q_point,
+       const Tensor<1, spacedim, ADNumber_t> &grad_u)
     {
       // Sacado is unbelievably annoying. If we don't explicitly
       // cast this return type then we get a segfault.

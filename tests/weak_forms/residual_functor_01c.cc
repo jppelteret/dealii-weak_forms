@@ -83,10 +83,11 @@ run(const SubSpaceExtractorTestSpace &      subspace_extractor_test,
   const auto residual_functor =
     residual_view.template value<ADNumber_t, dim, spacedim>(
       [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-         const std::vector<std::string> &              solution_names,
-         const unsigned int                            q_point,
-         const Tensor<2, dim, ADNumber_t> &            u,
-         const Tensor<3, dim, ADNumber_t> &            grad_u,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                               solution_extraction_data,
+         const unsigned int                q_point,
+         const Tensor<2, dim, ADNumber_t> &u,
+         const Tensor<3, dim, ADNumber_t> &grad_u,
          const Tensor<1, dim, ADNumber_t> &div_u) { return Result_t{}; });
 
   deallog << "Residual functor (ascii):\n"

@@ -96,8 +96,9 @@ namespace Step57
       residual_ss_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
@@ -114,8 +115,9 @@ namespace Step57
       residual_ss_div_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
@@ -132,8 +134,9 @@ namespace Step57
       residual_ss_grad_v.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,
@@ -150,8 +153,9 @@ namespace Step57
       residual_ss_p.template value<ADNumber_t, dim, spacedim>(
         [this,
          &spacedim](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                    const std::vector<std::string> &       solution_names,
-                    const unsigned int                     q_point,
+                    const std::vector<SolutionExtractionData<dim, spacedim>>
+                      &                solution_extraction_data,
+                    const unsigned int q_point,
                     const Tensor<1, spacedim, ADNumber_t> &v,
                     const ADNumber_t &                     div_v,
                     const Tensor<2, spacedim, ADNumber_t> &grad_v,

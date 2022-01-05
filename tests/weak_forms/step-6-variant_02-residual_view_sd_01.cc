@@ -82,8 +82,9 @@ Step6<dim>::assemble_system()
     [coefficient](const Tensor<1, spacedim, SDNumber_t> &grad_u)
     { return Differentiation::SD::make_symbol_map(coefficient); },
     [coefficient](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-                  const std::vector<std::string> &              solution_names,
-                  const unsigned int                            q_point)
+                  const std::vector<SolutionExtractionData<dim, spacedim>>
+                    &                solution_extraction_data,
+                  const unsigned int q_point)
     {
       const Point<spacedim> &p = scratch_data.get_quadrature_points()[q_point];
       const double           c = (p.square() < 0.5 * 0.5 ? 20.0 : 1.0);

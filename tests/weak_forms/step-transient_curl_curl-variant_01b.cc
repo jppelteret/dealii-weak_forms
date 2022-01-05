@@ -33,9 +33,16 @@ namespace StepTransientCurlCurl
 
   protected:
     virtual void
-    assemble_system(TrilinosWrappers::SparseMatrix & system_matrix,
-                    TrilinosWrappers::MPI::Vector &  system_rhs,
-                    const AffineConstraints<double> &constraints) override;
+    assemble_system_esp(
+      TrilinosWrappers::SparseMatrix & system_matrix_esp,
+      TrilinosWrappers::MPI::Vector &  system_rhs_esp,
+      const AffineConstraints<double> &constraints_esp) override;
+
+    virtual void
+    assemble_system_mvp(
+      TrilinosWrappers::SparseMatrix & system_matrix_mvp,
+      TrilinosWrappers::MPI::Vector &  system_rhs_mvp,
+      const AffineConstraints<double> &constraints_mvp) override;
   };
 
 
@@ -43,24 +50,35 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  StepTransientCurlCurl<dim>::assemble_system(
-    TrilinosWrappers::SparseMatrix & system_matrix,
-    TrilinosWrappers::MPI::Vector &  system_rhs,
-    const AffineConstraints<double> &constraints)
+  StepTransientCurlCurl<dim>::assemble_system_esp(
+    TrilinosWrappers::SparseMatrix & system_matrix_esp,
+    TrilinosWrappers::MPI::Vector &  system_rhs_esp,
+    const AffineConstraints<double> &constraints_esp)
+  {
+    AssertThrow(false, ExcPureFunctionCalled());
+  }
+
+
+  template <int dim>
+  void
+  StepTransientCurlCurl<dim>::assemble_system_mvp(
+    TrilinosWrappers::SparseMatrix & system_matrix_mvp,
+    TrilinosWrappers::MPI::Vector &  system_rhs_mvp,
+    const AffineConstraints<double> &constraints_mvp)
   {
     using namespace WeakForms;
     constexpr int spacedim = dim;
 
-    TimerOutput::Scope timer_scope(this->computing_timer, "Assembly");
-    system_matrix = 0.0;
-    system_rhs    = 0.0;
+    TimerOutput::Scope timer_scope(this->computing_timer, "Assembly: MVP");
+    system_matrix_mvp = 0.0;
+    system_rhs_mvp    = 0.0;
 
-    // Symbolic types for test function, trial solution and a coefficient.
+    // Symbolic types for test function, trial solution_mvp and a coefficient.
     const TestFunction<dim, spacedim>  test;
     const TrialSolution<dim, spacedim> trial;
     const FieldSolution<dim, spacedim> field_solution;
     const SubSpaceExtractors::Vector   subspace_extractor_A(0,
-                                                          0,
+                                                          this->mvp_extractor,
                                                           "A",
                                                           "\\mathbf{A}");
 
@@ -72,16 +90,16 @@ namespace StepTransientCurlCurl
     const auto trial_A      = trial[subspace_extractor_A].value();
     const auto trial_curl_A = trial[subspace_extractor_A].curl();
 
-    // Create storage for the solution vectors that may be referenced
+    // Create storage for the solution_mvp vectors that may be referenced
     // by the weak forms
     using VectorType = TrilinosWrappers::MPI::Vector;
     const SolutionStorage<VectorType> solution_storage(
-      {&this->solution, &this->solution_t1});
+      {&this->solution_mvp, &this->solution_mvp_t1});
 
     // Field solution
-    constexpr WeakForms::types::solution_index solution_index_t1 = 1;
-    const auto                                 A_t1 =
-      field_solution[subspace_extractor_A].template value<solution_index_t1>();
+    constexpr WeakForms::types::solution_index solution_mvp_index_t1 = 1;
+    const auto A_t1 = field_solution[subspace_extractor_A]
+                        .template value<solution_mvp_index_t1>();
 
     // Functions
     const ScalarFunctor                   timestep("dt", "\\Delta t");
@@ -125,150 +143,12 @@ namespace StepTransientCurlCurl
 
     // Now we pass in concrete objects to get data from
     // and assemble into.
-    assembler.assemble_system(system_matrix,
-                              system_rhs,
+    assembler.assemble_system(system_matrix_mvp,
+                              system_rhs_mvp,
                               solution_storage,
-                              constraints,
-                              this->dof_handler,
-                              this->qf_cell);
-
-    // {
-    // FEValues<dim> fe_values(this->mapping,
-    //                         this->fe,
-    //                         this->qf_cell,
-    //                         update_values | update_gradients |
-    //                           update_quadrature_points | update_JxW_values);
-
-    // typename DoFHandler<dim>::active_cell_iterator cell = this->dof_handler
-    //                                                         .begin_active(),
-    //                                                endc =
-    //                                                  this->dof_handler.end();
-    // for (; cell != endc; ++cell)
-    //   {
-    //     //    if (cell->is_locally_owned() == false) continue;
-    //     if (cell->subdomain_id() != this->this_mpi_process)
-    //       continue;
-
-    //     fe_values.reinit(cell);
-    //     const unsigned int &n_q_points      = fe_values.n_quadrature_points;
-    //     const unsigned int &n_dofs_per_cell = fe_values.dofs_per_cell;
-
-    //     FullMatrix<double> cell_matrix(n_dofs_per_cell, n_dofs_per_cell);
-    //     Vector<double>     cell_rhs(n_dofs_per_cell);
-
-    //     std::vector<double> permeability_coefficient_values(n_q_points);
-    //     std::vector<double> conductivity_coefficient_values(n_q_points);
-    //     std::vector<Tensor<1, dim>> source_values(n_q_points);
-    //     this->function_material_permeability_coefficients.value_list(
-    //       fe_values.get_quadrature_points(),
-    //       permeability_coefficient_values);
-    //     this->function_material_conductivity_coefficients.value_list(
-    //       fe_values.get_quadrature_points(),
-    //       conductivity_coefficient_values);
-    //     this->function_free_current_density.value_list(
-    //       fe_values.get_quadrature_points(), source_values);
-
-    //     // std::vector<Tensor<1, dim>> solution_curls(n_q_points);
-    //     std::vector<Tensor<1, dim>> solution_values_t1(n_q_points);
-    //     // std::vector<Tensor<1, dim>> d_solution_dt_values(n_q_points);
-    //     // fe_values[this->mvp_fe].get_function_curls(this->solution,
-    //     // solution_curls);
-    //     fe_values[this->mvp_fe].get_function_values(this->solution_t1,
-    //                                                 solution_values_t1);
-    //     // fe_values[this->mvp_fe].get_function_values(this->d_solution_dt,
-    //     //                                       d_solution_dt_values);
-
-    //     // Pre-compute QP data
-    //     std::vector<std::vector<Tensor<1, dim>>> qp_Nx(
-    //       n_q_points, std::vector<Tensor<1, dim>>(n_dofs_per_cell));
-    //     std::vector<std::vector<Tensor<1, dim>>> qp_curl_Nx(
-    //       n_q_points, std::vector<Tensor<1, dim>>(n_dofs_per_cell));
-    //     for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-    //       {
-    //         for (unsigned int k = 0; k < n_dofs_per_cell; ++k)
-    //           {
-    //             qp_Nx[q_point][k] = fe_values[this->mvp_fe].value(k,
-    //             q_point); qp_curl_Nx[q_point][k] =
-    //               fe_values[this->mvp_fe].curl(k, q_point);
-    //           }
-    //       }
-
-    //     for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-    //       {
-    //         const std::vector<Tensor<1, dim>> &Nx      = qp_Nx[q_point];
-    //         const std::vector<Tensor<1, dim>> &curl_Nx = qp_curl_Nx[q_point];
-    //         const double &                     JxW     =
-    //         fe_values.JxW(q_point);
-
-    //         AssertThrow(
-    //           std::abs(permeability_coefficient_values[q_point]) > 1e-9,
-    //           ExcMessage(
-    //             "Magnetic permeability coefficient must be non-zero."));
-    //         AssertThrow(
-    //           std::abs(conductivity_coefficient_values[q_point]) > 1e-9,
-    //           ExcMessage(
-    //             "Electric conductivity coefficient must be non-zero."));
-
-    //         const double inv_mu_r_mu_0 =
-    //           1.0 / permeability_coefficient_values[q_point];
-    //         const double &sigma    =
-    //         conductivity_coefficient_values[q_point]; const double &dt =
-    //         this->parameters.delta_t; const double  sigma_dt = sigma / dt;
-
-    //         // const Tensor<1, dim> &curl_A = solution_curls[q_point];
-    //         const Tensor<1, dim> &A_t1 = solution_values_t1[q_point];
-    //         // const Tensor<1, dim> &dA_dt  = d_solution_dt_values[q_point];
-
-    //         // Uniform current through wire
-    //         // Note: J_f must be divergence free!
-    //         const Tensor<1, dim> &J_f = source_values[q_point];
-
-    //         for (unsigned int I = 0; I < n_dofs_per_cell; ++I)
-    //           {
-    //             for (unsigned int J = 0; J <= I; ++J)
-    //               {
-    //                 cell_matrix(I, J) +=
-    //                   (
-    //                     curl_Nx[I] * inv_mu_r_mu_0 * curl_Nx[J]
-    //                   //  + Nx[I] * sigma_dt * Nx[J]
-    //                    ) *
-    //                   JxW;
-    //               }
-
-    //             // For the linear problem, this is the contribution from the
-    //             // rate dependent term that comes from its time
-    //             discretisation.
-    //             // cell_rhs(I) += (Nx[I] * sigma_dt * A_t1) * JxW;
-
-    //             // // For the incremental non-linear problem, we'd add these
-    //             terms
-    //             // // cell_rhs(I) -= (curl_Nx[I] * inv_mu_r_mu_0 * curl_A) *
-    //             JxW;
-    //             // // cell_rhs(I) -= (Nx[I] * sigma * dA_dt) * JxW;
-
-    //             // cell_rhs(I) += (Nx[I] * J_f) * JxW;
-    //           }
-    //       }
-
-
-    //     // Finally, we need to copy the lower half of the local matrix into
-    //     the
-    //     // upper half:
-    //     for (unsigned int I = 0; I < n_dofs_per_cell; ++I)
-    //       for (unsigned int J = I + 1; J < n_dofs_per_cell; ++J)
-    //         cell_matrix(I, J) = cell_matrix(J, I);
-
-    //     std::vector<dealii::types::global_dof_index>
-    //     local_dof_indices(n_dofs_per_cell);
-    //     cell->get_dof_indices(local_dof_indices);
-    //     constraints.distribute_local_to_global(
-    //       cell_matrix, cell_rhs, local_dof_indices, system_matrix,
-    //       system_rhs);
-    //   }
-    // }
-
-    system_matrix.compress(VectorOperation::add);
-    system_rhs.compress(VectorOperation::add);
+                              constraints_mvp,
+                              this->dof_handler_mvp,
+                              this->qf_cell_mvp);
   }
 
 } // namespace StepTransientCurlCurl

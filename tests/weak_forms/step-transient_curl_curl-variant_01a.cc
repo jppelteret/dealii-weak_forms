@@ -30,9 +30,16 @@ namespace StepTransientCurlCurl
 
   protected:
     virtual void
-    assemble_system(TrilinosWrappers::SparseMatrix & system_matrix,
-                    TrilinosWrappers::MPI::Vector &  system_rhs,
-                    const AffineConstraints<double> &constraints) override;
+    assemble_system_esp(
+      TrilinosWrappers::SparseMatrix & system_matrix_esp,
+      TrilinosWrappers::MPI::Vector &  system_rhs_esp,
+      const AffineConstraints<double> &constraints_esp) override;
+
+    virtual void
+    assemble_system_mvp(
+      TrilinosWrappers::SparseMatrix & system_matrix_mvp,
+      TrilinosWrappers::MPI::Vector &  system_rhs_mvp,
+      const AffineConstraints<double> &constraints_mvp) override;
   };
 
 
@@ -40,25 +47,35 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  StepTransientCurlCurl<dim>::assemble_system(
-    TrilinosWrappers::SparseMatrix & system_matrix,
-    TrilinosWrappers::MPI::Vector &  system_rhs,
-    const AffineConstraints<double> &constraints)
+  StepTransientCurlCurl<dim>::assemble_system_esp(
+    TrilinosWrappers::SparseMatrix & system_matrix_esp,
+    TrilinosWrappers::MPI::Vector &  system_rhs_esp,
+    const AffineConstraints<double> &constraints_esp)
   {
-    TimerOutput::Scope timer_scope(this->computing_timer, "Assembly");
-    system_matrix = 0.0;
-    system_rhs    = 0.0;
+    AssertThrow(false, ExcPureFunctionCalled());
+  }
+
+
+  template <int dim>
+  void
+  StepTransientCurlCurl<dim>::assemble_system_mvp(
+    TrilinosWrappers::SparseMatrix & system_matrix_mvp,
+    TrilinosWrappers::MPI::Vector &  system_rhs_mvp,
+    const AffineConstraints<double> &constraints_mvp)
+  {
+    TimerOutput::Scope timer_scope(this->computing_timer, "Assembly: MVP");
+    system_matrix_mvp = 0.0;
+    system_rhs_mvp    = 0.0;
 
     FEValues<dim> fe_values(this->mapping,
-                            this->fe,
-                            this->qf_cell,
+                            this->fe_mvp,
+                            this->qf_cell_mvp,
                             update_values | update_gradients |
                               update_quadrature_points | update_JxW_values);
 
-    typename DoFHandler<dim>::active_cell_iterator cell = this->dof_handler
-                                                            .begin_active(),
-                                                   endc =
-                                                     this->dof_handler.end();
+    typename DoFHandler<dim>::active_cell_iterator
+      cell = this->dof_handler_mvp.begin_active(),
+      endc = this->dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
         //    if (cell->is_locally_owned() == false) continue;
@@ -82,15 +99,15 @@ namespace StepTransientCurlCurl
         this->function_free_current_density.value_list(
           fe_values.get_quadrature_points(), source_values);
 
-        // std::vector<Tensor<1, dim>> solution_curls(n_q_points);
-        std::vector<Tensor<1, dim>> solution_values_t1(n_q_points);
-        // std::vector<Tensor<1, dim>> d_solution_dt_values(n_q_points);
-        // fe_values[this->mvp_fe].get_function_curls(this->solution,
-        // solution_curls);
-        fe_values[this->mvp_fe].get_function_values(this->solution_t1,
-                                                    solution_values_t1);
-        // fe_values[this->mvp_fe].get_function_values(this->d_solution_dt,
-        //                                       d_solution_dt_values);
+        // std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
+        std::vector<Tensor<1, dim>> solution_mvp_values_t1(n_q_points);
+        // std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
+        // fe_values[this->mvp_extractor].get_function_curls(this->solution_mvp,
+        // solution_mvp_curls);
+        fe_values[this->mvp_extractor].get_function_values(
+          this->solution_mvp_t1, solution_mvp_values_t1);
+        // fe_values[this->mvp_extractor].get_function_values(this->d_solution_mvp_dt,
+        //                                       d_solution_mvp_dt_values);
 
         // Pre-compute QP data
         std::vector<std::vector<Tensor<1, dim>>> qp_Nx(
@@ -101,9 +118,10 @@ namespace StepTransientCurlCurl
           {
             for (unsigned int k = 0; k < n_dofs_per_cell; ++k)
               {
-                qp_Nx[q_point][k] = fe_values[this->mvp_fe].value(k, q_point);
+                qp_Nx[q_point][k] =
+                  fe_values[this->mvp_extractor].value(k, q_point);
                 qp_curl_Nx[q_point][k] =
-                  fe_values[this->mvp_fe].curl(k, q_point);
+                  fe_values[this->mvp_extractor].curl(k, q_point);
               }
           }
 
@@ -128,9 +146,9 @@ namespace StepTransientCurlCurl
             const double &dt       = this->parameters.delta_t;
             const double  sigma_dt = sigma / dt;
 
-            // const Tensor<1, dim> &curl_A = solution_curls[q_point];
-            const Tensor<1, dim> &A_t1 = solution_values_t1[q_point];
-            // const Tensor<1, dim> &dA_dt  = d_solution_dt_values[q_point];
+            // const Tensor<1, dim> &curl_A = solution_mvp_curls[q_point];
+            const Tensor<1, dim> &A_t1 = solution_mvp_values_t1[q_point];
+            // const Tensor<1, dim> &dA_dt  = d_solution_mvp_dt_values[q_point];
 
             // Uniform current through wire
             // Note: J_f must be divergence free!
@@ -167,12 +185,15 @@ namespace StepTransientCurlCurl
 
         std::vector<types::global_dof_index> local_dof_indices(n_dofs_per_cell);
         cell->get_dof_indices(local_dof_indices);
-        constraints.distribute_local_to_global(
-          cell_matrix, cell_rhs, local_dof_indices, system_matrix, system_rhs);
+        constraints_mvp.distribute_local_to_global(cell_matrix,
+                                                   cell_rhs,
+                                                   local_dof_indices,
+                                                   system_matrix_mvp,
+                                                   system_rhs_mvp);
       }
 
-    system_matrix.compress(VectorOperation::add);
-    system_rhs.compress(VectorOperation::add);
+    system_matrix_mvp.compress(VectorOperation::add);
+    system_rhs_mvp.compress(VectorOperation::add);
   }
 
 } // namespace StepTransientCurlCurl
