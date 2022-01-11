@@ -40,8 +40,7 @@ run()
   const SymbolicDecorations decorator;
 
   const SymmetricTensorFunctor<2, dim> S1("S", "S");
-  const auto                           f1 = value<double, spacedim>(
-    S1,
+  const auto                           f1 = S1.template value<double, spacedim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     {
       SymmetricTensor<2, dim> t;

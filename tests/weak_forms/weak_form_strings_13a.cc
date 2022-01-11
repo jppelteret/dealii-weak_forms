@@ -40,16 +40,14 @@ run()
   const SymbolicDecorations decorator;
 
   const ScalarFunctor c1("c", "c");
-  const auto          f1 =
-    value<double, dim, spacedim>(c1,
-                                 [](const FEValuesBase<dim, spacedim> &,
-                                    const unsigned int) { return 2.0; });
+  const auto          f1 = c1.template value<double, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 2.0; });
 
   const ScalarFunctor c2("d", "d");
-  const auto          f2 =
-    value<double, dim, spacedim>(c2,
-                                 [](const FEValuesBase<dim, spacedim> &,
-                                    const unsigned int) { return 3.0; });
+  const auto          f2 = c2.template value<double, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 3.0; });
 
   // Test strings
   {

@@ -107,18 +107,18 @@ run()
     deallog << std::endl;
   }
 
-  const auto s =
-    value<NumberType, dim, spacedim>(scalar,
-                                     [](const FEValuesBase<dim, spacedim> &,
-                                        const unsigned int) { return 1.0; });
+  const auto s = scalar.template value<NumberType, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   const Functions::ConstantFunction<dim, NumberType> constant_scalar_function(
     1);
   const ConstantTensorFunction<2, dim, NumberType> constant_tensor_function(
     unit_symmetric_tensor<dim>());
-  const auto sf = value<NumberType, dim>(scalar_func, constant_scalar_function);
+  const auto sf =
+    scalar_func.template value<NumberType, dim>(constant_scalar_function);
   const auto T2f =
-    value<NumberType, dim>(tensor_func2, constant_tensor_function);
+    tensor_func2.template value<NumberType, dim>(constant_tensor_function);
 
   const auto l_form  = linear_form(test_val, soln_val);
   const auto bl_form = bilinear_form(test_val, soln_val, trial_val);
