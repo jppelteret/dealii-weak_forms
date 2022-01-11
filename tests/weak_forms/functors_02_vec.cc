@@ -98,7 +98,8 @@ run()
     return scratch_data.get_values(solution_extraction_data[0].solution_name,
                                    extractor)[q_point];
   };
-  const auto s = value<NumberType, dim, spacedim>(scalar, s_func, update_flags);
+  const auto s =
+    scalar.template value<NumberType, dim, spacedim>(s_func, update_flags);
 
   const auto v_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -109,7 +110,7 @@ run()
     return scratch_data.get_gradients(solution_extraction_data[0].solution_name,
                                       extractor)[q_point];
   };
-  const auto v = value<NumberType, dim>(vector, v_func, update_flags);
+  const auto v = vector.template value<NumberType, dim>(v_func, update_flags);
 
   const auto T2_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -120,7 +121,8 @@ run()
     return scratch_data.get_hessians(solution_extraction_data[0].solution_name,
                                      extractor)[q_point];
   };
-  const auto T2 = value<NumberType, dim>(tensor2, T2_func, update_flags);
+  const auto T2 =
+    tensor2.template value<NumberType, dim>(T2_func, update_flags);
 
   const auto T3_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -131,7 +133,8 @@ run()
     return scratch_data.get_third_derivatives(
       solution_extraction_data[0].solution_name, extractor)[q_point];
   };
-  const auto T3 = value<NumberType, dim>(tensor3, T3_func, update_flags);
+  const auto T3 =
+    tensor3.template value<NumberType, dim>(T3_func, update_flags);
 
   const auto T4_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -145,7 +148,8 @@ run()
       scratch_data.get_third_derivatives(
         solution_extraction_data[0].solution_name, extractor)[q_point]);
   };
-  const auto T4 = value<NumberType, dim>(tensor4, T4_func, update_flags);
+  const auto T4 =
+    tensor4.template value<NumberType, dim>(T4_func, update_flags);
 
   const auto S2_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -157,7 +161,8 @@ run()
       scratch_data.get_hessians(solution_extraction_data[0].solution_name,
                                 extractor)[q_point]);
   };
-  const auto S2 = value<NumberType, dim>(tensor2, S2_func, update_flags);
+  const auto S2 =
+    tensor2.template value<NumberType, dim>(S2_func, update_flags);
 
   const auto S4_func =
     [&extractor](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -170,7 +175,8 @@ run()
                                 extractor)[q_point]);
     return outer_product(S2, S2);
   };
-  const auto S4 = value<NumberType, dim>(tensor4, S4_func, update_flags);
+  const auto S4 =
+    tensor4.template value<NumberType, dim>(S4_func, update_flags);
 
   constexpr std::size_t width =
     dealii::internal::VectorizedArrayWidthSpecifier<double>::max_width;

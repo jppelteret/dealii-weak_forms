@@ -85,36 +85,15 @@ namespace WeakForms
       : Base(symbol_ascii, symbol_latex)
     {}
 
-    // Call operator to promote this class to a SymbolicOp
-    template <typename ScalarType, int dim, int spacedim = dim>
-    auto
-    operator()(const function_type<ScalarType, dim, spacedim> &function,
-               const UpdateFlags update_flags) const;
-
-    template <typename ScalarType, int dim, int spacedim = dim>
-    auto
-    operator()(const qp_function_type<ScalarType, dim, spacedim> &qp_function,
-               const UpdateFlags update_flags) const;
-
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
     template <typename ScalarType, int dim, int spacedim = dim>
     auto
     value(const function_type<ScalarType, dim, spacedim> &function,
-          const UpdateFlags                               update_flags) const
-    {
-      return this->operator()<ScalarType, dim, spacedim>(function,
-                                                         update_flags);
-    }
+          const UpdateFlags                               update_flags) const;
 
     template <typename ScalarType, int dim, int spacedim = dim>
     auto
     value(const qp_function_type<ScalarType, dim, spacedim> &qp_function,
-          const UpdateFlags                                  update_flags) const
-    {
-      return this->operator()<ScalarType, dim, spacedim>(qp_function,
-                                                         update_flags);
-    }
+          const UpdateFlags update_flags) const;
   };
 
 
@@ -153,34 +132,16 @@ namespace WeakForms
       : Base(symbol_ascii, symbol_latex)
     {}
 
-    // Call operator to promote this class to a SymbolicOp
-    template <typename ScalarType, int dim = spacedim>
-    auto
-    operator()(const function_type<ScalarType, dim> &function,
-               const UpdateFlags                     update_flags) const;
-
-    template <typename ScalarType, int dim = spacedim>
-    auto
-    operator()(const qp_function_type<ScalarType, dim> &qp_function,
-               const UpdateFlags                        update_flags) const;
-
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
+    // Methods to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
     value(const function_type<ScalarType, dim> &function,
-          const UpdateFlags                     update_flags) const
-    {
-      return this->operator()<ScalarType, dim>(function, update_flags);
-    }
+          const UpdateFlags                     update_flags) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
     value(const qp_function_type<ScalarType, dim> &qp_function,
-          const UpdateFlags                        update_flags) const
-    {
-      return this->operator()<ScalarType, dim>(qp_function, update_flags);
-    }
+          const UpdateFlags                        update_flags) const;
   };
 
 
@@ -219,34 +180,16 @@ namespace WeakForms
       : Base(symbol_ascii, symbol_latex)
     {}
 
-    // Call operator to promote this class to a SymbolicOp
-    template <typename ScalarType, int dim = spacedim>
-    auto
-    operator()(const function_type<ScalarType, dim> &function,
-               const UpdateFlags                     update_flags) const;
-
-    template <typename ScalarType, int dim = spacedim>
-    auto
-    operator()(const qp_function_type<ScalarType, dim> &qp_function,
-               const UpdateFlags                        update_flags) const;
-
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
+    // Methods to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
     value(const function_type<ScalarType, dim> &function,
-          const UpdateFlags                     update_flags) const
-    {
-      return this->operator()<ScalarType, dim>(function, update_flags);
-    }
+          const UpdateFlags                     update_flags) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
     value(const qp_function_type<ScalarType, dim> &qp_function,
-          const UpdateFlags                        update_flags) const
-    {
-      return this->operator()<ScalarType, dim>(qp_function, update_flags);
-    }
+          const UpdateFlags                        update_flags) const;
   };
 
 
@@ -809,233 +752,139 @@ namespace WeakForms
 
 
 
-/* ======================== Convenience functions ======================== */
-
-
-
-namespace WeakForms
-{
-  template <typename ScalarType = double, int dim, int spacedim = dim>
-  WeakForms::Operators::SymbolicOp<WeakForms::ScalarCacheFunctor,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   internal::DimPack<dim, spacedim>>
-  value(const WeakForms::ScalarCacheFunctor &operand,
-        const typename WeakForms::ScalarCacheFunctor::
-          template function_type<ScalarType, dim, spacedim> &function,
-        const UpdateFlags                                    update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = ScalarCacheFunctor;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, function, update_flags);
-  }
-
-
-
-  template <typename ScalarType = double, int dim, int spacedim = dim>
-  WeakForms::Operators::SymbolicOp<WeakForms::ScalarCacheFunctor,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   internal::DimPack<dim, spacedim>>
-  value(const WeakForms::ScalarCacheFunctor &operand,
-        const typename WeakForms::ScalarCacheFunctor::
-          template qp_function_type<ScalarType, dim, spacedim> &qp_function,
-        const UpdateFlags                                       update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = ScalarCacheFunctor;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, qp_function, update_flags);
-  }
-
-
-
-  template <typename ScalarType = double, int dim, int rank, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TensorCacheFunctor<rank, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    ScalarType,
-    internal::DimPack<dim, spacedim>>
-  value(const WeakForms::TensorCacheFunctor<rank, spacedim> &operand,
-        const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
-          template function_type<ScalarType, dim> &function,
-        const UpdateFlags                          update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = TensorCacheFunctor<rank, spacedim>;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, function, update_flags);
-  }
-
-
-
-  template <typename ScalarType = double, int dim, int rank, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TensorCacheFunctor<rank, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    ScalarType,
-    internal::DimPack<dim, spacedim>>
-  value(const WeakForms::TensorCacheFunctor<rank, spacedim> &operand,
-        const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
-          template qp_function_type<ScalarType, dim> &qp_function,
-        const UpdateFlags                             update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = TensorCacheFunctor<rank, spacedim>;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, qp_function, update_flags);
-  }
-
-
-
-  template <typename ScalarType = double, int dim, int rank, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    ScalarType,
-    internal::DimPack<dim, spacedim>>
-  value(const WeakForms::SymmetricTensorCacheFunctor<rank, spacedim> &operand,
-        const typename WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>::
-          template function_type<ScalarType, dim> &function,
-        const UpdateFlags                          update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SymmetricTensorCacheFunctor<rank, spacedim>;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, function, update_flags);
-  }
-
-
-
-  template <typename ScalarType = double, int dim, int rank, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    ScalarType,
-    internal::DimPack<dim, spacedim>>
-  value(const WeakForms::SymmetricTensorCacheFunctor<rank, spacedim> &operand,
-        const typename WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>::
-          template qp_function_type<ScalarType, dim> &qp_function,
-        const UpdateFlags                             update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SymmetricTensorCacheFunctor<rank, spacedim>;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              ScalarType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand, qp_function, update_flags);
-  }
-
-} // namespace WeakForms
-
-
-
 /* ==================== Class method definitions ==================== */
+
+
 
 namespace WeakForms
 {
   template <typename ScalarType, int dim, int spacedim>
-  auto
-  ScalarCacheFunctor::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  ScalarCacheFunctor::value(
     const typename WeakForms::ScalarCacheFunctor::
       template function_type<ScalarType, dim, spacedim> &function,
     const UpdateFlags                                    update_flags) const
   {
-    return WeakForms::value<ScalarType>(*this, function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = ScalarCacheFunctor;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, function, update_flags);
   }
 
 
   template <typename ScalarType, int dim, int spacedim>
-  auto
-  ScalarCacheFunctor::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  ScalarCacheFunctor::value(
     const typename WeakForms::ScalarCacheFunctor::
       template qp_function_type<ScalarType, dim, spacedim> &qp_function,
     const UpdateFlags                                       update_flags) const
   {
-    return WeakForms::value<ScalarType>(*this, qp_function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = ScalarCacheFunctor;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, qp_function, update_flags);
   }
 
 
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
-  auto
-  TensorCacheFunctor<rank, spacedim>::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  TensorCacheFunctor<rank, spacedim>::value(
     const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
       template function_type<ScalarType, dim> &function,
     const UpdateFlags                          update_flags) const
   {
-    return WeakForms::value<ScalarType, dim>(*this, function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TensorCacheFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, function, update_flags);
   }
 
 
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
-  auto
-  TensorCacheFunctor<rank, spacedim>::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  TensorCacheFunctor<rank, spacedim>::value(
     const typename WeakForms::TensorCacheFunctor<rank, spacedim>::
       template qp_function_type<ScalarType, dim> &qp_function,
     const UpdateFlags                             update_flags) const
   {
-    return WeakForms::value<ScalarType, dim>(*this, qp_function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = TensorCacheFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, qp_function, update_flags);
   }
 
 
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
-  auto
-  SymmetricTensorCacheFunctor<rank, spacedim>::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  SymmetricTensorCacheFunctor<rank, spacedim>::value(
     const typename WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>::
       template function_type<ScalarType, dim> &function,
     const UpdateFlags                          update_flags) const
   {
-    return WeakForms::value<ScalarType, dim>(*this, function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SymmetricTensorCacheFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, function, update_flags);
   }
 
 
   template <int rank, int spacedim>
   template <typename ScalarType, int dim>
-  auto
-  SymmetricTensorCacheFunctor<rank, spacedim>::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  SymmetricTensorCacheFunctor<rank, spacedim>::value(
     const typename WeakForms::SymmetricTensorCacheFunctor<rank, spacedim>::
       template qp_function_type<ScalarType, dim> &qp_function,
     const UpdateFlags                             update_flags) const
   {
-    return WeakForms::value<ScalarType, dim>(*this, qp_function, update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = SymmetricTensorCacheFunctor<rank, spacedim>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              ScalarType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand, qp_function, update_flags);
   }
 
 } // namespace WeakForms
