@@ -50,398 +50,407 @@ namespace WeakForms
 
 
 
-  /* ----- Finite element subspaces: Test functions and trial solutions ----- */
+  namespace internal
+  {
+    /* ----- Finite element subspaces: Test functions and trial solutions -----
+     */
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::value>
+    value(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const SubSpaceViewsType<rank, SpaceType> &operand);
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::value>
+    value(const SubSpaceViewsType<rank, SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::gradient>
+    gradient(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const SubSpaceViewsType<rank, SpaceType> &operand);
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::gradient>
+    gradient(const SubSpaceViewsType<rank, SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
-  symmetric_gradient(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
+    symmetric_gradient(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::divergence>
-  divergence(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::divergence>
+    divergence(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::divergence>
-  divergence(const SubSpaceViewsType<rank, SpaceType> &operand);
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::divergence>
+    divergence(const SubSpaceViewsType<rank, SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::curl>
-  curl(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::curl>
+    curl(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::laplacian>
+    laplacian(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::hessian>
+    hessian(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::third_derivative>
+    third_derivative(const SubSpaceViewsType<SpaceType> &operand);
 
 
 
-  /* -- Finite element subspaces: Test functions and trial solutions (interface)
-   * -- */
+    /* -- Finite element subspaces: Test functions and trial solutions
+     * (interface)
+     * -- */
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const SubSpaceViewsType<SpaceType> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+    jump_in_values(const SubSpaceViewsType<SpaceType> &operand);
 
 
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand);
-
-
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand);
-
-
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand);
-
-
-
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const SubSpaceViewsType<SpaceType> &operand);
-
-
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const SubSpaceViewsType<SpaceType> &operand);
-
-
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const SubSpaceViewsType<SpaceType> &operand);
-
-
-
-  /* ------------- Finite element subspaces: Field solutions ------------- */
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(
-    const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::symmetric_gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  symmetric_gradient(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::divergence,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::divergence,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  divergence(
-    const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::curl,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::hessian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  third_derivative(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-
-  /* -------- Finite element subspaces: Field solutions (interface) -------- */
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_values(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_gradients(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_hessians(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_third_derivatives(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_values(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_gradients(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
-
-
-  template <types::solution_index solution_index = 0,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_hessians(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+    jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand);
+
+
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+    jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand);
+
+
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+    jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand);
+
+
+
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_values>
+    average_of_values(const SubSpaceViewsType<SpaceType> &operand);
+
+
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+    average_of_gradients(const SubSpaceViewsType<SpaceType> &operand);
+
+
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+    average_of_hessians(const SubSpaceViewsType<SpaceType> &operand);
+
+
+
+    /* ------------- Finite element subspaces: Field solutions ------------- */
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::value,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::value,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    gradient(
+      const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::symmetric_gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    symmetric_gradient(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::divergence,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::divergence,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    divergence(
+      const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::curl,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::laplacian,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::hessian,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::third_derivative,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    third_derivative(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+
+    /* -------- Finite element subspaces: Field solutions (interface) --------
+     */
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_values,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_values(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_gradients(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_hessians(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_third_derivatives(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_values,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_values(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_gradients(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+
+
+    template <types::solution_index solution_index = 0,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_hessians(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
+  } // namespace internal
 
 } // namespace WeakForms
 
@@ -716,36 +725,38 @@ public:                                                                     \
         typename FEValuesViewsType::template solution_third_derivative_type<
           ScalarType>;
 
+
+      // Methods to promote this class to a SymbolicOp:
       // Operators: Test functions, trial solutions, and field solutions
 
       auto
       value() const
       {
-        return WeakForms::value(*this);
+        return WeakForms::internal::value(*this);
       }
 
       auto
       gradient() const
       {
-        return WeakForms::gradient(*this);
+        return WeakForms::internal::gradient(*this);
       }
 
       auto
       laplacian() const
       {
-        return WeakForms::laplacian(*this);
+        return WeakForms::internal::laplacian(*this);
       }
 
       auto
       hessian() const
       {
-        return WeakForms::hessian(*this);
+        return WeakForms::internal::hessian(*this);
       }
 
       auto
       third_derivative() const
       {
-        return WeakForms::third_derivative(*this);
+        return WeakForms::internal::third_derivative(*this);
       }
 
       // Operators: Field solutions only
@@ -757,7 +768,7 @@ public:                                                                     \
       auto
       value() const
       {
-        return WeakForms::value<solution_index>(*this);
+        return WeakForms::internal::value<solution_index>(*this);
       }
 
       template <
@@ -767,7 +778,7 @@ public:                                                                     \
       auto
       gradient() const
       {
-        return WeakForms::gradient<solution_index>(*this);
+        return WeakForms::internal::gradient<solution_index>(*this);
       }
 
       template <
@@ -777,7 +788,7 @@ public:                                                                     \
       auto
       laplacian() const
       {
-        return WeakForms::laplacian<solution_index>(*this);
+        return WeakForms::internal::laplacian<solution_index>(*this);
       }
 
       template <
@@ -787,7 +798,7 @@ public:                                                                     \
       auto
       hessian() const
       {
-        return WeakForms::hessian<solution_index>(*this);
+        return WeakForms::internal::hessian<solution_index>(*this);
       }
 
       template <
@@ -797,51 +808,52 @@ public:                                                                     \
       auto
       third_derivative() const
       {
-        return WeakForms::third_derivative<solution_index>(*this);
+        return WeakForms::internal::third_derivative<solution_index>(*this);
       }
 
+      // Methods to promote this class to a SymbolicOp:
       // Interface
 
       auto
       jump_in_values() const
       {
-        return WeakForms::jump_in_values(*this);
+        return WeakForms::internal::jump_in_values(*this);
       }
 
       auto
       jump_in_gradients() const
       {
-        return WeakForms::jump_in_gradients(*this);
+        return WeakForms::internal::jump_in_gradients(*this);
       }
 
       auto
       jump_in_hessians() const
       {
-        return WeakForms::jump_in_hessians(*this);
+        return WeakForms::internal::jump_in_hessians(*this);
       }
 
       auto
       jump_in_third_derivatives() const
       {
-        return WeakForms::jump_in_third_derivatives(*this);
+        return WeakForms::internal::jump_in_third_derivatives(*this);
       }
 
       auto
       average_of_values() const
       {
-        return WeakForms::average_of_values(*this);
+        return WeakForms::internal::average_of_values(*this);
       }
 
       auto
       average_of_gradients() const
       {
-        return WeakForms::average_of_gradients(*this);
+        return WeakForms::internal::average_of_gradients(*this);
       }
 
       auto
       average_of_hessians() const
       {
-        return WeakForms::average_of_hessians(*this);
+        return WeakForms::internal::average_of_hessians(*this);
       }
 
       // Operators: Field solutions only (interface)
@@ -853,7 +865,7 @@ public:                                                                     \
       auto
       jump_in_values() const
       {
-        return WeakForms::jump_in_values<solution_index>(*this);
+        return WeakForms::internal::jump_in_values<solution_index>(*this);
       }
 
       template <
@@ -863,7 +875,7 @@ public:                                                                     \
       auto
       jump_in_gradients() const
       {
-        return WeakForms::jump_in_gradients<solution_index>(*this);
+        return WeakForms::internal::jump_in_gradients<solution_index>(*this);
       }
 
       template <
@@ -873,7 +885,7 @@ public:                                                                     \
       auto
       jump_in_hessians() const
       {
-        return WeakForms::jump_in_hessians<solution_index>(*this);
+        return WeakForms::internal::jump_in_hessians<solution_index>(*this);
       }
 
       template <
@@ -883,7 +895,8 @@ public:                                                                     \
       auto
       jump_in_third_derivatives() const
       {
-        return WeakForms::jump_in_third_derivatives<solution_index>(*this);
+        return WeakForms::internal::jump_in_third_derivatives<solution_index>(
+          *this);
       }
 
       template <
@@ -893,7 +906,7 @@ public:                                                                     \
       auto
       average_of_values() const
       {
-        return WeakForms::average_of_values<solution_index>(*this);
+        return WeakForms::internal::average_of_values<solution_index>(*this);
       }
 
       template <
@@ -903,7 +916,7 @@ public:                                                                     \
       auto
       average_of_gradients() const
       {
-        return WeakForms::average_of_gradients<solution_index>(*this);
+        return WeakForms::internal::average_of_gradients<solution_index>(*this);
       }
 
       template <
@@ -913,7 +926,7 @@ public:                                                                     \
       auto
       average_of_hessians() const
       {
-        return WeakForms::average_of_hessians<solution_index>(*this);
+        return WeakForms::internal::average_of_hessians<solution_index>(*this);
       }
     };
 
@@ -958,48 +971,49 @@ public:                                                                     \
         typename FEValuesViewsType::template solution_third_derivative_type<
           ScalarType>;
 
+      // Methods to promote this class to a SymbolicOp:
       // Operators: Test functions, trial solutions, and field solutions
 
       auto
       value() const
       {
-        return WeakForms::value(*this);
+        return WeakForms::internal::value(*this);
       }
 
       auto
       gradient() const
       {
-        return WeakForms::gradient(*this);
+        return WeakForms::internal::gradient(*this);
       }
 
       auto
       symmetric_gradient() const
       {
-        return WeakForms::symmetric_gradient(*this);
+        return WeakForms::internal::symmetric_gradient(*this);
       }
 
       auto
       divergence() const
       {
-        return WeakForms::divergence(*this);
+        return WeakForms::internal::divergence(*this);
       }
 
       auto
       curl() const
       {
-        return WeakForms::curl(*this);
+        return WeakForms::internal::curl(*this);
       }
 
       auto
       hessian() const
       {
-        return WeakForms::hessian(*this);
+        return WeakForms::internal::hessian(*this);
       }
 
       auto
       third_derivative() const
       {
-        return WeakForms::third_derivative(*this);
+        return WeakForms::internal::third_derivative(*this);
       }
 
       // Operators: Field solutions only
@@ -1011,7 +1025,7 @@ public:                                                                     \
       auto
       value() const
       {
-        return WeakForms::value<solution_index>(*this);
+        return WeakForms::internal::value<solution_index>(*this);
       }
 
       template <
@@ -1021,7 +1035,7 @@ public:                                                                     \
       auto
       gradient() const
       {
-        return WeakForms::gradient<solution_index>(*this);
+        return WeakForms::internal::gradient<solution_index>(*this);
       }
 
       template <
@@ -1031,7 +1045,7 @@ public:                                                                     \
       auto
       symmetric_gradient() const
       {
-        return WeakForms::symmetric_gradient<solution_index>(*this);
+        return WeakForms::internal::symmetric_gradient<solution_index>(*this);
       }
 
       template <
@@ -1041,7 +1055,7 @@ public:                                                                     \
       auto
       divergence() const
       {
-        return WeakForms::divergence<solution_index>(*this);
+        return WeakForms::internal::divergence<solution_index>(*this);
       }
 
       template <
@@ -1051,7 +1065,7 @@ public:                                                                     \
       auto
       curl() const
       {
-        return WeakForms::curl<solution_index>(*this);
+        return WeakForms::internal::curl<solution_index>(*this);
       }
 
       template <
@@ -1061,7 +1075,7 @@ public:                                                                     \
       auto
       hessian() const
       {
-        return WeakForms::hessian<solution_index>(*this);
+        return WeakForms::internal::hessian<solution_index>(*this);
       }
 
       template <
@@ -1071,51 +1085,52 @@ public:                                                                     \
       auto
       third_derivative() const
       {
-        return WeakForms::third_derivative<solution_index>(*this);
+        return WeakForms::internal::third_derivative<solution_index>(*this);
       }
 
+      // Methods to promote this class to a SymbolicOp:
       // Interface
 
       auto
       jump_in_values() const
       {
-        return WeakForms::jump_in_values(*this);
+        return WeakForms::internal::jump_in_values(*this);
       }
 
       auto
       jump_in_gradients() const
       {
-        return WeakForms::jump_in_gradients(*this);
+        return WeakForms::internal::jump_in_gradients(*this);
       }
 
       auto
       jump_in_hessians() const
       {
-        return WeakForms::jump_in_hessians(*this);
+        return WeakForms::internal::jump_in_hessians(*this);
       }
 
       auto
       jump_in_third_derivatives() const
       {
-        return WeakForms::jump_in_third_derivatives(*this);
+        return WeakForms::internal::jump_in_third_derivatives(*this);
       }
 
       auto
       average_of_values() const
       {
-        return WeakForms::average_of_values(*this);
+        return WeakForms::internal::average_of_values(*this);
       }
 
       auto
       average_of_gradients() const
       {
-        return WeakForms::average_of_gradients(*this);
+        return WeakForms::internal::average_of_gradients(*this);
       }
 
       auto
       average_of_hessians() const
       {
-        return WeakForms::average_of_hessians(*this);
+        return WeakForms::internal::average_of_hessians(*this);
       }
 
       // Operators: Field solutions only (interface)
@@ -1127,7 +1142,7 @@ public:                                                                     \
       auto
       jump_in_values() const
       {
-        return WeakForms::jump_in_values<solution_index>(*this);
+        return WeakForms::internal::jump_in_values<solution_index>(*this);
       }
 
       template <
@@ -1137,7 +1152,7 @@ public:                                                                     \
       auto
       jump_in_gradients() const
       {
-        return WeakForms::jump_in_gradients<solution_index>(*this);
+        return WeakForms::internal::jump_in_gradients<solution_index>(*this);
       }
 
       template <
@@ -1147,7 +1162,7 @@ public:                                                                     \
       auto
       jump_in_hessians() const
       {
-        return WeakForms::jump_in_hessians<solution_index>(*this);
+        return WeakForms::internal::jump_in_hessians<solution_index>(*this);
       }
 
       template <
@@ -1157,7 +1172,8 @@ public:                                                                     \
       auto
       jump_in_third_derivatives() const
       {
-        return WeakForms::jump_in_third_derivatives<solution_index>(*this);
+        return WeakForms::internal::jump_in_third_derivatives<solution_index>(
+          *this);
       }
 
       template <
@@ -1167,7 +1183,7 @@ public:                                                                     \
       auto
       average_of_values() const
       {
-        return WeakForms::average_of_values<solution_index>(*this);
+        return WeakForms::internal::average_of_values<solution_index>(*this);
       }
 
       template <
@@ -1177,7 +1193,7 @@ public:                                                                     \
       auto
       average_of_gradients() const
       {
-        return WeakForms::average_of_gradients<solution_index>(*this);
+        return WeakForms::internal::average_of_gradients<solution_index>(*this);
       }
 
       template <
@@ -1187,7 +1203,7 @@ public:                                                                     \
       auto
       average_of_hessians() const
       {
-        return WeakForms::average_of_hessians<solution_index>(*this);
+        return WeakForms::internal::average_of_hessians<solution_index>(*this);
       }
     };
 
@@ -1214,24 +1230,25 @@ public:                                                                     \
         typename FEValuesViewsType::template solution_divergence_type<
           ScalarType>;
 
+      // Methods to promote this class to a SymbolicOp:
       // Operators: Test functions, trial solutions, and field solutions
 
       auto
       value() const
       {
-        return WeakForms::value(*this);
+        return WeakForms::internal::value(*this);
       }
 
       auto
       gradient() const
       {
-        return WeakForms::gradient(*this);
+        return WeakForms::internal::gradient(*this);
       }
 
       auto
       divergence() const
       {
-        return WeakForms::divergence(*this);
+        return WeakForms::internal::divergence(*this);
       }
 
       // Operators: Field solutions only
@@ -1243,7 +1260,7 @@ public:                                                                     \
       auto
       value() const
       {
-        return WeakForms::value<solution_index>(*this);
+        return WeakForms::internal::value<solution_index>(*this);
       }
 
       template <
@@ -1253,7 +1270,7 @@ public:                                                                     \
       auto
       gradient() const
       {
-        return WeakForms::gradient<solution_index>(*this);
+        return WeakForms::internal::gradient<solution_index>(*this);
       }
 
       template <
@@ -1263,7 +1280,7 @@ public:                                                                     \
       auto
       divergence() const
       {
-        return WeakForms::divergence<solution_index>(*this);
+        return WeakForms::internal::divergence<solution_index>(*this);
       }
 
       // Interfaces
@@ -1291,18 +1308,19 @@ public:                                                                     \
         typename FEValuesViewsType::template solution_divergence_type<
           ScalarType>;
 
+      // Methods to promote this class to a SymbolicOp:
       // Operators: Test functions, trial solutions, and field solutions
 
       auto
       value() const
       {
-        return WeakForms::value(*this);
+        return WeakForms::internal::value(*this);
       }
 
       auto
       divergence() const
       {
-        return WeakForms::divergence(*this);
+        return WeakForms::internal::divergence(*this);
       }
 
       // Operators: Field solutions only
@@ -1314,7 +1332,7 @@ public:                                                                     \
       auto
       value() const
       {
-        return WeakForms::value<solution_index>(*this);
+        return WeakForms::internal::value<solution_index>(*this);
       }
 
       template <
@@ -1324,7 +1342,7 @@ public:                                                                     \
       auto
       divergence() const
       {
-        return WeakForms::divergence<solution_index>(*this);
+        return WeakForms::internal::divergence<solution_index>(*this);
       }
 
       // Interfaces
@@ -3451,1378 +3469,1394 @@ protected:                                                                     \
 
 
 
+#ifndef DOXYGEN
+
+
+
 /* ======================== Convenience functions ======================== */
 
 
 
 namespace WeakForms
 {
-  /* ----- Finite element subspaces: Test functions and trial solutions ----- */
-
-  /**
-   * @brief Value variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const SubSpaceViewsType<SpaceType> &operand)
+  namespace internal
   {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Value variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const SubSpaceViewsType<rank, SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<rank, SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const SubSpaceViewsType<rank, SpaceType> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<rank, SpaceType>,
-                   SubSpaceViews::Tensor<rank, SpaceType>>::value,
-      "The selected subspace view does not support the gradient operation.");
-
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<rank, SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
-  symmetric_gradient(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<SpaceType>,
-                   SubSpaceViews::Vector<SpaceType>>::value,
-      "The selected subspace view does not support the symmetric gradient operation.");
-
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // typename SpaceType>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
-  //                               WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
-  // symmetric_gradient(const SubSpaceViewsType<rank, SpaceType> &operand)
-  // {
-  //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
-  //   support the symmetric gradient operation.");
-
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank, SpaceType>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Divergence variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::divergence>
-  divergence(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<SpaceType>,
-                   SubSpaceViews::Vector<SpaceType>>::value,
-      "The selected subspace view does not support the divergence operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::divergence>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Divergence variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <int, class> class SubSpaceViewsType,
-            int rank,
-            typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::divergence>
-  divergence(const SubSpaceViewsType<rank, SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<rank, SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::divergence>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Curl variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-                                   WeakForms::Operators::SymbolicOpCodes::curl>
-  curl(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<SpaceType>,
-                   SubSpaceViews::Vector<SpaceType>>::value,
-      "The selected subspace view does not support the curl operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Curl variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // typename SpaceType>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
-  //                               WeakForms::Operators::SymbolicOpCodes::curl>
-  // curl(const SubSpaceViewsType<rank, SpaceType> &operand)
-  // {
-  //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
-  //   support the symmetric gradient operation.");
-
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank, SpaceType>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Laplacian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<SpaceType>,
-                   SubSpaceViews::Scalar<SpaceType>>::value,
-      "The selected subspace view does not support the Laplacian operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // typename SpaceType>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
-  //                               WeakForms::Operators::SymbolicOpCodes::laplacian>
-  // laplacian(const SubSpaceViewsType<rank,SpaceType> &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,SpaceType>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Hessian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Hessian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // typename SpaceType>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
-  //                               WeakForms::Operators::SymbolicOpCodes::hessian>
-  // hessian(const SubSpaceViewsType<rank,SpaceType> &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,SpaceType>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Third derivative variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // typename SpaceType>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
-  //                               WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  // third_derivative(const SubSpaceViewsType<rank,SpaceType> &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,SpaceType>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
-
-  //   return OpType(operand);
-  // }
-
-
-
-  /* -- Finite element subspaces: Test functions and trial solutions (interface)
-   * -- */
-
-  /**
-   * @brief Jump in values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_values>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Jump in gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Jump in Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Jump in third derivatives variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
-
-    return OpType(operand);
-  }
-
-
-
-  /**
-   * @brief Average of values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::average_of_values>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Average of gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Average of Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-   */
-  template <template <class> class SubSpaceViewsType, typename SpaceType>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<SpaceType>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const SubSpaceViewsType<SpaceType> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = SubSpaceViewsType<SpaceType>;
-    using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
-
-    return OpType(operand);
-  }
-
-
-
-  /* ------------- Finite element subspaces: Field solutions ------------- */
-
-  /**
-   * @brief Value variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::value,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Value variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::value,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::gradient,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
-  {
-    static_assert(
-      std::is_same<
-        SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-        SubSpaceViews::Tensor<rank, FieldSolution<dim, spacedim>>>::value,
-      "The selected subspace view does not support the gradient operation.");
-
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::gradient,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::symmetric_gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  symmetric_gradient(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-                   SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
-      "The selected subspace view does not support the symmetric gradient operation.");
-
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::symmetric_gradient,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // int dim, int spacedim>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,
-  // FieldSolution<dim,spacedim>>,
-  //                               WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
-  // symmetric_gradient(const SubSpaceViewsType<rank,
-  // FieldSolution<dim,spacedim>> &operand)
-  // {
-  //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
-  //   support the symmetric gradient operation.");
-
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank, FieldSolution<dim,spacedim>>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Divergence variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::divergence,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-                   SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
-      "The selected subspace view does not support the divergence operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::divergence,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Divergence variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <int, class>
-            class SubSpaceViewsType,
-            int rank,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::divergence,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  divergence(
-    const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::divergence,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Curl variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::curl,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-                   SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
-      "The selected subspace view does not support the curl operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::curl,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  /**
-   * @brief Curl variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // int dim, int spacedim>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,
-  // FieldSolution<dim,spacedim>>,
-  //                               WeakForms::Operators::SymbolicOpCodes::curl>
-  // curl(const SubSpaceViewsType<rank, FieldSolution<dim,spacedim>> &operand)
-  // {
-  //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
-  //   support the symmetric gradient operation.");
-
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank, FieldSolution<dim,spacedim>>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Laplacian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    static_assert(
-      std::is_same<SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-                   SubSpaceViews::Scalar<FieldSolution<dim, spacedim>>>::value,
-      "The selected subspace view does not support the Laplacian operation.");
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::laplacian,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // int dim, int spacedim>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
-  //                               WeakForms::Operators::SymbolicOpCodes::laplacian>
-  // laplacian(const SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>
-  // &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Hessian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::hessian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::hessian,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Hessian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // int dim, int spacedim>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
-  //                               WeakForms::Operators::SymbolicOpCodes::hessian>
-  // hessian(const SubSpaceViewsType<rank,FieldSolution<dim,spacedim>> &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
-
-  //   return OpType(operand);
-  // }
-
-
-  /**
-   * @brief Third derivative variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
-   *
-   * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-   * @tparam SpaceType A space type, specifically a test space or trial space
-   * @param operand
-   * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-   * WeakForms::Operators::SymbolicOpCodes::value>
-   */
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  third_derivative(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::third_derivative,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  // /**
-  //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
-  //  *
-  //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
-  //  * @tparam SpaceType A space type, specifically a test space or trial space
-  //  * @param operand
-  //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
-  //  * WeakForms::Operators::SymbolicOpCodes::value>
-  //  */
-  // template <template<int, class> typename SubSpaceViewsType, int rank,
-  // int dim, int spacedim>
-  // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
-  //                               WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  // third_derivative(const SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>
-  // &operand)
-  // {
-  //   using namespace WeakForms;
-  //   using namespace WeakForms::Operators;
-
-  //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
-  //   using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
-
-  //   return OpType(operand);
-  // }
-
-
-
-  /* -------- Finite element subspaces: Field solutions (interface) -------- */
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_values(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::jump_in_values,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_gradients(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::jump_in_gradients,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_hessians(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::jump_in_hessians,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  jump_in_third_derivatives(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::jump_in_third_derivatives,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_values(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::average_of_values,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_gradients(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::average_of_gradients,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
-
-  template <types::solution_index solution_index,
-            template <class>
-            class SubSpaceViewsType,
-            int dim,
-            int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    SubSpaceViewsType<FieldSolution<dim, spacedim>>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  average_of_hessians(
-    const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
-    using OpType =
-      SymbolicOp<Op,
-                 SymbolicOpCodes::average_of_hessians,
-                 void,
-                 WeakForms::internal::SolutionIndex<solution_index>>;
-
-    return OpType(operand);
-  }
-
+    /* ----- Finite element subspaces: Test functions and trial solutions -----
+     */
+
+    /**
+     * @brief Value variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::value>
+    value(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Value variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::value>
+    value(const SubSpaceViewsType<rank, SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<rank, SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::gradient>
+    gradient(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::gradient>
+    gradient(const SubSpaceViewsType<rank, SpaceType> &operand)
+    {
+      static_assert(
+        std::is_same<SubSpaceViewsType<rank, SpaceType>,
+                     SubSpaceViews::Tensor<rank, SpaceType>>::value,
+        "The selected subspace view does not support the gradient operation.");
+
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<rank, SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
+    symmetric_gradient(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      static_assert(
+        std::is_same<SubSpaceViewsType<SpaceType>,
+                     SubSpaceViews::Vector<SpaceType>>::value,
+        "The selected subspace view does not support the symmetric gradient operation.");
+
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // typename SpaceType>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
+    //                               WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
+    // symmetric_gradient(const SubSpaceViewsType<rank, SpaceType> &operand)
+    // {
+    //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
+    //   support the symmetric gradient operation.");
+
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank, SpaceType>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Divergence variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::divergence>
+    divergence(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      static_assert(
+        std::is_same<SubSpaceViewsType<SpaceType>,
+                     SubSpaceViews::Vector<SpaceType>>::value,
+        "The selected subspace view does not support the divergence operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::divergence>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Divergence variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <int, class> class SubSpaceViewsType,
+              int rank,
+              typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::divergence>
+    divergence(const SubSpaceViewsType<rank, SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<rank, SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::divergence>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Curl variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::curl>
+    curl(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      static_assert(
+        std::is_same<SubSpaceViewsType<SpaceType>,
+                     SubSpaceViews::Vector<SpaceType>>::value,
+        "The selected subspace view does not support the curl operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Curl variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // typename SpaceType>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank, SpaceType>,
+    //                               WeakForms::Operators::SymbolicOpCodes::curl>
+    // curl(const SubSpaceViewsType<rank, SpaceType> &operand)
+    // {
+    //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
+    //   support the symmetric gradient operation.");
+
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank, SpaceType>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Laplacian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::laplacian>
+    laplacian(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      static_assert(
+        std::is_same<SubSpaceViewsType<SpaceType>,
+                     SubSpaceViews::Scalar<SpaceType>>::value,
+        "The selected subspace view does not support the Laplacian operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // typename SpaceType>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
+    //                               WeakForms::Operators::SymbolicOpCodes::laplacian>
+    // laplacian(const SubSpaceViewsType<rank,SpaceType> &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,SpaceType>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Hessian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::hessian>
+    hessian(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Hessian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // typename SpaceType>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
+    //                               WeakForms::Operators::SymbolicOpCodes::hessian>
+    // hessian(const SubSpaceViewsType<rank,SpaceType> &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,SpaceType>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Third derivative variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::third_derivative>
+    third_derivative(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // typename SpaceType>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,SpaceType>,
+    //                               WeakForms::Operators::SymbolicOpCodes::third_derivative>
+    // third_derivative(const SubSpaceViewsType<rank,SpaceType> &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,SpaceType>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
+
+    //   return OpType(operand);
+    // }
+
+
+
+    /* -- Finite element subspaces: Test functions and trial solutions
+     * (interface)
+     * -- */
+
+    /**
+     * @brief Jump in values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_values>
+    jump_in_values(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_values>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Jump in gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
+    jump_in_gradients(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Jump in Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
+    jump_in_hessians(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Jump in third derivatives variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
+    jump_in_third_derivatives(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
+
+      return OpType(operand);
+    }
+
+
+
+    /**
+     * @brief Average of values variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::average_of_values>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_values>
+    average_of_values(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Average of gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
+    average_of_gradients(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Average of Hessians variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+     */
+    template <template <class> class SubSpaceViewsType, typename SpaceType>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
+    average_of_hessians(const SubSpaceViewsType<SpaceType> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op     = SubSpaceViewsType<SpaceType>;
+      using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
+
+      return OpType(operand);
+    }
+
+
+
+    /* ------------- Finite element subspaces: Field solutions ------------- */
+
+    /**
+     * @brief Value variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::value,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::value,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Value variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::value,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::value,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::gradient,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    gradient(
+      const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
+    {
+      static_assert(
+        std::is_same<
+          SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+          SubSpaceViews::Tensor<rank, FieldSolution<dim, spacedim>>>::value,
+        "The selected subspace view does not support the gradient operation.");
+
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::gradient,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::symmetric_gradient,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    symmetric_gradient(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      static_assert(
+        std::is_same<
+          SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+          SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
+        "The selected subspace view does not support the symmetric gradient operation.");
+
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::symmetric_gradient,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Symmetric gradient variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // int dim, int spacedim>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,
+    // FieldSolution<dim,spacedim>>,
+    //                               WeakForms::Operators::SymbolicOpCodes::symmetric_gradient>
+    // symmetric_gradient(const SubSpaceViewsType<rank,
+    // FieldSolution<dim,spacedim>> &operand)
+    // {
+    //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
+    //   support the symmetric gradient operation.");
+
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank, FieldSolution<dim,spacedim>>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::symmetric_gradient>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Divergence variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::divergence,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      static_assert(
+        std::is_same<
+          SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+          SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
+        "The selected subspace view does not support the divergence operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::divergence,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Divergence variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <int, class>
+              class SubSpaceViewsType,
+              int rank,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::divergence,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    divergence(
+      const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<rank, FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::divergence,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Curl variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::curl,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      static_assert(
+        std::is_same<
+          SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+          SubSpaceViews::Vector<FieldSolution<dim, spacedim>>>::value,
+        "The selected subspace view does not support the curl operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::curl,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    /**
+     * @brief Curl variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType, e.g. WeakForms::SubSpaceViews::Scalar
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // int dim, int spacedim>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,
+    // FieldSolution<dim,spacedim>>,
+    //                               WeakForms::Operators::SymbolicOpCodes::curl>
+    // curl(const SubSpaceViewsType<rank, FieldSolution<dim,spacedim>> &operand)
+    // {
+    //   static_assert(false, "Tensor and SymmetricTensor subspace views do not
+    //   support the symmetric gradient operation.");
+
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank, FieldSolution<dim,spacedim>>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::curl>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Laplacian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::laplacian,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      static_assert(
+        std::is_same<
+          SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+          SubSpaceViews::Scalar<FieldSolution<dim, spacedim>>>::value,
+        "The selected subspace view does not support the Laplacian operation.");
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::laplacian,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // int dim, int spacedim>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
+    //                               WeakForms::Operators::SymbolicOpCodes::laplacian>
+    // laplacian(const SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>
+    // &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Hessian variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::hessian,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::hessian,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Hessian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // int dim, int spacedim>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
+    //                               WeakForms::Operators::SymbolicOpCodes::hessian>
+    // hessian(const SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>
+    // &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
+
+    //   return OpType(operand);
+    // }
+
+
+    /**
+     * @brief Third derivative variant for WeakForms::SubSpaceViews::Scalar, WeakForms::SubSpaceViews::Vector
+     *
+     * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+     * @tparam SpaceType A space type, specifically a test space or trial space
+     * @param operand
+     * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+     * WeakForms::Operators::SymbolicOpCodes::value>
+     */
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::third_derivative,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    third_derivative(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::third_derivative,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    // /**
+    //  * @brief Laplacian variant for WeakForms::SubSpaceViews::Tensor, WeakForms::SubSpaceViews::SymmetricTensor
+    //  *
+    //  * @tparam SubSpaceViewsType The type of view being applied to the SpaceType.
+    //  * @tparam SpaceType A space type, specifically a test space or trial space
+    //  * @param operand
+    //  * @return WeakForms::Operators::SymbolicOp<SubSpaceViewsType<SpaceType>,
+    //  * WeakForms::Operators::SymbolicOpCodes::value>
+    //  */
+    // template <template<int, class> typename SubSpaceViewsType, int rank,
+    // int dim, int spacedim>
+    // WeakForms::Operators::SymbolicOp<SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>,
+    //                               WeakForms::Operators::SymbolicOpCodes::third_derivative>
+    // third_derivative(const
+    // SubSpaceViewsType<rank,FieldSolution<dim,spacedim>> &operand)
+    // {
+    //   using namespace WeakForms;
+    //   using namespace WeakForms::Operators;
+
+    //   using Op     = SubSpaceViewsType<rank,FieldSolution<dim,spacedim>>;
+    //   using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
+
+    //   return OpType(operand);
+    // }
+
+
+
+    /* -------- Finite element subspaces: Field solutions (interface) --------
+     */
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_values,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_values(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::jump_in_values,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_gradients,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_gradients(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::jump_in_gradients,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_hessians,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_hessians(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::jump_in_hessians,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    jump_in_third_derivatives(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::jump_in_third_derivatives,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_values,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_values(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::average_of_values,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_gradients,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_gradients(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::average_of_gradients,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+
+    template <types::solution_index solution_index,
+              template <class>
+              class SubSpaceViewsType,
+              int dim,
+              int spacedim>
+    WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<FieldSolution<dim, spacedim>>,
+      WeakForms::Operators::SymbolicOpCodes::average_of_hessians,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>>
+    average_of_hessians(
+      const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand)
+    {
+      using namespace WeakForms;
+      using namespace WeakForms::Operators;
+
+      using Op = SubSpaceViewsType<FieldSolution<dim, spacedim>>;
+      using OpType =
+        SymbolicOp<Op,
+                   SymbolicOpCodes::average_of_hessians,
+                   void,
+                   WeakForms::internal::SolutionIndex<solution_index>>;
+
+      return OpType(operand);
+    }
+
+  } // namespace internal
 } // namespace WeakForms
 
 
 
 /* ==================== Specialization of type traits ==================== */
-
-
-
-#ifndef DOXYGEN
 
 
 namespace WeakForms

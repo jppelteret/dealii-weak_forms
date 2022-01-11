@@ -63,24 +63,25 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Value" << std::endl;
-    deallog << "Test function: " << value(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.value().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << value(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.value().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << value(soln_ss).as_ascii(decorator) << std::endl;
-    deallog << "Solution (t1): " << value<1>(soln_ss).as_ascii(decorator)
-            << std::endl;
+    deallog << "Solution: " << soln_ss.value().as_ascii(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template value<1>().as_ascii(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Divergence" << std::endl;
-    deallog << "Test function: " << divergence(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.divergence().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << divergence(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.divergence().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << divergence(soln_ss).as_ascii(decorator)
+    deallog << "Solution: " << soln_ss.divergence().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << divergence<1>(soln_ss).as_ascii(decorator)
+    deallog << "Solution (t1): "
+            << soln_ss.template divergence<1>().as_ascii(decorator)
             << std::endl;
 
     deallog << std::endl;
@@ -98,24 +99,25 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Value" << std::endl;
-    deallog << "Test function: " << value(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.value().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << value(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.value().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << value(soln_ss).as_latex(decorator) << std::endl;
-    deallog << "Solution (t1): " << value<1>(soln_ss).as_latex(decorator)
-            << std::endl;
+    deallog << "Solution: " << soln_ss.value().as_latex(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template value<1>().as_latex(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Divergence" << std::endl;
-    deallog << "Test function: " << divergence(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.divergence().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << divergence(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.divergence().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << divergence(soln_ss).as_latex(decorator)
+    deallog << "Solution: " << soln_ss.divergence().as_latex(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << divergence<1>(soln_ss).as_latex(decorator)
+    deallog << "Solution (t1): "
+            << soln_ss.template divergence<1>().as_latex(decorator)
             << std::endl;
 
     deallog << std::endl;
