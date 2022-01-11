@@ -74,212 +74,6 @@ namespace WeakForms
     } // namespace internal
   }   // namespace SelfLinearization
 
-  /* --------------- Finite element spaces: Test functions --------------- */
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<WeakForms::TestFunction<dim, spacedim>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  /* ---------- Finite element spaces: Test functions (interface) ---------- */
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(
-    const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const WeakForms::TestFunction<dim, spacedim> &operand);
-
-
-
-  /* --------------- Finite element spaces: Trial solutions --------------- */
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<WeakForms::TrialSolution<dim, spacedim>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  /* --------- Finite element spaces: Trial solutions (interface) --------- */
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(
-    const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand);
-
-
-
-  /* --------------- Finite element spaces: Solution fields --------------- */
-
   namespace internal
   {
     // Used to work around the restriction that template arguments
@@ -290,56 +84,6 @@ namespace WeakForms
       static const types::solution_index solution_index = solution_index_;
     };
   } // namespace internal
-
-
-
-  template <types::solution_index solution_index = 0, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const WeakForms::FieldSolution<dim, spacedim> &operand);
-
-
-
-  template <types::solution_index solution_index = 0, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(const WeakForms::FieldSolution<dim, spacedim> &operand);
-
-
-
-  template <types::solution_index solution_index = 0, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  laplacian(const WeakForms::FieldSolution<dim, spacedim> &operand);
-
-
-
-  template <types::solution_index solution_index = 0, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  hessian(const WeakForms::FieldSolution<dim, spacedim> &operand);
-
-
-
-  template <types::solution_index solution_index = 0, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  third_derivative(const WeakForms::FieldSolution<dim, spacedim> &operand);
 
 } // namespace WeakForms
 
@@ -389,27 +133,6 @@ namespace WeakForms
     using third_derivative_type =
       typename FEValuesViewsType::template solution_third_derivative_type<
         ScalarType>;
-
-    // using FEInterfaceValuesViewsType = FEInterfaceViews::Scalar<dimension,
-    // space_dimension>;
-
-    // template <typename ScalarType>
-    // using interface_value_type =
-    //   typename FEValuesViewsType::template solution_value_type<ScalarType>;
-
-    // template <typename ScalarType>
-    // using interface_gradient_type =
-    //   typename FEValuesViewsType::template
-    //   solution_gradient_type<ScalarType>;
-
-    // template <typename ScalarType>
-    // using interface_hessian_type =
-    //   typename FEValuesViewsType::template solution_hessian_type<ScalarType>;
-
-    // template <typename ScalarType>
-    // using interface_third_derivative_type =
-    //   typename FEValuesViewsType::template solution_third_derivative_type<
-    //     ScalarType>;
 
     virtual ~Space() = default;
 
@@ -548,37 +271,7 @@ namespace WeakForms
       return naming.test_function;
     }
 
-    // Cell / face
-
-    auto
-    value() const
-    {
-      return WeakForms::value(*this);
-    }
-
-    auto
-    gradient() const
-    {
-      return WeakForms::gradient(*this);
-    }
-
-    auto
-    laplacian() const
-    {
-      return WeakForms::laplacian(*this);
-    }
-
-    auto
-    hessian() const
-    {
-      return WeakForms::hessian(*this);
-    }
-
-    auto
-    third_derivative() const
-    {
-      return WeakForms::third_derivative(*this);
-    }
+    // Extractors
 
     SubSpaceViews::Scalar<TestFunction>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
@@ -620,49 +313,45 @@ namespace WeakForms
         subspace, extractor.extractor);
     }
 
-    // Interface
+    // Methods to promote this class to a SymbolicOp: Cell / face
 
     auto
-    jump_in_values() const
-    {
-      return WeakForms::jump_in_values(*this);
-    }
+    value() const;
 
     auto
-    jump_in_gradients() const
-    {
-      return WeakForms::jump_in_gradients(*this);
-    }
+    gradient() const;
 
     auto
-    jump_in_hessians() const
-    {
-      return WeakForms::jump_in_hessians(*this);
-    }
+    laplacian() const;
 
     auto
-    jump_in_third_derivatives() const
-    {
-      return WeakForms::jump_in_third_derivatives(*this);
-    }
+    hessian() const;
 
     auto
-    average_of_values() const
-    {
-      return WeakForms::average_of_values(*this);
-    }
+    third_derivative() const;
+
+    // Methods to promote this class to a SymbolicOp: Interface
 
     auto
-    average_of_gradients() const
-    {
-      return WeakForms::average_of_gradients(*this);
-    }
+    jump_in_values() const;
 
     auto
-    average_of_hessians() const
-    {
-      return WeakForms::average_of_hessians(*this);
-    }
+    jump_in_gradients() const;
+
+    auto
+    jump_in_hessians() const;
+
+    auto
+    jump_in_third_derivatives() const;
+
+    auto
+    average_of_values() const;
+
+    auto
+    average_of_gradients() const;
+
+    auto
+    average_of_hessians() const;
 
   protected:
     // Subspace
@@ -730,37 +419,7 @@ namespace WeakForms
       return naming.trial_solution;
     }
 
-    // Cell / face
-
-    auto
-    value() const
-    {
-      return WeakForms::value(*this);
-    }
-
-    auto
-    gradient() const
-    {
-      return WeakForms::gradient(*this);
-    }
-
-    auto
-    laplacian() const
-    {
-      return WeakForms::laplacian(*this);
-    }
-
-    auto
-    hessian() const
-    {
-      return WeakForms::hessian(*this);
-    }
-
-    auto
-    third_derivative() const
-    {
-      return WeakForms::third_derivative(*this);
-    }
+    // Extractors
 
     SubSpaceViews::Scalar<TrialSolution>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
@@ -804,49 +463,45 @@ namespace WeakForms
         subspace, extractor.extractor);
     }
 
-    // Interface
+    // Methods to promote this class to a SymbolicOp: Cell / face
 
     auto
-    jump_in_values() const
-    {
-      return WeakForms::jump_in_values(*this);
-    }
+    value() const;
 
     auto
-    jump_in_gradients() const
-    {
-      return WeakForms::jump_in_gradients(*this);
-    }
+    gradient() const;
 
     auto
-    jump_in_hessians() const
-    {
-      return WeakForms::jump_in_hessians(*this);
-    }
+    laplacian() const;
 
     auto
-    jump_in_third_derivatives() const
-    {
-      return WeakForms::jump_in_third_derivatives(*this);
-    }
+    hessian() const;
 
     auto
-    average_of_values() const
-    {
-      return WeakForms::average_of_values(*this);
-    }
+    third_derivative() const;
+
+    // Methods to promote this class to a SymbolicOp: Interface
 
     auto
-    average_of_gradients() const
-    {
-      return WeakForms::average_of_gradients(*this);
-    }
+    jump_in_values() const;
 
     auto
-    average_of_hessians() const
-    {
-      return WeakForms::average_of_hessians(*this);
-    }
+    jump_in_gradients() const;
+
+    auto
+    jump_in_hessians() const;
+
+    auto
+    jump_in_third_derivatives() const;
+
+    auto
+    average_of_values() const;
+
+    auto
+    average_of_gradients() const;
+
+    auto
+    average_of_hessians() const;
 
   protected:
     // Subspace
@@ -902,42 +557,7 @@ namespace WeakForms
         return "";
     }
 
-    // Cell / face
-
-    template <types::solution_index solution_index = 0>
-    auto
-    value() const
-    {
-      return WeakForms::value<solution_index>(*this);
-    }
-
-    template <types::solution_index solution_index = 0>
-    auto
-    gradient() const
-    {
-      return WeakForms::gradient<solution_index>(*this);
-    }
-
-    template <types::solution_index solution_index = 0>
-    auto
-    laplacian() const
-    {
-      return WeakForms::laplacian<solution_index>(*this);
-    }
-
-    template <types::solution_index solution_index = 0>
-    auto
-    hessian() const
-    {
-      return WeakForms::hessian<solution_index>(*this);
-    }
-
-    template <types::solution_index solution_index = 0>
-    auto
-    third_derivative() const
-    {
-      return WeakForms::third_derivative<solution_index>(*this);
-    }
+    // Extractors
 
     SubSpaceViews::Scalar<FieldSolution>
     operator[](const SubSpaceExtractors::Scalar &extractor) const
@@ -981,7 +601,29 @@ namespace WeakForms
         subspace, extractor.extractor);
     }
 
-    // Interface
+    // Methods to promote this class to a SymbolicOp: Cell / face
+
+    template <types::solution_index solution_index = 0>
+    auto
+    value() const;
+
+    template <types::solution_index solution_index = 0>
+    auto
+    gradient() const;
+
+    template <types::solution_index solution_index = 0>
+    auto
+    laplacian() const;
+
+    template <types::solution_index solution_index = 0>
+    auto
+    hessian() const;
+
+    template <types::solution_index solution_index = 0>
+    auto
+    third_derivative() const;
+
+    // Methods to promote this class to a SymbolicOp: Interface
 
   protected:
     // Subspace
@@ -2908,7 +2550,7 @@ public:                                                                    \
 
 
 
-/* ======================== Convenience functions ======================== */
+/* ==================== Class method definitions ==================== */
 
 
 
@@ -2918,9 +2560,8 @@ namespace WeakForms
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<WeakForms::TestFunction<dim, spacedim>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::value() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -2928,16 +2569,15 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::gradient() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -2945,16 +2585,15 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::laplacian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -2962,16 +2601,15 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::hessian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -2979,16 +2617,15 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::third_derivative() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -2996,6 +2633,7 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
@@ -3005,10 +2643,8 @@ namespace WeakForms
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::jump_in_values() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3016,15 +2652,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_values>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::jump_in_gradients() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3032,15 +2667,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::jump_in_hessians() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3048,16 +2682,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(
-    const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::jump_in_third_derivatives() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3065,15 +2697,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::average_of_values() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3081,15 +2712,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::average_of_gradients() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3097,15 +2727,14 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TestFunction<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const WeakForms::TestFunction<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TestFunction<dim, spacedim>::average_of_hessians() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3113,6 +2742,7 @@ namespace WeakForms
     using Op     = TestFunction<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
@@ -3123,9 +2753,8 @@ namespace WeakForms
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<WeakForms::TrialSolution<dim, spacedim>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::value() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3133,16 +2762,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient>
-  gradient(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::gradient() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3150,16 +2778,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::gradient>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian>
-  laplacian(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::laplacian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3167,16 +2794,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::laplacian>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian>
-  hessian(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::hessian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3184,16 +2810,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::hessian>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative>
-  third_derivative(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::third_derivative() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3201,6 +2826,7 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::third_derivative>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
@@ -3211,10 +2837,8 @@ namespace WeakForms
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_values>
-  jump_in_values(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::jump_in_values() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3222,16 +2846,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_values>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_gradients>
-  jump_in_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::jump_in_gradients() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3239,16 +2862,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_gradients>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_hessians>
-  jump_in_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::jump_in_hessians() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3256,17 +2878,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_hessians>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::jump_in_third_derivatives>
-  jump_in_third_derivatives(
-    const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::jump_in_third_derivatives() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3274,16 +2894,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::jump_in_third_derivatives>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_values>
-  average_of_values(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::average_of_values() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3291,16 +2910,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_values>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_gradients>
-  average_of_gradients(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::average_of_gradients() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3308,16 +2926,15 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_gradients>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::TrialSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::average_of_hessians>
-  average_of_hessians(const WeakForms::TrialSolution<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::TrialSolution<dim, spacedim>::average_of_hessians() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3325,6 +2942,7 @@ namespace WeakForms
     using Op     = TrialSolution<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::average_of_hessians>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
@@ -3334,13 +2952,10 @@ namespace WeakForms
 
 
 
-  template <types::solution_index solution_index, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  value(const WeakForms::FieldSolution<dim, spacedim> &operand)
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::value() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3352,18 +2967,16 @@ namespace WeakForms
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
-  template <types::solution_index solution_index, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::gradient,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  gradient(const WeakForms::FieldSolution<dim, spacedim> &operand)
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::gradient() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3375,18 +2988,16 @@ namespace WeakForms
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
-  template <types::solution_index solution_index, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::laplacian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  laplacian(const WeakForms::FieldSolution<dim, spacedim> &operand)
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::laplacian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3398,18 +3009,16 @@ namespace WeakForms
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
-  template <types::solution_index solution_index, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::hessian,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  hessian(const WeakForms::FieldSolution<dim, spacedim> &operand)
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::hessian() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3421,18 +3030,16 @@ namespace WeakForms
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
 
 
-  template <types::solution_index solution_index, int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::FieldSolution<dim, spacedim>,
-    WeakForms::Operators::SymbolicOpCodes::third_derivative,
-    void,
-    WeakForms::internal::SolutionIndex<solution_index>>
-  third_derivative(const WeakForms::FieldSolution<dim, spacedim> &operand)
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::third_derivative() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -3444,6 +3051,7 @@ namespace WeakForms
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
 
