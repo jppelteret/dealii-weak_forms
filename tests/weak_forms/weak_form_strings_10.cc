@@ -52,9 +52,9 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in values" << std::endl;
-    deallog << "Test function: " << jump_in_values(test).as_ascii(decorator)
+    deallog << "Test function: " << test.jump_in_values().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << jump_in_values(trial).as_ascii(decorator)
+    deallog << "Trial solution: " << trial.jump_in_values().as_ascii(decorator)
             << std::endl;
     //     deallog << "Solution: " << jump_in_values(soln).as_ascii(decorator)
     //             << std::endl;
@@ -65,10 +65,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in gradients" << std::endl;
-    deallog << "Test function: " << jump_in_gradients(test).as_ascii(decorator)
+    deallog << "Test function: " << test.jump_in_gradients().as_ascii(decorator)
             << std::endl;
     deallog << "Trial solution: "
-            << jump_in_gradients(trial).as_ascii(decorator) << std::endl;
+            << trial.jump_in_gradients().as_ascii(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     jump_in_gradients(soln).as_ascii(decorator)
     //             << std::endl;
@@ -79,10 +79,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in hessians" << std::endl;
-    deallog << "Test function: " << jump_in_hessians(test).as_ascii(decorator)
+    deallog << "Test function: " << test.jump_in_hessians().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << jump_in_hessians(trial).as_ascii(decorator)
-            << std::endl;
+    deallog << "Trial solution: "
+            << trial.jump_in_hessians().as_ascii(decorator) << std::endl;
     //     deallog << "Solution: " << jump_in_hessians(soln).as_ascii(decorator)
     //             << std::endl;
     //     deallog << "Solution (t1): " <<
@@ -93,9 +93,10 @@ run()
 
     deallog << "SPACE FUNCTIONS: Jump in third derivatives" << std::endl;
     deallog << "Test function: "
-            << jump_in_third_derivatives(test).as_ascii(decorator) << std::endl;
+            << test.jump_in_third_derivatives().as_ascii(decorator)
+            << std::endl;
     deallog << "Trial solution: "
-            << jump_in_third_derivatives(trial).as_ascii(decorator)
+            << trial.jump_in_third_derivatives().as_ascii(decorator)
             << std::endl;
     //     deallog << "Solution: " <<
     //     jump_in_third_derivatives(soln).as_ascii(decorator)
@@ -107,10 +108,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Average of values" << std::endl;
-    deallog << "Test function: " << average_of_values(test).as_ascii(decorator)
+    deallog << "Test function: " << test.average_of_values().as_ascii(decorator)
             << std::endl;
     deallog << "Trial solution: "
-            << average_of_values(trial).as_ascii(decorator) << std::endl;
+            << trial.average_of_values().as_ascii(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_values(soln).as_ascii(decorator)
     //             << std::endl;
@@ -122,9 +123,9 @@ run()
 
     deallog << "SPACE FUNCTIONS: Average of gradients" << std::endl;
     deallog << "Test function: "
-            << average_of_gradients(test).as_ascii(decorator) << std::endl;
+            << test.average_of_gradients().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
-            << average_of_gradients(trial).as_ascii(decorator) << std::endl;
+            << trial.average_of_gradients().as_ascii(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_gradients(soln).as_ascii(decorator)
     //             << std::endl;
@@ -136,9 +137,9 @@ run()
 
     deallog << "SPACE FUNCTIONS: Average of hessians" << std::endl;
     deallog << "Test function: "
-            << average_of_hessians(test).as_ascii(decorator) << std::endl;
+            << test.average_of_hessians().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
-            << average_of_hessians(trial).as_ascii(decorator) << std::endl;
+            << trial.average_of_hessians().as_ascii(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_hessians(soln).as_ascii(decorator)
     //             << std::endl;
@@ -161,9 +162,9 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in values" << std::endl;
-    deallog << "Test function: " << jump_in_values(test).as_latex(decorator)
+    deallog << "Test function: " << test.jump_in_values().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << jump_in_values(trial).as_latex(decorator)
+    deallog << "Trial solution: " << trial.jump_in_values().as_latex(decorator)
             << std::endl;
     //     deallog << "Solution: " << jump_in_values(soln).as_latex(decorator)
     //             << std::endl;
@@ -174,10 +175,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in gradients" << std::endl;
-    deallog << "Test function: " << jump_in_gradients(test).as_latex(decorator)
+    deallog << "Test function: " << test.jump_in_gradients().as_latex(decorator)
             << std::endl;
     deallog << "Trial solution: "
-            << jump_in_gradients(trial).as_latex(decorator) << std::endl;
+            << trial.jump_in_gradients().as_latex(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     jump_in_gradients(soln).as_latex(decorator)
     //             << std::endl;
@@ -188,10 +189,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Jump in hessians" << std::endl;
-    deallog << "Test function: " << jump_in_hessians(test).as_latex(decorator)
+    deallog << "Test function: " << test.jump_in_hessians().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << jump_in_hessians(trial).as_latex(decorator)
-            << std::endl;
+    deallog << "Trial solution: "
+            << trial.jump_in_hessians().as_latex(decorator) << std::endl;
     //     deallog << "Solution: " << jump_in_hessians(soln).as_latex(decorator)
     //             << std::endl;
     //     deallog << "Solution (t1): " <<
@@ -202,9 +203,10 @@ run()
 
     deallog << "SPACE FUNCTIONS: Jump in third derivatives" << std::endl;
     deallog << "Test function: "
-            << jump_in_third_derivatives(test).as_latex(decorator) << std::endl;
+            << test.jump_in_third_derivatives().as_latex(decorator)
+            << std::endl;
     deallog << "Trial solution: "
-            << jump_in_third_derivatives(trial).as_latex(decorator)
+            << trial.jump_in_third_derivatives().as_latex(decorator)
             << std::endl;
     //     deallog << "Solution: " <<
     //     jump_in_third_derivatives(soln).as_latex(decorator)
@@ -216,10 +218,10 @@ run()
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Average of values" << std::endl;
-    deallog << "Test function: " << average_of_values(test).as_latex(decorator)
+    deallog << "Test function: " << test.average_of_values().as_latex(decorator)
             << std::endl;
     deallog << "Trial solution: "
-            << average_of_values(trial).as_latex(decorator) << std::endl;
+            << trial.average_of_values().as_latex(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_values(soln).as_latex(decorator)
     //             << std::endl;
@@ -231,9 +233,9 @@ run()
 
     deallog << "SPACE FUNCTIONS: Average of gradients" << std::endl;
     deallog << "Test function: "
-            << average_of_gradients(test).as_latex(decorator) << std::endl;
+            << test.average_of_gradients().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
-            << average_of_gradients(trial).as_latex(decorator) << std::endl;
+            << trial.average_of_gradients().as_latex(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_gradients(soln).as_latex(decorator)
     //             << std::endl;
@@ -245,9 +247,9 @@ run()
 
     deallog << "SPACE FUNCTIONS: Average of hessians" << std::endl;
     deallog << "Test function: "
-            << average_of_hessians(test).as_latex(decorator) << std::endl;
+            << test.average_of_hessians().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
-            << average_of_hessians(trial).as_latex(decorator) << std::endl;
+            << trial.average_of_hessians().as_latex(decorator) << std::endl;
     //     deallog << "Solution: " <<
     //     average_of_hessians(soln).as_latex(decorator)
     //             << std::endl;

@@ -201,10 +201,10 @@ run(const unsigned int n_subdivisions)
     const VectorFunctionFunctor<dim>    source("f_pillow", "\\mathbf{f}_{s}");
     const TensorFunctionFunctor<2, dim> traction("f_cosine", "\\mathbf{f}_{t}");
 
-    const auto test_val      = value(test_ss);
-    const auto normal_val    = value(normal);
-    const auto src_func      = value<double, dim>(source, source_function);
-    const auto traction_func = value<double, dim>(traction, traction_function);
+    const auto test_val      = test_ss.value();
+    const auto normal_val    = normal.value();
+    const auto src_func      = source.value(source_function);
+    const auto traction_func = traction.value(traction_function);
 
     // Non-vectorized assembler
     {

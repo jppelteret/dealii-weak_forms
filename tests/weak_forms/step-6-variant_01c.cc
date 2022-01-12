@@ -56,17 +56,15 @@ Step6<dim>::assemble_system()
   const ScalarFunctor      mat_coeff("c", "c");
   const ScalarFunctor      rhs_coeff("s", "s");
 
-  const auto test_val   = value(test);
-  const auto test_grad  = gradient(test);
-  const auto trial_grad = gradient(trial);
-  const auto mat_coeff_func =
-    value<double, dim, spacedim>(mat_coeff,
-                                 [](const FEValuesBase<dim, spacedim> &,
-                                    const unsigned int) { return 1.0; });
-  const auto rhs_coeff_func =
-    value<double, dim, spacedim>(rhs_coeff,
-                                 [](const FEValuesBase<dim, spacedim> &,
-                                    const unsigned int) { return 1.0; });
+  const auto test_val       = test.value();
+  const auto test_grad      = test.gradient();
+  const auto trial_grad     = trial.gradient();
+  const auto mat_coeff_func = mat_coeff.template value<double, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
+  const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
   assembler += bilinear_form(test_grad, mat_coeff_func, trial_grad)

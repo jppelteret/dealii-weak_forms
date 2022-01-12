@@ -77,59 +77,72 @@ namespace WeakForms
 
     // ===== Section: Integration =====
 
+    template <typename ScalarType = double>
     auto
     dV() const
     {
-      return integrate(*this, VolumeIntegral());
+      return VolumeIntegral().template integrate<ScalarType>(*this);
     }
 
+    template <typename ScalarType = double>
     auto
     dV(const typename VolumeIntegral::subdomain_t subdomain) const
     {
-      return dV(std::set<typename VolumeIntegral::subdomain_t>{subdomain});
+      return dV<ScalarType>(
+        std::set<typename VolumeIntegral::subdomain_t>{subdomain});
     }
 
+    template <typename ScalarType = double>
     auto
     dV(const std::set<typename VolumeIntegral::subdomain_t> &subdomains) const
     {
-      return integrate(*this, VolumeIntegral(subdomains));
+      return VolumeIntegral(subdomains).template integrate<ScalarType>(*this);
     }
 
+    template <typename ScalarType = double>
     auto
     dA() const
     {
-      return integrate(*this, BoundaryIntegral());
+      return BoundaryIntegral().template integrate<ScalarType>(*this);
     }
 
+    template <typename ScalarType = double>
     auto
     dA(const typename BoundaryIntegral::subdomain_t boundary) const
     {
-      return dA(std::set<typename BoundaryIntegral::subdomain_t>{boundary});
+      return dA<ScalarType>(
+        std::set<typename BoundaryIntegral::subdomain_t>{boundary});
     }
 
+    template <typename ScalarType = double>
     auto
     dA(const std::set<typename BoundaryIntegral::subdomain_t> &boundaries) const
     {
-      return integrate(*this, BoundaryIntegral(boundaries));
+      return BoundaryIntegral(boundaries).template integrate<ScalarType>(*this);
     }
 
+    template <typename ScalarType = double>
     auto
     dI() const
     {
-      return integrate(*this, InterfaceIntegral());
+      return InterfaceIntegral().template integrate<ScalarType>(*this);
     }
 
+    template <typename ScalarType = double>
     auto
     dI(const typename InterfaceIntegral::subdomain_t interface) const
     {
-      return dI(std::set<typename InterfaceIntegral::subdomain_t>{interface});
+      return dI<ScalarType>(
+        std::set<typename InterfaceIntegral::subdomain_t>{interface});
     }
 
+    template <typename ScalarType = double>
     auto
     dI(
       const std::set<typename InterfaceIntegral::subdomain_t> &interfaces) const
     {
-      return integrate(*this, InterfaceIntegral(interfaces));
+      return InterfaceIntegral(interfaces)
+        .template integrate<ScalarType>(*this);
     }
 
     // ===== Section: Construct assembly operation =====

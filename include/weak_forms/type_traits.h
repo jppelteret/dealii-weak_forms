@@ -140,6 +140,10 @@ namespace WeakForms
   struct is_interface_integral_op : std::false_type
   {};
 
+  template <typename T>
+  struct is_valid_integration_domain : std::false_type
+  {};
+
   // TODO: Add test for this
   template <typename T, typename U = void>
   struct is_unary_op : std::false_type

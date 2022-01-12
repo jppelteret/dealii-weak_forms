@@ -41,8 +41,6 @@
 // Operators that operate and give values to functors and spaces
 #include <weak_forms/binary_operators.h>
 #include <weak_forms/cell_face_subface_operators.h>
-// #include <weak_forms/fe_space_operators.h> // ? TODO: Remove
-// #include <weak_forms/tensor_operators.h> // ? TODO: Remove
 #include <weak_forms/mixed_operators.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/unary_operators.h>
@@ -57,7 +55,6 @@
 #include <weak_forms/energy_functor.h>
 #include <weak_forms/residual_functor.h>
 #include <weak_forms/self_linearizing_forms.h>
-// #include <weak_forms/symbolic_functors.h>
 
 // Common tools for assembly
 #include <weak_forms/integrator.h>

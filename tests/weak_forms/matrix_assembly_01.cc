@@ -202,12 +202,11 @@ run()
     const TrialSolution<dim, spacedim> trial;
     const ScalarFunctor                coeff("c", "c");
 
-    const auto test_val  = value(test);
-    const auto trial_val = value(trial);
-    const auto coeff_func =
-      value<double, dim, spacedim>(coeff,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 1.0; });
+    const auto test_val   = test.value();
+    const auto trial_val  = trial.value();
+    const auto coeff_func = coeff.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;
@@ -248,10 +247,9 @@ run()
                                           constant_scalar_function(1.0);
     const ScalarFunctionFunctor<spacedim> coeff("c", "c");
 
-    const auto test_val  = value(test);
-    const auto trial_val = value(trial);
-    const auto coeff_func =
-      value<double, dim, spacedim>(coeff, constant_scalar_function);
+    const auto test_val   = test.value();
+    const auto trial_val  = trial.value();
+    const auto coeff_func = coeff.value(constant_scalar_function);
 
     // Non-vectorized assembler
     {

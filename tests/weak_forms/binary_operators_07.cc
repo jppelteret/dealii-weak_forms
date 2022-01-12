@@ -126,16 +126,14 @@ run()
     using namespace WeakForms;
 
     const ScalarFunctor c1("c1", "c1");
-    const auto          f1 =
-      value<double, dim, spacedim>(c1,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 2.0; });
+    const auto          f1 = c1.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 2.0; });
 
     const ScalarFunctor c2("c2", "c2");
-    const auto          f2 =
-      value<double, dim, spacedim>(c2,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 3.0; });
+    const auto          f2 = c2.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 3.0; });
 
     std::cout
       << "Power: "
@@ -163,8 +161,7 @@ run()
     using namespace WeakForms;
 
     const VectorFunctor<dim> v1("v1", "v1");
-    const auto               f1 = value<double, spacedim>(
-      v1,
+    const auto               f1 = v1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<1, dim> t;
@@ -175,8 +172,7 @@ run()
       });
 
     const VectorFunctor<dim> v2("v2", "v2");
-    const auto               f2 = value<double, spacedim>(
-      v2,
+    const auto               f2 = v2.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<1, dim> t;
@@ -222,8 +218,7 @@ run()
     using namespace WeakForms;
 
     const TensorFunctor<2, dim> T1("T1", "T1");
-    const auto                  f1 = value<double, spacedim>(
-      T1,
+    const auto                  f1 = T1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<2, dim> t;
@@ -235,8 +230,7 @@ run()
       });
 
     const TensorFunctor<2, dim> T2("T2", "T2");
-    const auto                  f2 = value<double, spacedim>(
-      T2,
+    const auto                  f2 = T2.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<2, dim> t;
@@ -283,8 +277,7 @@ run()
     using namespace WeakForms;
 
     const SymmetricTensorFunctor<2, dim> S1("S1", "S1");
-    const auto                           f1 = value<double, spacedim>(
-      S1,
+    const auto f1 = S1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         SymmetricTensor<2, dim> t;
@@ -296,8 +289,7 @@ run()
       });
 
     const SymmetricTensorFunctor<2, dim> S2("S2", "S2");
-    const auto                           f2 = value<double, spacedim>(
-      S2,
+    const auto f2 = S2.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         SymmetricTensor<2, dim> t;

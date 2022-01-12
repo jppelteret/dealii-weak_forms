@@ -40,8 +40,7 @@ run()
   const SymbolicDecorations decorator;
 
   const TensorFunctor<2, dim> T1("T", "T");
-  const auto                  f1 = value<double, spacedim>(
-    T1,
+  const auto                  f1 = T1.template value<double, spacedim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     {
       Tensor<2, dim> t;
@@ -53,8 +52,7 @@ run()
     });
 
   const TensorFunctor<2, dim> T2("U", "U");
-  const auto                  f2 = value<double, spacedim>(
-    T2,
+  const auto                  f2 = T2.template value<double, spacedim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     {
       Tensor<2, dim> t;

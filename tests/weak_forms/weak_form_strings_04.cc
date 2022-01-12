@@ -41,9 +41,9 @@ run()
   const TrialSolution<dim, spacedim> trial;
   const FieldSolution<dim, spacedim> soln;
 
-  const auto test_val  = value(test);
-  const auto trial_val = value(trial);
-  const auto soln_val  = value(soln);
+  const auto test_val  = test.value();
+  const auto trial_val = trial.value();
+  const auto soln_val  = soln.value();
 
   // Test strings
   {

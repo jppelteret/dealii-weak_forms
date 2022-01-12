@@ -166,12 +166,11 @@ run()
     const auto                       test_ss  = test[subspace_extractor];
     const auto                       trial_ss = trial[subspace_extractor];
 
-    const auto test_val  = value(test_ss);
-    const auto trial_val = value(trial_ss);
-    const auto coeff_func =
-      value<double, dim, spacedim>(coeff,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 1.0; });
+    const auto test_val   = test_ss.value();
+    const auto trial_val  = trial_ss.value();
+    const auto coeff_func = coeff.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
 
     // Non-vectorized assembler
     {

@@ -46,15 +46,15 @@ run()
   const TrialSolution<dim, spacedim> trial_2;
   const FieldSolution<dim, spacedim> soln_2;
 
-  const auto test_val_1  = value(test_1);
-  const auto trial_val_1 = value(trial_1);
-  const auto soln_val_1  = value(soln_1);
-  const auto soln_grad_1 = gradient(soln_1);
+  const auto test_val_1  = test_1.value();
+  const auto trial_val_1 = trial_1.value();
+  const auto soln_val_1  = soln_1.value();
+  const auto soln_grad_1 = soln_1.gradient();
 
-  const auto test_val_2  = value(test_2);
-  const auto trial_val_2 = value(trial_2);
-  const auto soln_val_2  = value(soln_2);
-  const auto soln_grad_2 = gradient(soln_2);
+  const auto test_val_2  = test_2.value();
+  const auto trial_val_2 = trial_2.value();
+  const auto soln_val_2  = soln_2.value();
+  const auto soln_grad_2 = soln_2.gradient();
 
   // What we're going to do here doesn't make much sense, since the test
   // function and trial solution represents the entire finite element space. But

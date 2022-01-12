@@ -63,61 +63,62 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Value" << std::endl;
-    deallog << "Test function: " << value(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.value().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << value(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.value().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << value(soln_ss).as_ascii(decorator) << std::endl;
-    deallog << "Solution (t1): " << value<1>(soln_ss).as_ascii(decorator)
-            << std::endl;
+    deallog << "Solution: " << soln_ss.value().as_ascii(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template value<1>().as_ascii(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Gradient" << std::endl;
-    deallog << "Test function: " << gradient(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.gradient().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << gradient(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.gradient().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << gradient(soln_ss).as_ascii(decorator)
+    deallog << "Solution: " << soln_ss.gradient().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << gradient<1>(soln_ss).as_ascii(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template gradient<1>().as_ascii(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Laplacian" << std::endl;
-    deallog << "Test function: " << laplacian(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.laplacian().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << laplacian(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.laplacian().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << laplacian(soln_ss).as_ascii(decorator)
+    deallog << "Solution: " << soln_ss.laplacian().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << laplacian<1>(soln_ss).as_ascii(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template laplacian<1>().as_ascii(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Hessian" << std::endl;
-    deallog << "Test function: " << hessian(test_ss).as_ascii(decorator)
+    deallog << "Test function: " << test_ss.hessian().as_ascii(decorator)
             << std::endl;
-    deallog << "Trial solution: " << hessian(trial_ss).as_ascii(decorator)
+    deallog << "Trial solution: " << trial_ss.hessian().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution: " << hessian(soln_ss).as_ascii(decorator)
+    deallog << "Solution: " << soln_ss.hessian().as_ascii(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << hessian<1>(soln_ss).as_ascii(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template hessian<1>().as_ascii(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Third derivative" << std::endl;
     deallog << "Test function: "
-            << third_derivative(test_ss).as_ascii(decorator) << std::endl;
+            << test_ss.third_derivative().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
-            << third_derivative(trial_ss).as_ascii(decorator) << std::endl;
-    deallog << "Solution: " << third_derivative(soln_ss).as_ascii(decorator)
+            << trial_ss.third_derivative().as_ascii(decorator) << std::endl;
+    deallog << "Solution: " << soln_ss.third_derivative().as_ascii(decorator)
             << std::endl;
     deallog << "Solution (t1): "
-            << third_derivative<1>(soln_ss).as_ascii(decorator) << std::endl;
+            << soln_ss.template third_derivative<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }
@@ -134,61 +135,62 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Value" << std::endl;
-    deallog << "Test function: " << value(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.value().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << value(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.value().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << value(soln_ss).as_latex(decorator) << std::endl;
-    deallog << "Solution (t1): " << value<1>(soln_ss).as_latex(decorator)
-            << std::endl;
+    deallog << "Solution: " << soln_ss.value().as_latex(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template value<1>().as_latex(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Gradient" << std::endl;
-    deallog << "Test function: " << gradient(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.gradient().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << gradient(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.gradient().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << gradient(soln_ss).as_latex(decorator)
+    deallog << "Solution: " << soln_ss.gradient().as_latex(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << gradient<1>(soln_ss).as_latex(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template gradient<1>().as_latex(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Laplacian" << std::endl;
-    deallog << "Test function: " << laplacian(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.laplacian().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << laplacian(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.laplacian().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << laplacian(soln_ss).as_latex(decorator)
+    deallog << "Solution: " << soln_ss.laplacian().as_latex(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << laplacian<1>(soln_ss).as_latex(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template laplacian<1>().as_latex(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Hessian" << std::endl;
-    deallog << "Test function: " << hessian(test_ss).as_latex(decorator)
+    deallog << "Test function: " << test_ss.hessian().as_latex(decorator)
             << std::endl;
-    deallog << "Trial solution: " << hessian(trial_ss).as_latex(decorator)
+    deallog << "Trial solution: " << trial_ss.hessian().as_latex(decorator)
             << std::endl;
-    deallog << "Solution: " << hessian(soln_ss).as_latex(decorator)
+    deallog << "Solution: " << soln_ss.hessian().as_latex(decorator)
             << std::endl;
-    deallog << "Solution (t1): " << hessian<1>(soln_ss).as_latex(decorator)
-            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template hessian<1>().as_latex(decorator) << std::endl;
 
     deallog << std::endl;
 
     deallog << "SPACE FUNCTIONS: Third derivative" << std::endl;
     deallog << "Test function: "
-            << third_derivative(test_ss).as_latex(decorator) << std::endl;
+            << test_ss.third_derivative().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
-            << third_derivative(trial_ss).as_latex(decorator) << std::endl;
-    deallog << "Solution: " << third_derivative(soln_ss).as_latex(decorator)
+            << trial_ss.third_derivative().as_latex(decorator) << std::endl;
+    deallog << "Solution: " << soln_ss.third_derivative().as_latex(decorator)
             << std::endl;
     deallog << "Solution (t1): "
-            << third_derivative<1>(soln_ss).as_latex(decorator) << std::endl;
+            << soln_ss.template third_derivative<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }

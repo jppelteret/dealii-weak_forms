@@ -49,9 +49,9 @@ run()
   const TrialSolution<dim, spacedim> trial;
   const FieldSolution<dim, spacedim> soln;
 
-  const auto test_val  = value(test);
-  const auto trial_val = value(trial);
-  const auto soln_val  = value(soln);
+  const auto test_val  = test.value();
+  const auto trial_val = trial.value();
+  const auto soln_val  = soln.value();
 
   const VolumeIntegral    integral_dV;
   const BoundaryIntegral  integral_dA;
@@ -107,24 +107,24 @@ run()
     deallog << std::endl;
   }
 
-  const auto s =
-    value<NumberType, dim, spacedim>(scalar,
-                                     [](const FEValuesBase<dim, spacedim> &,
-                                        const unsigned int) { return 1.0; });
+  const auto s = scalar.template value<NumberType, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
 
   const Functions::ConstantFunction<dim, NumberType> constant_scalar_function(
     1);
   const ConstantTensorFunction<2, dim, NumberType> constant_tensor_function(
     unit_symmetric_tensor<dim>());
-  const auto sf = value<NumberType, dim>(scalar_func, constant_scalar_function);
+  const auto sf =
+    scalar_func.template value<NumberType, dim>(constant_scalar_function);
   const auto T2f =
-    value<NumberType, dim>(tensor_func2, constant_tensor_function);
+    tensor_func2.template value<NumberType, dim>(constant_tensor_function);
 
   const auto l_form  = linear_form(test_val, soln_val);
   const auto bl_form = bilinear_form(test_val, soln_val, trial_val);
 
-  const auto s_dV   = value(integral_dV, s);
-  const auto T2f_dA = value(integral_dA, T2f);
+  const auto s_dV   = integrate(s, integral_dV);
+  const auto T2f_dA = integrate(T2f, integral_dA);
   const auto sf_dI  = integrate(sf, integral_dI);
 
   const auto blf_dV = integrate(bl_form, integral_dV);

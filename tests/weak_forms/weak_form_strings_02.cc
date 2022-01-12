@@ -98,36 +98,25 @@ run()
     deallog << std::endl;
   }
 
-  const auto s =
-    value<NumberType, dim, spacedim>(scalar,
-                                     [](const FEValuesBase<dim, spacedim> &,
-                                        const unsigned int) { return 1.0; });
-  const auto v =
-    value<NumberType, dim>(vector,
-                           [](const FEValuesBase<dim, spacedim> &,
-                              const unsigned int)
-                           { return Tensor<1, spacedim, NumberType>(); });
-  const auto T2 =
-    value<NumberType, dim>(tensor2,
-                           [](const FEValuesBase<dim, spacedim> &,
-                              const unsigned int)
-                           { return Tensor<2, spacedim, NumberType>(); });
-  const auto T3 =
-    value<NumberType, dim>(tensor3,
-                           [](const FEValuesBase<dim, spacedim> &,
-                              const unsigned int)
-                           { return Tensor<3, spacedim, NumberType>(); });
-  const auto T4 =
-    value<NumberType, dim>(tensor4,
-                           [](const FEValuesBase<dim, spacedim> &,
-                              const unsigned int)
-                           { return Tensor<4, spacedim, NumberType>(); });
-  const auto S2 = value<NumberType, dim>(
-    tensor2,
+  const auto s = scalar.template value<NumberType, dim, spacedim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return 1.0; });
+  const auto v = vector.template value<NumberType, dim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return Tensor<1, spacedim, NumberType>(); });
+  const auto T2 = tensor2.template value<NumberType, dim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return Tensor<2, spacedim, NumberType>(); });
+  const auto T3 = tensor3.template value<NumberType, dim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return Tensor<3, spacedim, NumberType>(); });
+  const auto T4 = tensor4.template value<NumberType, dim>(
+    [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    { return Tensor<4, spacedim, NumberType>(); });
+  const auto S2 = tensor2.template value<NumberType, dim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     { return SymmetricTensor<2, spacedim, NumberType>(); });
-  const auto S4 = value<NumberType, dim>(
-    tensor4,
+  const auto S4 = tensor4.template value<NumberType, dim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     { return SymmetricTensor<4, spacedim, NumberType>(); });
 
@@ -135,13 +124,14 @@ run()
     1);
   const ConstantTensorFunction<2, dim, NumberType> constant_tensor_function(
     unit_symmetric_tensor<dim>());
-  const auto sf = value<NumberType, dim>(scalar_func, constant_scalar_function);
+  const auto sf =
+    scalar_func.template value<NumberType, dim>(constant_scalar_function);
   const auto grad_sf =
-    gradient<NumberType, dim>(scalar_func, constant_scalar_function);
+    scalar_func.template gradient<NumberType, dim>(constant_scalar_function);
   const auto T2f =
-    value<NumberType, dim>(tensor_func2, constant_tensor_function);
+    tensor_func2.template value<NumberType, dim>(constant_tensor_function);
   const auto grad_T2f =
-    gradient<NumberType, dim>(tensor_func2, constant_tensor_function);
+    tensor_func2.template gradient<NumberType, dim>(constant_tensor_function);
 
   const FE_Q<dim>         fe_cell(1);
   const QGauss<dim>       qf_cell(2);

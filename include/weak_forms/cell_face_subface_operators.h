@@ -74,17 +74,10 @@ namespace WeakForms
     template <typename ScalarType>
     using value_type = Tensor<rank, spacedim, double>;
 
-    // Call operator to promote this class to a SymbolicOp
-    auto
-    operator()() const;
+    // Methods to promote this class to a SymbolicOp
 
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
     auto
-    value() const
-    {
-      return this->operator()();
-    }
+    value() const;
 
     // ----  Ascii ----
 
@@ -301,16 +294,15 @@ namespace WeakForms
 
 
 
-/* ======================== Convenience functions ======================== */
+/* ==================== Class method definitions ==================== */
 
 
 
 namespace WeakForms
 {
   template <int dim, int spacedim>
-  WeakForms::Operators::SymbolicOp<WeakForms::Normal<dim, spacedim>,
-                                   WeakForms::Operators::SymbolicOpCodes::value>
-  value(const WeakForms::Normal<dim, spacedim> &operand)
+  DEAL_II_ALWAYS_INLINE inline auto
+  Normal<dim, spacedim>::value() const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -318,24 +310,11 @@ namespace WeakForms
     using Op     = Normal<dim, spacedim>;
     using OpType = SymbolicOp<Op, SymbolicOpCodes::value>;
 
+    const auto &operand = *this;
     return OpType(operand);
   }
-
 } // namespace WeakForms
 
-
-/* ==================== Class method definitions ==================== */
-
-
-namespace WeakForms
-{
-  template <int dim, int spacedim>
-  auto
-  Normal<dim, spacedim>::operator()() const
-  {
-    return WeakForms::value(*this);
-  }
-} // namespace WeakForms
 
 
 /* ==================== Specialization of type traits ==================== */

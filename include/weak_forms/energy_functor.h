@@ -144,44 +144,18 @@ namespace WeakForms
       return symbol_latex;
     }
 
-    // Call operator to promote this class to a SymbolicOp
-    template <typename ADNumberType, int dim, int spacedim = dim>
-    auto
-    operator()(const ad_function_type<ADNumberType, dim, spacedim> &function,
-               const UpdateFlags update_flags) const;
+    // Methods to promote this class to a SymbolicOp
 
-    template <typename SDNumberType, int dim, int spacedim = dim>
-    auto
-    operator()(
-      const sd_function_type<SDNumberType, dim, spacedim> &function,
-      const sd_register_symbols_function_type<SDNumberType, dim, spacedim>
-        symbol_registration_map,
-      const sd_substitution_function_type<SDNumberType, dim, spacedim>
-        substitution_map,
-      const sd_intermediate_substitution_function_type<SDNumberType,
-                                                       dim,
-                                                       spacedim>
-        intermediate_substitution_map,
-      const enum Differentiation::SD::OptimizerType     optimization_method,
-      const enum Differentiation::SD::OptimizationFlags optimization_flags,
-      const UpdateFlags                                 update_flags) const;
-
-    // Let's give our users a nicer syntax to work with this
-    // templated call operator.
     template <typename ADNumberType, int dim, int spacedim = dim>
     auto
     value(const ad_function_type<ADNumberType, dim, spacedim> &function,
-          const UpdateFlags update_flags) const
-    {
-      return this->operator()<ADNumberType, dim, spacedim>(function,
-                                                           update_flags);
-    }
+          const UpdateFlags update_flags) const;
 
     template <typename ADNumberType, int dim, int spacedim = dim>
     auto
     value(const ad_function_type<ADNumberType, dim, spacedim> &function) const
     {
-      return this->operator()<ADNumberType, dim, spacedim>(
+      return this->template value<ADNumberType, dim, spacedim>(
         function, UpdateFlags::update_default);
     }
 
@@ -216,7 +190,7 @@ namespace WeakForms
                                                        spacedim>
         dummy_intermediate_substitution_map;
 
-      return this->operator()<SDNumberType, dim, spacedim>(
+      return this->template value<SDNumberType, dim, spacedim>(
         function,
         dummy_symbol_registration_map,
         dummy_substitution_map,
@@ -242,7 +216,7 @@ namespace WeakForms
                                                        spacedim>
         dummy_intermediate_substitution_map;
 
-      return this->operator()<SDNumberType, dim, spacedim>(
+      return this->template value<SDNumberType, dim, spacedim>(
         function,
         symbol_registration_map,
         substitution_map,
@@ -268,7 +242,7 @@ namespace WeakForms
                                                        spacedim>
         dummy_intermediate_substitution_map;
 
-      return this->operator()<SDNumberType, dim, spacedim>(
+      return this->template value<SDNumberType, dim, spacedim>(
         function,
         symbol_registration_map,
         substitution_map,
@@ -290,6 +264,43 @@ namespace WeakForms
       symbolic_op_field_solutions;
   };
 
+} // namespace WeakForms
+
+
+
+/* ======================== Convenience functions ======================== */
+
+
+
+namespace WeakForms
+{
+  /**
+   * Shortcut so that we don't need to do something like this:
+   *
+   * <code>
+   * const FieldSolution<dim> solution;
+   * const WeakForms::SubSpaceExtractors::Scalar subspace_extractor(0, "s",
+   * "s");
+   *
+   * const auto soln_ss   = solution[subspace_extractor];
+   * const auto soln_val  = soln_ss.value();    // Solution value
+   * const auto soln_grad = soln_ss.gradient(); // Solution gradient
+   * ...
+   *
+   * const EnergyFunctor<decltype(soln_val), decltype(soln_grad), ...>
+   * energy("e", "\\Psi", soln_val, soln_grad, ...);
+   * </code>
+   */
+  template <typename... SymbolicOpsSubSpaceFieldSolution>
+  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
+  energy_functor(
+    const std::string &symbol_ascii,
+    const std::string &symbol_latex,
+    const SymbolicOpsSubSpaceFieldSolution &...symbolic_op_field_solutions)
+  {
+    return EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>(
+      symbol_ascii, symbol_latex, symbolic_op_field_solutions...);
+  }
 } // namespace WeakForms
 
 
@@ -1108,59 +1119,22 @@ namespace WeakForms
 
 
 
-/* ======================== Convenience functions ======================== */
+/* ==================== Specialization of type traits ==================== */
 
 
+
+/* ==================== Class method definitions ==================== */
 
 namespace WeakForms
 {
-  /**
-   * Shortcut so that we don't need to do something like this:
-   *
-   * <code>
-   * const FieldSolution<dim> solution;
-   * const WeakForms::SubSpaceExtractors::Scalar subspace_extractor(0, "s",
-   * "s");
-   *
-   * const auto soln_ss   = solution[subspace_extractor];
-   * const auto soln_val  = soln_ss.value();    // Solution value
-   * const auto soln_grad = soln_ss.gradient(); // Solution gradient
-   * ...
-   *
-   * const EnergyFunctor<decltype(soln_val), decltype(soln_grad), ...>
-   * energy("e", "\\Psi", soln_val, soln_grad, ...);
-   * </code>
-   */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
-  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
-  energy_functor(
-    const std::string &symbol_ascii,
-    const std::string &symbol_latex,
-    const SymbolicOpsSubSpaceFieldSolution &...symbolic_op_field_solutions)
-  {
-    return EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>(
-      symbol_ascii, symbol_latex, symbolic_op_field_solutions...);
-  }
-
-
-  template <typename ADNumberType,
-            int dim,
-            int spacedim = dim,
-            typename... SymbolicOpsSubSpaceFieldSolution,
-            typename = typename std::enable_if<
-              Differentiation::AD::is_ad_number<ADNumberType>::value>::type>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    typename Differentiation::AD::ADNumberTraits<ADNumberType>::scalar_type,
-    ADNumberType,
-    internal::DimPack<dim, spacedim>>
-  value(const WeakForms::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
-          &operand,
-        const typename WeakForms::EnergyFunctor<
-          SymbolicOpsSubSpaceFieldSolution...>::
-          template ad_function_type<ADNumberType, dim, spacedim> &function,
-        const UpdateFlags                                         update_flags)
+  template <typename ADNumberType, int dim, int spacedim>
+  DEAL_II_ALWAYS_INLINE inline auto
+  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::value(
+    const typename WeakForms::EnergyFunctor<
+      SymbolicOpsSubSpaceFieldSolution...>::
+      template ad_function_type<ADNumberType, dim, spacedim> &function,
+    const UpdateFlags update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1174,97 +1148,15 @@ namespace WeakForms
                               ADNumberType,
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
+    const auto &operand = *this;
     return OpType(operand, function, update_flags);
-  }
-
-
-
-  template <typename SDNumberType,
-            int dim,
-            int spacedim = dim,
-            typename... SymbolicOpsSubSpaceFieldSolution,
-            typename = typename std::enable_if<
-              Differentiation::SD::is_sd_number<SDNumberType>::value>::type>
-  WeakForms::Operators::SymbolicOp<
-    WeakForms::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>,
-    WeakForms::Operators::SymbolicOpCodes::value,
-    void,
-    SDNumberType,
-    internal::DimPack<dim, spacedim>>
-  value(
-    const WeakForms::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
-      &operand,
-    const typename WeakForms::EnergyFunctor<
-      SymbolicOpsSubSpaceFieldSolution...>::
-      template sd_function_type<SDNumberType, dim, spacedim> &function,
-    const typename WeakForms::EnergyFunctor<
-      SymbolicOpsSubSpaceFieldSolution...>::
-      template sd_register_symbols_function_type<SDNumberType, dim, spacedim>
-        symbol_registration_map,
-    const typename WeakForms::EnergyFunctor<
-      SymbolicOpsSubSpaceFieldSolution...>::
-      template sd_substitution_function_type<SDNumberType, dim, spacedim>
-        substitution_map,
-    const typename WeakForms::EnergyFunctor<
-      SymbolicOpsSubSpaceFieldSolution...>::
-      template sd_intermediate_substitution_function_type<SDNumberType,
-                                                          dim,
-                                                          spacedim>
-                                                  intermediate_substitution_map,
-    const enum Differentiation::SD::OptimizerType optimization_method,
-    const enum Differentiation::SD::OptimizationFlags optimization_flags,
-    const UpdateFlags                                 update_flags)
-  {
-    using namespace WeakForms;
-    using namespace WeakForms::Operators;
-
-    using Op     = EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>;
-    using OpType = SymbolicOp<Op,
-                              SymbolicOpCodes::value,
-                              void,
-                              SDNumberType,
-                              WeakForms::internal::DimPack<dim, spacedim>>;
-
-    return OpType(operand,
-                  function,
-                  symbol_registration_map,
-                  substitution_map,
-                  intermediate_substitution_map,
-                  optimization_method,
-                  optimization_flags,
-                  update_flags);
-  }
-} // namespace WeakForms
-
-
-
-/* ==================== Specialization of type traits ==================== */
-
-
-
-/* ==================== Class method definitions ==================== */
-
-namespace WeakForms
-{
-  template <typename... SymbolicOpsSubSpaceFieldSolution>
-  template <typename ADNumberType, int dim, int spacedim>
-  auto
-  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::operator()(
-    const typename WeakForms::EnergyFunctor<
-      SymbolicOpsSubSpaceFieldSolution...>::
-      template ad_function_type<ADNumberType, dim, spacedim> &function,
-    const UpdateFlags update_flags) const
-  {
-    return WeakForms::value<ADNumberType, dim, spacedim>(*this,
-                                                         function,
-                                                         update_flags);
   }
 
 
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   template <typename SDNumberType, int dim, int spacedim>
-  auto
-  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::operator()(
+  DEAL_II_ALWAYS_INLINE inline auto
+  EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>::value(
     const typename WeakForms::EnergyFunctor<
       SymbolicOpsSubSpaceFieldSolution...>::
       template sd_function_type<SDNumberType, dim, spacedim> &function,
@@ -1286,15 +1178,25 @@ namespace WeakForms
     const enum Differentiation::SD::OptimizationFlags optimization_flags,
     const UpdateFlags                                 update_flags) const
   {
-    return WeakForms::value<SDNumberType, dim, spacedim>(
-      *this,
-      function,
-      symbol_registration_map,
-      substitution_map,
-      intermediate_substitution_map,
-      optimization_method,
-      optimization_flags,
-      update_flags);
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op     = EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>;
+    using OpType = SymbolicOp<Op,
+                              SymbolicOpCodes::value,
+                              void,
+                              SDNumberType,
+                              WeakForms::internal::DimPack<dim, spacedim>>;
+
+    const auto &operand = *this;
+    return OpType(operand,
+                  function,
+                  symbol_registration_map,
+                  substitution_map,
+                  intermediate_substitution_map,
+                  optimization_method,
+                  optimization_flags,
+                  update_flags);
   }
 
 } // namespace WeakForms

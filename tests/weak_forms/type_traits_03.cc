@@ -40,13 +40,13 @@ main()
   using trial_t = TrialSolution<dim, spacedim>;
   using soln_t  = FieldSolution<dim, spacedim>;
 
-  using test_val_t  = decltype(value(std::declval<test_t>()));
-  using trial_val_t = decltype(value(std::declval<trial_t>()));
-  using soln_val_t  = decltype(value(std::declval<soln_t>()));
+  using test_val_t  = decltype(std::declval<test_t>().value());
+  using trial_val_t = decltype(std::declval<trial_t>().value());
+  using soln_val_t  = decltype(std::declval<soln_t>().value());
 
-  using test_grad_t  = decltype(gradient(std::declval<test_t>()));
-  using trial_grad_t = decltype(gradient(std::declval<trial_t>()));
-  using soln_grad_t  = decltype(gradient(std::declval<soln_t>()));
+  using test_grad_t  = decltype(std::declval<test_t>().gradient());
+  using trial_grad_t = decltype(std::declval<trial_t>().gradient());
+  using soln_grad_t  = decltype(std::declval<soln_t>().gradient());
 
   deallog << std::boolalpha;
 

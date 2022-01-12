@@ -73,7 +73,7 @@ main()
     const ScalarFunctionFunctor<spacedim> s("s", "s");
     const Functions::ConstantFunction<spacedim, double>
                constant_scalar_function(1.0);
-    const auto sf = value<double, dim>(s, constant_scalar_function);
+    const auto sf = s.template value<double, dim>(constant_scalar_function);
 
     // const TensorFunctionFunctor<0, spacedim>     t("t", "t");
     const TensorFunctionFunctor<2, spacedim> T("T", "T");
@@ -82,7 +82,7 @@ main()
     const ConstantTensorFunction<2, dim, double> constant_tensor_function(
       unit_symmetric_tensor<dim>());
     // const auto tf = value<double, dim>(t, constant_r0_tensor_function);
-    const auto Tf = value<double, dim>(T, constant_tensor_function);
+    const auto Tf = T.template value<double, dim>(constant_tensor_function);
 
     // Multiply
     const auto s1 = scalar * sf;
@@ -112,21 +112,22 @@ main()
          const std::vector<SolutionExtractionData<dim, spacedim>>
            &                solution_extraction_data,
          const unsigned int q_point) { return 0.0; };
-    const auto sc = value<double, dim, spacedim>(s, s_func, update_flags);
+    const auto sc =
+      s.template value<double, dim, spacedim>(s_func, update_flags);
 
     const auto T_func =
       [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
          const std::vector<SolutionExtractionData<dim, spacedim>>
            &                solution_extraction_data,
          const unsigned int q_point) { return Tensor<2, dim>(); };
-    const auto Tc = value<double, dim>(T, T_func, update_flags);
+    const auto Tc = T.template value<double, dim>(T_func, update_flags);
 
     const auto S_func =
       [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
          const std::vector<SolutionExtractionData<dim, spacedim>>
            &                solution_extraction_data,
          const unsigned int q_point) { return SymmetricTensor<2, dim>(); };
-    const auto Sc = value<double, dim>(S, S_func, update_flags);
+    const auto Sc = S.template value<double, dim>(S_func, update_flags);
 
     // Multiply
     const auto s1 = scalar * sc;
