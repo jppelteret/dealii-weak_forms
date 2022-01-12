@@ -178,6 +178,12 @@ namespace WeakForms
     {
       return integrate_on_subdomain(cell->material_id());
     }
+
+    // Methods to promote this class to a SymbolicOp
+
+    template <typename ScalarType = double, typename Integrand>
+    auto
+    integrate(const Integrand &integrand) const;
   };
 
 
@@ -235,6 +241,12 @@ namespace WeakForms
 
       return integrate_on_subdomain(cell->face(face)->boundary_id());
     }
+
+    // Methods to promote this class to a SymbolicOp
+
+    template <typename ScalarType = double, typename Integrand>
+    auto
+    integrate(const Integrand &integrand) const;
   };
 
 
@@ -294,6 +306,12 @@ namespace WeakForms
 
       return integrate_on_subdomain(cell->face(face)->manifold_id());
     }
+
+    // Methods to promote this class to a SymbolicOp
+
+    template <typename ScalarType = double, typename Integrand>
+    auto
+    integrate(const Integrand &integrand) const;
   };
 
 
@@ -310,6 +328,43 @@ namespace WeakForms
   // };
 
 } // namespace WeakForms
+
+
+
+/* ======================== Convenience functions ======================== */
+
+
+
+namespace WeakForms
+{
+  template <typename ScalarType = double,
+            typename Integrand,
+            typename IntegralType,
+            typename = typename std::enable_if<is_valid_integration_domain<
+              typename std::decay<IntegralType>::type>::value>::type>
+  WeakForms::Operators::SymbolicOp<IntegralType,
+                                   WeakForms::Operators::SymbolicOpCodes::value,
+                                   ScalarType,
+                                   Integrand>
+  integrate(const Integrand &integrand, const IntegralType &integral)
+  {
+    return integral.template integrate<ScalarType>(integrand);
+  }
+
+  // template <typename ScalarType = double,
+  //           typename Integrand,
+  //           typename IntegralType,
+  //           typename = typename std::enable_if<
+  //             WeakForms::is_unary_integral_op<IntegralType>::value>::type>
+  // auto
+  // integrate(const Integrand &integrand, const IntegralType &integral, const
+  // std::set<typename IntegralType::subdomain_t> &subdomains)
+  // {
+  //   return value(integral, integrand);
+  // }
+
+} // namespace WeakForms
+
 
 
 /* ================== Specialization of unary operators ================== */
@@ -507,18 +562,15 @@ namespace WeakForms
 
 
 
-/* ======================== Convenience functions ======================== */
+/* ==================== Class method definitions ==================== */
 
 
 
 namespace WeakForms
 {
-  template <typename ScalarType = double, typename Integrand>
-  WeakForms::Operators::SymbolicOp<WeakForms::VolumeIntegral,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   Integrand>
-  value(const WeakForms::VolumeIntegral &operand, const Integrand &integrand)
+  template <typename ScalarType, typename Integrand>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::VolumeIntegral::integrate(const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -527,16 +579,14 @@ namespace WeakForms
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
+    const auto &operand = *this;
     return OpType(operand, integrand);
   }
 
 
-  template <typename ScalarType = double, typename Integrand>
-  WeakForms::Operators::SymbolicOp<WeakForms::BoundaryIntegral,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   Integrand>
-  value(const WeakForms::BoundaryIntegral &operand, const Integrand &integrand)
+  template <typename ScalarType, typename Integrand>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::BoundaryIntegral::integrate(const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -545,17 +595,15 @@ namespace WeakForms
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
+    const auto &operand = *this;
     return OpType(operand, integrand);
   }
 
 
 
-  template <typename ScalarType = double, typename Integrand>
-  WeakForms::Operators::SymbolicOp<WeakForms::InterfaceIntegral,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   Integrand>
-  value(const WeakForms::InterfaceIntegral &operand, const Integrand &integrand)
+  template <typename ScalarType, typename Integrand>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::InterfaceIntegral::integrate(const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -564,55 +612,9 @@ namespace WeakForms
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
+    const auto &operand = *this;
     return OpType(operand, integrand);
   }
-
-
-
-  template <typename T>
-  struct is_valid_integration_domain : std::false_type
-  {};
-
-  template <>
-  struct is_valid_integration_domain<VolumeIntegral> : std::true_type
-  {};
-
-  template <>
-  struct is_valid_integration_domain<BoundaryIntegral> : std::true_type
-  {};
-
-  template <>
-  struct is_valid_integration_domain<InterfaceIntegral> : std::true_type
-  {};
-
-
-
-  template <typename ScalarType = double,
-            typename Integrand,
-            typename IntegralType,
-            typename = typename std::enable_if<is_valid_integration_domain<
-              typename std::decay<IntegralType>::type>::value>::type>
-  // auto
-  WeakForms::Operators::SymbolicOp<IntegralType,
-                                   WeakForms::Operators::SymbolicOpCodes::value,
-                                   ScalarType,
-                                   Integrand>
-  integrate(const Integrand &integrand, const IntegralType &integral)
-  {
-    return value(integral, integrand);
-  }
-
-  // template <typename ScalarType = double,
-  //           typename Integrand,
-  //           typename IntegralType,
-  //           typename = typename std::enable_if<
-  //             WeakForms::is_unary_integral_op<IntegralType>::value>::type>
-  // auto
-  // integrate(const Integrand &integrand, const IntegralType &integral, const
-  // std::set<typename IntegralType::subdomain_t> &subdomains)
-  // {
-  //   return value(integral, integrand);
-  // }
 
 
   // WeakForms::Operators::SymbolicOp<WeakForms::Integral,
@@ -641,6 +643,18 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  template <>
+  struct is_valid_integration_domain<VolumeIntegral> : std::true_type
+  {};
+
+  template <>
+  struct is_valid_integration_domain<BoundaryIntegral> : std::true_type
+  {};
+
+  template <>
+  struct is_valid_integration_domain<InterfaceIntegral> : std::true_type
+  {};
+
   // Decorator classes
 
   // template <>
