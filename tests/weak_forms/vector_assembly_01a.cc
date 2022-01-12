@@ -206,9 +206,10 @@ run(const unsigned int n_subdivisions)
       MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
       assembler -=
         linear_form(test_ss.value(), source.value(source_function)).dV();
-      assembler -= linear_form(test_ss.value(),
-                               normal() * traction.value(traction_function))
-                     .dA();
+      assembler -=
+        linear_form(test_ss.value(),
+                    normal.value() * traction.value(traction_function))
+          .dA();
 
       // Look at what we're going to compute
       const SymbolicDecorations decorator;
@@ -234,9 +235,10 @@ run(const unsigned int n_subdivisions)
       MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
       assembler -=
         linear_form(test_ss.value(), source.value(source_function)).dV();
-      assembler -= linear_form(test_ss.value(),
-                               normal() * traction.value(traction_function))
-                     .dA();
+      assembler -=
+        linear_form(test_ss.value(),
+                    normal.value() * traction.value(traction_function))
+          .dA();
 
       // Now we pass in concrete objects to get data from
       // and assemble into.

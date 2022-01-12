@@ -154,12 +154,11 @@ run()
     const TrialSolution<dim, spacedim> trial;
     const ScalarFunctor                coeff("c", "c");
 
-    const auto test_lap  = laplacian(test);
-    const auto trial_lap = laplacian(trial);
-    const auto coeff_func =
-      value<double, dim, spacedim>(coeff,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 1.0; });
+    const auto test_lap   = test.laplacian();
+    const auto trial_lap  = trial.laplacian();
+    const auto coeff_func = coeff.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;
@@ -196,13 +195,11 @@ run()
     const TrialSolution<dim, spacedim> trial;
     const TensorFunctor<0, spacedim>   coeff("C", "C");
 
-    const auto test_lap  = laplacian(test);
-    const auto trial_lap = laplacian(trial);
-    const auto coeff_func =
-      value<double, dim>(coeff,
-                         [](const FEValuesBase<dim, spacedim> &,
-                            const unsigned int)
-                         { return Tensor<0, spacedim, double>({1.0}); });
+    const auto test_lap   = test.laplacian();
+    const auto trial_lap  = trial.laplacian();
+    const auto coeff_func = coeff.template value<double, dim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return Tensor<0, spacedim, double>({1.0}); });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;

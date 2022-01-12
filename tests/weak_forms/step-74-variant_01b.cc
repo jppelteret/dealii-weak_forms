@@ -69,8 +69,7 @@ namespace Step74
 
     // Functions
     const ScalarFunctor diffusion_coeff("nu", "\\nu");
-    const auto          nu = value<double, dim, spacedim>(
-      diffusion_coeff,
+    const auto nu = diffusion_coeff.template value<double, dim, spacedim>(
       [this](const FEValuesBase<dim, spacedim> &, const unsigned int)
       { return this->diffusion_coefficient; },
       [this](const FEInterfaceValues<dim, spacedim> &, const unsigned int)

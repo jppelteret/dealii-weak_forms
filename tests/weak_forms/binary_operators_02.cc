@@ -91,10 +91,9 @@ run()
     using namespace WeakForms;
 
     const ScalarFunctor c1("c1", "c1");
-    const auto          f1 =
-      value<double, dim, spacedim>(c1,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 2.0; });
+    const auto          f1 = c1.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 2.0; });
 
     const FieldSolution<dim, spacedim> field_solution;
     const SubSpaceExtractors::Scalar   subspace_extractor(0, "s", "s");
@@ -183,8 +182,7 @@ run()
     using namespace WeakForms;
 
     const VectorFunctor<dim> v1("v1", "v1");
-    const auto               f1 = value<double, spacedim>(
-      v1,
+    const auto               f1 = v1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<1, dim> t;
@@ -265,8 +263,7 @@ run()
     using namespace WeakForms;
 
     const TensorFunctor<2, dim> T1("T1", "T1");
-    const auto                  f1 = value<double, spacedim>(
-      T1,
+    const auto                  f1 = T1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         Tensor<2, dim> t;
@@ -347,8 +344,7 @@ run()
     using namespace WeakForms;
 
     const SymmetricTensorFunctor<2, dim> S1("S1", "S1");
-    const auto                           f1 = value<double, spacedim>(
-      S1,
+    const auto f1 = S1.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       {
         SymmetricTensor<2, dim> t;

@@ -164,12 +164,11 @@ run()
     const auto                       test_ss  = test[subspace_extractor];
     const auto                       trial_ss = trial[subspace_extractor];
 
-    const auto test_grad  = gradient(test_ss);
-    const auto trial_grad = gradient(trial_ss);
-    const auto coeff_func =
-      value<double, dim, spacedim>(coeff,
-                                   [](const FEValuesBase<dim, spacedim> &,
-                                      const unsigned int) { return 1.0; });
+    const auto test_grad  = test_ss.gradient();
+    const auto trial_grad = trial_ss.gradient();
+    const auto coeff_func = coeff.template value<double, dim, spacedim>(
+      [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+      { return 1.0; });
 
     // Still no concrete definitions
     MatrixBasedAssembler<dim, spacedim> assembler;
@@ -210,10 +209,9 @@ run()
     const auto                       test_ss  = test[subspace_extractor];
     const auto                       trial_ss = trial[subspace_extractor];
 
-    const auto test_grad  = gradient(test_ss);
-    const auto trial_grad = gradient(trial_ss);
-    const auto coeff_func = value<double, spacedim>(
-      coeff,
+    const auto test_grad  = test_ss.gradient();
+    const auto trial_grad = trial_ss.gradient();
+    const auto coeff_func = coeff.template value<double, spacedim>(
       [](const FEValuesBase<dim, spacedim> &, const unsigned int)
       { return Tensor<2, dim, double>(unit_symmetric_tensor<dim>()); });
 

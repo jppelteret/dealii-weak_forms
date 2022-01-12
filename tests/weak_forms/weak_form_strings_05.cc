@@ -123,8 +123,8 @@ run()
   const auto l_form  = linear_form(test_val, soln_val);
   const auto bl_form = bilinear_form(test_val, soln_val, trial_val);
 
-  const auto s_dV   = value(integral_dV, s);
-  const auto T2f_dA = value(integral_dA, T2f);
+  const auto s_dV   = integrate(s, integral_dV);
+  const auto T2f_dA = integrate(T2f, integral_dA);
   const auto sf_dI  = integrate(sf, integral_dI);
 
   const auto blf_dV = integrate(bl_form, integral_dV);
