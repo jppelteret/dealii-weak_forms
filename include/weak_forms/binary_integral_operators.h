@@ -63,6 +63,11 @@ namespace WeakForms
       using LhsOpType = LhsOp;
       using RhsOpType = RhsOp;
 
+      static_assert(std::is_same<typename LhsOp::ScalarType,
+                                 typename RhsOp::ScalarType>::value,
+                    "Operands do not have the same scalar type.");
+      using ScalarType = typename LhsOp::ScalarType;
+
       static const enum BinaryOpCodes op_code = BinaryOpCodes::add;
 
       explicit BinaryOp(const LhsOp &lhs_operand, const RhsOp &rhs_operand)
@@ -118,6 +123,11 @@ namespace WeakForms
     public:
       using LhsOpType = LhsOp;
       using RhsOpType = RhsOp;
+
+      static_assert(std::is_same<typename LhsOp::ScalarType,
+                                 typename RhsOp::ScalarType>::value,
+                    "Operands do not have the same scalar type.");
+      using ScalarType = typename LhsOp::ScalarType;
 
       static const enum BinaryOpCodes op_code = BinaryOpCodes::subtract;
 
@@ -182,6 +192,11 @@ namespace WeakForms
     public:
       using LhsOpType = LhsOp;
       using RhsOpType = RhsOp;
+
+      static_assert(std::is_same<typename LhsOp::ScalarType,
+                                 typename RhsOp::ScalarType>::value,
+                    "Operands do not have the same scalar type.");
+      using ScalarType = typename LhsOp::ScalarType;
 
       static const enum BinaryOpCodes op_code = BinaryOpCodes::multiply;
 

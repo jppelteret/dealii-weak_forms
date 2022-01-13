@@ -56,7 +56,8 @@ namespace WeakForms
                   typename std::enable_if<is_integral_op<Op>::value>::type>
     {
     public:
-      using OpType = Op;
+      using OpType     = Op;
+      using ScalarType = typename OpType::ScalarType;
 
       static const enum UnaryOpCodes op_code = UnaryOpCodes::negate;
 
