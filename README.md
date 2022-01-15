@@ -202,7 +202,8 @@ The results of some preliminary benchmarks can be found [here](doc/readme/benchm
   - [FEniCS](https://fenicsproject.org/): [Unified Form Language](https://github.com/FEniCS/ufl)
   - [NGSolve](https://ngsolve.org/): [Symbolic Integrators](https://docu.ngsolve.org/latest/how_to/symbolic_integrators.html)
   - [OpenFOAM](https://openfoam.com/): [Equation representation](https://cfd.direct/openfoam/user-guide/v6-programming-language-openfoam/)
-
+- Other codes that use expression templates
+  - [Sacado](https://trilinos.github.io/sacado.html): [Automatic differentiation using operator overloading](https://github.com/trilinos/Trilinos/tree/master/packages/sacado) 
 
 # Acknowledgements
 - The LaTex output for the various examples was rendered using the [Interactive LaTeX Editor](https://arachnoid.com/latex/).
