@@ -217,7 +217,7 @@ For more information, see the `LICENSE.md` and `COPYING.LESSER` files.
     for deal.II, using expression templates as well as automatic and symbolic
     differentiation. 
 
-    Copyright (C) 2021  Jean-Paul Pelteret
+    Copyright (C) 2021 - 2022  Jean-Paul Pelteret
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
