@@ -17,6 +17,27 @@
  * Author: Timo Heister and Jiaqi Zhang, Clemson University, 2020
  */
 
+// ---------------------------------------------------------------------
+//
+// Copyright (C) 2021 - 2022 by Jean-Paul Pelteret
+//
+// This file is part of the Weak forms for deal.II library.
+//
+// The Weak forms for deal.II library is free software; you can use it,
+// redistribute it, and/or modify it under the terms of the GNU Lesser
+// General Public License as published by the Free Software Foundation;
+// either version 3.0 of the License, or (at your option) any later
+// version. The full text of the license can be found in the file LICENSE
+// at the top level of the Weak forms for deal.II distribution.
+//
+// ---------------------------------------------------------------------
+
+
+// This header replicates step-74, leaves some aspects of its implementation
+// out so that they may be modified.
+// It is used as a baseline for the weak form tests.
+
+
 #include <deal.II/base/convergence_table.h>
 #include <deal.II/base/function.h>
 #include <deal.II/base/function_lib.h>
