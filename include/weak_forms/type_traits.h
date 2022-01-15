@@ -411,6 +411,91 @@ namespace WeakForms
   //   : std::true_type
   // {};
 
+
+  // Arithmetic
+
+  template <typename T, typename = void>
+  struct is_compatible_with_scalar_arithmetic : std::false_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_scalar_arithmetic<
+    T,
+    typename std::enable_if<
+      (is_test_function_op<T>::value || is_trial_solution_op<T>::value ||
+       is_field_solution_op<T>::value || is_cell_geometry_op<T>::value ||
+       is_functor_op<T>::value || is_cache_functor_op<T>::value) &&
+      !(is_unary_op<T>::value || is_binary_op<T>::value)>::type>
+    : std::true_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_scalar_arithmetic<
+    T,
+    typename std::enable_if<is_symbolic_integral_op<T>::value>::type>
+    : std::false_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_scalar_arithmetic<
+    T,
+    typename std::enable_if<
+      is_unary_op<T>::value && !is_unary_integral_op<T>::value &&
+      is_compatible_with_scalar_arithmetic<typename T::OpType>::value>::type>
+    : std::true_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_scalar_arithmetic<
+    T,
+    typename std::enable_if<
+      is_binary_op<T>::value && !is_binary_integral_op<T>::value &&
+      is_compatible_with_scalar_arithmetic<typename T::LhsOpType>::value &&
+      is_compatible_with_scalar_arithmetic<typename T::RhsOpType>::value>::type>
+    : std::true_type
+  {};
+
+  template <typename T, typename = void>
+  struct is_compatible_with_tensor_arithmetic : std::false_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_tensor_arithmetic<
+    T,
+    typename std::enable_if<
+      (is_test_function_op<T>::value || is_trial_solution_op<T>::value ||
+       is_field_solution_op<T>::value || is_cell_geometry_op<T>::value ||
+       is_functor_op<T>::value || is_cache_functor_op<T>::value) &&
+      !(is_unary_op<T>::value || is_binary_op<T>::value)>::type>
+    : std::true_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_tensor_arithmetic<
+    T,
+    typename std::enable_if<is_symbolic_integral_op<T>::value>::type>
+    : std::false_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_tensor_arithmetic<
+    T,
+    typename std::enable_if<
+      is_unary_op<T>::value && !is_unary_integral_op<T>::value &&
+      is_compatible_with_tensor_arithmetic<typename T::OpType>::value>::type>
+    : std::true_type
+  {};
+
+  template <typename T>
+  struct is_compatible_with_tensor_arithmetic<
+    T,
+    typename std::enable_if<
+      is_binary_op<T>::value && !is_binary_integral_op<T>::value &&
+      is_compatible_with_tensor_arithmetic<typename T::LhsOpType>::value &&
+      is_compatible_with_tensor_arithmetic<typename T::RhsOpType>::value>::type>
+    : std::true_type
+  {};
+
 } // namespace WeakForms
 
 

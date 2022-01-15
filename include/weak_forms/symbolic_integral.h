@@ -381,18 +381,19 @@ namespace WeakForms
      * @tparam dim
      * @tparam spacedim
      */
-    template <typename ScalarType,
+    template <typename ScalarType_,
               typename IntegralType_,
               typename IntegrandType_>
     class SymbolicOp<IntegralType_,
                      SymbolicOpCodes::value,
-                     ScalarType,
+                     ScalarType_,
                      IntegrandType_>
     {
       static_assert(!is_integral_op<IntegrandType_>::value,
                     "Cannot integrate an integral!");
 
     public:
+      using ScalarType    = ScalarType_;
       using IntegralType  = IntegralType_;
       using IntegrandType = IntegrandType_;
 

@@ -1,2 +1,32 @@
 
+DEAL::Forms
+DEAL::factor * l_form: (d{U}, [2 * U])
+DEAL::l_form * factor: (d{U}, [2 * U])
+DEAL::factor * bl_form: (Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))
+DEAL::bl_form * factor: (Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))
+DEAL::Symbolic integral
+DEAL::factor * s_lf_dV: #(d{U}, [2 * U])#dV
+DEAL::s_lf_dV * factor: #(d{U}, [2 * U])#dV
+DEAL::factor * s_blf_dV: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::s_blf_dV * factor: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::Unary integral
+DEAL::factor * u_lf_dV: -#(d{U}, [2 * U])#dV
+DEAL::u_lf_dV * factor: -#(d{U}, [2 * U])#dV
+DEAL::factor * u_blf_dV: -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::u_blf_dV * factor: -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::Binary integral: Symbolic
+DEAL::factor * bs_lf_dV: #(d{U}, [2 * U])#dV + #(d{U}, [2 * U])#dV
+DEAL::bs_lf_dV * factor: #(d{U}, [2 * U])#dV + #(d{U}, [2 * U])#dV
+DEAL::factor * bs_blf_dV: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::bs_blf_dV * factor: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::Binary integral: Unary
+DEAL::factor * bu_lf_dV: -#(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV
+DEAL::bu_lf_dV * factor: -#(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV
+DEAL::factor * bu_blf_dV: -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::bu_blf_dV * factor: -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::Binary integral: Unary
+DEAL::factor * bb_lf_dV: #(d{U}, [2 * U])#dV + #(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV
+DEAL::bb_lf_dV * factor: #(d{U}, [2 * U])#dV + #(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV + -#(d{U}, [2 * U])#dV
+DEAL::factor * bb_blf_dV: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
+DEAL::bb_blf_dV * factor: #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + #(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV + -#(Grad(d{U}), [2 * Hessian(U)], Grad(D{U}))#dV
 DEAL::OK

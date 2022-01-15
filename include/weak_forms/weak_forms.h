@@ -48,6 +48,7 @@
 // The actual forms themselves
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/linear_forms.h>
+#include <weak_forms/mixed_form_operators.h>
 
 // Self-linearizing functors and forms
 // (using template meta-programming in conjunction with AD/SD)
@@ -63,6 +64,7 @@
 #include <weak_forms/symbolic_integral.h>
 // Operate on symbolic integrals
 #include <weak_forms/binary_integral_operators.h>
+#include <weak_forms/mixed_integral_operators.h>
 #include <weak_forms/unary_integral_operators.h>
 
 // Assembly
