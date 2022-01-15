@@ -37,7 +37,9 @@ namespace WeakForms
       static_cast<types::field_index>(-1);
 
     const types::solution_index invalid_solution_index =
-      static_cast<types::field_index>(-1);
+      static_cast<types::solution_index>(-1);
+
+    const types::solution_index linearizable_solution_index = 0;
 
 
 #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
