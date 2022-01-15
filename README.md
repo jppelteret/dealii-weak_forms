@@ -208,6 +208,9 @@ The results of some preliminary benchmarks can be found [here](doc/readme/benchm
 # Acknowledgements
 - The LaTex output for the various examples was rendered using the [Interactive LaTeX Editor](https://arachnoid.com/latex/).
 
+# Contributing
+Please read the contributing documentation [here](contributing.md).
+
 
 # License
 ---------
