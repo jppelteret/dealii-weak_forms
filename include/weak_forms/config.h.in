@@ -13,10 +13,15 @@
 //
 // ---------------------------------------------------------------------
 
-#ifndef _weak_forms_config_h
-#define _weak_forms_config_h
+#ifndef dealii_weakforms_config_h
+#define dealii_weakforms_config_h
 
-#include <deal.II/base/config.h>
+
+#define WEAK_FORMS_MAJOR_VERSION ${WEAK_FORMS_MAJOR_VERSION}
+#define WEAK_FORMS_MINOR_VERSION ${WEAK_FORMS_MINOR_VERSION}
+#define WEAK_FORMS_PATCH_VERSION ${WEAK_FORMS_PATCH_VERSION}
+#define WEAK_FORMS_VERSION "${WEAK_FORMS_VERSION}"
+
 
 #define WEAK_FORMS_NAMESPACE_NAME dealiiWeakForms
 
@@ -27,8 +32,9 @@
 
 
 // Unconditionally import the deal.II namespace
+#include <deal.II/base/config.h>
 WEAK_FORMS_NAMESPACE_OPEN
 using namespace dealii;
 WEAK_FORMS_NAMESPACE_CLOSE
 
-#endif // _weak_forms_config_h
+#endif // dealii_weakforms_config_h
