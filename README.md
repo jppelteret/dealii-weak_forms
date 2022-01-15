@@ -151,7 +151,7 @@ Author: Jean-Paul Pelteret, 2020 - 2021
     - Addition
     - Subtraction
     - Multiplication
-      - [TODO] Scalar
+      - Scalar
 
 
 ## Integration
@@ -167,6 +167,12 @@ Author: Jean-Paul Pelteret, 2020 - 2021
 - User-defined function integrators
   - Position independent/dependent
   - Volume, boundary, interface (using `mesh_loop`)
+- Integral operators
+  - Binary
+    - Addition
+    - Subtraction
+    - Multiplication
+      - Scalar
 
 
 ## Assemblers
