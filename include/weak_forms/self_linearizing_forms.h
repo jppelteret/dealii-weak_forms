@@ -892,13 +892,15 @@ namespace WeakForms
       {
         using AssemblerScalar_t = typename AssemblerType::scalar_type;
 
-        const auto &field_solution = std::get<I>(symbolic_op_field_solutions);
-        const auto  test_function =
-          internal::ConvertTo::test_function(field_solution);
+        const auto &field_solution_test =
+          std::get<I>(symbolic_op_field_solutions);
+        const auto test_function =
+          internal::ConvertTo::test_function(field_solution_test);
 
         const auto linear_form = WeakForms::linear_form(
           test_function,
-          get_functor_first_derivative<AssemblerScalar_t, I>(field_solution));
+          get_functor_first_derivative<AssemblerScalar_t, I>(
+            field_solution_test));
         const auto integrated_linear_form =
           integral_operation.template integrate<AssemblerScalar_t>(linear_form);
 
@@ -958,14 +960,22 @@ namespace WeakForms
       {
         using AssemblerScalar_t = typename AssemblerType::scalar_type;
 
-        const auto &field_solution_1 =
+        const auto &field_solution_test =
           std::get<I>(symbolic_op_field_solutions_1);
-        const auto &field_solution_2 =
+        const auto &field_solution_trial =
           std::get<J>(symbolic_op_field_solutions_2);
+
+        // We only allow one solution index, namely that pertaining to
+        // the current timestep / Newton iterate and active DoFHandler
+        // to be linearized.
+        if (field_solution_trial.solution_index !=
+            numbers::linearizable_solution_index)
+          return;
+
         const auto test_function =
-          internal::ConvertTo::test_function(field_solution_1);
+          internal::ConvertTo::test_function(field_solution_test);
         const auto trial_solution =
-          internal::ConvertTo::trial_solution(field_solution_2);
+          internal::ConvertTo::trial_solution(field_solution_trial);
 
         // Since we derive from a potential, we can expect the contributions
         // to the linear system to be symmetric.
@@ -973,7 +983,7 @@ namespace WeakForms
           WeakForms::bilinear_form(
             test_function,
             get_functor_second_derivative<AssemblerScalar_t, I, J>(
-              field_solution_1, field_solution_2),
+              field_solution_test, field_solution_trial),
             trial_solution)
             .symmetrize();
         const auto integrated_bilinear_form =
@@ -1614,14 +1624,24 @@ namespace WeakForms
       {
         using AssemblerScalar_t = typename AssemblerType::scalar_type;
 
-        const auto &field_solution = std::get<J>(symbolic_op_field_solutions);
-        const auto  test_function  = get_test_function();
-        const auto  trial_solution =
-          internal::ConvertTo::trial_solution(field_solution);
+        const auto &field_solution_trial =
+          std::get<J>(symbolic_op_field_solutions);
+
+        // We only allow one solution index, namely that pertaining to
+        // the current timestep / Newton iterate and active DoFHandler
+        // to be linearized.
+        if (field_solution_trial.solution_index !=
+            numbers::linearizable_solution_index)
+          return;
+
+        const auto test_function = get_test_function();
+        const auto trial_solution =
+          internal::ConvertTo::trial_solution(field_solution_trial);
 
         const auto bilinear_form = WeakForms::bilinear_form(
           test_function,
-          get_functor_first_derivative<AssemblerScalar_t, J>(field_solution),
+          get_functor_first_derivative<AssemblerScalar_t, J>(
+            field_solution_trial),
           trial_solution);
         const auto integrated_bilinear_form =
           integral_operation.template integrate<AssemblerScalar_t>(
