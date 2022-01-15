@@ -65,7 +65,8 @@ with this library you can do it expressively
   // RHS contribution: a(phi_i, f)    
   assembler -= linear_form(test.value(), rhs_coeff_func).dV();
 
-  //
+  // Take the generic forms, and perform some concrete
+  // computations using the given data structures.
   assembler.assemble_system(system_matrix,
                             system_rhs,
                             constraints,
@@ -201,6 +202,7 @@ Let's identify the key differences between these two paradigms:
                                           outer_product(v,grad_v),   // rank-3
                                           hessian_p * grad_trial_p); // rank-1
    ```
+   
    Note that in the (terrible) example above, we generated the form without
    specifying the integration domain -- these two actions are orthogonal,
    and one form can be integrated in multiple contexts.
@@ -209,7 +211,7 @@ Let's identify the key differences between these two paradigms:
    those tied to other `DoFHandler`s) so, as examples, time discretisation of
    rate-dependent problems is supported, and the solution of one finite
    element problem can be used as the input to another. More features of the
-   library are loosly listed below.
+   library are loosely listed below.
 
 ## How does this work?
 
