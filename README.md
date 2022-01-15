@@ -174,7 +174,35 @@ Let's identify the key differences between these two paradigms:
    Some other interesting features of the library include the mimicry of `deal.II`
    functions for scalars and tensors, so that this library can be most naturally
    used by people who are familiar with the syntax of the `deal.II` linear
-   algebra classes. Naturally, integrals can be restricted to specific subdomains,
+   algebra classes. By means of an example, this would be a valid (albeit 
+   non-sensical) bilinear form:
+   ```c++
+    const TestFunction<dim>          test;
+    const TrialSolution<dim>         trial;
+    const FieldSolution<dim>         field_solution;
+    const SubSpaceExtractors::Vector subspace_extractor_v(0,
+                                                          "v",
+                                                          "\\mathbf{v}");
+    const SubSpaceExtractors::Scalar subspace_extractor_p(dim,
+                                                          "p_tilde",
+                                                          "\\tilde{p}");
+
+    const auto div_test_v   = test[subspace_extractor_v].divergence();
+    const auto grad_trial_p = trial[subspace_extractor_p].gradient();
+    const auto v            = field_solution[subspace_extractor_v].value();
+    const auto grad_v       = field_solution[subspace_extractor_v].gradient();
+    const auto hessian_p    = field_solution[subspace_extractor_p].hessian();
+
+    const auto I = dealii::unit_symmetric_tensor<dim>();
+
+    const auto form = 2.0 * bilinear_form(div_test_v * I,            // rank-2
+                                          outer_product(v,grad_v),   // rank-3
+                                          hessian_p * grad_trial_p); // rank-1
+   ```
+   Note that in the (terrible) example above, we generated the form without
+   specifying the integration domain -- these two actions are orthogonal,
+   and one form can be integrated in multiple contexts.
+   Naturally, integrals can be restricted to specific subdomains,
    boundaries or interfaces. There is a class that wraps solution histories (even
    those tied to other `DoFHandlers`) so, as examples, time discretisation of
    rate-dependent problems is supported, and the solution of one finite
@@ -363,11 +391,13 @@ Let's identify the key differences between these two paradigms:
 - Symbolic decorator (customisable)
 - ASCII
 - LaTeX
-  
+
+
 # Examples
 ----------
 Some examples and output can be found [here](doc/readme/examples.md).
-  
+
+
 # Benchmarks
 ------------
 The results of some preliminary benchmarks can be found [here](doc/readme/benchmarks.md).
@@ -384,6 +414,38 @@ made in the (limited) benchmarking study, should not be considered general truth
 It might be prudent to conduct some examinations of your own before accepting
 the analysis done here and following any guidance given by the author.
 
+
+# Building the library
+----------------------
+This library requires `deal.II` version `10.0.0` (at the time of writing, this
+means the developer version), and at the moment requires that `deal.II` is built
+with the following dependencies:
+-  ADOLC-C
+-  Trilinos (with Sacado)
+-  SymEngine
+Since interaction with these libraries is actually optional, at some point in 
+the future these requirements will be removed.
+
+This project uses `CMake` as a build generator. The code block below encapsulates
+the various options that can be passed on `CMake` to configure the project before
+compilation.
+
+```bash
+cmake \
+-DCMAKE_BUILD_TYPE=[Debug/Release] \
+-DCMAKE_INSTALL_PREFIX=<path> \
+-BUILD_BENCHMARKS=[ON/OFF] \
+-DBUILD_DOCUMENTATION=[ON/OFF] \
+-DBUILD_TESTS=[ON/OFF] \
+-DDEAL_II_DIR=<path> \
+-DDEAL_II_SOURCE_DIR=<path> \ # Only required when tests or benchmarks are enabled
+-DDOXYGEN_EXECUTABLE=<path_to_doxygen> \ # Only required when documentation is built
+-DCLANGFORMAT=[ON/OFF] \
+-DCLANGFORMAT_EXECUTABLE=<path_to_clang-format> \ # Only required when code formatting is quired
+<path_to_weak_forms_source>
+```
+
+
 # Similar projects that inspired this work
 ------------------------------------------
 - `deal.II`
@@ -395,9 +457,11 @@ the analysis done here and following any guidance given by the author.
 - Other codes that use expression templates
   - [Sacado](https://trilinos.github.io/sacado.html): [Automatic differentiation using operator overloading](https://github.com/trilinos/Trilinos/tree/master/packages/sacado) 
 
+
 # Acknowledgements
 ------------------
 - The LaTex output for the various examples was rendered using the [Interactive LaTeX Editor](https://arachnoid.com/latex/).
+
 
 # Contributing
 --------------
