@@ -6,8 +6,21 @@
 # SET(TARGET "weak_forms-evaluation_exec")
 SET(TARGET_LIB "dealii_weakforms")
 
+# Declare project version
+SET(WEAK_FORMS_MAJOR_VERSION 0)
+SET(WEAK_FORMS_MINOR_VERSION 1)
+SET(WEAK_FORMS_PATCH_VERSION 0)
+SET(WEAK_FORMS_VERSION ${WEAK_FORMS_MAJOR_VERSION}.${WEAK_FORMS_MINOR_VERSION}.${WEAK_FORMS_PATCH_VERSION})# # Configuration files
+
+# # Configuration files
+CONFIGURE_FILE(
+  ${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/configured_include/weak_forms/config.h
+)
+
 # Declare all header files the target consists of:
 INCLUDE_DIRECTORIES(include)
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}/configured_include")
 
 # Declare all source files the target consists of.
 # FILE(GLOB_RECURSE TARGET_SRC  
@@ -123,6 +136,9 @@ ENDIF()
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET (CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "default install path" FORCE )
 ENDIF()
+MESSAGE(STATUS 
+  "Target installation path: ${CMAKE_INSTALL_PREFIX}"
+)
 
 ##
 # Manage RPaths
@@ -191,9 +207,19 @@ INSTALL(
     # ${TARGET} 
     ${TARGET_LIB}
     # RUNTIME  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-    LIBRARY  DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/weak_forms
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 )
+
+#
+# Install generated headers
+#
+INSTALL(
+  DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/configured_include/weak_forms"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+  COMPONENT library
+  FILES_MATCHING PATTERN "*.h"
+  )
 
 ##
 # Generate custom "debug" and "release" make targets
