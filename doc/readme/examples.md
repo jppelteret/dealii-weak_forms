@@ -1,6 +1,7 @@
 # Examples
+----------
 
-Summary
+## Summary
 - step-6:
   - Laplace / Poisson equation 
   - Scalar-valued problem
@@ -35,6 +36,7 @@ Summary
 
 
 ## Step-6
+---------
 ASCII output
 ```
 0 = #(Grad(d{U}), c, Grad(D{U}))#dV 
@@ -48,6 +50,7 @@ LaTeX output
 ```
 
 ## Step-8
+---------
 ASCII output
 ```
 0 = #(Grad(d{u}), <<<<C(X)>>>>, Grad(D{u}))#dV 
@@ -61,6 +64,7 @@ LaTeX output
 ```
 
 ## Step-12
+----------
 ASCII output
 ```
 0 = #(Grad(d{s}), -<beta(X)>, D{s})#dV
@@ -72,6 +76,7 @@ LaTeX output
 ```
 
 ## Step-23
+----------
 ASCII output
 ```
 0 = #(d{u}, 1, D{u})#dV 
@@ -95,6 +100,7 @@ LaTeX output
 ```
 
 ## Step-44
+----------
 
 ### Example 1: Standard implementation
 ASCII output
@@ -200,6 +206,7 @@ LaTeX output
 ```
 
 ## Step-47
+----------
 ASCII output
 ```
 0 = #(Hessian(d{U}), 1, Hessian(D{U}))#dV 
@@ -229,6 +236,7 @@ LaTeX output
 ```
 
 ## Step-57
+----------
 ASCII output
 ```
 0 = #(Grad(d{v}), 0.001, Grad(D{v}))#dV + #(d{v}, Grad({v}), D{v})#dV 
@@ -257,6 +265,7 @@ LaTeX output
 ```
 
 ## Step-72
+----------
 ASCII output
 ```
 0 = #(Grad(d{u}), [1 / sqrt([1 + [Grad({u}) * Grad({u})]])], Grad(D{u}))#dV 
@@ -272,6 +281,7 @@ LaTeX output
 ```
 
 ## Step-74
+----------
 ASCII output
 ```
 0 = #(Grad(d{U}), nu, Grad(D{U}))#dV 
