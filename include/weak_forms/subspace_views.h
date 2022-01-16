@@ -199,7 +199,8 @@ namespace WeakForms
     /* ------------- Finite element subspaces: Field solutions ------------- */
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -212,7 +213,8 @@ namespace WeakForms
     value(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <int, class>
               class SubSpaceViewsType,
               int rank,
@@ -226,7 +228,8 @@ namespace WeakForms
     value(const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -239,7 +242,8 @@ namespace WeakForms
     gradient(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <int, class>
               class SubSpaceViewsType,
               int rank,
@@ -254,7 +258,8 @@ namespace WeakForms
       const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -268,7 +273,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -281,7 +287,8 @@ namespace WeakForms
     divergence(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <int, class>
               class SubSpaceViewsType,
               int rank,
@@ -296,7 +303,8 @@ namespace WeakForms
       const SubSpaceViewsType<rank, FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -309,7 +317,8 @@ namespace WeakForms
     curl(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -322,7 +331,8 @@ namespace WeakForms
     laplacian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -335,7 +345,8 @@ namespace WeakForms
     hessian(const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -354,7 +365,8 @@ namespace WeakForms
      */
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -368,7 +380,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -382,7 +395,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -396,7 +410,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -410,7 +425,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -424,7 +440,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -438,7 +455,8 @@ namespace WeakForms
       const SubSpaceViewsType<FieldSolution<dim, spacedim>> &operand);
 
 
-    template <types::solution_index solution_index = 0,
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index,
               template <class>
               class SubSpaceViewsType,
               int dim,
@@ -762,9 +780,10 @@ public:                                                                     \
       // Operators: Field solutions only
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
       {
@@ -772,9 +791,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
       {
@@ -782,9 +802,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       laplacian() const
       {
@@ -792,9 +813,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       hessian() const
       {
@@ -802,9 +824,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       third_derivative() const
       {
@@ -859,9 +882,10 @@ public:                                                                     \
       // Operators: Field solutions only (interface)
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_values() const
       {
@@ -869,9 +893,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_gradients() const
       {
@@ -879,9 +904,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_hessians() const
       {
@@ -889,9 +915,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_third_derivatives() const
       {
@@ -900,9 +927,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_values() const
       {
@@ -910,9 +938,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_gradients() const
       {
@@ -920,9 +949,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_hessians() const
       {
@@ -1019,9 +1049,10 @@ public:                                                                     \
       // Operators: Field solutions only
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
       {
@@ -1029,9 +1060,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
       {
@@ -1039,9 +1071,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       symmetric_gradient() const
       {
@@ -1049,9 +1082,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
       {
@@ -1059,9 +1093,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       curl() const
       {
@@ -1069,9 +1104,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       hessian() const
       {
@@ -1079,9 +1115,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       third_derivative() const
       {
@@ -1136,9 +1173,10 @@ public:                                                                     \
       // Operators: Field solutions only (interface)
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_values() const
       {
@@ -1146,9 +1184,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_gradients() const
       {
@@ -1156,9 +1195,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_hessians() const
       {
@@ -1166,9 +1206,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       jump_in_third_derivatives() const
       {
@@ -1177,9 +1218,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_values() const
       {
@@ -1187,9 +1229,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_gradients() const
       {
@@ -1197,9 +1240,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       average_of_hessians() const
       {
@@ -1254,9 +1298,10 @@ public:                                                                     \
       // Operators: Field solutions only
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
       {
@@ -1264,9 +1309,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       gradient() const
       {
@@ -1274,9 +1320,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
       {
@@ -1326,9 +1373,10 @@ public:                                                                     \
       // Operators: Field solutions only
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       value() const
       {
@@ -1336,9 +1384,10 @@ public:                                                                     \
       }
 
       template <
-        types::solution_index solution_index = 0,
-        typename T                           = SpaceType_,
-        typename = typename std::enable_if<is_field_solution<T>::value>::type>
+        types::solution_index solution_index =
+          numbers::linearizable_solution_index,
+        typename T = SpaceType_,
+        typename   = typename std::enable_if<is_field_solution<T>::value>::type>
       auto
       divergence() const
       {

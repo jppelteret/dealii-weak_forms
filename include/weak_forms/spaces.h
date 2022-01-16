@@ -603,23 +603,28 @@ namespace WeakForms
 
     // Methods to promote this class to a SymbolicOp: Cell / face
 
-    template <types::solution_index solution_index = 0>
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
     auto
     value() const;
 
-    template <types::solution_index solution_index = 0>
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
     auto
     gradient() const;
 
-    template <types::solution_index solution_index = 0>
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
     auto
     laplacian() const;
 
-    template <types::solution_index solution_index = 0>
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
     auto
     hessian() const;
 
-    template <types::solution_index solution_index = 0>
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
     auto
     third_derivative() const;
 
