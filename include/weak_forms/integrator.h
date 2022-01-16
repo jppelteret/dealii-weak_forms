@@ -300,6 +300,7 @@ namespace WeakForms
                             copy,
                             MeshWorker::assemble_own_cells);
 
+      // Utilities::MPI::sum(integral, mpi_communicator);
       return integral;
     }
 
@@ -421,6 +422,7 @@ namespace WeakForms
                             MeshWorker::assemble_boundary_faces,
                             boundary_worker);
 
+      // Utilities::MPI::sum(integral, mpi_communicator);
       return integral;
     }
 
