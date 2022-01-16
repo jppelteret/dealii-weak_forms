@@ -105,6 +105,7 @@ mathematically, what its going to compute:
   const SymbolicDecorations decorator;
   std::cout << assembler.as_ascii(decorator) << std::endl;
   ```
+  renders in the output
   ```
   0 = #(Grad(d{U}), coefficient, Grad(D{U}))#dV - #(d{U}, f)#dV
   ```
@@ -116,6 +117,7 @@ mathematically, what its going to compute:
   const SymbolicDecorations decorator;
   std::cout << assembler.as_latex(decorator) << std::endl;
   ```
+  renders in the output
   ```latex
   0 = \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[{c}\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
   - \int\left[\delta{\varphi}\,{f}\right]\textrm{dV}

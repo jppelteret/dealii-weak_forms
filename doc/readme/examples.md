@@ -44,10 +44,12 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[{c}\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
 - \int\left[\delta{\varphi}\,{s}\right]\textrm{dV}
 ```
+
+<img src="./images/step-6-latex_output.png">
 
 ## Step-8
 ---------
@@ -58,10 +60,12 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{\mathcal{C}\left(\mathbf{X}\right)} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} 
 - \int\left[\delta{\mathbf{u}} \cdot \mathrm{\mathbf{s}\left(\mathbf{X}\right)}\right]\textrm{dV}
 ```
+
+<img src="./images/step-8-latex_output.png">
 
 ## Step-12
 ----------
@@ -71,7 +75,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{s}}\right) \cdot -\mathrm{\beta\left(\mathbf{X}\right)}\,\Delta{\mathbf{s}}\right]\textrm{dV}
 ```
 
@@ -89,7 +93,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\delta{u}\,\left[{1}\,\Delta{u}\right]\right]\textrm{dV} 
 + \int\left[\nabla\left(\delta{u}\right) \cdot \left[{6.103515625e-05}\,\nabla\left(\Delta{u}\right)\right]\right]\textrm{dV} 
 - \int\left[\delta{u}\,{u}_{t-1}\right]\textrm{dV} 
@@ -98,6 +102,8 @@ LaTeX output
 - \int\left[\delta{u}\,\left[{0.0078125}\,{f\left(\mathbf{X}\right)}\right]\right]\textrm{dV} 
 - \int\left[\delta{u}\,\left[{6.103515625e-05}\,{f_{t-1}\left(\mathbf{X}\right)}\right]\right]\textrm{dV}
 ```
+
+<img src="./images/step-23-latex_output.png">
 
 ## Step-44
 ----------
@@ -118,7 +124,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{\mathcal{H}} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} 
 + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \left[{det(\mathbf{F})}\,\mathbf{\mathbf{F}^{-T}}\right]\,\Delta{\tilde{p}}\right]\textrm{dV} 
 + \int\left[\delta{\tilde{p}}\,\left[{det(\mathbf{F})}\,\mathbf{\mathbf{F}^{-T}}\right] \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} 
@@ -131,7 +137,8 @@ LaTeX output
 + \int\left[\delta{\tilde{J}}\,\left[{\frac{d \Psi^{vol}(J)}{dJ}} - {\tilde{p}}\right]\right]\textrm{dV} 
 - \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot \left[\mathbf{N}\,{p}\right]\right]\textrm{dA}
 ```
-![](./images/step-44-latex_output-example_1.png)
+
+<img src="./images/step-44-latex_output-example_1.png">
 
 
 ### Example 2: Self-linearising energy functional
@@ -154,7 +161,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}{\Psi^{int}}(\nabla\left({\mathbf{u}}\right), {\tilde{p}}, {\tilde{J}})}{\mathrm{d}\nabla\left({\mathbf{u}}\right)}\right]\textrm{dV} 
 + \int\left[\delta{\tilde{p}}\,\frac{\mathrm{d}{\Psi^{int}}(\nabla\left({\mathbf{u}}\right), {\tilde{p}}, {\tilde{J}})}{\mathrm{d}{\tilde{p}}}\right]\textrm{dV} 
 + \int\left[\delta{\tilde{J}}\,\frac{\mathrm{d}{\Psi^{int}}(\nabla\left({\mathbf{u}}\right), {\tilde{p}}, {\tilde{J}})}{\mathrm{d}{\tilde{J}}}\right]\textrm{dV} 
@@ -171,7 +178,7 @@ LaTeX output
 + \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot \frac{\mathrm{d}^{2}{\Psi^{ext}}({\mathbf{u}})}{\mathrm{d}{\mathbf{u}} \otimes \mathrm{d}{\mathbf{u}}} \cdot \Delta{\mathbf{u}}\right]\textrm{dA}
 ```
 
-![](./images/step-44-latex_output-example_2.png)
+<img src="./images/step-44-latex_output-example_2.png">
 
 
 ### Example 3: Self-linearising residual form
@@ -191,7 +198,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon {\mathrm{R}}_{\nabla\left(\delta{\mathbf{u}}\right)}\left(\nabla\left({\mathbf{u}}\right), {\tilde{p}}\right)\right]\textrm{dV} 
 + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}{\mathrm{R}}_{\nabla\left(\delta{\mathbf{u}}\right)}\left(\nabla\left({\mathbf{u}}\right), {\tilde{p}}\right)}{\mathrm{d}\nabla\left({\mathbf{u}}\right)} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} 
 + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}{\mathrm{R}}_{\nabla\left(\delta{\mathbf{u}}\right)}\left(\nabla\left({\mathbf{u}}\right), {\tilde{p}}\right)}{\mathrm{d}{\tilde{p}}}\,\Delta{\tilde{p}}\right]\textrm{dV} 
@@ -204,6 +211,8 @@ LaTeX output
 - \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot {\mathrm{F}}_{\delta{\mathbf{u}}}\left({\mathbf{u}}\right)\right]\textrm{dA} 
 - \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot \frac{\mathrm{d}{\mathrm{F}}_{\delta{\mathbf{u}}}\left({\mathbf{u}}\right)}{\mathrm{d}{\mathbf{u}}} \cdot \Delta{\mathbf{u}}\right]\textrm{dA}
 ```
+
+<img src="./images/step-44-latex_output-example_3.png">
 
 ## Step-47
 ----------
@@ -222,7 +231,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\nabla\left(\delta{\varphi}\right) \colon \left[{1}\,\nabla\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
 - \int\left[\left[\left[\mathbf{N} \cdot \left\lbrace\!\left\lbrace\nabla\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace\right] \cdot \mathbf{N}\right]\,\left[{1}\,\left[\left[\!\left[\nabla\left(\Delta{\varphi}\right)\right]\!\right] \cdot \mathbf{N}\right]\right]\right]\textrm{dI} 
 - \int\left[\left[\left[\!\left[\nabla\left(\delta{\varphi}\right)\right]\!\right] \cdot \mathbf{N}\right]\,\left[{1}\,\left[\left[\mathbf{N} \cdot \left\lbrace\!\left\lbrace\nabla\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace\right] \cdot \mathbf{N}\right]\right]\right]\textrm{dI} 
@@ -234,6 +243,8 @@ LaTeX output
 + \int\left[\left[\left[\mathbf{N} \cdot \nabla\nabla\left(\delta{\varphi}\right)\right] \cdot \mathbf{N}\right]\,\left[\nabla\left({u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right) \cdot \mathbf{N}\right]\right]\textrm{dA} 
 - \int\left[\left[\left[{\frac{\gamma}{h}}\,\nabla\left(\delta{\varphi}\right)\right] \cdot \mathbf{N}\right]\,\left[\nabla\left({u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right) \cdot \mathbf{N}\right]\right]\textrm{dA}
 ```
+
+<img src="./images/step-47-latex_output.png">
 
 ## Step-57
 ----------
@@ -249,7 +260,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\mathbf{v}}\right) \colon \left[{0.001}\,\nabla\left(\Delta{\mathbf{v}}\right)\right]\right]\textrm{dV} 
 + \int\left[\delta{\mathbf{v}} \cdot \nabla\left({\mathbf{v}}\right) \cdot \Delta{\mathbf{v}}\right]\textrm{dV} 
 + \int\left[\delta{\mathbf{v}} \cdot \left[{1}\,\left[\nabla\left(\Delta{\mathbf{v}}\right) \cdot {\mathbf{v}}\right]\right]\right]\textrm{dV} 
@@ -264,6 +275,8 @@ LaTeX output
 + \int\left[\nabla \cdot\left(\delta{\mathbf{v}}\right)\,\left[{1}\,\nabla \cdot\left({\mathbf{v}}\right)\right]\right]\textrm{dV}
 ```
 
+<img src="./images/step-57-latex_output.png">
+
 ## Step-72
 ----------
 ASCII output
@@ -274,11 +287,13 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{u}\right) \cdot \left[\frac{{1}}{\sqrt{\left[{1} + \left[\nabla\left({u}\right) \cdot \nabla\left({u}\right)\right]\right]}}\,\nabla\left(\Delta{u}\right)\right]\right]\textrm{dV} 
 - \int\left[\nabla\left(\delta{u}\right) \cdot \left[{\frac{{1}}{\sqrt{\left[{1} + \left[\nabla\left({u}\right) \cdot \nabla\left({u}\right)\right]\right]}}}^{{3}}\,\left[\left[\nabla\left(\Delta{u}\right) \cdot \nabla\left({u}\right)\right]\,\nabla\left({u}\right)\right]\right]\right]\textrm{dV} 
 + \int\left[\nabla\left(\delta{u}\right) \cdot \left[\frac{{1}}{\sqrt{\left[{1} + \left[\nabla\left({u}\right) \cdot \nabla\left({u}\right)\right]\right]}}\,\nabla\left({u}\right)\right]\right]\textrm{dV}
 ```
+
+<img src="./images/step-72-latex_output.png">
 
 ## Step-74
 ----------
@@ -297,7 +312,7 @@ ASCII output
 ```
 
 LaTeX output
-```
+```latex
 0 = \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[{\nu}\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
 - \int\left[\left[\!\left[\delta{\varphi}\right]\!\right]\,\left[{\nu}\,\left[\left\lbrace\!\left\lbrace\nabla\left(\Delta{\varphi}\right)\right\rbrace\!\right\rbrace \cdot \mathbf{N}\right]\right]\right]\textrm{dI} 
 - \int\left[\left[\left\lbrace\!\left\lbrace\nabla\left(\delta{\varphi}\right)\right\rbrace\!\right\rbrace \cdot \mathbf{N}\right]\,\left[{\nu}\,\left[\!\left[\Delta{\varphi}\right]\!\right]\right]\right]\textrm{dI} 
@@ -309,3 +324,5 @@ LaTeX output
 + \int\left[\left[\nabla\left(\delta{\varphi}\right) \cdot \mathbf{N}\right]\,\left[{\nu}\,{u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right]\right]\textrm{dA} 
 - \int\left[\delta{\varphi}\,\left[\left[{\nu}\,{\sigma\left(\mathbf{X}\right)}\right]\,{u\left(\mathbf{X}\right)\left(\mathbf{X}\right)}\right]\right]\textrm{dA}
 ```
+
+<img src="./images/step-74-latex_output.png">
