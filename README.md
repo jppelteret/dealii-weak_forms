@@ -5,6 +5,24 @@ expression templates as well as automatic and symbolic differentiation.
 
 Author: Jean-Paul Pelteret, 2020 - 2022
 
+# Table of Contents
+
+- [Concept](#concept)
+   - [How is this different from the standard deal.II functionality?](#how-is-this-different-from-the-standard-dealii-functionality) 
+   - [How does this work?](#how-does-this-work)
+   - [What exactly is the compiler doing?](#what-exactly-is-the-compiler-doing)
+- [Features](#features)
+   - [Highlights](#highlights)
+   - [Wishlist and work in progress](#wishlist-and-work-in-progress)
+- [Class documentation](#class-documentation)
+- [Examples](#examples)
+- [Benchmarks](#benchmarks)
+- [Building the library](#building-the-library)
+- [Similar projects that inspired this work](#similar-projects-that-inspired-this-work)
+- [Acknowledgements](#acknowledgements)
+- [Contributing](#contributing)
+- [License](#license)
+
 # Concept
 ---------
 The idea for this library is to offer an abstraction for the discretisation
@@ -409,8 +427,8 @@ computes operations, the call operators are transparent and the compiler is
 in principle able to generate very fast code with which to perform evaluations.
 
 
-# Features: 
------------
+# Features
+----------
 
 ## Highlights
 - Easy to read and interpret expression of weak forms
