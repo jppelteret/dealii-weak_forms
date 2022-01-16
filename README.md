@@ -442,6 +442,9 @@ in principle able to generate very fast code with which to perform evaluations.
 - The datatype for calculations (`float`, `double`, `std::complex<...>`) is,
   chosen only at assembly time and is in principle, generic. 
   This feature, however, needs to be tested more thoroughly.
+- Performance improvements for the self-linearising forms is an ongoing area of
+  interest and research. 
+- A matrix-free implementation will be investigated in the future.
 
 # Class documentation
 ---------------------
