@@ -385,7 +385,7 @@ these compile to:
    ```c++
    SymbolicOp<SubSpaceViews::Vector<TestFunction>, SymbolicOpCodes::gradient>
    ```
-   which again somewhat transparently denotes that it represents the `gradient
+   which again somewhat transparently denotes that it represents the `gradient`
     of a `Vector` subspace view of a `TestFunction`.
 1. The negation of the gradient of a vector-valued test function is a
    ```c++
