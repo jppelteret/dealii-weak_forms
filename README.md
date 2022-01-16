@@ -21,6 +21,10 @@ const double f           = 1.0;
 for (const auto &cell : dof_handler.active_cell_iterators())
 {
   ...
+  // Initialise some data structures, precompute some data for use in
+  // the assembly loop, ...
+
+  ...
   for (const unsigned int i : fe_values.dof_indices())
   {
     for (const unsigned int j : fe_values.dof_indices())
@@ -42,7 +46,9 @@ for (const auto &cell : dof_handler.active_cell_iterators())
                                          system_rhs);
 }
 ```
-with this library you can do it expressively
+with this library you can do it expressively without having to worry about
+the structure of the assembly loop, data initialisation or extraction, and
+some of the other details
 ```c++
   const TestFunction<dim>  test;
   const TrialSolution<dim> trial;
@@ -74,20 +80,49 @@ with this library you can do it expressively
                             qf_cell);
 ```
 
+If analysing code to debug is a chore, then this library can also spell out,
+mathematically, what its going to compute:
+- in ACSII format
+  ```c++
+  const SymbolicDecorations decorator;
+  std::cout << assembler.as_ascii(decorator) << std::endl;
+  ```
+  ```
+  0 = #(Grad(d{U}), coefficient, Grad(D{U}))#dV - #(d{U}, f)#dV
+  ```
+- or in LaTeX format that can be readily 
+  [rendered online](https://arachnoid.com/latex/?equ=0%20%3D%20%5Cint%5Cleft%5B%5Cnabla%5Cleft(%5Cdelta%7B%5Cvarphi%7D%5Cright)%20%5Ccdot%20%5Cleft%5B%7Bc%7D%5C%2C%5Cnabla%5Cleft(%5CDelta%7B%5Cvarphi%7D%5Cright)%5Cright%5D%5Cright%5D%5Ctextrm%7BdV%7D%20%0A-%20%5Cint%5Cleft%5B%5Cdelta%7B%5Cvarphi%7D%5C%2C%7Bf%7D%5Cright%5D%5Ctextrm%7BdV%7D%0A)
+  or using a minimal number of added packages
+  <img src="./doc/readme/images/intro-latex_output-example.png" width="600">
+  ```c++
+  const SymbolicDecorations decorator;
+  std::cout << assembler.as_latex(decorator) << std::endl;
+  ```
+  ```latex
+  0 = \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[{c}\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
+  - \int\left[\delta{\varphi}\,{f}\right]\textrm{dV}
+  ```
+
 ## How is this different from the standard deal.II functionality?
 
 Let's identify the key differences between these two paradigms:
-- `native deal.II`: 
+- `native deal.II` (considering the approach typically advocated and
+  adopted for "matrix-based" methods): 
   
    When writing an assembly loop, one "sees" the weak form at the lowest level,
    i.e. the fully discretised, indexed entries for each shape function from
    the test space and trial solution spaces, as well as field solutions computed
    at quadrature points and the like. One has to know the discretisation
    (i.e. the assembly function has to have access to a specific `DofHandler`,
-   `FiniteElement`, `SparseMatrix`, right-hand-side `Vector`, etc) as context 
-   (indeed, such assembly functions can be made generic, but this must be
+   `FiniteElement`, `SparseMatrix`, right-hand-side `Vector`, etc) as context.
+   Indeed, such assembly functions can be made generic, but this must be
    done by the implementer at some effort -- only something that advanced
-   users of the `deal.II` library might consider doing). 
+   users of the `deal.II` library might consider doing. This also means that
+   the assembly functions might need addition arguments, which might 
+   complicate the extension of multi-physics frameworks that use polymorphism
+   as part of their design abstraction. None of these (potential) issues are
+   insurmountable; they only make the life of the programmer a little more
+   challenging.
 
    When extending or modifying the weak form, the user might have to employ
    some effort to cache data (e.g. when using the `Function` classes).
@@ -96,19 +131,29 @@ Let's identify the key differences between these two paradigms:
    to write an assembly loop that is both readable and highly performance
    orientated. The naive, explicit assembly algorithm becomes even more
    "interesting" when interface terms are introduced, and mesh adaptivity
-   makes things even more tricky.
+   makes things even more tricky. The `MeshWorker::mesh_loop()` concept
+   partnered with the `MeshWorker::ScratchData` and `GeneralDataStorage`
+   classes can offer a lot of assistance and greatly simplify things here,
+   but their use still adds complexity to (and increases the code length of) 
+   the assembly method.
 
-   On the matter of correctness, when dealing with complex constitutive laws
-   the automatic and symbolic differentiation capabilities built into `deal.II`
-   might be useful, but are another aspect of the library that the user must
-   become very familiar with before they can use them *correctly* and
-   *effectively*.
+   On the matter of correctness, subtle errors related to indexing in the
+   assembly loops can be introduced very easily, and sometimes take some
+   time to spot. Adding more complexity to the weak form being implemented
+   introduces more opportunity for mistakes. Compounding this are the
+   formulation of quantities derived from (nonlinear or otherwise complex)
+   constitutive laws, and the subsequent consistent linearisation of those
+   quantities. To assist in this regard, the automatic and symbolic
+   differentiation capabilities built into `deal.II` might be useful, but are
+   another aspect of the library that the user must become very familiar with
+   before they can use them *correctly* and *effectively*.
 
 - `Symbolic weak form library`:
   
    In contrast, the `weak form` library allows one to write the weak form
-   symbolically (perhaps even more "expressively", even closer to the (bi)linear
-   notation that one might find in an academic paper). The notion of "assembly"
+   symbolically at a high level. Although only a matter of opinion, perhaps this
+   is more expressive than the alternative, as it may be closer to the (bi)linear
+   notation that one might find in an academic paper. The notion of "assembly"
    is taken care by the library, and only when requested. Each of the forms that
    are (compile-time) generated are, in fact, patterns for assembly (also known
    as integration kernels), and while these kernels describe how to perform the
@@ -153,12 +198,12 @@ Let's identify the key differences between these two paradigms:
    the library is able to perform several optimisations to limit the extent
    to which this impacts the overall assembly time. The vectorisation capabilities
    of modern computers can be exploited to do `SIMD` parallelisation on top
-   of the multi-threading which is built in to `deal.II`'s `WorkStream::mesh_loop()`
+   of the multi-threading which is built in to `deal.II`'s `MeshWorker::mesh_loop()`
    concept (and whatever distributed computation the user might be doing using 
    `MPI`). For the classes that are not parallel-friendly, their data is
    extracted as early as possible into parallel data structures, to that
    parallelisation can be used in as many operations as possible. Using
-   `WorkStream::mesh_loop()` means that we can offer (some) functionality for
+   `MeshWorker::mesh_loop()` means that we can offer (some) functionality for
    DG finite elements and other methods that introduce interface terms.
 
    On the matter of supporting complex physics models, this library offers
@@ -364,186 +409,294 @@ computes operations, the call operators are transparent and the compiler is
 in principle able to generate very fast code with which to perform evaluations.
 
 
-# Features
-----------
+# Features: 
+-----------
+
+## Highlights
+- Easy to read and interpret expression of weak forms
+- Output of forms in ASCII and LaTeX formats
+- Any and all quantities can be retained as intermediate calculations
+- Wrappers for many of the commonly used `deal.II` functions and classes
+- Operator and function overloading for many `deal.II` dense linear algebra
+  classes
+- Support for scalar, vector and tensor-valued finite elements
+- Support for multi-field forms, thereby supporting the implementation of 
+  (coupled) multi-physics problems
+- The use of `std::function`s as input to user-definable class value definitions
+- Self-linearising forms with specified parameterisations that leverage
+  automatic and symbolic differentiation frameworks. This allows for problems
+  to be implemented as a (scalar) energy functional or the expression of
+  residuals alone. The AD/SD frameworks permit efficient derivative computations
+  derived from provided quantities.
+- Volume, boundary and interface integration
+  - Assembly loops, assembling cell or face matrix and/or vector contributions
+    into a global linear system
+  - Summation of quantities (like the integral of a field value)
+- Supports MPI and serial computing concepts
+- Automatically implements multi-threading along with `SIMD` vectorisation
+  (when available)
+
+## Wishlist and work in progress
+- Currently only supports non-hp finite element methods, but
+  [hp-FEM support is imminent](https://github.com/dealii/dealii/pull/13181)
+- The datatype for calculations (`float`, `double`, `std::complex<...>`) is,
+  chosen only at assembly time and is in principle, generic. 
+  This feature, however, needs to be tested more thoroughly.
+
+# Class list
+------------
 
 ## Functors
-- User-defined
-  - Scalar function
-  - Tensor function
-  - Symmetric tensor function
+- User-defined (spatially dependent)
+  - `ScalarFunctor`: Scalar function
+  - `TensorFunctor`: Tensor function
+  - `SymmetricTensorFunctor`: Symmetric tensor function
 - User-defined (with caching)
-  - Scalar function
-  - Tensor function
-  - Symmetric tensor function
+  - `ScalarCacheFunctor`: Scalar function
+  - `TensorCacheFunctor`: Tensor function
+  - `SymmetricTensorCacheFunctor`: Symmetric tensor function
 - Wrappers for `deal.II` `Function`s
-  - Scalar function, FunctionParser
-  - Tensor function, TensorFunctionParser
+  - `ScalarFunctionFunctor`: Scalar function, FunctionParser
+  - `TensorFunctionFunctor`: Tensor function, TensorFunctionParser
 - Conversion utilities (local to symbolic)
-  - Constant scalar function
-  - Constant tensor function
-  - Constant symmetric tensor function
+  - `constant_scalar()`: Constant scalar function
+  - `constant_vector()`: Constant vector function
+  - `constant_tensor()`: Constant tensor function
+  - `constant_symmetric_tensor()`: Constant symmetric tensor function
 - [TODO] No-op
 
 
 ## Spaces
-- Test function
-- Trial solution
-- Field solution
+- `TestFunction`: Global test function
+- `TrialSolution`: Global trial solution
+- `FieldSolution`: Global field solution
   - Indexed storage for time history or other solution fields
   - Indexed storage also supports multiple DoFHandlers (e.g. when a field solution for another discretisation is used in the RHS of the one being assembled)
-- Sub-space extractors and views
+- Sub-space extractors, used to segment a finite element space into
+  sub-components
+  - `SubSpaceExtractors::Scalar`
+  - `SubSpaceExtractors::Vector`
+  - `SubSpaceExtractors::Tensor`
+  - `SubSpaceExtractors::SymmetricTensor`
+- Sub-space views (extracted from a space), accessing one or more components of
+  the finite element space. With a sub-space view, the natural "type" of the
+  finite element component is known, and more operators become available for
+  use.
+  - `SubSpaceViews::Scalar`
+  - `SubSpaceViews::Vector`
+  - `SubSpaceViews::Tensor`
+  - `SubSpaceViews::SymmetricTensor`
 
 
 ## Forms
 - Standard
-  - Linear
-  - Bilinear
-    - Symmetry flag for local contributions
+  - `LinearForm`: 
+    A class that encapsulates a linear form, composed of a test space operator
+    and an arbitrary functor.
+    - Convenience function: `linear_form()`
+  - `BilinearForm`:
+    A class that encapsulates a bilinear form, composed of a test space operator,
+    an arbitrary functor, and a trial space operator.
+    - Can set a symmetry flag for local contributions
+    - Convenience function: `bilinear_form()`
   - Feature points
     - Form operators involve slots for per-dof calculations and per-quadrature point calculations
       - Can use the per-quadrature point slot as much as possible to minimise number of operations
     - Test function and trial solution may be a composite operation
       - Note: In this case, the composite operation may incur n(dofs)*n(q-points) operations
 - Self-linearising
-  - Energy functional
-    - Automatic differentiation stored energy function
-    - Symbolic differentiation free/stored energy function
+  - Accumulation of these forms into an assembler will automatically generate
+    additional forms for the linearisation (and, in the case of an energy
+    functional, the residual as well). The parameterisation (dictating how many
+    additional forms are generated) are automatically deduced.
+  - `SelfLinearization::EnergyFunctional`:
+    A self-linearising energy functional (as is often defined for variational 
+    problems)
     - Feature points
+      - Convenience function: `energy_functional_form()`
+      - Consumes an `EnergyFunctor`
+      - Parameterisation is defined by the energy functor
       - Variation and linearisation with respect to all field variables
-  - Residual
-    - Automatic differentiation function for kinetic variable
-    - Symbolic differentiation function for kinetic variable
+    - `EnergyFunctor`: Energy functional
+      Functors to parameterise and define self-linearisation finite element
+      residuals (or a component of the residual)
+      - Convenience function: `energy_functor()`
+      - Automatic differentiation stored energy function
+      - Symbolic differentiation free/stored energy function
+  - `SelfLinearization::ResidualView`:
+    A self-linearising energy functional (as is often defined for variational 
+    problems)
     - Feature points
-      - Component selection using test function
-      - Test function may be a composite operation (but will not be linearised)
+      - Convenience function: `residual_form()`
+      - Consumes an `ResidualFunctor` or a `ResidualViewFunctor`
+      - Finite element component selection using the designated test function
+      - Test function may be a composite operation (but will **not** be
+        linearised)
+      - Parameterisation is defined by the residual functor
       - Linearisation with respect to all field variables
+    - `ResidualFunctor`, `ResidualViewFunctor`:
+      Functors to parameterise and define self-linearisation finite element
+      residuals (or a component of the residual)
+      - Convenience functions: `residual_functor()`, `residual_view_functor()`
+      - Automatic differentiation function for kinetic variable
+      - Symbolic differentiation function for kinetic variable
 
 
 ## Operators
 - Symbolic test functions/trial solutions/field solutions
-  - Scalar
-    - value
-    - gradient
-    - laplacian
-    - Hessian
-    - third derivative
-    - jump in values
-    - jump in gradients
-    - jump in Hessians
-    - jump in third derivatives
-    - average of values
-    - average of gradients
-    - average of Hessians
-  - Vector
-    - value
-    - gradient
-    - symmetric_gradient
-    - divergence
-    - curl
-    - Hessian
-    - third derivative
-    - jump in values
-    - jump in gradients
-    - jump in Hessians
-    - jump in third derivatives
-    - average of values
-    - average of gradients
-    - average of Hessians
-  - Tensor
-    - value
-    - gradient
-    - divergence 
-  - Symmetric tensor
-    - value
-    - divergence
+  - Global `TestFunction`, `TrialSolution`, `FieldSolution`
+    - sub-space extraction
+    - `value()`: value
+    - `gradient()`: gradient
+    - `laplacian()`: laplacian
+    - `hessian()`: Hessian
+    - `third_derivative()`: third derivative
+    - `jump_in_values()`: jump in values
+    - `jump_in_gradients()`: jump in gradients
+    - `jump_in_hessians()`: jump in Hessians
+    - `jump_in_third_derivatives()`: jump in third derivatives
+    - `average_of_values()`: average of values
+    - `average_of_gradients()`: average of gradients
+    - `average_of_hessians()`: average of Hessians
+  - Scalar (`SubSpaceViews::Scalar` generated by a 
+    `TestFunction[SubSpaceExtractors::Scalar]`,
+    `TrialSolution[SubSpaceExtractors::Scalar]`, or a
+    `FieldSolution[SubSpaceExtractors::Scalar]`)
+    - `value()`: value
+    - `gradient()`: gradient
+    - `laplacian()`: laplacian
+    - `hessian()`: Hessian
+    - `third_derivative()`: third derivative
+    - `jump_in_values()`: jump in values
+    - `jump_in_gradients()`: jump in gradients
+    - `jump_in_hessians()`: jump in Hessians
+    - `jump_in_third_derivatives()`: jump in third derivatives
+    - `average_of_values()`: average of values
+    - `average_of_gradients()`: average of gradients
+    - `average_of_hessians()`: average of Hessians
+  - Vector (`SubSpaceViews::Vector` generated by a 
+    `TestFunction[SubSpaceExtractors::Vector]`,
+    `TrialSolution[SubSpaceExtractors::Vector]`, or a
+    `FieldSolution[SubSpaceExtractors::Vector]`)
+    - `value()`: value
+    - `gradient()`: gradient
+    - `symmetric_gradient()`: symmetric gradient
+    - `divergence()`: divergence
+    - `curl()`: curl
+    - `hessian()`: Hessian
+    - `third_derivative()`: third derivative
+    - `jump_in_values()`: jump in values
+    - `jump_in_gradients()`: jump in gradients
+    - `jump_in_hessians()`: jump in Hessians
+    - `jump_in_third_derivatives()`: jump in third derivatives
+    - `average_of_values()`: average of values
+    - `average_of_gradients()`: average of gradients
+    - `average_of_hessians()`: average of Hessians
+  - Tensor (`SubSpaceViews::Tensor` generated by a 
+    `TestFunction[SubSpaceExtractors::Tensor]`,
+    `TrialSolution[SubSpaceExtractors::Tensor]`, or a
+    `FieldSolution[SubSpaceExtractors::Tensor]`)
+    - `value()`: value
+    - `gradient()`: gradient
+    - `divergence()`: divergence
+  - Symmetric tensor (`SubSpaceViews::SymmetricTensor` generated by a 
+    `TestFunction[SubSpaceExtractors::SymmetricTensor]`,
+    `TrialSolution[SubSpaceExtractors::SymmetricTensor]`, or a
+    `FieldSolution[SubSpaceExtractors::SymmetricTensor]`)
+    - `value()`: value
+    - `divergence()`: divergence
 - Function operators
   - Unary
     - General
-      -  negation
+      -  `operator-`: negation
     -  Scalar operations
-       - trignometric operations: sine, cosine, tangent
-       - exponential, logarithm
-       - square root
-       - absolute value
+       - `sin()`, `cos()`, `tan()`: trignometric operations: sine, cosine, tangent
+       - `exp()`, `log()`:`exponential, logarithm
+       - `sqrt()`:square root
+       - `abs()`:absolute value
        - [TODO] Other math functions
     - Tensor operations
-      - determinant
-      - invert
-      - transpose
-      - symmetrize
+      - `determinant()`: determinant
+      - `invert()`: invert
+      - `transpose()`: transpose
+      - `symmetrize()`: symmetrize
     - Interface operations (evaluating a function across an interface)
       - [TODO] jump
       - [TODO] average 
   - Binary
-    - Addition
-    - Subtraction
-    - Multiplication
+    - `operator+`: Addition
+    - `operator-`: Subtraction
+    - `operator*`: Multiplication
       - Scalar
       - Tensor
     -  Scalar operations
-       - power
-       - maximum, minimum
+       - `pow()`: power
+       - `max()`, `min()`: maximum, minimum
        - [TODO] Other math functions
      - Tensor operations
-       - cross product
-       - Schur product
-       - outer product
+       - `cross_product()`: cross product
+       - `schur_product()`: Schur product
+       - `outer_product`: outer product
      - Tensor contractions
-       - operator * (single contraction for Tensor, double contraction for SymmetricTensor)
-       - scalar product
-       - contract
-       - double contract
+       - `operator*` (single contraction for `Tensor`s, double contraction for `SymmetricTensor`s)
+       - `scalar_product()`: scalar product
+       - `contract()`: single index contraction
+       - `double_contract`: double index double contraction
        - [TODO] general contraction
   - Implicit conversions to functors
-    - Arithmetic types
-    - Tensor
-    - SymmetricTensor
+    - Arithmetic types, e.g. `double` -> `constant_scalar()`
+    - Tensor, e.g. `Tensor` -> `constant_tensor()`
+    - SymmetricTensor, e.g. `SymmetricTensor` -> `constant_symmetric_tensor()`
   - Operation modes
     - Quadrature point
     - Shape function @ quadrature point (binary operation with test function / trial solution)
 - Form operators
   - Unary
-    - negation
+    - `operator-`: negation
   - Binary
-    - Addition
-    - Subtraction
-    - Multiplication
+    - `operator+`: Addition
+    - `operator-`: Subtraction
+    - `operator*`: Multiplication
       - Scalar
 
 
 ## Integration
 - Integration domains
-  - Volume
-    - Subdomains: Material ID
-  - Boundary
-    - Subdomains: Boundary ID
-  - Interface
-    - Subdomains: Manifold ID
-    - Inter-cell interfaces for DG
+  - `VolumeIntegral`: A class representing volume integrals
+    - Subdomain selection: Material ID (`dealii::types::material_id`)
+  - `BoundaryIntegral`: A class representing boundary integrals
+    - Subdomain selection: Boundary ID (`dealii::types::boundary_id`)
+  - `Interfacentegral`: A class representing interface integrals
+    - Inter-cell interfaces for DG FEM
+    - Subdomain selection: Manifold ID (`dealii::types::manifold_id`)
   - [TODO] Custom predicates for the above
-- User-defined function integrators
+- `Integrator`: User-defined function integrators, used to compute integrals
+  of quantities over a domain or subdomain.
   - Position independent/dependent
-  - Volume, boundary, interface (using `WorkStream::mesh_loop()`)
+  - Volume, boundary, interface (using `MeshWorker::mesh_loop()`)
 - Integral operators
   - Binary
-    - Addition
-    - Subtraction
-    - Multiplication
+    - `operator+`: Addition
+    - `operator-`: Subtraction
+    - `operator*`: Multiplication
       - Scalar
 
 
 ## Assemblers
-- Matrix-based (using `WorkStream::mesh_loop()`)
+- `MatrixBasedAssembler`:
+  Matrix-based assembly (using `MeshWorker::mesh_loop()` for multithreading as
+  well as `SIMD`)
   - Symmetry flag for global system
     - Exclusion of bilinear form contributions based on field index
   - Ignore DoFs that aren't in DoF group
-  - Vectorisation
+  - Vectorisation if `AVX` extensions are available
   - Pre-computation and result caching
 - [TODO] Matrix-free
 
 ## Output
-- Symbolic decorator (customisable)
+- `SymbolicDecorations`: A (partially customisable) symbolic decorator that
+  is used to provide some nomenclature when the expression tree is parsed during
+  output
 - ASCII
 - LaTeX
 
