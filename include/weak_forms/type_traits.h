@@ -96,6 +96,10 @@ namespace WeakForms
   struct is_evaluated_with_scratch_data : std::false_type
   {};
 
+  template <typename T, typename = void>
+  struct is_compatible_with_scalar_arithmetic : std::false_type
+  {};
+
   template <typename T>
   struct is_boundary_op : std::false_type
   {};
@@ -346,7 +350,14 @@ namespace WeakForms
 
 #undef DEAL_II_TYPE_TRAIT_OR_COMBINER
 
+} // namespace WeakForms
 
+
+#ifndef DOXYGEN
+
+
+namespace WeakForms
+{
   // TODO: Add test for this
   template <typename T>
   struct is_evaluated_with_scratch_data<
@@ -413,10 +424,6 @@ namespace WeakForms
 
 
   // Arithmetic
-
-  template <typename T, typename = void>
-  struct is_compatible_with_scalar_arithmetic : std::false_type
-  {};
 
   template <typename T>
   struct is_compatible_with_scalar_arithmetic<
@@ -497,6 +504,9 @@ namespace WeakForms
   {};
 
 } // namespace WeakForms
+
+
+#endif // DOXYGEN
 
 
 WEAK_FORMS_NAMESPACE_CLOSE

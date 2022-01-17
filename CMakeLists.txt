@@ -246,7 +246,7 @@ IF(BUILD_DOCUMENTATION)
   MESSAGE(STATUS "Configuring with Doxygen documentation")
   ADD_SUBDIRECTORY(doc/doxygen)
 
-  ADD_CUSTOM_TARGET(docs
+  ADD_CUSTOM_TARGET(documentation
     COMMAND doxygen doc/doxygen/options.dox
     COMMENT "Build Doxygen documentation"
   )
