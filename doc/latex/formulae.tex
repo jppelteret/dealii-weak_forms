@@ -49,7 +49,26 @@ $\begin{aligned}
 
 \newpage
 
-% Step-44: Example 1: Standard implementation
+% Step-44: Example 1: Standard implementation (b/tau formulation)
+\preview
+$\begin{aligned}
+0 &= \int\left[\left[\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]^{S} \colon \mathcal{J\mathcal{c}^{mat}} \colon \left[\left[\nabla\left(\Delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]^{S}\right]\textrm{dV} \\
+  &+ \int\left[\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right] \colon \mathcal{J\mathcal{c}^{geo}} \colon \left[\nabla\left(\Delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\left[\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]^{S} \colon \left[{det(\mathbf{F})}\,\mathbf{\mathbf{I}}\right]\,\Delta{\tilde{p}}\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{p}}\,\left[{det(\mathbf{F})}\,\mathbf{\mathbf{I}}\right] \colon \left[\left[\nabla\left(\Delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]^{S}\right]\textrm{dV} \\
+  &- \int\left[\delta{\tilde{p}}\,\left[{1}\,\Delta{\tilde{J}}\right]\right]\textrm{dV} \\
+  &- \int\left[\delta{\tilde{J}}\,\left[{1}\,\Delta{\tilde{p}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{J}}\,\left[{\frac{d^{2} \Psi^{vol}(J)}{dJ^{2}}}\,\Delta{\tilde{J}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\left[\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathbf{\mathbf{F}^{-1}}\right]\right]^{S} \colon \mathbf{\boldsymbol{\tau}}\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{p}}\,\left[{det(\mathbf{F})} - {\tilde{J}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{J}}\,\left[{\frac{d \Psi^{vol}(J)}{dJ}} - {\tilde{p}}\right]\right]\textrm{dV} \\
+  &- \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot \left[\mathbf{N}\,{p}\right]\right]\textrm{dA}
+\end{aligned}$
+\endpreview
+
+\newpage
+
+% Step-44: Example 2: Standard implementation (F/P formulation)
 \preview
 $\begin{aligned}
 0 &= \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{\mathcal{H}} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} \\
@@ -67,7 +86,26 @@ $\begin{aligned}
 
 \newpage
 
-% Step-44: Example 2: Self-linearising energy functional
+% Step-44: Example 3: Standard implementation (C/S formulation)
+\preview
+$\begin{aligned}
+0 &= \int\left[\left[\left[\left[\left[\mathbf{\mathbf{I}} + \nabla\left({\mathbf{u}}\right)\right]\right]^{T} \colon \nabla\left(\delta{\mathbf{u}}\right)\right]\right]^{S} \colon \mathcal{\mathcal{H}^{mat}} \colon \left[\left[\left[\left[\mathbf{\mathbf{I}} + \nabla\left({\mathbf{u}}\right)\right]\right]^{T} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\right]^{S}\right]\textrm{dV} \\
+  &+ \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{\mathcal{H}^{geo}} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} \\
+  &+ \int\left[\left[\left[\left[\left[\mathbf{\mathbf{I}} + \nabla\left({\mathbf{u}}\right)\right]\right]^{T} \colon \nabla\left(\delta{\mathbf{u}}\right)\right]\right]^{S} \colon \left[{det(\mathbf{F})}\,\mathbf{\mathbf{C}^{-1}}\right]\,\Delta{\tilde{p}}\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{p}}\,\left[{det(\mathbf{F})}\,\mathbf{\mathbf{C}^{-1}}\right] \colon \left[\left[\left[\left[\mathbf{\mathbf{I}} + \nabla\left({\mathbf{u}}\right)\right]\right]^{T} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\right]^{S}\right]\textrm{dV} \\
+  &- \int\left[\delta{\tilde{p}}\,\left[{1}\,\Delta{\tilde{J}}\right]\right]\textrm{dV} \\
+  &- \int\left[\delta{\tilde{J}}\,\left[{1}\,\Delta{\tilde{p}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{J}}\,\left[{\frac{d^{2} \Psi^{vol}(J)}{dJ^{2}}}\,\Delta{\tilde{J}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\left[\left[\left[\left[\mathbf{\mathbf{I}} + \nabla\left({\mathbf{u}}\right)\right]\right]^{T} \colon \nabla\left(\delta{\mathbf{u}}\right)\right]\right]^{S} \colon \mathbf{\mathbf{S}}\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{p}}\,\left[{det(\mathbf{F})} - {\tilde{J}}\right]\right]\textrm{dV} \\
+  &+ \int\left[\delta{\tilde{J}}\,\left[{\frac{d \Psi^{vol}(J)}{dJ}} - {\tilde{p}}\right]\right]\textrm{dV} \\
+  &- \int\limits_{A=6}\left[\delta{\mathbf{u}} \cdot \left[\mathbf{N}\,{p}\right]\right]\textrm{dA}
+\end{aligned}$
+\endpreview
+
+\newpage
+
+% Step-44: Example 4: Self-linearising energy functional
 \preview
 $\begin{aligned}
 0 &= \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}{\Psi^{int}}(\nabla\left({\mathbf{u}}\right), {\tilde{p}}, {\tilde{J}})}{\mathrm{d}\nabla\left({\mathbf{u}}\right)}\right]\textrm{dV} \\
@@ -89,7 +127,7 @@ $\begin{aligned}
 
 \newpage
 
-% Step-44: Example 3: Self-linearising residual form
+% Step-44: Example 5: Self-linearising residual form
 \preview
 $\begin{aligned}
 0 &= \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon {\mathrm{R}}_{\nabla\left(\delta{\mathbf{u}}\right)}\left(\nabla\left({\mathbf{u}}\right), {\tilde{p}}\right)\right]\textrm{dV} \\

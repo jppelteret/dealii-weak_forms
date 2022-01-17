@@ -98,6 +98,11 @@ doxygen documentation is in preparation.
       - Convenience functions: `residual_functor()`, `residual_view_functor()`
       - Automatic differentiation function for kinetic variable
       - Symbolic differentiation function for kinetic variable
+  - `AD_SD_Functor_Cache`:
+    A class that provides a caching mechanism for `SD` calculations.
+    Using this class, the results of symbolic operations (e.g. symbolic
+    differentiation) can persist across timesteps and Newton iterations, rather
+    than being recomputed each time assembly is invoked.
 - Forms are integrated over volumes, boundaries and interfaces using the 
   `dV()`, `dA()` and `dI()` class member functions.
 
@@ -257,5 +262,5 @@ doxygen documentation is in preparation.
 - `SymbolicDecorations`: A (partially customisable) symbolic decorator that
   is used to provide some nomenclature when the expression tree is parsed during
   output
-- ASCII
-- LaTeX
+- ASCII using the `as_ascii()` class member functions
+- LaTeX using the `as_latex()` class member functions
