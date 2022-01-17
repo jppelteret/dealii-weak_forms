@@ -28,7 +28,7 @@ doxygen documentation is in preparation.
 - `TestFunction`: Global test function
 - `TrialSolution`: Global trial solution
 - `FieldSolution`: Global field solution
-  - Indexed storage for time history or other solution fields
+  - Indexed storage for time history or other solution fields via the `SolutionStorage` class
   - Indexed storage also supports multiple DoFHandlers (e.g. when a field solution for another discretisation is used in the RHS of the one being assembled)
 - Sub-space extractors, used to segment a finite element space into
   sub-components

@@ -1,10 +1,12 @@
 
 DEAL::Dim: 2
 DEAL:string::Negation: -<<S>>
+DEAL:string::Normalization: <<S>>/|<<S>>|
 DEAL:string::Determinant: det(<<S>>)
 DEAL:string::Inverse: inv(<<S>>)
 DEAL:string::Transpose: trans(<<S>>)
 DEAL:LaTeX::Negation: -\mathbf{S}
+DEAL:LaTeX::Normalization: \frac{\mathbf{S}}{\left\vert\mathbf{S}\right\vert}
 DEAL:LaTeX::Determinant: \text{det}\left(<<S>>\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{S}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{S}\right]^{T}
@@ -12,10 +14,12 @@ DEAL::OK
 DEAL::
 DEAL::Dim: 3
 DEAL:string::Negation: -<<S>>
+DEAL:string::Normalization: <<S>>/|<<S>>|
 DEAL:string::Determinant: det(<<S>>)
 DEAL:string::Inverse: inv(<<S>>)
 DEAL:string::Transpose: trans(<<S>>)
 DEAL:LaTeX::Negation: -\mathbf{S}
+DEAL:LaTeX::Normalization: \frac{\mathbf{S}}{\left\vert\mathbf{S}\right\vert}
 DEAL:LaTeX::Determinant: \text{det}\left(<<S>>\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{S}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{S}\right]^{T}
