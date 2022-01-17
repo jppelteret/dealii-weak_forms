@@ -267,7 +267,7 @@ Let's identify the key differences between these two paradigms:
    those tied to other `DoFHandler`s) so, as examples, time discretisation of
    rate-dependent problems is supported, and the solution of one finite
    element problem can be used as the input to another. More features of the
-   library are loosely listed below.
+   library are loosely listed [here](classes.md).
 
 ## How does this work?
 
@@ -359,7 +359,7 @@ The main (opaque) data classes that this library uses are:
   which transforms two input arguments to a single result.  
 
 These three symbolic classes perform the data extraction or transformation based
-on their input arguments. As the imput arguments are arbitrarily complex, the
+on their input arguments. As the input arguments are arbitrarily complex, the
 generated class has a (template-derived) definition that is similarly arbitrary
 complex.
 
@@ -423,6 +423,8 @@ these compile to:
    while the second argument is the type described by point `(3)`.
 
 Unfortunately, the concrete class types get more and more complex as the chain
-of operations increases. However, as the compiler knows the exact type that
-computes operations, the call operators are transparent and the compiler is
-in principle able to generate very fast code with which to perform evaluations.
+of operations increases. (You might be exposed to this in the event of a
+compilation failure in a user code.) However, as the compiler knows the exact
+ctype that omputes operations, the call operators are transparent and the
+compiler is in principle able to generate very fast code with which to perform
+evaluations.
