@@ -129,6 +129,12 @@ cmake \
 <path_to_weak_forms_source>
 ```
 
+## Dependency recommentations
+-----------------------------
+- If you plan on using multi-threading and the `SD` framework provided by one of
+  the self-linearising functors, then SymEngine (a `deal.II` dependency) should
+  be built with the option `-DWITH_SYMENGINE_THREAD_SAFE:BOOL=ON`.
+
 
 # Similar projects that inspired this work
 ------------------------------------------
