@@ -104,6 +104,11 @@ run()
                                                                q_point_range))
               << std::endl;
 
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+
     std::cout << "Trigonometric sine: "
               << ((sin(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -159,6 +164,11 @@ run()
                                                                q_point_range))
               << std::endl;
 
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+
     deallog << "OK" << std::endl;
   }
 
@@ -184,6 +194,11 @@ run()
     std::cout << "Negation: "
               << ((-f1).template operator()<NumberType, width>(fe_values,
                                                                q_point_range))
+              << std::endl;
+
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
               << std::endl;
 
     std::cout << "Determinant: "
@@ -237,6 +252,11 @@ run()
     std::cout << "Negation: "
               << ((-f1).template operator()<NumberType, width>(fe_values,
                                                                q_point_range))
+              << std::endl;
+
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
               << std::endl;
 
     std::cout << "Determinant: "

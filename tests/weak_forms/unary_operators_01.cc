@@ -99,6 +99,11 @@ run()
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType>(
+                   fe_values))[q_point]
+              << std::endl;
+
     std::cout << "Trigonometric sine: "
               << ((sin(f1)).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
@@ -153,6 +158,11 @@ run()
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
               << std::endl;
 
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType>(
+                   fe_values))[q_point]
+              << std::endl;
+
     deallog << "OK" << std::endl;
   }
 
@@ -177,6 +187,11 @@ run()
 
     std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType>(
+                   fe_values))[q_point]
               << std::endl;
 
     std::cout
@@ -235,6 +250,11 @@ run()
 
     std::cout << "Negation: "
               << ((-f1).template operator()<NumberType>(fe_values))[q_point]
+              << std::endl;
+
+    std::cout << "Normalization: "
+              << (normalize(-f1).template operator()<NumberType>(
+                   fe_values))[q_point]
               << std::endl;
 
     std::cout

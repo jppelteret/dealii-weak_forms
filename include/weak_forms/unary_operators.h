@@ -51,6 +51,10 @@ namespace WeakForms
        * Negate the current operand.
        */
       negate,
+      /*
+       * Normalise the value of the current operand
+       */
+      normalize,
 
       // --- Scalar operations ---
       /**
@@ -250,6 +254,85 @@ namespace WeakForms
           typename numbers::VectorizedValue<T>::template type<width>>;
       };
 
+
+      template <typename ScalarType,
+                typename = typename std::enable_if<std::is_same<
+                  ScalarType,
+                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+      ScalarType
+      normalize(const ScalarType &value)
+      {
+        using namespace std;
+        const ScalarType norm = std::abs(value);
+        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+          return norm;
+
+        return value / norm;
+      }
+
+
+      template <typename ScalarType,
+                typename = typename std::enable_if<std::is_same<
+                  ScalarType,
+                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+      std::complex<ScalarType>
+      normalize(const std::complex<ScalarType> &value)
+      {
+        const std::complex<ScalarType> norm = std::abs(value);
+        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+          return norm;
+
+        return value / norm;
+      }
+
+
+      template <int rank,
+                int dim,
+                typename ScalarType,
+                typename = typename std::enable_if<std::is_same<
+                  ScalarType,
+                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+      Tensor<rank, dim, ScalarType>
+      normalize(const Tensor<rank, dim, ScalarType> &value)
+      {
+        const ScalarType norm = value.norm();
+        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+          return Tensor<rank, dim, ScalarType>();
+
+        return value / norm;
+      }
+
+
+      template <int rank,
+                int dim,
+                typename ScalarType,
+                typename = typename std::enable_if<std::is_same<
+                  ScalarType,
+                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+      SymmetricTensor<rank, dim, ScalarType>
+      normalize(const SymmetricTensor<rank, dim, ScalarType> &value)
+      {
+        const ScalarType norm = value.norm();
+        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+          return SymmetricTensor<rank, dim, ScalarType>();
+
+        return value / norm;
+      }
+
+
+      template <typename T, std::size_t width>
+      VectorizedArray<T, width>
+      normalize(const VectorizedArray<T, width> &value)
+      {
+        VectorizedArray<T, width> out;
+
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int v = 0; v < width; v++)
+          out[v] = normalize(value[v]);
+
+        return out;
+      }
+
     } // namespace internal
 
 
@@ -308,6 +391,22 @@ namespace WeakForms
       template <typename ScalarType>
       using value_type =
         decltype(-std::declval<typename Op::template value_type<ScalarType>>());
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::normalize>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::normalize;
+      static const int               rank    = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(internal::normalize(
+        std::declval<typename Op::template value_type<ScalarType>>()));
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -973,6 +1072,53 @@ private:                                                                 \
     };
 
 
+    /**
+     * Normalization operator for integrands of symbolic integrals
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::normalize,
+                  typename std::enable_if<!is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::normalize>>
+    {
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::normalize)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        const auto op = operand.as_ascii(decorator);
+        return op + "/|" + op + "|";
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        const std::string &lvert = Utilities::LaTeX::l_vert;
+        const std::string &rvert = Utilities::LaTeX::r_vert;
+        const auto         op    = operand.as_latex(decorator);
+        return "\\frac{" + op + "}{" + lvert + op + rvert + "}";
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return internal::normalize(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return internal::normalize(value);
+      }
+    };
+
+
     /* ------------------------- Scalar operations ------------------------- */
 
     /**
@@ -1592,8 +1738,11 @@ private:                                                                 \
     return OpType(operand);                                                \
   }
 
-// Scalar operations
+// General operations
 DEAL_II_UNARY_OP_OF_UNARY_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_UNARY_OP(normalize, normalize)
+
+// Scalar operations
 DEAL_II_UNARY_OP_OF_UNARY_OP(sin, sine)
 DEAL_II_UNARY_OP_OF_UNARY_OP(cos, cosine)
 DEAL_II_UNARY_OP_OF_UNARY_OP(tan, tangent)

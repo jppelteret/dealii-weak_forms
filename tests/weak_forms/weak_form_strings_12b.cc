@@ -54,6 +54,9 @@ run()
     LogStream::Prefix prefix("string");
 
     deallog << "Negation: " << (-f1).as_ascii(decorator) << std::endl;
+
+    deallog << "Normalization: " << normalize(f1).as_ascii(decorator)
+            << std::endl;
   }
 
   // Test LaTeX
@@ -61,6 +64,9 @@ run()
     LogStream::Prefix prefix("LaTeX");
 
     deallog << "Negation: " << (-f1).as_latex(decorator) << std::endl;
+
+    deallog << "Normalization: " << normalize(f1).as_latex(decorator)
+            << std::endl;
   }
 
   deallog << "OK" << std::endl << std::endl;

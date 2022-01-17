@@ -64,8 +64,11 @@ WEAK_FORMS_NAMESPACE_OPEN
     return OpType(operand);                                                      \
   }
 
-// Scalar operations
+// General operations
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(normalize, normalize)
+
+// Scalar operations
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(sin, sine)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(cos, cosine)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(tan, tangent)
@@ -105,8 +108,11 @@ DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(symmetrize, symmetrize)
     return OpType(operand);                                                  \
   }
 
-// Scalar operations
+// General operations
 DEAL_II_UNARY_OP_OF_BINARY_OP(operator-, negate)
+DEAL_II_UNARY_OP_OF_BINARY_OP(normalize, normalize)
+
+// Scalar operations
 DEAL_II_UNARY_OP_OF_BINARY_OP(sin, sine)
 DEAL_II_UNARY_OP_OF_BINARY_OP(cos, cosine)
 DEAL_II_UNARY_OP_OF_BINARY_OP(tan, tangent)
