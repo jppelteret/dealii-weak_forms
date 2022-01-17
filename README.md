@@ -69,6 +69,7 @@ Details as to exactly what the abstraction level is, and how it differs to the
 - Performance improvements for the self-linearising forms is an ongoing area of
   interest and research. 
 - A matrix-free implementation will be investigated in the future.
+- Python bindings, to be usable in Jupyter Notebooks, will be investigated.
 
 # Class documentation
 ---------------------
