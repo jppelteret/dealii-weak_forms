@@ -330,13 +330,11 @@ namespace WeakForms
 
   // A specialised variant with no functor specified. We assume a unity
   // scalar functor is the equivalent operation.
-  template <typename TestSpaceOp, typename TrialSpaceOpe>
+  template <typename TestSpaceOp, typename TrialSpaceOp>
   auto
   bilinear_form(const TestSpaceOp & test_space_op,
                 const TrialSpaceOp &trial_space_op)
   {
-    constexpr int dim      = TestSpaceOp::dimension;
-    constexpr int spacedim = TestSpaceOp::space_dimension;
     // Delegate to the other function
     return bilinear_form(test_space_op, 1.0, trial_space_op);
   }
