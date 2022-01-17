@@ -388,19 +388,23 @@ Omitting some (well, actually a lot) of the details for the sake of brevity,
 these compile to:
 1. A (constant) scalar functor that returns the value `2.0` everywhere is a
    ```c++
-   SymbolicOp<ScalarFunctor, SymbolicOpCodes::value>
+   SymbolicOp<ScalarFunctor,
+              SymbolicOpCodes::value>
    ```
    Shown here, the class signature is somewhat indicatative of the fact that
    it represents the `value` of a `ScalarFunctor`.
 2. The gradient of a vector-valued test function is a 
    ```c++
-   SymbolicOp<SubSpaceViews::Vector<TestFunction>, SymbolicOpCodes::gradient>
+   SymbolicOp<SubSpaceViews::Vector<TestFunction>,
+              SymbolicOpCodes::gradient>
    ```
    which again somewhat transparently denotes that it represents the `gradient`
     of a `Vector` subspace view of a `TestFunction`.
 1. The negation of the gradient of a vector-valued test function is a
    ```c++
-   UnaryOp<SymbolicOp<SubSpaceViews::Vector<TestFunction>, SymbolicOpCodes::gradient>, UnaryOpCodes::negate>
+   UnaryOp<SymbolicOp<SubSpaceViews::Vector<TestFunction>, 
+                      SymbolicOpCodes::gradient>,
+           UnaryOpCodes::negate>
    ```
    Composition complicates things slightly. Read from the outside in, this class
    is a unary operation that `negates` an argument; that argument is the object of
@@ -408,7 +412,11 @@ these compile to:
 2. Multiplication of the constant scalar function with the negative gradient
    of a vector-valued test function results in a
    ```c++
-   BinaryOp<SymbolicOp<ScalarFunctor, SymbolicOpCodes::value>, UnaryOp<SymbolicOp<SubSpaceViews::Vector<TestFunction>, SymbolicOpCodes::gradient>, UnaryOpCodes::negate>, BinaryOpCodes::multiply>
+   BinaryOp<SymbolicOp<ScalarFunctor, SymbolicOpCodes::value>, 
+            UnaryOp<SymbolicOp<SubSpaceViews::Vector<TestFunction>, 
+                               SymbolicOpCodes::gradient>, 
+                    UnaryOpCodes::negate>, 
+            BinaryOpCodes::multiply>
    ```
    Again read from the outside in, this is a binary operation that `multiply`s
    two arguments. The first argument is the same type described in point `(1)`,
