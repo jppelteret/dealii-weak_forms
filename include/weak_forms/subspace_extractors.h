@@ -230,7 +230,7 @@ namespace WeakForms
       const std::string                               field_ascii;
       const std::string                               field_latex;
     };
-  }; // namespace SubSpaceExtractors
+  } // namespace SubSpaceExtractors
 
 } // namespace WeakForms
 

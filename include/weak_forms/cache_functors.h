@@ -237,7 +237,7 @@ namespace WeakForms
       using scalar_type = ScalarType;
 
       template <typename ResultScalarType>
-      using value_type = typename Op::template value_type<ResultScalarType>;
+      using value_type = Op::template value_type<ResultScalarType>;
 
       template <typename ResultScalarType>
       using function_type =
