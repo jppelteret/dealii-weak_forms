@@ -3102,7 +3102,7 @@ namespace WeakForms
     : std::true_type
   {};
 
-  template <std::size_t                     solution_index,
+  template <types::solution_index           solution_index,
             int                             dim,
             int                             spacedim,
             enum Operators::SymbolicOpCodes OpCode>
