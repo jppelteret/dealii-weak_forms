@@ -9,7 +9,8 @@ Should time have not been an issue then the documentation for the project, as we
 as examples demonstrating its capabilities, would be much more comprehensive.
 
 That said, the author would like to think that this project can be extended to
-meet the needs of users. So bugs, issues, and other comments can be reported as an
+meet the needs of users. So bugs, defects, issues, and other comments can be
+recorded as an
 [issue](https://github.com/jppelteret/dealii-weak_forms/issues).
 Depending on their severity and ease of resolution, they may be attended to
 (but unfortunately there are no guarantees to that effect).

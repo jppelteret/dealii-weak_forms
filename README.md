@@ -130,6 +130,10 @@ cmake \
 <path_to_weak_forms_source>
 ```
 
+To date, this library has only been built and tested on `MacOS` with the `Clang`
+compiler. In the future, the `GCC` compiler and the `Linux` operating system will
+be tested as well.
+
 ## Dependency recommentations
 -----------------------------
 - If you plan on using multi-threading and the `SD` framework provided by one of

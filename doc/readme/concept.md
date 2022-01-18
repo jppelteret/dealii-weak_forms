@@ -201,6 +201,8 @@ Let's identify the key differences between these two paradigms:
    invalidates the entire thing that the library is designed to do.
    Although no library is bug-free, it is the author's hope that users of this
    work find it to reliably compute what the user has prescribed.
+   Every effort has been made to ensure that the computed linear system and
+   processed data is correct but, in the end, there are no guarantees.
 
    As an implementational detail, an assembly loop is (currently) performed
    for each bilinear and linear form individually. This is not ideal when
