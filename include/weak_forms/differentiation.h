@@ -20,11 +20,11 @@
 
 #include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
-#include <deal.II/base/template_constraints.h>
 #include <deal.II/base/tensor.h>
 
 #include <weak_forms/cache_functors.h>
 #include <weak_forms/config.h>
+#include <weak_forms/template_constraints.h>
 
 #include <tuple>
 #include <type_traits>
@@ -37,46 +37,6 @@ namespace WeakForms
 {
   namespace internal
   {
-    // TODO: This is replicated in energy_functor.h
-    template <typename T>
-    class is_scalar_type
-    {
-      // See has_begin_and_end() in template_constraints.h
-      // and https://stackoverflow.com/a/10722840
-
-      template <typename A>
-      static constexpr auto
-      test(int) -> decltype(std::declval<typename EnableIfScalar<A>::type>(),
-                            std::true_type())
-      {
-        return true;
-      }
-
-      template <typename A>
-      static std::false_type
-      test(...);
-
-    public:
-      using type = decltype(test<T>(0));
-
-      static const bool value = type::value;
-    };
-
-
-    template <typename T, typename U, typename = void>
-    struct are_scalar_types : std::false_type
-    {};
-
-
-    template <typename T, typename U>
-    struct are_scalar_types<
-      T,
-      U,
-      typename std::enable_if<is_scalar_type<T>::value &&
-                              is_scalar_type<U>::value>::type> : std::true_type
-    {};
-
-
     // Determine types resulting from differential operations
     // of scalars, tensors and symmetric tensors.
     namespace Differentiation
@@ -146,7 +106,7 @@ namespace WeakForms
       struct DiffOpResult<
         T,
         U,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = 0;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -192,7 +152,7 @@ namespace WeakForms
       struct DiffOpResult<
         T,
         Tensor<rank_, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -238,7 +198,7 @@ namespace WeakForms
       struct DiffOpResult<
         T,
         SymmetricTensor<rank_, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -284,7 +244,7 @@ namespace WeakForms
       struct DiffOpResult<
         Tensor<rank_, spacedim, T>,
         U,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -330,7 +290,7 @@ namespace WeakForms
       struct DiffOpResult<
         Tensor<rank_1, spacedim, T>,
         Tensor<rank_2, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_1 + rank_2;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -376,7 +336,7 @@ namespace WeakForms
       struct DiffOpResult<
         Tensor<rank_1, spacedim, T>,
         SymmetricTensor<rank_2, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_1 + rank_2;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -422,7 +382,7 @@ namespace WeakForms
       struct DiffOpResult<
         SymmetricTensor<rank_, spacedim, T>,
         U,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -468,7 +428,7 @@ namespace WeakForms
       struct DiffOpResult<
         SymmetricTensor<rank_1, spacedim, T>,
         Tensor<rank_2, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_1 + rank_2;
         using scalar_type         = typename ProductType<T, U>::type;
@@ -515,7 +475,7 @@ namespace WeakForms
       struct DiffOpResult<
         SymmetricTensor<rank_1, spacedim, T>,
         SymmetricTensor<rank_2, spacedim, U>,
-        typename std::enable_if<are_scalar_types<T, U>::value>::type>
+        typename std::enable_if<WeakForms::are_scalar_types<T, U>::value>::type>
       {
         static constexpr int rank = rank_1 + rank_2;
         using scalar_type         = typename ProductType<T, U>::type;

@@ -84,33 +84,6 @@ namespace WeakForms
       // }
 
 
-      // // TODO: This is replicated in self_linearizing_forms.h
-      // template <typename T>
-      // class is_scalar_type
-      // {
-      //   // See has_begin_and_end() in template_constraints.h
-      //   // and https://stackoverflow.com/a/10722840
-
-      //   template <typename A>
-      //   static constexpr auto
-      //   test(int) -> decltype(std::declval<typename
-      //   EnableIfScalar<A>::type>(),
-      //                         std::true_type())
-      //   {
-      //     return true;
-      //   }
-
-      //   template <typename A>
-      //   static std::false_type
-      //   test(...);
-
-      // public:
-      //   using type = decltype(test<T>(0));
-
-      //   static const bool value = type::value;
-      // };
-
-
       // template <typename T, typename U = void>
       // struct FieldType;
 
@@ -514,7 +487,7 @@ namespace WeakForms
           return unpack_n_components<SymbolicOpsSubSpaceFieldSolution...>();
         }
 
-        static field_extractors_t &&
+        static field_extractors_t
         get_initialized_extractors()
         {
           field_extractors_t field_extractors;
@@ -523,7 +496,7 @@ namespace WeakForms
           unpack_initialize_extractors<0, SymbolicOpsSubSpaceFieldSolution...>(
             field_extractors, n_previous_field_components);
 
-          return std::move(field_extractors);
+          return field_extractors;
         }
 
         template <typename SymbolicOpField>

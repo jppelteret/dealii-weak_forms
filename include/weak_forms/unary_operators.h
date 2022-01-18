@@ -31,6 +31,7 @@
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
+#include <weak_forms/template_constraints.h>
 #include <weak_forms/type_traits.h>
 #include <weak_forms/types.h>
 
@@ -256,9 +257,7 @@ namespace WeakForms
 
 
       template <typename ScalarType,
-                typename = typename std::enable_if<std::is_same<
-                  ScalarType,
-                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+                typename = typename WeakForms::is_scalar_type<ScalarType>::type>
       ScalarType
       normalize(const ScalarType &value)
       {
@@ -272,9 +271,7 @@ namespace WeakForms
 
 
       template <typename ScalarType,
-                typename = typename std::enable_if<std::is_same<
-                  ScalarType,
-                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+                typename = typename WeakForms::is_scalar_type<ScalarType>::type>
       std::complex<ScalarType>
       normalize(const std::complex<ScalarType> &value)
       {
@@ -289,9 +286,7 @@ namespace WeakForms
       template <int rank,
                 int dim,
                 typename ScalarType,
-                typename = typename std::enable_if<std::is_same<
-                  ScalarType,
-                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+                typename = typename WeakForms::is_scalar_type<ScalarType>::type>
       Tensor<rank, dim, ScalarType>
       normalize(const Tensor<rank, dim, ScalarType> &value)
       {
@@ -306,9 +301,7 @@ namespace WeakForms
       template <int rank,
                 int dim,
                 typename ScalarType,
-                typename = typename std::enable_if<std::is_same<
-                  ScalarType,
-                  typename EnableIfScalar<ScalarType>::type>::value>::type>
+                typename = typename WeakForms::is_scalar_type<ScalarType>::type>
       SymmetricTensor<rank, dim, ScalarType>
       normalize(const SymmetricTensor<rank, dim, ScalarType> &value)
       {

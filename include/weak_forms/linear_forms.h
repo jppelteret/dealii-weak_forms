@@ -24,6 +24,7 @@
 #include <weak_forms/functors.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_integral.h>
+#include <weak_forms/template_constraints.h>
 #include <weak_forms/type_traits.h>
 
 
@@ -180,10 +181,11 @@ namespace WeakForms
 
 namespace WeakForms
 {
-  template <typename TestSpaceOp,
-            typename Functor,
-            typename = typename std::enable_if<
-              is_valid_form_functor<Functor>::value>::type>
+  template <
+    typename TestSpaceOp,
+    typename Functor,
+    typename = typename std::enable_if<is_valid_form_functor<Functor>::value &&
+                                       !is_scalar_type<Functor>::value>::type>
   LinearForm<TestSpaceOp, Functor>
   linear_form(const TestSpaceOp &test_space_op, const Functor &functor_op)
   {
@@ -193,7 +195,9 @@ namespace WeakForms
 
   template <typename TestSpaceOp,
             typename ScalarType,
-            typename = typename EnableIfScalar<ScalarType>::type>
+            typename = typename std::enable_if<
+              !is_valid_form_functor<ScalarType>::value &&
+              is_scalar_type<ScalarType>::value>::type>
   auto
   linear_form(const TestSpaceOp &test_space_op, const ScalarType &value)
   {
@@ -209,7 +213,7 @@ namespace WeakForms
             int rank,
             int spacedim,
             typename ScalarType,
-            typename = typename EnableIfScalar<ScalarType>::type>
+            typename = typename is_scalar_type<ScalarType>::type>
   auto
   linear_form(const TestSpaceOp &                       test_space_op,
               const Tensor<rank, spacedim, ScalarType> &value)
@@ -225,7 +229,7 @@ namespace WeakForms
             int rank,
             int spacedim,
             typename ScalarType,
-            typename = typename EnableIfScalar<ScalarType>::type>
+            typename = typename is_scalar_type<ScalarType>::type>
   auto
   linear_form(const TestSpaceOp &                                test_space_op,
               const SymmetricTensor<rank, spacedim, ScalarType> &value)

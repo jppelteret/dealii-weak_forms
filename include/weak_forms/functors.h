@@ -420,9 +420,6 @@ public:                                                                        \
   using scalar_type = ScalarType;                                              \
                                                                                \
   template <typename ResultScalarType>                                         \
-  using value_type = typename Op::template value_type<ResultScalarType>;       \
-                                                                               \
-  template <typename ResultScalarType>                                         \
   using return_type = std::vector<value_type<ResultScalarType>>;               \
                                                                                \
   template <typename ResultScalarType, std::size_t width>                      \
@@ -603,6 +600,10 @@ private:                                                                       \
       using interface_function_type = typename Op::
         template interface_function_type<ResultScalarType, dim, spacedim>;
 
+    public:
+      template <typename ResultScalarType>
+      using value_type = Op::template value_type<ResultScalarType>;
+
       DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()
 
     public:
@@ -629,6 +630,10 @@ private:                                                                       \
       template <typename ResultScalarType>
       using interface_function_type =
         typename Op::template interface_function_type<ResultScalarType, dim>;
+
+    public:
+      template <typename ResultScalarType>
+      using value_type = typename Op::template value_type<ResultScalarType>;
 
       DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()
 
@@ -660,6 +665,10 @@ private:                                                                       \
       template <typename ResultScalarType>
       using interface_function_type =
         typename Op::template interface_function_type<ResultScalarType, dim>;
+
+    public:
+      template <typename ResultScalarType>
+      using value_type = typename Op::template value_type<ResultScalarType>;
 
       DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()
 

@@ -776,10 +776,14 @@ namespace WeakForms
         // Assert(!(cache.stores_object_with_name(name_ad_helper)),
         //        ExcMessage("ADHelper is already present in the cache."));
 
-        const unsigned int n_dependent_variables =
+        // Keep these as non-const:
+        // Work around a GCC bug, where it cannot disambiguate between a lvalue
+        // and rvalue template parameter in
+        // GeneralDataStorage::get_or_add_object_with_name()
+        unsigned int n_dependent_variables =
           Operators::internal::SpaceOpComponentInfo<TestSpaceOp>::n_components;
-        const unsigned int n_independent_variables =
-          OpHelper_t::get_n_components();
+        unsigned int n_independent_variables = OpHelper_t::get_n_components();
+
         return cache.get_or_add_object_with_name<ad_helper_type>(
           name_ad_helper, n_independent_variables, n_dependent_variables);
       }
@@ -1259,6 +1263,14 @@ namespace WeakForms
         // Assert(!(cache.stores_object_with_name(name_sd_batch_optimizer)),
         //        ExcMessage("SDBatchOptimizer is already present in the
         //        cache."));
+
+        // Work around a GCC bug, where it cannot disambiguate between a lvalue
+        // and rvalue template parameter in
+        // GeneralDataStorage::get_or_add_object_with_name()
+        enum Differentiation::SD::OptimizerType optimization_method =
+          this->optimization_method;
+        enum Differentiation::SD::OptimizationFlags optimization_flags =
+          this->optimization_flags;
 
         return cache
           .get_or_add_object_with_name<sd_helper_type<ResultScalarType>>(
