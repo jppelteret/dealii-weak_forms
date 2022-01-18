@@ -28,6 +28,7 @@
 #include <weak_forms/types.h>
 #include <weak_forms/utilities.h>
 
+#include <initializer_list>
 #include <string>
 
 
@@ -91,6 +92,15 @@ namespace WeakForms
       const std::string                     name = "solution")
       : SolutionStorage(solution_vectors,
                         create_name_vector(name, solution_vectors.size()))
+    {}
+
+    template <typename DH = DoFHandlerType,
+              typename    = typename std::enable_if<
+                std::is_same<DH, std::nullptr_t>::value>::type>
+    explicit SolutionStorage(
+      const std::initializer_list<solution_ptr_type> &solution_vectors,
+      const std::string                               name = "solution")
+      : SolutionStorage(std::vector<solution_ptr_type>(solution_vectors), name)
     {}
 
     template <typename DH = DoFHandlerType,
