@@ -30,6 +30,7 @@
 #include <deal.II/physics/notation.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/template_constraints.h>
 
 #include <iterator>
 #include <numeric>

@@ -53,21 +53,18 @@ namespace WeakForms
       typename ScalarType,
       typename SymbolicIntegralOp,
       typename = typename std::enable_if<
-        std::is_same<ScalarType,
-                     typename EnableIfScalar<ScalarType>::type>::value &&
+        WeakForms::is_scalar_type<ScalarType>::value &&
         WeakForms::is_symbolic_integral_op<SymbolicIntegralOp>::value>::type>
     auto
     ScalarTimesSymbolicIntegralOpImpl(const ScalarType &        value,
                                       const SymbolicIntegralOp &integral);
 
 
-    template <
-      typename ScalarType,
-      typename UnaryIntegralOp,
-      typename = typename std::enable_if<
-        std::is_same<ScalarType,
-                     typename EnableIfScalar<ScalarType>::type>::value &&
-        WeakForms::is_unary_integral_op<UnaryIntegralOp>::value>::type>
+    template <typename ScalarType,
+              typename UnaryIntegralOp,
+              typename = typename std::enable_if<
+                WeakForms::is_scalar_type<ScalarType>::value &&
+                WeakForms::is_unary_integral_op<UnaryIntegralOp>::value>::type>
     auto
     ScalarTimesUnaryIntegralOpImpl(const ScalarType &     value,
                                    const UnaryIntegralOp &integral);
@@ -77,8 +74,7 @@ namespace WeakForms
       typename ScalarType,
       typename BinaryIntegralOp,
       typename = typename std::enable_if<
-        std::is_same<ScalarType,
-                     typename EnableIfScalar<ScalarType>::type>::value &&
+        WeakForms::is_scalar_type<ScalarType>::value &&
         WeakForms::is_binary_integral_op<BinaryIntegralOp>::value>::type>
     auto
     ScalarTimesBinaryIntegralOpImpl(const ScalarType &      value,
@@ -90,7 +86,7 @@ namespace WeakForms
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_symbolic_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
     std::declval<ScalarType>(),
@@ -105,7 +101,7 @@ operator*(const ScalarType &value, const IntegralOp &integral)
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_symbolic_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
     std::declval<ScalarType>(),
@@ -120,7 +116,7 @@ operator*(const IntegralOp &integral, const ScalarType &value)
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_unary_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
     std::declval<ScalarType>(),
@@ -134,7 +130,7 @@ operator*(const ScalarType &value, const IntegralOp &integral)
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_unary_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
     std::declval<ScalarType>(),
@@ -149,7 +145,7 @@ operator*(const IntegralOp &integral, const ScalarType &value)
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_binary_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
     std::declval<ScalarType>(),
@@ -163,7 +159,7 @@ operator*(const ScalarType &value, const IntegralOp &integral)
 
 template <typename ScalarType, typename IntegralOp>
 typename std::enable_if<
-  std::is_same<ScalarType, typename EnableIfScalar<ScalarType>::type>::value &&
+  WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_binary_integral_op<IntegralOp>::value,
   decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
     std::declval<ScalarType>(),

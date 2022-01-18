@@ -26,6 +26,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/symbolic_operators.h>
+#include <weak_forms/template_constraints.h>
 #include <weak_forms/type_traits.h>
 #include <weak_forms/unary_operators.h>
 
@@ -714,9 +715,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
-    SymbolicOp::rank == 0 &&
+    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator+(const ScalarType &value, const SymbolicOp &op)
@@ -732,9 +731,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
-    SymbolicOp::rank == 0 &&
+    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator+(const SymbolicOp &op, const ScalarType &value)
@@ -827,9 +824,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
-    SymbolicOp::rank == 0 &&
+    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator-(const ScalarType &value, const SymbolicOp &op)
@@ -845,9 +840,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
-    SymbolicOp::rank == 0 &&
+    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator-(const SymbolicOp &op, const ScalarType &value)
@@ -940,8 +933,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator*(const ScalarType &value, const SymbolicOp &op)
@@ -960,8 +952,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator*(const SymbolicOp &op, const ScalarType &value)
@@ -1065,8 +1056,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator/(const SymbolicOp &op, const ScalarType &value)
@@ -1085,8 +1075,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 operator/(const ScalarType &value, const SymbolicOp &op)
@@ -1168,8 +1157,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 pow(const SymbolicOp &op, const ScalarType &value)
@@ -1185,8 +1173,7 @@ template <
   typename ScalarType,
   typename SymbolicOp,
   typename = typename std::enable_if<
-    std::is_same<ScalarType,
-                 typename EnableIfScalar<ScalarType>::type>::value &&
+    WeakForms::is_scalar_type<ScalarType>::value &&
     WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
 auto
 pow(const ScalarType &value, const SymbolicOp &op)

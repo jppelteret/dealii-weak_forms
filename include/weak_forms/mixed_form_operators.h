@@ -25,6 +25,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/linear_forms.h>
 #include <weak_forms/mixed_operators.h>
+#include <weak_forms/template_constraints.h>
 
 
 
@@ -39,9 +40,7 @@ WEAK_FORMS_NAMESPACE_OPEN
 template <typename ScalarType,
           typename TestSpaceOp,
           typename Functor,
-          typename = typename std::enable_if<std::is_same<
-            ScalarType,
-            typename EnableIfScalar<ScalarType>::type>::value>::type>
+          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
 auto
 operator*(const ScalarType &                                 value,
           const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form)
@@ -55,9 +54,7 @@ operator*(const ScalarType &                                 value,
 template <typename ScalarType,
           typename TestSpaceOp,
           typename Functor,
-          typename = typename std::enable_if<std::is_same<
-            ScalarType,
-            typename EnableIfScalar<ScalarType>::type>::value>::type>
+          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
 auto
 operator*(const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form,
           const ScalarType &                                 value)
@@ -76,9 +73,7 @@ template <typename ScalarType,
           typename TestSpaceOp,
           typename Functor,
           typename TrialSpaceOp,
-          typename = typename std::enable_if<std::is_same<
-            ScalarType,
-            typename EnableIfScalar<ScalarType>::type>::value>::type>
+          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
 auto
 operator*(const ScalarType &value,
           const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
@@ -95,9 +90,7 @@ template <typename ScalarType,
           typename TestSpaceOp,
           typename Functor,
           typename TrialSpaceOp,
-          typename = typename std::enable_if<std::is_same<
-            ScalarType,
-            typename EnableIfScalar<ScalarType>::type>::value>::type>
+          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
 auto
 operator*(const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
             &               bilinear_form,
