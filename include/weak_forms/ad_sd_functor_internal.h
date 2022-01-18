@@ -487,7 +487,7 @@ namespace WeakForms
           return unpack_n_components<SymbolicOpsSubSpaceFieldSolution...>();
         }
 
-        static field_extractors_t &&
+        static field_extractors_t
         get_initialized_extractors()
         {
           field_extractors_t field_extractors;
@@ -496,7 +496,7 @@ namespace WeakForms
           unpack_initialize_extractors<0, SymbolicOpsSubSpaceFieldSolution...>(
             field_extractors, n_previous_field_components);
 
-          return std::move(field_extractors);
+          return field_extractors;
         }
 
         template <typename SymbolicOpField>
