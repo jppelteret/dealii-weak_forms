@@ -181,10 +181,11 @@ namespace WeakForms
 
 namespace WeakForms
 {
-  template <typename TestSpaceOp,
-            typename Functor,
-            typename = typename std::enable_if<
-              is_valid_form_functor<Functor>::value>::type>
+  template <
+    typename TestSpaceOp,
+    typename Functor,
+    typename = typename std::enable_if<is_valid_form_functor<Functor>::value &&
+                                       !is_scalar_type<Functor>::value>::type>
   LinearForm<TestSpaceOp, Functor>
   linear_form(const TestSpaceOp &test_space_op, const Functor &functor_op)
   {
@@ -194,7 +195,9 @@ namespace WeakForms
 
   template <typename TestSpaceOp,
             typename ScalarType,
-            typename = typename is_scalar_type<ScalarType>::type>
+            typename = typename std::enable_if<
+              !is_valid_form_functor<ScalarType>::value &&
+              is_scalar_type<ScalarType>::value>::type>
   auto
   linear_form(const TestSpaceOp &test_space_op, const ScalarType &value)
   {

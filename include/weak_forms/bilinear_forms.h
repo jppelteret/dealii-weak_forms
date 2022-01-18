@@ -255,11 +255,12 @@ namespace WeakForms
   //                                                        trial_space_op);
   // }
 
-  template <typename TestSpaceOp,
-            typename Functor,
-            typename TrialSpaceOp,
-            typename = typename std::enable_if<
-              is_valid_form_functor<Functor>::value>::type>
+  template <
+    typename TestSpaceOp,
+    typename Functor,
+    typename TrialSpaceOp,
+    typename = typename std::enable_if<is_valid_form_functor<Functor>::value &&
+                                       !is_scalar_type<Functor>::value>::type>
   BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
   bilinear_form(const TestSpaceOp & test_space_op,
                 const Functor &     functor_op,
@@ -274,7 +275,9 @@ namespace WeakForms
   template <typename TestSpaceOp,
             typename ScalarType,
             typename TrialSpaceOp,
-            typename = typename is_scalar_type<ScalarType>::type>
+            typename = typename std::enable_if<
+              !is_valid_form_functor<ScalarType>::value &&
+              is_scalar_type<ScalarType>::value>::type>
   auto
   bilinear_form(const TestSpaceOp & test_space_op,
                 const ScalarType &  value,
