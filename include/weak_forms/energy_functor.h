@@ -1083,6 +1083,14 @@ namespace WeakForms
         //        ExcMessage("SDBatchOptimizer is already present in the
         //        cache."));
 
+        // Work around a GCC bug, where it cannot disambiguate between a lvalue
+        // and rvalue template parameter in
+        // GeneralDataStorage::get_or_add_object_with_name()
+        enum Differentiation::SD::OptimizerType optimization_method =
+          this->optimization_method;
+        enum Differentiation::SD::OptimizationFlags optimization_flags =
+          this->optimization_flags;
+
         return cache
           .get_or_add_object_with_name<sd_helper_type<ResultScalarType>>(
             name_sd_batch_optimizer, optimization_method, optimization_flags);
