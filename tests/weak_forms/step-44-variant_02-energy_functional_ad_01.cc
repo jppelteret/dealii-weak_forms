@@ -81,9 +81,9 @@ namespace Step44
     // Field variables: Internal energy
     const auto internal_energy_func =
       energy_functor("e^{int}", "\\Psi^{int}", Grad_u, p_tilde, J_tilde);
-    using EnergyADNumber_t = typename decltype(
+    using InternalEnergyADNumber_t = typename decltype(
       internal_energy_func)::template ad_type<double, ad_typecode>;
-    static_assert(std::is_same<ADNumber_t, EnergyADNumber_t>::value,
+    static_assert(std::is_same<ADNumber_t, InternalEnergyADNumber_t>::value,
                   "Expected identical AD number types");
 
     const auto internal_energy =
@@ -126,9 +126,9 @@ namespace Step44
     // Field variables: External energy
     const auto external_energy_func =
       energy_functor("e^{ext}", "\\Psi^{ext}", u);
-    using EnergyADNumber_t = typename decltype(
+    using ExternalEnergyADNumber_t = typename decltype(
       external_energy_func)::template ad_type<double, ad_typecode>;
-    static_assert(std::is_same<ADNumber_t, EnergyADNumber_t>::value,
+    static_assert(std::is_same<ADNumber_t, ExternalEnergyADNumber_t>::value,
                   "Expected identical AD number types");
 
     const auto external_energy =
