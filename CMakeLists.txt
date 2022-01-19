@@ -288,14 +288,16 @@ IF(BUILD_TESTS OR BUILD_BENCHMARKS)
   )
 
   IF(EXISTS ${DEAL_II_TESTS_H})
+    STRING(REPLACE "/tests.h" "" DEAL_II_TESTS_DIR "${DEAL_II_TESTS_H}")
     MESSAGE(STATUS "Path to deal.II test header: ${DEAL_II_TESTS_H}")
+    MESSAGE(STATUS "Path to deal.II test directory: ${DEAL_II_TESTS_DIR}")
   ELSE()
-    MESSAGE(STATUS "Tests could not be enabled: deal.II's test.h file could not be found.")
+    MESSAGE(STATUS "Tests could not be enabled: deal.II's tests.h file could not be found.")
   ENDIF()
 
   IF(BUILD_TESTS AND EXISTS ${DEAL_II_TESTS_H})
     MESSAGE(STATUS "Tests enabled")
-    INCLUDE_DIRECTORIES(${DEAL_II_SOURCE_DIR}/tests)
+    INCLUDE_DIRECTORIES(${DEAL_II_TESTS_DIR})
     ADD_SUBDIRECTORY(tests)
   ENDIF()
 
@@ -307,7 +309,7 @@ IF(BUILD_TESTS OR BUILD_BENCHMARKS)
       MATH(EXPR CUSTOM_TEST_TIME_LIMIT "24 * 60 * 60") # Seconds
       SET(TEST_TIME_LIMIT ${CUSTOM_TEST_TIME_LIMIT})
 
-      INCLUDE_DIRECTORIES(${DEAL_II_SOURCE_DIR}/tests)
+      INCLUDE_DIRECTORIES(${DEAL_II_TESTS_DIR})
       ADD_SUBDIRECTORY(benchmarks)
     ELSE()
       MESSAGE(STATUS "Benchmarks disabled when not in release mode")
