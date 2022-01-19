@@ -785,7 +785,9 @@ namespace WeakForms
         unsigned int n_independent_variables = OpHelper_t::get_n_components();
 
         return cache.get_or_add_object_with_name<ad_helper_type>(
-          name_ad_helper, n_independent_variables, n_dependent_variables);
+          name_ad_helper,
+          std::move(n_independent_variables),
+          std::move(n_dependent_variables));
       }
 
       std::vector<Vector<scalar_type>> &
@@ -1267,14 +1269,16 @@ namespace WeakForms
         // Work around a GCC bug, where it cannot disambiguate between a lvalue
         // and rvalue template parameter in
         // GeneralDataStorage::get_or_add_object_with_name()
-        enum Differentiation::SD::OptimizerType optimization_method =
+        enum Differentiation::SD::OptimizerType nc_optimization_method =
           this->optimization_method;
-        enum Differentiation::SD::OptimizationFlags optimization_flags =
+        enum Differentiation::SD::OptimizationFlags nc_optimization_flags =
           this->optimization_flags;
 
         return cache
           .get_or_add_object_with_name<sd_helper_type<ResultScalarType>>(
-            name_sd_batch_optimizer, optimization_method, optimization_flags);
+            name_sd_batch_optimizer,
+            std::move(nc_optimization_method),
+            std::move(nc_optimization_flags));
       }
 
       template <typename ResultScalarType>
