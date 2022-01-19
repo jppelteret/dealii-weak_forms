@@ -1564,6 +1564,265 @@ namespace WeakForms
 
     } // namespace internal
   }   // namespace Operators
+
+
+  namespace internal
+  {
+    template <typename ScalarType,
+              typename TestOrTrialSpaceOp,
+              typename FEValuesDofsType,
+              typename FEValuesOpType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      !WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
+      std::vector<std::vector<
+        typename TestOrTrialSpaceOp::template value_type<ScalarType>>>>::type
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data)
+    {
+      static_assert(
+        is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
+        "Expected a test function or trial solution.");
+      (void)scratch_data;
+      (void)solution_extraction_data;
+
+      return test_or_trial_space_op.template operator()<ScalarType>(
+        fe_values_dofs, fe_values_op);
+    }
+
+
+    template <typename ScalarType,
+              typename TestOrTrialSpaceOp,
+              typename FEValuesDofsType,
+              typename FEValuesOpType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
+      std::vector<std::vector<
+        typename TestOrTrialSpaceOp::template value_type<ScalarType>>>>::type
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data)
+    {
+      static_assert(
+        is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
+        "Expected a test function or trial solution.");
+
+      return test_or_trial_space_op.template operator()<ScalarType>(
+        fe_values_dofs, fe_values_op, scratch_data, solution_extraction_data);
+    }
+
+
+    template <typename ScalarType,
+              std::size_t width,
+              typename TestOrTrialSpaceOp,
+              typename FEValuesDofsType,
+              typename FEValuesOpType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      !WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
+      AlignedVector<typename TestOrTrialSpaceOp::
+                      template vectorized_value_type<ScalarType, width>>>::type
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data,
+                      const types::vectorized_qp_range_t &q_point_range)
+    {
+      static_assert(
+        is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
+        "Expected a test function or trial solution.");
+      (void)scratch_data;
+      (void)solution_extraction_data;
+
+      return test_or_trial_space_op.template operator()<ScalarType, width>(
+        fe_values_dofs, fe_values_op, q_point_range);
+    }
+
+
+    template <typename ScalarType,
+              std::size_t width,
+              typename TestOrTrialSpaceOp,
+              typename FEValuesDofsType,
+              typename FEValuesOpType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::has_evaluated_with_scratch_data<TestOrTrialSpaceOp>::value,
+      AlignedVector<typename TestOrTrialSpaceOp::
+                      template vectorized_value_type<ScalarType, width>>>::type
+    evaluate_fe_space(const TestOrTrialSpaceOp &test_or_trial_space_op,
+                      const FEValuesDofsType &  fe_values_dofs,
+                      const FEValuesOpType &    fe_values_op,
+                      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                      const std::vector<SolutionExtractionData<dim, spacedim>>
+                        &solution_extraction_data,
+                      const types::vectorized_qp_range_t &q_point_range)
+    {
+      static_assert(
+        is_or_has_test_function_or_trial_solution_op<TestOrTrialSpaceOp>::value,
+        "Expected a test function or trial solution.");
+
+      return test_or_trial_space_op.template operator()<ScalarType, width>(
+        fe_values_dofs,
+        fe_values_op,
+        scratch_data,
+        solution_extraction_data,
+        q_point_range);
+    }
+
+
+
+    template <typename ScalarType,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      !WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value,
+      std::vector<typename FunctorType::template value_type<ScalarType>>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
+    {
+      (void)scratch_data;
+      (void)solution_extraction_data;
+      return functor.template operator()<ScalarType>(fe_values);
+    }
+
+
+    template <typename ScalarType,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
+        !(WeakForms::is_unary_op<FunctorType>::value ||
+          WeakForms::is_binary_op<FunctorType>::value),
+      std::vector<typename FunctorType::template value_type<ScalarType>>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
+    {
+      (void)fe_values;
+      return functor.template operator()<ScalarType>(scratch_data,
+                                                     solution_extraction_data);
+    }
+
+
+    template <typename ScalarType,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
+        (WeakForms::is_unary_op<FunctorType>::value ||
+         WeakForms::is_binary_op<FunctorType>::value),
+      std::vector<typename FunctorType::template value_type<ScalarType>>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data)
+    {
+      return functor.template operator()<ScalarType>(fe_values,
+                                                     scratch_data,
+                                                     solution_extraction_data);
+    }
+
+
+    template <typename ScalarType,
+              std::size_t width,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      !WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value,
+      typename FunctorType::template vectorized_value_type<ScalarType,
+                                                           width>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
+                     const types::vectorized_qp_range_t &q_point_range)
+    {
+      (void)scratch_data;
+      (void)solution_extraction_data;
+      return functor.template operator()<ScalarType, width>(fe_values,
+                                                            q_point_range);
+    }
+
+
+    template <typename ScalarType,
+              std::size_t width,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
+        !(WeakForms::is_unary_op<FunctorType>::value ||
+          WeakForms::is_binary_op<FunctorType>::value),
+      typename FunctorType::template vectorized_value_type<ScalarType,
+                                                           width>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
+                     const types::vectorized_qp_range_t &q_point_range)
+    {
+      (void)fe_values;
+      return functor.template operator()<ScalarType, width>(
+        scratch_data, solution_extraction_data, q_point_range);
+    }
+
+
+    template <typename ScalarType,
+              std::size_t width,
+              typename FunctorType,
+              typename FEValuesType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<
+      WeakForms::is_or_has_evaluated_with_scratch_data<FunctorType>::value &&
+        (WeakForms::is_unary_op<FunctorType>::value ||
+         WeakForms::is_binary_op<FunctorType>::value),
+      typename FunctorType::template vectorized_value_type<ScalarType,
+                                                           width>>::type
+    evaluate_functor(const FunctorType &                     functor,
+                     const FEValuesType &                    fe_values,
+                     MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                     const std::vector<SolutionExtractionData<dim, spacedim>>
+                       &solution_extraction_data,
+                     const types::vectorized_qp_range_t &q_point_range)
+    {
+      return functor.template operator()<ScalarType, width>(
+        fe_values, scratch_data, solution_extraction_data, q_point_range);
+    }
+
+  } // namespace internal
+
 } // namespace WeakForms
 
 

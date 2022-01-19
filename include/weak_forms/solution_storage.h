@@ -638,6 +638,142 @@ namespace WeakForms
     }
 
   }; // class SolutionStorage
+
+
+  namespace internal
+  {
+    // Utility functions to help with template arguments of the
+    // assemble_system() method being void / std::null_ptr_t.
+
+    template <typename FEValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
+                                         std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
+      (void)scratch_data;
+      (void)fe_values;
+      (void)dof_handler;
+      (void)solution_storage;
+
+      // Void pointer; do nothing.
+      AssertThrow(false, ExcUnexpectedFunctionCall());
+    }
+
+    // Valid for both FEValues and FEInterfaceValues
+    template <typename FEValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
+                                          std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      solution_storage.initialize(scratch_data, fe_values, dof_handler);
+    }
+
+    template <typename FEValuesType,
+              typename FEFaceValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
+                                         std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const FEFaceValuesType &                    fe_face_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
+      (void)scratch_data;
+      (void)fe_values;
+      (void)fe_face_values;
+      (void)dof_handler;
+      (void)solution_storage;
+
+      // Void pointer; do nothing.
+      AssertThrow(false, ExcUnexpectedFunctionCall());
+    }
+
+    template <typename FEValuesType,
+              typename FEFaceValuesType,
+              typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
+                                          std::nullptr_t>::value>::type
+    initialize(MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+               const FEValuesType &                        fe_values,
+               const FEFaceValuesType &                    fe_face_values,
+               const DoFHandlerType &                      dof_handler,
+               const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      solution_storage.initialize(scratch_data,
+                                  fe_values,
+                                  fe_face_values,
+                                  dof_handler);
+    }
+
+    template <typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<std::is_same<typename std::decay<VectorType>::type,
+                                         std::nullptr_t>::value>::type
+    extract_solution_local_dof_values(
+      MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+      const DoFHandlerType &                      dof_handler,
+      const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      static_assert(
+        std::is_same<typename std::decay<SSDType>::type, std::nullptr_t>::value,
+        "Expected DoFHandler type for solution storage to be null type.");
+      (void)scratch_data;
+      (void)dof_handler;
+      (void)solution_storage;
+
+      // Void pointer; do nothing.
+      AssertThrow(false, ExcUnexpectedFunctionCall());
+    }
+
+    template <typename DoFHandlerType,
+              typename VectorType,
+              typename SSDType,
+              int dim,
+              int spacedim>
+    typename std::enable_if<!std::is_same<typename std::decay<VectorType>::type,
+                                          std::nullptr_t>::value>::type
+    extract_solution_local_dof_values(
+      MeshWorker::ScratchData<dim, spacedim> &    scratch_data,
+      const DoFHandlerType &                      dof_handler,
+      const SolutionStorage<VectorType, SSDType> &solution_storage)
+    {
+      solution_storage.extract_local_dof_values(scratch_data, dof_handler);
+    }
+  } // namespace internal
 } // namespace WeakForms
 
 

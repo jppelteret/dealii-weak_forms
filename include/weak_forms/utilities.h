@@ -641,6 +641,19 @@ namespace WeakForms
 
   } // namespace Utilities
 
+
+  namespace internal
+  {
+    /**
+     * Exception denoting that a class requires some specialization
+     * in order to be used.
+     */
+    DeclExceptionMsg(ExcUnexpectedFunctionCall,
+                     "This function should never be called, as it is "
+                     "expected to be bypassed though the lack of availability "
+                     "of a pointer at the calling site.");
+  } // namespace internal
+
 } // namespace WeakForms
 
 
