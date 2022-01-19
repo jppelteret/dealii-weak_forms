@@ -19,6 +19,7 @@
 #include <deal.II/base/config.h>
 
 #include <deal.II/base/function.h>
+#include <deal.II/base/mpi.h>
 #include <deal.II/base/point.h>
 #include <deal.II/base/quadrature.h>
 #include <deal.II/base/types.h>
@@ -33,6 +34,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/template_constraints.h>
 
 #include <functional>
 
@@ -42,8 +44,15 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
-  template <int spacedim, typename ReturnType = void>
-  class Integrator
+  template <int spacedim, typename Type, typename U = void>
+  class Integrator;
+
+  // Integrator for user-defined functions
+  template <int spacedim, typename ReturnType>
+  class Integrator<
+    spacedim,
+    ReturnType,
+    typename std::enable_if<is_scalar_type<ReturnType>::value>::type>
   {
     /**
      * Type definition for functions that are independent of position.
@@ -65,9 +74,11 @@ namespace WeakForms
      *
      * @param integrand
      */
-    Integrator(const IntegrandPositionIndependent &integrand)
+    Integrator(const IntegrandPositionIndependent &integrand,
+               const MPI_Comm *const               mpi_communicator = nullptr)
       : integrand_position_independent(integrand)
       , integrand_position_dependent(nullptr)
+      , mpi_communicator(mpi_communicator)
     {}
 
     /**
@@ -75,9 +86,11 @@ namespace WeakForms
      *
      * @param integrand
      */
-    Integrator(const IntegrandPositionDependent &integrand)
+    Integrator(const IntegrandPositionDependent &integrand,
+               const MPI_Comm *const             mpi_communicator = nullptr)
       : integrand_position_independent(nullptr)
       , integrand_position_dependent(integrand)
+      , mpi_communicator(mpi_communicator)
     {}
 
     /**
@@ -85,12 +98,14 @@ namespace WeakForms
      *
      * @param function
      */
-    Integrator(const Function<spacedim, ReturnType> &function)
+    Integrator(const Function<spacedim, ReturnType> &function,
+               const MPI_Comm *const                 mpi_communicator = nullptr)
       : integrand_position_independent(nullptr)
       , integrand_position_dependent(
           [&function](const std::vector<Point<spacedim>> &points,
                       std::vector<ReturnType> &           values)
           { return function.value_list(points, values); })
+      , mpi_communicator(mpi_communicator)
     {}
 
     // SECTION: Volume integrals
@@ -187,13 +202,15 @@ namespace WeakForms
      *
      *
      */
-    const IntegrandPositionDependent integrand_position_dependent;
+    const IntegrandPositionIndependent integrand_position_independent;
 
     /**
      *
      *
      */
-    const IntegrandPositionIndependent integrand_position_independent;
+    const IntegrandPositionDependent integrand_position_dependent;
+
+    const MPI_Comm *const mpi_communicator;
 
     UpdateFlags
     get_update_flags_cell() const
@@ -300,7 +317,9 @@ namespace WeakForms
                             copy,
                             MeshWorker::assemble_own_cells);
 
-      // Utilities::MPI::sum(integral, mpi_communicator);
+      if (mpi_communicator)
+        Utilities::MPI::sum(integral, *mpi_communicator);
+
       return integral;
     }
 
@@ -422,7 +441,9 @@ namespace WeakForms
                             MeshWorker::assemble_boundary_faces,
                             boundary_worker);
 
-      // Utilities::MPI::sum(integral, mpi_communicator);
+      if (mpi_communicator)
+        Utilities::MPI::sum(integral, *mpi_communicator);
+
       return integral;
     }
 
