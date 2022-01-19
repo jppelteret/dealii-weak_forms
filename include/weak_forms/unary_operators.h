@@ -1773,6 +1773,12 @@ namespace WeakForms
 
   template <typename Op, typename UnderlyingType>
   struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::normalize, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
     Operators::UnaryOp<Op, Operators::UnaryOpCodes::sine, UnderlyingType>>
     : std::true_type
   {};
