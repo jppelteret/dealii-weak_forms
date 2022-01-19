@@ -52,8 +52,8 @@ run()
   // Volume integral
   {
     const double volume =
-      WeakForms::Integrator<dim, T>(unity).template dV<double>(cell_quadrature,
-                                                               dof_handler);
+      WeakForms::Integrator<dim, T>(unity).template dV<double>(dof_handler,
+                                                               cell_quadrature);
     deallog << "Volume: " << volume << std::endl;
 
     double reference_volume = 0.0;
@@ -69,9 +69,9 @@ run()
   // Boundary integral
   {
     const double area =
-      WeakForms::Integrator<dim, T>(unity).template dA<double>(cell_quadrature,
-                                                               face_quadrature,
-                                                               dof_handler);
+      WeakForms::Integrator<dim, T>(unity).template dA<double>(dof_handler,
+                                                               cell_quadrature,
+                                                               face_quadrature);
     deallog << "Area: " << area << std::endl;
 
     double reference_area = 0.0;

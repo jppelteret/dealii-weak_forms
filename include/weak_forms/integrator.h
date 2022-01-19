@@ -499,30 +499,101 @@ namespace WeakForms
               template <int, int>
               class DoFHandlerType>
     ReturnType<ScalarType>
-    dV(const Quadrature<dim> &              cell_quadrature,
-       const DoFHandlerType<dim, spacedim> &dof_handler)
+    dV(const DoFHandlerType<dim, spacedim> &dof_handler,
+       const Quadrature<dim> &              cell_quadrature)
+    {
+      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
+      const SolutionStorage_t solution_storage;
+
+      return dV<ScalarType>(solution_storage, dof_handler, cell_quadrature);
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType>
+    ReturnType<ScalarType>
+    dV(const VectorType &                   solution_vector,
+       const DoFHandlerType<dim, spacedim> &dof_handler,
+       const Quadrature<dim> &              cell_quadrature)
+    {
+      const SolutionStorage<VectorType> solution_storage(solution_vector);
+
+      return dV<ScalarType>(solution_storage, dof_handler, cell_quadrature);
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType,
+              typename SSDType>
+    ReturnType<ScalarType>
+    dV(const SolutionStorage<VectorType, SSDType> &solution_storage,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature)
     {
       const auto filtered_iterator_range =
         filter_iterators(dof_handler.active_cell_iterators(),
                          IteratorFilters::LocallyOwnedCell());
 
-      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
-      const SolutionStorage_t solution_storage;
-
-      return do_dV<ScalarType>(cell_quadrature,
-                               dof_handler,
+      return do_dV<ScalarType>(dof_handler,
                                solution_storage,
+                               cell_quadrature,
                                get_update_flags_cell(),
                                filtered_iterator_range);
     }
+
+    // ======
 
     template <typename ScalarType = double,
               int dim,
               template <int, int>
               class DoFHandlerType>
     ReturnType<ScalarType>
-    dV(const Quadrature<dim> &                     cell_quadrature,
+    dV(const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
+       const std::set<dealii::types::material_id> &subdomains)
+    {
+      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
+      const SolutionStorage_t solution_storage;
+
+      return dV<ScalarType>(solution_storage,
+                            dof_handler,
+                            cell_quadrature,
+                            subdomains);
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType>
+    ReturnType<ScalarType>
+    dV(const VectorType &                          solution_vector,
        const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
+       const std::set<dealii::types::material_id> &subdomains)
+    {
+      const SolutionStorage<VectorType> solution_storage(solution_vector);
+
+      return dV<ScalarType>(solution_storage,
+                            dof_handler,
+                            cell_quadrature,
+                            subdomains);
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType,
+              typename SSDType>
+    ReturnType<ScalarType>
+    dV(const SolutionStorage<VectorType, SSDType> &solution_storage,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
        const std::set<dealii::types::material_id> &subdomains)
     {
       const auto filtered_iterator_range =
@@ -530,12 +601,9 @@ namespace WeakForms
                          IteratorFilters::LocallyOwnedCell(),
                          IteratorFilters::MaterialIdEqualTo(subdomains));
 
-      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
-      const SolutionStorage_t solution_storage;
-
-      return do_dV<ScalarType>(cell_quadrature,
-                               dof_handler,
+      return do_dV<ScalarType>(dof_handler,
                                solution_storage,
+                               cell_quadrature,
                                get_update_flags_cell(),
                                filtered_iterator_range);
     }
@@ -556,37 +624,119 @@ namespace WeakForms
               template <int, int>
               class DoFHandlerType>
     ReturnType<ScalarType>
-    dA(const Quadrature<dim> &              cell_quadrature,
-       const Quadrature<dim - 1> &          face_quadrature,
-       const DoFHandlerType<dim, spacedim> &dof_handler)
+    dA(const DoFHandlerType<dim, spacedim> &dof_handler,
+       const Quadrature<dim> &              cell_quadrature,
+       const Quadrature<dim - 1> &          face_quadrature)
     {
-      return dA<ScalarType>(cell_quadrature,
+      return dA<ScalarType>(dof_handler,
+                            cell_quadrature,
                             face_quadrature,
-                            dof_handler,
                             std::set<dealii::types::boundary_id>{});
     }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType>
+    ReturnType<ScalarType>
+    dA(const VectorType &                   solution_vector,
+       const DoFHandlerType<dim, spacedim> &dof_handler,
+       const Quadrature<dim> &              cell_quadrature,
+       const Quadrature<dim - 1> &          face_quadrature)
+    {
+      return dA<ScalarType>(solution_vector,
+                            dof_handler,
+                            cell_quadrature,
+                            face_quadrature,
+                            std::set<dealii::types::boundary_id>{});
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType,
+              typename SSDType>
+    ReturnType<ScalarType>
+    dA(const SolutionStorage<VectorType, SSDType> &solution_storage,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
+       const Quadrature<dim - 1> &                 face_quadrature)
+    {
+      return dA<ScalarType>(solution_storage,
+                            dof_handler,
+                            cell_quadrature,
+                            face_quadrature,
+                            std::set<dealii::types::boundary_id>{});
+    }
+
+    // ====
 
     template <typename ScalarType = double,
               int dim,
               template <int, int>
               class DoFHandlerType>
     ReturnType<ScalarType>
-    dA(const Quadrature<dim> &                     cell_quadrature,
+    dA(const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
        const Quadrature<dim - 1> &                 face_quadrature,
+       const std::set<dealii::types::boundary_id> &boundaries)
+    {
+      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
+      const SolutionStorage_t solution_storage;
+
+      return dA<ScalarType>(solution_storage,
+                            dof_handler,
+                            cell_quadrature,
+                            face_quadrature,
+                            boundaries);
+    }
+
+
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType>
+    ReturnType<ScalarType>
+    dA(const VectorType &                          solution_vector,
        const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
+       const Quadrature<dim - 1> &                 face_quadrature,
+       const std::set<dealii::types::boundary_id> &boundaries)
+    {
+      const SolutionStorage<VectorType> solution_storage(solution_vector);
+
+      return dA<ScalarType>(solution_storage,
+                            dof_handler,
+                            cell_quadrature,
+                            face_quadrature,
+                            boundaries);
+    }
+
+    template <typename ScalarType = double,
+              typename VectorType,
+              int dim,
+              template <int, int>
+              class DoFHandlerType,
+              typename SSDType>
+    ReturnType<ScalarType>
+    dA(const SolutionStorage<VectorType, SSDType> &solution_storage,
+       const DoFHandlerType<dim, spacedim> &       dof_handler,
+       const Quadrature<dim> &                     cell_quadrature,
+       const Quadrature<dim - 1> &                 face_quadrature,
        const std::set<dealii::types::boundary_id> &boundaries)
     {
       const auto filtered_iterator_range =
         filter_iterators(dof_handler.active_cell_iterators(),
                          IteratorFilters::LocallyOwnedCell());
 
-      using SolutionStorage_t = SolutionStorage<std::nullptr_t>;
-      const SolutionStorage_t solution_storage;
-
-      return do_dA<ScalarType>(cell_quadrature,
-                               face_quadrature,
-                               dof_handler,
+      return do_dA<ScalarType>(dof_handler,
                                solution_storage,
+                               cell_quadrature,
+                               face_quadrature,
                                get_update_flags_face(),
                                boundaries,
                                filtered_iterator_range);
@@ -616,9 +766,9 @@ namespace WeakForms
               typename SSDType,
               typename BaseIterator>
     ReturnType<ScalarType>
-    do_dV(const Quadrature<dim> &                     cell_quadrature,
-          const DoFHandlerType<dim, spacedim> &       dof_handler,
+    do_dV(const DoFHandlerType<dim, spacedim> &       dof_handler,
           const SolutionStorage<VectorType, SSDType> &solution_storage,
+          const Quadrature<dim> &                     cell_quadrature,
           const UpdateFlags                           update_flags_cell,
           const IteratorRange<FilteredIterator<BaseIterator>>
             filtered_iterator_range)
@@ -723,10 +873,11 @@ namespace WeakForms
               typename SSDType,
               typename BaseIterator>
     ReturnType<ScalarType>
-    do_dA(const Quadrature<dim> &                     cell_quadrature,
-          const Quadrature<dim - 1> &                 face_quadrature,
-          const DoFHandlerType<dim, spacedim> &       dof_handler,
+    do_dA(const DoFHandlerType<dim, spacedim> &       dof_handler,
           const SolutionStorage<VectorType, SSDType> &solution_storage,
+          const Quadrature<dim> &                     cell_quadrature,
+          const Quadrature<dim - 1> &                 face_quadrature,
+
           const UpdateFlags                           update_flags_face,
           const std::set<dealii::types::boundary_id> &boundaries,
           const IteratorRange<FilteredIterator<BaseIterator>>
