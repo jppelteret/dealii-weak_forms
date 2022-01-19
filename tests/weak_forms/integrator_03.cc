@@ -14,7 +14,7 @@
 // ---------------------------------------------------------------------
 
 
-// Check that function integrator works for volumes and boundaries
+// Check that integrator works for symbolic functor
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -24,6 +24,7 @@
 #include <deal.II/grid/grid_generator.h>
 #include <deal.II/grid/tria.h>
 
+#include <weak_forms/functors.h>
 #include <weak_forms/integrator.h>
 
 #include "../weak_forms_tests.h"
@@ -45,13 +46,14 @@ run()
   DoFHandler<dim, spacedim> dof_handler(triangulation);
   dof_handler.distribute_dofs(fe);
 
-  Functions::ConstantFunction<spacedim, double> unity(1.0);
+  const auto unity = WeakForms::constant_scalar<dim>(1.0);
+  using T          = decltype(unity);
 
   // Volume integral
   {
     const double volume =
-      WeakForms::FunctionIntegrator<dim, double>(unity).dV(cell_quadrature,
-                                                           dof_handler);
+      WeakForms::Integrator<dim, T>(unity).template dV<double>(cell_quadrature,
+                                                               dof_handler);
     deallog << "Volume: " << volume << std::endl;
 
     double reference_volume = 0.0;
@@ -67,8 +69,9 @@ run()
   // Boundary integral
   {
     const double area =
-      WeakForms::FunctionIntegrator<dim, double>(unity).dA(face_quadrature,
-                                                           dof_handler);
+      WeakForms::Integrator<dim, T>(unity).template dA<double>(cell_quadrature,
+                                                               face_quadrature,
+                                                               dof_handler);
     deallog << "Area: " << area << std::endl;
 
     double reference_area = 0.0;
