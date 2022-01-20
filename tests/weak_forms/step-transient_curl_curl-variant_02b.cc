@@ -188,6 +188,19 @@ namespace StepTransientCurlCurl
     // current_source.value(this->function_free_current_density);
     const auto J_f = -grad_phi;
 
+    // Check current running through boundary
+    const Normal<spacedim> normal{};
+    const auto             N       = normal.value();
+    const auto             J_dot_N = J_f * N;
+    const double           I_total =
+      WeakForms::Integrator<dim, decltype(J_dot_N)>(J_dot_N)
+        .template dA<double>(solution_storage,
+                             this->dof_handler_mvp,
+                             this->qf_cell_mvp,
+                             this->qf_face_mvp,
+                             {2} /*input boundary*/);
+    std::cout << "I_total: " << I_total << std::endl;
+
     // Assembly
     MatrixBasedAssembler<dim> assembler;
     assembler +=

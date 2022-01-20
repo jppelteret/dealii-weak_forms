@@ -235,9 +235,12 @@ doxygen documentation is in preparation.
     - Inter-cell interfaces for DG FEM
     - Subdomain selection: Manifold ID (`dealii::types::manifold_id`)
   - [TODO] Custom predicates for the above
-- `Integrator`: User-defined function integrators, used to compute integrals
+- `FunctionIntegrator`: User-defined function integrators, used to compute integrals
   of quantities over a domain or subdomain.
   - Position independent/dependent
+  - Volume, boundary, interface (using `MeshWorker::mesh_loop()`)
+- `Integrator`: Integrator for symbolic functors, used to compute integrals
+  of quantities over a domain or subdomain.
   - Volume, boundary, interface (using `MeshWorker::mesh_loop()`)
 - Integral operators
   - Binary
