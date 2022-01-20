@@ -147,23 +147,26 @@ namespace WeakForms
     auto
     value(const function_type<ScalarType, dim, spacedim> &function,
           const interface_function_type<ScalarType, dim, spacedim>
-            &interface_function) const;
+            &               interface_function,
+          const UpdateFlags update_flags = update_default) const;
 
     template <typename ScalarType, int dim, int spacedim = dim>
     auto
-    value(const function_type<ScalarType, dim, spacedim> &function) const
+    value(const function_type<ScalarType, dim, spacedim> &function,
+          const UpdateFlags update_flags = update_default) const
     {
       const interface_function_type<ScalarType, dim, spacedim> dummy_function;
-      return this->value(function, dummy_function);
+      return this->value(function, dummy_function, update_flags);
     }
 
     template <typename ScalarType, int dim, int spacedim = dim>
     auto
     value(const interface_function_type<ScalarType, dim, spacedim>
-            &interface_function) const
+            &               interface_function,
+          const UpdateFlags update_flags = update_default) const
     {
       const function_type<ScalarType, dim, spacedim> dummy_function;
-      return this->value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function, update_flags);
     }
   };
 
@@ -200,25 +203,26 @@ namespace WeakForms
     // Methods to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(
-      const function_type<ScalarType, dim> &          function,
-      const interface_function_type<ScalarType, dim> &interface_function) const;
+    value(const function_type<ScalarType, dim> &          function,
+          const interface_function_type<ScalarType, dim> &interface_function,
+          const UpdateFlags update_flags = update_default) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType, dim> &function) const
+    value(const function_type<ScalarType, dim> &function,
+          const UpdateFlags update_flags = update_default) const
     {
       const interface_function_type<ScalarType, dim> dummy_function;
-      return this->value(function, dummy_function);
+      return this->value(function, dummy_function, update_flags);
     }
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(
-      const interface_function_type<ScalarType, dim> &interface_function) const
+    value(const interface_function_type<ScalarType, dim> &interface_function,
+          const UpdateFlags update_flags = update_default) const
     {
       const function_type<ScalarType, dim> dummy_function;
-      return this->value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function, update_flags);
     }
   };
 
@@ -257,25 +261,26 @@ namespace WeakForms
     // Methods to promote this class to a SymbolicOp
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(
-      const function_type<ScalarType, dim> &          function,
-      const interface_function_type<ScalarType, dim> &interface_function) const;
+    value(const function_type<ScalarType, dim> &          function,
+          const interface_function_type<ScalarType, dim> &interface_function,
+          const UpdateFlags update_flags = update_default) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType, dim> &function) const
+    value(const function_type<ScalarType, dim> &function,
+          const UpdateFlags update_flags = update_default) const
     {
       const interface_function_type<ScalarType, dim> dummy_function;
-      return this->value(function, dummy_function);
+      return this->value(function, dummy_function, update_flags);
     }
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(
-      const interface_function_type<ScalarType, dim> &interface_function) const
+    value(const interface_function_type<ScalarType, dim> &interface_function,
+          const UpdateFlags update_flags = update_default) const
     {
       const function_type<ScalarType, dim> dummy_function;
-      return this->value(dummy_function, interface_function);
+      return this->value(dummy_function, interface_function, update_flags);
     }
   };
 
@@ -316,11 +321,13 @@ namespace WeakForms
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType> &function) const;
+    value(const function_type<ScalarType> &function,
+          const UpdateFlags                update_flags = update_default) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    gradient(const function_type<ScalarType> &function) const;
+    gradient(const function_type<ScalarType> &function,
+             const UpdateFlags update_flags = update_default) const;
   };
 
 
@@ -365,11 +372,13 @@ namespace WeakForms
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    value(const function_type<ScalarType> &function) const;
+    value(const function_type<ScalarType> &function,
+          const UpdateFlags                update_flags = update_default) const;
 
     template <typename ScalarType, int dim = spacedim>
     auto
-    gradient(const function_type<ScalarType> &function) const;
+    gradient(const function_type<ScalarType> &function,
+             const UpdateFlags update_flags = update_default) const;
   };
 
 
@@ -435,10 +444,12 @@ public:                                                                        \
   explicit SymbolicOp(                                                         \
     const Op &                                 operand,                        \
     const function_type<ScalarType> &          function,                       \
-    const interface_function_type<ScalarType> &interface_function)             \
+    const interface_function_type<ScalarType> &interface_function,             \
+    const UpdateFlags                          update_flags)                   \
     : operand(operand)                                                         \
     , function(function)                                                       \
     , interface_function(interface_function)                                   \
+    , update_flags(update_flags)                                               \
   {}                                                                           \
                                                                                \
   explicit SymbolicOp(const Op &operand, const value_type<ScalarType> &value)  \
@@ -466,7 +477,7 @@ public:                                                                        \
                                                                                \
   UpdateFlags get_update_flags() const                                         \
   {                                                                            \
-    return UpdateFlags::update_default;                                        \
+    return update_flags;                                                       \
   }                                                                            \
                                                                                \
   /**                                                                          \
@@ -557,6 +568,7 @@ private:                                                                       \
   const Op                                  operand;                           \
   const function_type<ScalarType>           function;                          \
   const interface_function_type<ScalarType> interface_function;                \
+  const UpdateFlags                         update_flags;                      \
                                                                                \
   template <typename ResultScalarType, int dim2>                               \
   value_type<ResultScalarType> operator()(                                     \
@@ -724,14 +736,16 @@ public:                                                                        \
    * a longer lifetime than this object.                                       \
    */                                                                          \
   explicit SymbolicOp(const Op &                       operand,                \
-                      const function_type<ScalarType> &function)               \
+                      const function_type<ScalarType> &function,               \
+                      const UpdateFlags &              update_flags)           \
     : operand(operand)                                                         \
     , function(&function)                                                      \
+    , update_flags(update_flags)                                               \
   {}                                                                           \
                                                                                \
   UpdateFlags get_update_flags() const                                         \
   {                                                                            \
-    return UpdateFlags::update_quadrature_points;                              \
+    return update_flags | UpdateFlags::update_quadrature_points;               \
   }                                                                            \
                                                                                \
   /**                                                                          \
@@ -813,7 +827,8 @@ public:                                                                        \
                                                                                \
 private:                                                                       \
   const Op                                            operand;                 \
-  const SmartPointer<const function_type<ScalarType>> function;
+  const SmartPointer<const function_type<ScalarType>> function;                \
+  const UpdateFlags                                   update_flags;
 
 
 #define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()              \
@@ -1020,7 +1035,8 @@ namespace WeakForms
       template function_type<ScalarType, dim, spacedim> &function,
     const typename WeakForms::ScalarFunctor::
       template interface_function_type<ScalarType, dim, spacedim>
-        &interface_function) const
+        &             interface_function,
+    const UpdateFlags update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1032,7 +1048,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function, interface_function);
+    return OpType(operand, function, interface_function, update_flags);
   }
 
 
@@ -1044,8 +1060,8 @@ namespace WeakForms
     const typename WeakForms::TensorFunctor<rank, spacedim>::
       template function_type<ScalarType, dim> &function,
     const typename WeakForms::TensorFunctor<rank, spacedim>::
-      template interface_function_type<ScalarType, dim> &interface_function)
-    const
+      template interface_function_type<ScalarType, dim> &interface_function,
+    const UpdateFlags                                    update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1057,7 +1073,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function, interface_function);
+    return OpType(operand, function, interface_function, update_flags);
   }
 
 
@@ -1069,8 +1085,8 @@ namespace WeakForms
     const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
       template function_type<ScalarType, dim> &function,
     const typename WeakForms::SymmetricTensorFunctor<rank, spacedim>::
-      template interface_function_type<ScalarType, dim> &interface_function)
-    const
+      template interface_function_type<ScalarType, dim> &interface_function,
+    const UpdateFlags                                    update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1082,7 +1098,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function, interface_function);
+    return OpType(operand, function, interface_function, update_flags);
   }
 
 
@@ -1092,7 +1108,8 @@ namespace WeakForms
   DEAL_II_ALWAYS_INLINE inline auto
   WeakForms::ScalarFunctionFunctor<spacedim>::value(
     const typename WeakForms::ScalarFunctionFunctor<
-      spacedim>::template function_type<ScalarType> &function) const
+      spacedim>::template function_type<ScalarType> &function,
+    const UpdateFlags                                update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1104,7 +1121,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function);
+    return OpType(operand, function, update_flags);
   }
 
 
@@ -1114,7 +1131,8 @@ namespace WeakForms
   DEAL_II_ALWAYS_INLINE inline auto
   WeakForms::ScalarFunctionFunctor<spacedim>::gradient(
     const typename WeakForms::ScalarFunctionFunctor<
-      spacedim>::template function_type<ScalarType> &function) const
+      spacedim>::template function_type<ScalarType> &function,
+    const UpdateFlags                                update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1126,7 +1144,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function);
+    return OpType(operand, function, update_flags);
   }
 
 
@@ -1136,7 +1154,8 @@ namespace WeakForms
   DEAL_II_ALWAYS_INLINE inline auto
   WeakForms::TensorFunctionFunctor<rank, spacedim>::value(
     const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
-      template function_type<ScalarType> &function) const
+      template function_type<ScalarType> &function,
+    const UpdateFlags                     update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1148,7 +1167,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function);
+    return OpType(operand, function, update_flags);
   }
 
 
@@ -1158,7 +1177,8 @@ namespace WeakForms
   DEAL_II_ALWAYS_INLINE inline auto
   WeakForms::TensorFunctionFunctor<rank, spacedim>::gradient(
     const typename WeakForms::TensorFunctionFunctor<rank, spacedim>::
-      template function_type<ScalarType> &function) const
+      template function_type<ScalarType> &function,
+    const UpdateFlags                     update_flags) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
@@ -1170,7 +1190,7 @@ namespace WeakForms
                               WeakForms::internal::DimPack<dim, spacedim>>;
 
     const auto &operand = *this;
-    return OpType(operand, function);
+    return OpType(operand, function, update_flags);
   }
 } // namespace WeakForms
 
