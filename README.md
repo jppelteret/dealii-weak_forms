@@ -15,6 +15,7 @@ Author: Jean-Paul Pelteret, 2020 - 2022
 - [Examples](#examples)
 - [Benchmarks](#benchmarks)
 - [Building the library](#building-the-library)
+- [Citing the library](#citing-the-library)
 - [Similar projects that inspired this work](#similar-projects-that-inspired-this-work)
 - [Acknowledgements](#acknowledgements)
 - [Contributing](#contributing)
@@ -134,11 +135,100 @@ To date, this library has only been built and tested on `MacOS` with the `Clang`
 compiler. In the future, the `GCC` compiler and the `Linux` operating system will
 be tested as well.
 
-## Dependency recommentations
+## Dependency recommendations
 -----------------------------
 - If you plan on using multi-threading and the `SD` framework provided by one of
   the self-linearising functors, then SymEngine (a `deal.II` dependency) should
   be built with the option `-DWITH_SYMENGINE_THREAD_SAFE:BOOL=ON`.
+
+
+# Citing the library
+--------------------
+This library has been created for the author's enjoyment, so no direct citation
+is necessary, thanks. Since this library acts as a convenience wrapper around
+data structures and algorithms implemented in the `deal.II` library, a citation
+of the latest release paper, as well as the design paper, would be appreciated.
+```bibtex
+@article{dealII93,
+  title     = {The \texttt{deal.II} Library, Version 9.3},
+  author    = {Daniel Arndt and Wolfgang Bangerth and Bruno Blais and
+               Marc Fehling and Rene Gassm{\"o}ller and Timo Heister
+               and Luca Heltai and Uwe K{\"o}cher and Martin
+               Kronbichler and Matthias Maier and Peter Munch and
+               Jean-Paul Pelteret and Sebastian Proell and Konrad
+               Simon and Bruno Turcksin and David Wells and Jiaqi
+               Zhang},
+  journal   = {Journal of Numerical Mathematics},
+  year      = {2021, accepted for publication},
+  url       = {https://dealii.org/deal93-preprint.pdf},
+  doi       = {10.1515/jnma-2021-0081},
+  volume    = {29},
+  number    = {3},
+  pages     = {171--186}
+}
+
+@article{dealII2019design,
+  title   = {The {deal.II} finite element library: Design, features,
+             and insights},
+  author  = {Daniel Arndt and Wolfgang Bangerth and Denis Davydov and
+             Timo Heister and Luca Heltai and Martin Kronbichler and
+             Matthias Maier and Jean-Paul Pelteret and Bruno Turcksin and
+             David Wells},
+  journal = {Computers \& Mathematics with Applications},
+  year    = {2021},
+  DOI     = {10.1016/j.camwa.2020.02.022},
+  pages   = {407-422},
+  volume  = {81},
+  issn    = {0898-1221},
+  url     = {https://arxiv.org/abs/1910.13247}
+}
+```
+As the matrix-based implementation leverages some awesome concepts and data
+structures in the `deal.II` library, it would be appropriate to cite the
+authors of those specific areas of work.
+- `MeshWorker::mesh_loop()`, built on top of the `WorkStream` pattern, for
+  efficient multithreading
+  ```bibtex
+  @article{Turcksin2016,
+    author    = {B. Turcksin and M. Kronbichler and W. Bangerth},
+    title     = {WorkStream -- a design pattern for multicore-enabled finite
+                 element computations},
+    journal   = {ACM Transactions on Mathematical Software, pp. 2/1-29},
+    year      = {2016},
+    volume    = {43}
+  }
+  ```
+- `VectorizedArray` and `AlignedVector` for `SIMD` vectorisation
+  ```bibtex
+  @article{Kronbichler2012,
+    author = {Martin Kronbichler and Katharina Kormann},
+    title = {A generic interface for parallel cell-based finite element
+             operator application},
+    journal = {Computers {\&} Fluids},
+    doi = {10.1016/j.compfluid.2012.04.012},
+    url = {https://doi.org/10.1016/j.compfluid.2012.04.012},
+    year = {2012},
+    month = jun,
+    publisher = {Elsevier {BV}},
+    volume = {63},
+    pages = {135--147}
+  }
+  ```
+- `MeshWorker::ScratchData` and `GeneralDataStorage` for generic finite element
+   operations and data storage / extraction.
+  ```bibtex
+  @article{Sartori2018,
+    Author  = {Sartori, Alberto and Giuliani, Nicola and
+               Bardelloni, Mauro and Heltai, Luca},
+    Journal = {SoftwareX},
+    Pages   = {318--327},
+    Title   = {{deal2lkit: A toolkit library for high performance
+              programming in deal.II}},
+    Doi     = {10.1016/j.softx.2018.09.004},
+    Volume  = {7},
+    Year    = {2018}
+  }
+  ```
 
 
 # Similar projects that inspired this work
