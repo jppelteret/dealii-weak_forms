@@ -6,34 +6,35 @@ This (namely rendering errors and bracket usage) will be investigated and
 improved in the future.
 
 ## Summary
-- step-6:
+- [step-6](#step-6):
   - Laplace / Poisson equation 
   - Scalar-valued problem
-- step-8:
+- [step-8](#step-8):
   - Elasticity equation
   - Vector-valued problem
-- step-12:
+- [step-12](#step-12):
   - Advection problem
   - Discontinuous Galerkin method  (DG)
   - Only a partial implementation (the conditional in the assembly doesn't lend
     itself well to the weak forms approach)
-- step-23:
+- [step-23](#step-23):
   - The wave equation
   - Fractional time stepping
-- step-44: Multi-field problem
+- [step-44](#step-44)
   - Finite-strain solid mechanics (mixed formulation)
+  - Multi-field problem
   - Volume and boundary integrals
-- step-47:
+- [step-47](#step-47):
   - Biharmonic problem
   - Discontinuous Galerkin method (DG)
   - Volume, boundary and interface integrals
-- step-57:
+- [step-57](#step-57):
   - Fluid mechanics (Incompressible stationary Navier-Stokes equations)
   - Nonlinear term
-- step-72:
+- [step-72](#step-72):
   - A nonlinear elliptic problem (the minimal surface equation)
   - Field-dependent material coefficient (and trial solution in bilinear form)
-- step-74:
+- [step-74](#step-74):
   - The Symmetric interior penalty Galerkin (SIPG) method for Poisson's equation
   - Discontinuous Galerkin method  (DG)
   - Volume, boundary and interface integrals
