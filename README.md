@@ -29,6 +29,21 @@ library. It, effectively, allows one to express the assembly of discretised
 linear system by the weak form alone, the components of which can be reused
 as they are lazily evaluated.
 
+To summarise what this library offers the user: by providing an intuitive
+method to compose and re-use operations, the user is able to focus more on
+*what* they are doing (i.e. the algorithm or discretisation that they are
+wanting to implement) rather than *how* they are doing it (i.e. the
+programmatic implementation itself). This way you need not be distracted
+the minutia of the implementation -- all of the calculation loops are now
+hidden details, as are the data storage and value extraction processes.
+Permitting the storing and reusing intermediate values (or composite
+operations) means that if you want to change that definition, then you only
+need to do it in one place -- in the case of a composite operation, all of
+the updates to the underlying value composition follow seemlessly, and without
+any further intervention. On top of that, by leveraging automatic or symbolic
+differentiation, the number of hand-calculations required to implement
+complex constitutive laws *correctly* diminishes significantly.
+
 Details as to exactly what the abstraction level is, and how it differs to the
 "native" functionality that is already provided in `deal.II` can be found
 [here](doc/readme/concept.md).
