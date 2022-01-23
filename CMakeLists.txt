@@ -1,14 +1,15 @@
 ##
-#  CMake script for the project:
+# CMake script for the project:
 ##
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 ##
 # Set the name of the project and target:
 ##
 SET(WEAK_FORMS_PACKAGE_NAME "deal.II weak forms")
+SET(WEAK_FORMS_PACKAGE_SHORT_NAME "weak_forms")
 STRING(REPLACE "." "_" WEAK_FORMS_BASE_NAME "${WEAK_FORMS_PACKAGE_NAME}")
 STRING(REPLACE " " "_" WEAK_FORMS_BASE_NAME "${WEAK_FORMS_BASE_NAME}")
 STRING(TOLOWER "${WEAK_FORMS_BASE_NAME}" WEAK_FORMS_BASE_NAME)
@@ -26,37 +27,75 @@ SET(WEAK_FORMS_VERSION ${WEAK_FORMS_VERSION_MAJOR}.${WEAK_FORMS_VERSION_MINOR}.$
 ##
 # Information about paths, install locations and names
 ##
-SET(WEAK_FORMS_PROJECT_CONFIG_NAME "${WEAK_FORMS_PACKAGE_NAME}")
-STRING(REPLACE " " "_" WEAK_FORMS_PROJECT_CONFIG_NAME "${WEAK_FORMS_PROJECT_CONFIG_NAME}")
+SET(WEAK_FORMS_CMAKE_EXPORT_NAME "${WEAK_FORMS_LIB}")
+SET(WEAK_FORMS_PROJECT_CONFIG_NAME "${WEAK_FORMS_PACKAGE_SHORT_NAME}")
+SET(WEAK_FORMS_PROJECT_TARGET_NAME "${WEAK_FORMS_PACKAGE_SHORT_NAME}Targets")
 
 SET(WEAK_FORMS_EXECUTABLE_RELDIR "bin")
 SET(WEAK_FORMS_INCLUDE_RELDIR "include")
 SET(WEAK_FORMS_CONFIGURED_FILES_RELDIR "configured_files")
 SET(WEAK_FORMS_LIBRARY_RELDIR "lib")
-SET(WEAK_FORMS_PKGCONF_RELDIR "${WEAK_FORMS_LIBRARY_RELDIR}/pkgconfig")
 SET(WEAK_FORMS_PROJECT_CONFIG_RELDIR "${WEAK_FORMS_LIBRARY_RELDIR}/cmake/${WEAK_FORMS_PROJECT_CONFIG_NAME}")
 SET(WEAK_FORMS_SHARE_RELDIR "share/${WEAK_FORMS_PACKAGE_NAME}")
 SET(WEAK_FORMS_DOCHTML_RELDIR "doc")
 
 ##
-# Configuration files
+# Follow the official guidelines for setting up CMake projects:
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-to-create-a-ProjectConfig.cmake-file
+##
 
 ##
+# Offer the user the choice of overriding the installation directories
+##
+SET(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+SET(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+SET(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
+IF(WIN32 AND NOT CYGWIN)
+  SET(DEF_INSTALL_CMAKE_DIR CMake)
+ELSE()
+  SET(DEF_INSTALL_CMAKE_DIR ${WEAK_FORMS_PROJECT_CONFIG_RELDIR})
+ENDIF()
+SET(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+
+IF(NOT IS_ABSOLUTE "${CMAKE_INSTALL_PREFIX}")
+  SET(CMAKE_INSTALL_PREFIX_IS_ABSOLUTE FALSE)
+
+  MESSAGE(STATUS "CMake install path is not absolute. Correcting...")
+  SET(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_PREFIX}")
+ELSE()
+  SET(CMAKE_INSTALL_PREFIX_IS_ABSOLUTE TRUE)
+ENDIF()
+
+# Make relative paths absolute (needed later on)
+FOREACH(p LIB BIN INCLUDE CMAKE)
+  SET(var INSTALL_${p}_DIR)
+  IF(NOT IS_ABSOLUTE "${${var}}")
+    SET(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  ENDIF()
+ENDFOREACH()
+
+
+##
+# Configuration files for this project:
+##
 CONFIGURE_FILE(
-  ${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h
+  "${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h"
 )
 
 # Declare all header files the target consists of:
-INCLUDE_DIRECTORIES(include)
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}")
+INCLUDE_DIRECTORIES(
+  "${CMAKE_SOURCE_DIR}/include"
+  "${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}"
+)
 
-# Declare all source files the target consists of.
+# Declare all header files the target consists of
 FILE(GLOB_RECURSE FILE_LIST_INC 
   "${CMAKE_SOURCE_DIR}/include/*.h"
   "${CMAKE_SOURCE_DIR}/include/weak_forms/*.h"
 )
 
+# Declare all source files the target consists of:
 FILE(GLOB_RECURSE FILE_LIST_SRC  
   "${CMAKE_SOURCE_DIR}/source/*.cc"
   "${CMAKE_SOURCE_DIR}/source/weak_forms/*.cc"
@@ -109,7 +148,7 @@ ENDIF()
 # Initialise this project
 ##
 DEAL_II_INITIALIZE_CACHED_VARIABLES()
-PROJECT(${WEAK_FORMS_LIB})
+PROJECT(${WEAK_FORMS_LIB} CXX)
 
 # Reset the module path
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
@@ -126,11 +165,11 @@ IF(CLANGFORMAT)
 
   # List sources to format
   SET(CLANG_FORMAT_SRCS 
-      ${FILE_LIST_INC}
-      ${FILE_LIST_SRC}
-      ${FILE_LIST_TESTS}
-      ${FILE_LIST_BENCHMARKS}
-      )
+    ${FILE_LIST_INC}
+    ${FILE_LIST_SRC}
+    ${FILE_LIST_TESTS}
+    ${FILE_LIST_BENCHMARKS}
+  )
 
   # Setup clangformat target
   clangformat_setup("${CLANG_FORMAT_SRCS}")
@@ -190,7 +229,7 @@ IF(APPLE)
   SET(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}")
 ELSE() # Linux
   SET(CMAKE_SKIP_BUILD_RPATH FALSE)
-  SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) # tried also with TRUE
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR})
 ENDIF()
@@ -201,8 +240,16 @@ ENDIF()
 ADD_LIBRARY(${WEAK_FORMS_LIB} SHARED
   ${FILE_LIST_SRC}
 )
-SET_TARGET_PROPERTIES(${WEAK_FORMS_LIB}
-  PROPERTIES PUBLIC_HEADER "${FILE_LIST_INC}"
+
+##
+# Build a different debug and release library
+# https://cmake.org/cmake/help/git-stage/guide/tutorial/Packaging%20Debug%20and%20Release.html
+##
+SET(CMAKE_DEBUG_POSTFIX ".g")
+
+SET_TARGET_PROPERTIES(${WEAK_FORMS_LIB} PROPERTIES 
+  PUBLIC_HEADER "${FILE_LIST_INC};${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h"
+  DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
 )
 
 DEAL_II_SETUP_TARGET(${WEAK_FORMS_LIB})
@@ -222,8 +269,9 @@ INSTALL(
 ##
 INSTALL(
   TARGETS ${WEAK_FORMS_LIB}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_INCLUDE_RELDIR}/weak_forms
-  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}
+  EXPORT ${WEAK_FORMS_PROJECT_TARGET_NAME}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_INCLUDE_RELDIR}/weak_forms COMPONENT dev
+  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR} COMPONENT shlib
 )
 
 ##
@@ -237,8 +285,13 @@ IF(BUILD_DOCUMENTATION)
   ADD_SUBDIRECTORY(doc/doxygen)
 
   ADD_CUSTOM_TARGET(documentation
-    COMMAND doxygen doc/doxygen/options.dox
+    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/doc/doxygen/options.dox
     COMMENT "Build Doxygen documentation"
+  )
+  FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
+  INSTALL(
+    DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_DOCHTML_RELDIR}"
   )
 ENDIF()
 
@@ -308,3 +361,69 @@ IF(BUILD_TESTS OR BUILD_BENCHMARKS)
 ENDIF()
 
 
+
+##
+# Exports
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-to-create-a-ProjectConfig.cmake-file
+# https://stackoverflow.com/a/49857699
+##
+
+# Add all targets to the build-tree export set
+EXPORT(TARGETS ${WEAK_FORMS_LIB}
+  FILE "${PROJECT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/${WEAK_FORMS_PROJECT_CONFIG_NAME}Targets.cmake"
+)
+
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+EXPORT(PACKAGE ${WEAK_FORMS_CMAKE_EXPORT_NAME})
+
+##
+# Install CMake configuration files
+##
+
+# Create the ${WEAK_FORMS_PROJECT_CONFIG_NAME}Config.cmake and ${WEAK_FORMS_PROJECT_CONFIG_NAME}ConfigVersion files
+FILE(
+  RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+  "${INSTALL_INCLUDE_DIR}"
+)
+    
+# ... for the build tree
+SET(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config/Config.cmake.in
+  "${PROJECT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/${WEAK_FORMS_PROJECT_CONFIG_NAME}Config.cmake" 
+  @ONLY
+)
+
+# ... for the install tree
+SET(CONF_INCLUDE_DIRS "\${WEAK_FORMS_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config/Config.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${WEAK_FORMS_PROJECT_CONFIG_NAME}Config.cmake" 
+  @ONLY
+)
+
+# ... for both
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config/ConfigVersion.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${WEAK_FORMS_PROJECT_CONFIG_NAME}ConfigVersion.cmake" 
+  @ONLY
+)
+
+# Install the ${WEAK_FORMS_PROJECT_CONFIG_NAME}Config.cmake and ${WEAK_FORMS_PROJECT_CONFIG_NAME}ConfigVersion.cmake
+INSTALL(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${WEAK_FORMS_PROJECT_CONFIG_NAME}Config.cmake"
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${WEAK_FORMS_PROJECT_CONFIG_NAME}ConfigVersion.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}" 
+  COMPONENT dev
+)
+
+##
+# Install the export set for use with the install-tree
+##
+INSTALL(
+  EXPORT ${WEAK_FORMS_PROJECT_TARGET_NAME}
+  DESTINATION "${INSTALL_CMAKE_DIR}"
+  COMPONENT dev
+)
+  

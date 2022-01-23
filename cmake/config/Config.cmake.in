@@ -1,0 +1,39 @@
+## ---------------------------------------------------------------------
+##
+## Copyright (C) 2021 - 2022 by Jean-Paul Pelteret
+##
+## This file is part of the Weak forms for deal.II library.
+##
+## The Weak forms for deal.II library is free software; you can use it,
+## redistribute it, and/or modify it under the terms of the GNU Lesser
+## General Public License as published by the Free Software Foundation;
+## either version 3.0 of the License, or (at your option) any later
+## version. The full text of the license can be found in the file LICENSE
+## at the top level of the Weak forms for deal.II distribution.
+##
+## ---------------------------------------------------------------------
+
+##
+# Source:
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/How-to-create-a-ProjectConfig.cmake-file
+##
+
+# - Config file for the Weak Forms package
+# It defines the following variables
+#  WEAK_FORMS_FOUND        - the library has been successfully located
+#  WEAK_FORMS_INCLUDE_DIRS - include directories for Weak Forms
+#  WEAK_FORMS_LIBRARIES    - libraries to link against
+
+# Compute paths
+GET_FILENAME_COMPONENT(WEAK_FORMS_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+SET(WEAK_FORMS_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+IF(NOT "${WEAK_FORMS_INCLUDE_DIRS}" STREQUAL "")
+  # Our library dependencies (contains definitions for IMPORTED targets)
+  IF(NOT TARGET "@WEAK_FORMS_LIB@" AND NOT "@WEAK_FORMS_PROJECT_CONFIG_NAME@_BINARY_DIR")
+    INCLUDE("${WEAK_FORMS_CMAKE_DIR}/@WEAK_FORMS_PROJECT_CONFIG_NAME@Targets.cmake")
+  ENDIF()
+
+  # These are IMPORTED targets created by ${WEAK_FORMS_PROJECT_CONFIG_NAME}Targets.cmake
+  SET(WEAK_FORMS_LIBRARIES "@WEAK_FORMS_LIB@")
+ENDIF()
