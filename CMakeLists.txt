@@ -2,67 +2,81 @@
 #  CMake script for the project:
 ##
 
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+
+##
 # Set the name of the project and target:
-# SET(TARGET "weak_forms-evaluation_exec")
-SET(TARGET_LIB "dealii_weakforms")
+##
+SET(WEAK_FORMS_PACKAGE_NAME "deal.II weak forms")
+STRING(REPLACE "." "_" WEAK_FORMS_BASE_NAME "${WEAK_FORMS_PACKAGE_NAME}")
+STRING(REPLACE " " "_" WEAK_FORMS_BASE_NAME "${WEAK_FORMS_BASE_NAME}")
+STRING(TOLOWER "${WEAK_FORMS_BASE_NAME}" WEAK_FORMS_BASE_NAME)
+SET(WEAK_FORMS_LIB "${WEAK_FORMS_BASE_NAME}")
 
+##
 # Declare project version
-SET(WEAK_FORMS_MAJOR_VERSION 0)
-SET(WEAK_FORMS_MINOR_VERSION 1)
-SET(WEAK_FORMS_PATCH_VERSION 0)
-SET(WEAK_FORMS_VERSION ${WEAK_FORMS_MAJOR_VERSION}.${WEAK_FORMS_MINOR_VERSION}.${WEAK_FORMS_PATCH_VERSION})# # Configuration files
+##
+SET(WEAK_FORMS_VERSION_MAJOR    0)
+SET(WEAK_FORMS_VERSION_MINOR    1)
+SET(WEAK_FORMS_VERSION_SUBMINOR 0)
+SET(WEAK_FORMS_VERSION ${WEAK_FORMS_VERSION_MAJOR}.${WEAK_FORMS_VERSION_MINOR}.${WEAK_FORMS_VERSION_SUBMINOR})
 
-# # Configuration files
+
+##
+# Information about paths, install locations and names
+##
+SET(WEAK_FORMS_PROJECT_CONFIG_NAME "${WEAK_FORMS_PACKAGE_NAME}")
+STRING(REPLACE " " "_" WEAK_FORMS_PROJECT_CONFIG_NAME "${WEAK_FORMS_PROJECT_CONFIG_NAME}")
+
+SET(WEAK_FORMS_EXECUTABLE_RELDIR "bin")
+SET(WEAK_FORMS_INCLUDE_RELDIR "include")
+SET(WEAK_FORMS_CONFIGURED_FILES_RELDIR "configured_files")
+SET(WEAK_FORMS_LIBRARY_RELDIR "lib")
+SET(WEAK_FORMS_PKGCONF_RELDIR "${WEAK_FORMS_LIBRARY_RELDIR}/pkgconfig")
+SET(WEAK_FORMS_PROJECT_CONFIG_RELDIR "${WEAK_FORMS_LIBRARY_RELDIR}/cmake/${WEAK_FORMS_PROJECT_CONFIG_NAME}")
+SET(WEAK_FORMS_SHARE_RELDIR "share/${WEAK_FORMS_PACKAGE_NAME}")
+SET(WEAK_FORMS_DOCHTML_RELDIR "doc")
+
+##
+# Configuration files
+
+##
 CONFIGURE_FILE(
   ${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/configured_include/weak_forms/config.h
+  ${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h
 )
 
 # Declare all header files the target consists of:
 INCLUDE_DIRECTORIES(include)
-INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}/configured_include")
+INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}")
 
 # Declare all source files the target consists of.
-# FILE(GLOB_RECURSE TARGET_SRC  
-#   )
-FILE(GLOB_RECURSE TARGET_LIB_INC 
+FILE(GLOB_RECURSE FILE_LIST_INC 
   "${CMAKE_SOURCE_DIR}/include/*.h"
   "${CMAKE_SOURCE_DIR}/include/weak_forms/*.h"
 )
 
-FILE(GLOB_RECURSE TARGET_LIB_SRC  
+FILE(GLOB_RECURSE FILE_LIST_SRC  
   "${CMAKE_SOURCE_DIR}/source/*.cc"
   "${CMAKE_SOURCE_DIR}/source/weak_forms/*.cc"
-  )
-
-# Declare all include files:
-FILE(GLOB_RECURSE TARGET_ALL_INC  
-  "${CMAKE_SOURCE_DIR}/include/*.h"
-  "${CMAKE_SOURCE_DIR}/include/weak_forms/*.h"
-  )
-
-# Declare all source files:
-FILE(GLOB_RECURSE TARGET_ALL_SRC  
-  "${CMAKE_SOURCE_DIR}/source/*.cc"
-  "${CMAKE_SOURCE_DIR}/source/weak_forms/*.cc"
-  )
+)
 
 # Declare all test files:
-FILE(GLOB_RECURSE TARGET_ALL_TESTS
+FILE(GLOB_RECURSE FILE_LIST_TESTS
   "${CMAKE_SOURCE_DIR}/tests/*.h"
   "${CMAKE_SOURCE_DIR}/tests/*.cc"
 )
 
 # Declare all benchmark test files:
-FILE(GLOB_RECURSE TARGET_ALL_BENCHMARKS
+FILE(GLOB_RECURSE FILE_LIST_BENCHMARKS
   "${CMAKE_SOURCE_DIR}/benchmarks/*.h"
-  "${CMAKE_SOURCE_DIR}/benchmarks/*.cc")
+  "${CMAKE_SOURCE_DIR}/benchmarks/*.cc"
+)
 
-
-# Usually, you will not need to modify anything beyond this point...
-
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-
+##
+# Setup deal.II
+##
 FIND_PACKAGE(deal.II 10.0 QUIET
   HINTS ${deal.II_DIR} ${DEAL_II_DIR} ../ ../../ $ENV{DEAL_II_DIR}
   )
@@ -78,21 +92,9 @@ ELSE()
   )
 ENDIF()
 
-SET(CLEAN_UP_FILES
-  *.log *.vtu *.pvtu *.pvd *.vtk
-)
-
-DEAL_II_INITIALIZE_CACHED_VARIABLES()
-# PROJECT(${TARGET})
-PROJECT(${TARGET_LIB})
-
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
-
-# DEAL_II_INVOKE_AUTOPILOT()
-
-#
-# Are all dependencies fulfilled?
-#
+##
+# Check that dependencies are fulfilled
+##
 IF(NOT DEAL_II_WITH_ADOLC OR NOT DEAL_II_WITH_TRILINOS OR NOT DEAL_II_WITH_SYMENGINE)
   MESSAGE(FATAL_ERROR "
 Error! The deal.II library found at ${DEAL_II_PATH} was not configured with
@@ -102,6 +104,15 @@ Error! The deal.II library found at ${DEAL_II_PATH} was not configured with
 One or all of these are OFF in your installation but are required for this project."
     )
 ENDIF()
+
+##
+# Initialise this project
+##
+DEAL_II_INITIALIZE_CACHED_VARIABLES()
+PROJECT(${WEAK_FORMS_LIB})
+
+# Reset the module path
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 
 ##
 # Setup Clang format:
@@ -115,10 +126,10 @@ IF(CLANGFORMAT)
 
   # List sources to format
   SET(CLANG_FORMAT_SRCS 
-      ${TARGET_ALL_INC}
-      ${TARGET_ALL_SRC}
-      ${TARGET_ALL_TESTS}
-      ${TARGET_ALL_BENCHMARKS}
+      ${FILE_LIST_INC}
+      ${FILE_LIST_SRC}
+      ${FILE_LIST_TESTS}
+      ${FILE_LIST_BENCHMARKS}
       )
 
   # Setup clangformat target
@@ -134,7 +145,9 @@ ENDIF()
 # Set installation path
 # https://stackoverflow.com/a/16076855
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  SET (CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "default install path" FORCE )
+  SET (CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}" 
+       CACHE PATH "default install path" FORCE
+      )
 ENDIF()
 MESSAGE(STATUS 
   "Target installation path: ${CMAKE_INSTALL_PREFIX}"
@@ -161,80 +174,57 @@ IF(APPLE)
   # (but later on when installing)
   SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}")
 
   # add the automatically determined parts of the RPATH
   # which point to directories outside the build tree to the install RPATH
   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
   # the RPATH to be used when installing, but only if it's not a system directory
-  LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+  LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}" isSystemDir)
   IF("${isSystemDir}" STREQUAL "-1")
-     SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+     SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}")
   ENDIF("${isSystemDir}" STREQUAL "-1")
 
   # make sure RPATHs are used on macOS
-  SET(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+  SET(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}")
 ELSE() # Linux
   SET(CMAKE_SKIP_BUILD_RPATH FALSE)
   SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) # tried also with TRUE
   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+  SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR})
 ENDIF()
 
 ##
 # Create library and executable
 ##
-ADD_LIBRARY(${TARGET_LIB} SHARED
-    ${TARGET_LIB_SRC}
-  )
-SET_TARGET_PROPERTIES(${TARGET_LIB} PROPERTIES PUBLIC_HEADER "${TARGET_LIB_INC}")
-
-# ADD_EXECUTABLE(${TARGET}
-#     ${TARGET_SRC}
-#   )
-
-DEAL_II_SETUP_TARGET(${TARGET_LIB})
-# DEAL_II_SETUP_TARGET(${TARGET})
-
-# TARGET_LINK_LIBRARIES(${TARGET}
-#     ${TARGET_LIB}
-#   )
-
-# Install binary
-INSTALL(
-  TARGETS 
-    # ${TARGET} 
-    ${TARGET_LIB}
-    # RUNTIME  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include/weak_forms
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+ADD_LIBRARY(${WEAK_FORMS_LIB} SHARED
+  ${FILE_LIST_SRC}
+)
+SET_TARGET_PROPERTIES(${WEAK_FORMS_LIB}
+  PROPERTIES PUBLIC_HEADER "${FILE_LIST_INC}"
 )
 
-#
+DEAL_II_SETUP_TARGET(${WEAK_FORMS_LIB})
+
+##
 # Install generated headers
-#
+##
 INSTALL(
-  DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/configured_include/weak_forms"
-  DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+  DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_INCLUDE_RELDIR}"
   COMPONENT library
   FILES_MATCHING PATTERN "*.h"
-  )
+)
 
 ##
-# Generate custom "debug" and "release" make targets
+# Install binary
 ##
-# ADD_CUSTOM_TARGET(debug
-# COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}
-# COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
-# COMMENT "Switch CMAKE_BUILD_TYPE to Debug"
-# )
-
-# ADD_CUSTOM_TARGET(release
-# COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Release ${CMAKE_SOURCE_DIR}
-# COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
-# COMMENT "Switch CMAKE_BUILD_TYPE to Release"
-# )
+INSTALL(
+  TARGETS ${WEAK_FORMS_LIB}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_INCLUDE_RELDIR}/weak_forms
+  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${WEAK_FORMS_LIBRARY_RELDIR}
+)
 
 ##
 # Build documentation
@@ -316,3 +306,5 @@ IF(BUILD_TESTS OR BUILD_BENCHMARKS)
     ENDIF()
   ENDIF()
 ENDIF()
+
+
