@@ -427,6 +427,6 @@ these compile to:
 Unfortunately, the concrete class types get more and more complex as the chain
 of operations increases. (You might be exposed to this in the event of a
 compilation failure in a user code.) However, as the compiler knows the exact
-ctype that omputes operations, the call operators are transparent and the
+type that computes operations, the call operators are transparent and the
 compiler is in principle able to generate very fast code with which to perform
 evaluations.
