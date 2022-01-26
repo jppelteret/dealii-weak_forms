@@ -2400,72 +2400,70 @@ namespace StepTransientCurlCurl
       }
     else
       {
-        // Create wire cross-section
-        const unsigned int   csdim = 2;
-        Triangulation<csdim> tria_hyper_ball_inner;
+        Triangulation<dim> tria_surroundings;
         {
-          GridGenerator::hyper_ball(tria_hyper_ball_inner,
-                                    Point<csdim>(),
-                                    parameters.radius_wire *
-                                      parameters.grid_scale);
+          const double inner_radius =
+            parameters.radius_wire * parameters.grid_scale;
+          const double length =
+            parameters.side_length_surroundings * parameters.grid_scale;
+          const double outer_radius =
+            std::min(2 * inner_radius, 0.5 * (length + inner_radius));
+          const double             pad               = length - outer_radius;
+          const double             pad_bottom        = pad;
+          const double             pad_top           = pad;
+          const double             pad_left          = pad;
+          const double             pad_right         = pad;
+          const Point<dim> &       center            = Point<dim>();
+          const types::manifold_id polar_manifold_id = 0;
+          const types::manifold_id tfi_manifold_id   = 1;
+          // The wire gets refined once, so account for that here.
+          Assert(
+            parameters.n_divisions_longitudinal % 2 == 0,
+            ExcMessage(
+              "The number of initial divisions must be a multiple of two."));
+          const unsigned int n_slices = parameters.n_divisions_longitudinal + 1;
+          GridGenerator::plate_with_a_hole(tria_surroundings,
+                                           inner_radius,
+                                           outer_radius,
+                                           pad_bottom,
+                                           pad_top,
+                                           pad_left,
+                                           pad_right,
+                                           center,
+                                           polar_manifold_id,
+                                           tfi_manifold_id,
+                                           length,
+                                           n_slices);
         }
 
-        // Create cross-section of surrounding media
-        Triangulation<csdim> tria_hyper_rectangle_outer;
+        Triangulation<dim> tria_wire;
         {
-          Triangulation<csdim>             tria_hyper_rectangle;
-          std::vector<std::vector<double>> step_sizes(csdim);
-          for (unsigned int d = 0; d < csdim; ++d)
-            {
-              // 3 partitions per direction such that the vertices
-              // of the central cell sit on the particle radius
-              const double s2 = 2.0 / sqrt(csdim) * parameters.radius_wire *
-                                parameters.grid_scale;
-              const double s1 = 0.5 * (parameters.side_length_surroundings *
-                                         parameters.grid_scale -
-                                       s2);
-              const double s3 = s1;
-              std::vector<double> steps;
-              step_sizes[d].push_back(s1);
-              step_sizes[d].push_back(s2);
-              step_sizes[d].push_back(s3);
-            }
+          const double radius = parameters.radius_wire * parameters.grid_scale;
+          const double length =
+            parameters.side_length_surroundings * parameters.grid_scale;
+          const unsigned int n_divisions = parameters.n_divisions_longitudinal;
 
-          const Point<csdim> corner_2d(corner[0], corner[1]);
-          GridGenerator::subdivided_hyper_rectangle(
-            tria_hyper_rectangle, step_sizes, corner_2d, -corner_2d, true);
+          Triangulation<dim> tria_wire_tmp;
+          GridGenerator::subdivided_cylinder(tria_wire_tmp,
+                                             n_divisions / 2,
+                                             radius,
+                                             length / 2.0);
 
-          // Remove central cell
-          std::set<typename Triangulation<csdim>::active_cell_iterator>
-            cells_to_remove;
-          typename Triangulation<csdim>::active_cell_iterator
-            cell = tria_hyper_rectangle.begin_active(),
-            endc = tria_hyper_rectangle.end();
-          for (; cell != endc; ++cell)
-            {
-              if (cell->center().norm() < 1e-6)
-                cells_to_remove.insert(cell);
-            }
-          GridGenerator::create_triangulation_with_removed_cells(
-            tria_hyper_rectangle, cells_to_remove, tria_hyper_rectangle_outer);
+          // Refine before rotation, due to attached manifolds
+          tria_wire_tmp.refine_global(1);
+
+          // Align with axis of hole
+          GridTools::rotate(Tensor<1, dim>({0, 1, 0}),
+                            90.0 * (numbers::PI / 180.0),
+                            tria_wire_tmp);
+
+          GridGenerator::flatten_triangulation(tria_wire_tmp, tria_wire);
         }
 
-        // Merge the two together
-        Triangulation<csdim> tria_cross_section;
-        GridGenerator::merge_triangulations(tria_hyper_rectangle_outer,
-                                            tria_hyper_ball_inner,
-                                            tria_cross_section);
-
-        // Extrude into third dimension
-        GridGenerator::extrude_triangulation(
-          tria_cross_section,
-          parameters.n_divisions_longitudinal,
-          parameters.side_length_surroundings * parameters.grid_scale,
-          triangulation);
-        // Since the extrusion is from the X-Y plane, we shift the
-        // generated grid veertically to align with the Cartesian mesh
-        GridTools::shift(Tensor<1, dim>({0, 0, -half_length}), triangulation);
-
+        // Merge triangulations
+        GridGenerator::merge_triangulations(tria_surroundings,
+                                            tria_wire,
+                                            triangulation);
 
         // Remove all boundary and manifold IDs
         typename Triangulation<dim>::active_cell_iterator
@@ -2523,14 +2521,14 @@ namespace StepTransientCurlCurl
         }
         triangulation.set_manifold(refinement_manifold_id, surface_description);
 
-        // Force one refinement to get material interface to match up
-        triangulation.refine_global(1);
+        // // Force one refinement to get material interface to match up
+        // triangulation.refine_global(1);
 
-        // Refine, keeping in mind the extra subdivisions
-        // already in place
-        if (parameters.n_global_refinements > 0)
-          parameters.n_global_refinements -= 1;
-        triangulation.refine_global(parameters.n_global_refinements);
+        // // Refine, keeping in mind the extra subdivisions
+        // // already in place
+        // if (parameters.n_global_refinements > 0)
+        //   parameters.n_global_refinements -= 1;
+        // triangulation.refine_global(parameters.n_global_refinements);
 
         // Reset the maximum number of levels if our original refinement
         // scheme violates it
@@ -2600,10 +2598,13 @@ namespace StepTransientCurlCurl
                 // ID = 1:   Lateral faces (perpendicular to wire)
                 // ID = 2/3: Top/bottom faces (parallel to wire)
                 const Point<dim> pt = cell->face(face)->center();
-                if (std::abs(pt[2] - half_length) < tol_b_id)
-                  cell->face(face)->set_boundary_id(2);
-                else if (std::abs(pt[2] + half_length) < tol_b_id)
-                  cell->face(face)->set_boundary_id(3);
+                if (geometry.within_wire(pt) == true)
+                  {
+                    if (std::abs(pt[2] - half_length) < tol_b_id)
+                      cell->face(face)->set_boundary_id(2);
+                    else if (std::abs(pt[2] + half_length) < tol_b_id)
+                      cell->face(face)->set_boundary_id(3);
+                  }
                 else
                   cell->face(face)->set_boundary_id(1);
               }

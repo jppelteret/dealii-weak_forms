@@ -12,11 +12,11 @@ subsection Geometry
   set Discretisation type = Exact
 
   # Wire radius
-  set Wire radius     = 0.25
+  set Wire radius     = 2.5
   #set Wire radius     = 10
 
   # Surrounding side length
-  set Surrounding side length  = 2.0
+  set Surrounding side length  = 20.0
 
   # Global grid scaling factor
   set Grid scale          = 1.0e-2
@@ -72,7 +72,7 @@ subsection Refinement
   set Refinement strategy         = h-GMR
 
   # Initial global refinement level
-  set Initial global refinements  = 1
+  set Initial global refinements  = 0
 
   # Maximum number of refinement cycles
   set Maximum cycles              = 1
