@@ -175,6 +175,7 @@ doxygen documentation is in preparation.
     - General
       -  `operator-`: negation
     -  Scalar operations
+       - `invert()`: reciprocal value
        - `sin()`, `cos()`, `tan()`: trignometric operations: sine, cosine, tangent
        - `exp()`, `log()`:`exponential, logarithm
        - `sqrt()`:square root

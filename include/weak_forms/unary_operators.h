@@ -558,17 +558,47 @@ namespace WeakForms
 
 
 
+    namespace internal
+    {
+      template <
+        typename T,
+        typename = typename std::enable_if<
+          std::is_same<T, typename EnableIfScalar<T>::type>::value>::type>
+      auto
+      invert_impl(const T &value)
+      {
+        return dealii::internal::NumberType<T>::value(1.0) / value;
+      }
+
+      template <int rank, int dim, typename NumberType>
+      auto
+      invert_impl(const Tensor<rank, dim, NumberType> &tensor)
+      {
+        return dealii::invert(tensor);
+      }
+
+      template <int rank, int dim, typename NumberType>
+      auto
+      invert_impl(const SymmetricTensor<rank, dim, NumberType> &symm_tensor)
+      {
+        return dealii::invert(symm_tensor);
+      }
+    } // namespace internal
+
+
+
     template <typename Op>
     struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::invert>>
     {
       static const enum UnaryOpCodes op_code = UnaryOpCodes::invert;
 
-      static_assert(Op::rank == 2 || Op::rank == 4, "Invalid rank");
+      static_assert(Op::rank == 0 || Op::rank == 2 || Op::rank == 4,
+                    "Invalid rank");
       static const int rank = Op::rank;
 
       template <typename ScalarType>
-      using value_type = decltype(
-        invert(std::declval<typename Op::template value_type<ScalarType>>()));
+      using value_type = decltype(internal::invert_impl(
+        std::declval<typename Op::template value_type<ScalarType>>()));
 
       // Implement the common part of the class
       DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
@@ -1576,16 +1606,32 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
-          "inv", operand);
+        if (rank == 0)
+          {
+            return "1/" + operand.as_ascii(decorator);
+          }
+        else
+          {
+            return decorator
+              .prefixed_parenthesized_symbolic_op_operand_as_ascii("inv",
+                                                                   operand);
+          }
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator
-          .suffixed_braced_superscript_symbolic_op_operand_as_latex(operand,
-                                                                    "-1");
+        if (rank == 0)
+          {
+            return Utilities::LaTeX::decorate_fraction(
+              "1", operand.as_latex(decorator));
+          }
+        else
+          {
+            return decorator
+              .suffixed_braced_superscript_symbolic_op_operand_as_latex(operand,
+                                                                        "-1");
+          }
       }
 
       template <typename ScalarType>
@@ -1593,7 +1639,7 @@ private:                                                                 \
       operator()(
         const typename Op::template value_type<ScalarType> &value) const
       {
-        return invert(value);
+        return internal::invert_impl(value);
       }
 
       template <typename ScalarType, std::size_t width>
@@ -1602,7 +1648,7 @@ private:                                                                 \
         const typename Op::template vectorized_value_type<ScalarType, width>
           &value) const
       {
-        return invert(value);
+        return internal::invert_impl(value);
       }
     };
 

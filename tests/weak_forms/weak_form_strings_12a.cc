@@ -50,6 +50,8 @@ run()
 
     deallog << "Negation: " << (-f1).as_ascii(decorator) << std::endl;
 
+    deallog << "Inverse: " << invert(f1).as_ascii(decorator) << std::endl;
+
     deallog << "Normalization: " << normalize(f1).as_ascii(decorator)
             << std::endl;
 
@@ -76,6 +78,8 @@ run()
     LogStream::Prefix prefix("LaTeX");
 
     deallog << "Negation: " << (-f1).as_latex(decorator) << std::endl;
+
+    deallog << "Inverse: " << invert(f1).as_latex(decorator) << std::endl;
 
     deallog << "Normalization: " << normalize(f1).as_latex(decorator)
             << std::endl;
