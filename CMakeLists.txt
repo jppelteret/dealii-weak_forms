@@ -113,6 +113,12 @@ FILE(GLOB_RECURSE FILE_LIST_BENCHMARKS
   "${CMAKE_SOURCE_DIR}/benchmarks/*.cc"
 )
 
+# Declare all example files:
+FILE(GLOB_RECURSE FILE_LIST_EXAMPLES
+  "${CMAKE_SOURCE_DIR}/examples/*.h"
+  "${CMAKE_SOURCE_DIR}/examples/*.cc"
+)
+
 ##
 # Setup deal.II
 ##
@@ -169,6 +175,7 @@ IF(CLANGFORMAT)
     ${FILE_LIST_SRC}
     ${FILE_LIST_TESTS}
     ${FILE_LIST_BENCHMARKS}
+    ${FILE_LIST_EXAMPLES}
   )
 
   # Setup clangformat target
