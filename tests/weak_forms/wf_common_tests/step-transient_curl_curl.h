@@ -217,7 +217,7 @@ namespace StepTransientCurlCurl
     // discontinuous approximation allows $\widetilde{p}$ and $\widetilde{J}$ to
     // be condensed out and a classical displacement based method is recovered.
     // Here we specify the polynomial order used to approximate the
-    // solution_mvp. The quadrature order should be adjusted accordingly, but
+    // solution. The quadrature order should be adjusted accordingly, but
     // this is done at a later stage.
     struct FESystem
     {
@@ -840,19 +840,19 @@ namespace StepTransientCurlCurl
       }
   }
 
-  // @sect3{Analytical solution_mvp}
-  // Analytical solution_mvp to a linearly magnetisable
+  // @sect3{Analytical solution}
+  // Analytical solution to a linearly magnetisable
   // straight wire, aligned in the z-direction,
   // immersed in a medium of infinite size.
-  // The fundamentals required to derive the solution_mvp
+  // The fundamentals required to derive the solution
   // can be found in:
   // [Griffiths1999a] Griffiths, D. J. & College, R.
   // Introduction to electrodynamics. Prentice Hall, 1999
-  // The analytical solution_mvp is the solution_mvp to questions
+  // The analytical solution is the solution to questions
   // 5.25 on page 239. Note that q5.22 is loosely related...
 
   template <int dim>
-  class Analyticalsolution_mvp : public Function<dim>
+  class AnalyticalSolution : public Function<dim>
   {
   public:
     enum e_Field
@@ -861,11 +861,10 @@ namespace StepTransientCurlCurl
       MI   // Magnetic induction
     };
 
-    Analyticalsolution_mvp(
-      const Geometry<dim> &                geometry,
-      const PermeabilityCoefficient<dim> & coefficient,
-      const SourceFreeCurrentDensity<dim> &source_free_current,
-      const e_Field &                      field)
+    AnalyticalSolution(const Geometry<dim> &                geometry,
+                       const PermeabilityCoefficient<dim> & coefficient,
+                       const SourceFreeCurrentDensity<dim> &source_free_current,
+                       const e_Field &                      field)
       : Function<dim>(dim)
       , geometry(geometry)
       , coefficient(coefficient)
@@ -873,7 +872,7 @@ namespace StepTransientCurlCurl
       , field(field)
     {}
 
-    virtual ~Analyticalsolution_mvp()
+    virtual ~AnalyticalSolution()
     {}
 
     virtual void
@@ -891,16 +890,16 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  Analyticalsolution_mvp<dim>::vector_value(const Point<dim> &,
-                                            Vector<double> &) const
+  AnalyticalSolution<dim>::vector_value(const Point<dim> &,
+                                        Vector<double> &) const
   {
     AssertThrow(false, ExcInternalError());
   }
 
   template <>
   void
-  Analyticalsolution_mvp<3>::vector_value(const Point<3> &p,
-                                          Vector<double> &values) const
+  AnalyticalSolution<3>::vector_value(const Point<3> &p,
+                                      Vector<double> &values) const
   {
     const unsigned int dim = 3;
     Assert(values.size() == dim, ExcDimensionMismatch(values.size(), dim));
@@ -1174,7 +1173,7 @@ namespace StepTransientCurlCurl
     PermeabilityCoefficient<dim>  function_material_permeability_coefficients;
     ConductivityCoefficient<dim>  function_material_conductivity_coefficients;
     SourceFreeCurrentDensity<dim> function_free_current_density;
-    Analyticalsolution_mvp<dim>   function_analytical_solution_mvp_MI;
+    AnalyticalSolution<dim>       function_analytical_solution_mvp_MI;
   };
 
 
@@ -1234,7 +1233,7 @@ namespace StepTransientCurlCurl
         geometry,
         function_material_permeability_coefficients,
         function_free_current_density,
-        Analyticalsolution_mvp<dim>::MI)
+        AnalyticalSolution<dim>::MI)
   {
     if (parameters.discretisation_type != "Cartesian")
       AssertThrow(parameters.radius_wire <
@@ -2336,37 +2335,94 @@ namespace StepTransientCurlCurl
         const auto cell_iterator_and_point =
           GridTools::find_active_cell_around_point(mapping, dof_handler_mvp, p);
         const auto &cell = cell_iterator_and_point.first;
-        fe_values.reinit(cell);
 
-        const unsigned int &n_q_points = fe_values.n_quadrature_points;
-        const unsigned int  q_point    = 0;
-        const auto          point = fe_values.get_quadrature_points()[q_point];
+        const auto output_result = [this](const Point<dim> &    point,
+                                          const Tensor<1, dim> &B,
+                                          const Tensor<1, dim> &J_eddy,
+                                          const Tensor<1, dim> &J_free)
+        {
+          deallog << " ; Point: " << point
+                  << " ; Within wire: " << geometry.within_wire(point)
+                  << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
+                  << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
+        };
 
-        std::vector<double>         conductivity_coefficient_values(n_q_points);
-        std::vector<Tensor<1, dim>> source_values(n_q_points);
+        if (cell != dof_handler_mvp.end() &&
+            cell->subdomain_id() == this_mpi_process)
+          {
+            std::cout << "FOUND IN SUBDOMAIN " << cell->subdomain_id()
+                      << std::endl;
+            fe_values.reinit(cell);
 
-        this->function_material_conductivity_coefficients.value_list(
-          fe_values.get_quadrature_points(), conductivity_coefficient_values);
-        this->function_free_current_density.value_list(
-          fe_values.get_quadrature_points(), source_values);
+            const unsigned int &n_q_points = fe_values.n_quadrature_points;
+            const unsigned int  q_point    = 0;
+            const Point<dim> point = fe_values.get_quadrature_points()[q_point];
 
-        std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
-        std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
-        fe_values[mvp_extractor].get_function_curls(solution_mvp,
-                                                    solution_mvp_curls);
-        fe_values[mvp_extractor].get_function_values(d_solution_mvp_dt,
-                                                     d_solution_mvp_dt_values);
+            std::vector<double> conductivity_coefficient_values(n_q_points);
+            std::vector<Tensor<1, dim>> source_values(n_q_points);
 
-        const double          sigma  = conductivity_coefficient_values[q_point];
-        const Tensor<1, dim>  B      = solution_mvp_curls[q_point];
-        const Tensor<1, dim>  dA_dt  = d_solution_mvp_dt_values[q_point];
-        const Tensor<1, dim>  J_eddy = -sigma * dA_dt;
-        const Tensor<1, dim> &J_free = source_values[q_point];
+            this->function_material_conductivity_coefficients.value_list(
+              fe_values.get_quadrature_points(),
+              conductivity_coefficient_values);
+            this->function_free_current_density.value_list(
+              fe_values.get_quadrature_points(), source_values);
 
-        deallog << " ; Point: " << point
-                << " ; Within wire: " << geometry.within_wire(point)
-                << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
-                << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
+            std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
+            std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
+            fe_values[mvp_extractor].get_function_curls(solution_mvp,
+                                                        solution_mvp_curls);
+            fe_values[mvp_extractor].get_function_values(
+              d_solution_mvp_dt, d_solution_mvp_dt_values);
+
+            const double sigma      = conductivity_coefficient_values[q_point];
+            const Tensor<1, dim>  B = solution_mvp_curls[q_point];
+            const Tensor<1, dim>  dA_dt  = d_solution_mvp_dt_values[q_point];
+            const Tensor<1, dim>  J_eddy = -sigma * dA_dt;
+            const Tensor<1, dim> &J_free = source_values[q_point];
+
+            if (n_mpi_processes > 1)
+              {
+                Utilities::MPI::broadcast(mpi_communicator,
+                                          point,
+                                          cell->subdomain_id());
+                Utilities::MPI::broadcast(mpi_communicator,
+                                          B,
+                                          cell->subdomain_id());
+                Utilities::MPI::broadcast(mpi_communicator,
+                                          J_eddy,
+                                          cell->subdomain_id());
+                Utilities::MPI::broadcast(mpi_communicator,
+                                          J_free,
+                                          cell->subdomain_id());
+              }
+
+            output_result(point, B, J_eddy, J_free);
+          }
+        else
+          {
+            Point<dim>     point;
+            Tensor<1, dim> B;
+            Tensor<1, dim> J_eddy;
+            Tensor<1, dim> J_free;
+
+            if (n_mpi_processes > 1)
+              {
+                point  = Utilities::MPI::broadcast(mpi_communicator,
+                                                  point,
+                                                  cell->subdomain_id());
+                B      = Utilities::MPI::broadcast(mpi_communicator,
+                                              B,
+                                              cell->subdomain_id());
+                J_eddy = Utilities::MPI::broadcast(mpi_communicator,
+                                                   J_eddy,
+                                                   cell->subdomain_id());
+                J_free = Utilities::MPI::broadcast(mpi_communicator,
+                                                   J_free,
+                                                   cell->subdomain_id());
+              }
+
+            output_result(point, B, J_eddy, J_free);
+          }
       }
   }
 
