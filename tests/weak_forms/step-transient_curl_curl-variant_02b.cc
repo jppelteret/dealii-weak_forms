@@ -199,7 +199,7 @@ namespace StepTransientCurlCurl
                              this->qf_cell_mvp,
                              this->qf_face_mvp,
                              {2} /*input boundary*/);
-    std::cout << "I_total: " << I_total << std::endl;
+    // std::cout << "I_total: " << I_total << std::endl;
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;

@@ -72,8 +72,7 @@ namespace StepTransientCurlCurl
       endc = this->dof_handler_esp.end();
     for (; cell != endc; ++cell)
       {
-        //    if (cell->is_locally_owned() == false) continue;
-        if (cell->subdomain_id() != this->this_mpi_process)
+        if (cell->is_locally_owned() == false)
           continue;
 
         fe_values.reinit(cell);
@@ -169,8 +168,7 @@ namespace StepTransientCurlCurl
       endc = this->dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
-        //    if (cell->is_locally_owned() == false) continue;
-        if (cell->subdomain_id() != this->this_mpi_process)
+        if (cell->is_locally_owned() == false)
           continue;
 
         fe_values.reinit(cell);
