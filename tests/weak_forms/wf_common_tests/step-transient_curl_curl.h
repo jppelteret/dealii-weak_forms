@@ -25,10 +25,13 @@
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/function.h>
 #include <deal.II/base/logstream.h>
+#include <deal.II/base/mpi.templates.h>
 #include <deal.II/base/parameter_handler.h>
 #include <deal.II/base/quadrature_lib.h>
 #include <deal.II/base/tensor_function.h>
 #include <deal.II/base/timer.h>
+
+#include <deal.II/distributed/tria.h>
 
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_renumbering.h>
@@ -46,7 +49,6 @@
 #include <deal.II/grid/grid_refinement.h>
 #include <deal.II/grid/grid_tools.h>
 #include <deal.II/grid/manifold_lib.h>
-#include <deal.II/grid/tria.h>
 #include <deal.II/grid/tria_accessor.h>
 #include <deal.II/grid/tria_iterator.h>
 
@@ -217,7 +219,7 @@ namespace StepTransientCurlCurl
     // discontinuous approximation allows $\widetilde{p}$ and $\widetilde{J}$ to
     // be condensed out and a classical displacement based method is recovered.
     // Here we specify the polynomial order used to approximate the
-    // solution_mvp. The quadrature order should be adjusted accordingly, but
+    // solution. The quadrature order should be adjusted accordingly, but
     // this is done at a later stage.
     struct FESystem
     {
@@ -840,19 +842,19 @@ namespace StepTransientCurlCurl
       }
   }
 
-  // @sect3{Analytical solution_mvp}
-  // Analytical solution_mvp to a linearly magnetisable
+  // @sect3{Analytical solution}
+  // Analytical solution to a linearly magnetisable
   // straight wire, aligned in the z-direction,
   // immersed in a medium of infinite size.
-  // The fundamentals required to derive the solution_mvp
+  // The fundamentals required to derive the solution
   // can be found in:
   // [Griffiths1999a] Griffiths, D. J. & College, R.
   // Introduction to electrodynamics. Prentice Hall, 1999
-  // The analytical solution_mvp is the solution_mvp to questions
+  // The analytical solution is the solution to questions
   // 5.25 on page 239. Note that q5.22 is loosely related...
 
   template <int dim>
-  class Analyticalsolution_mvp : public Function<dim>
+  class AnalyticalSolution : public Function<dim>
   {
   public:
     enum e_Field
@@ -861,11 +863,10 @@ namespace StepTransientCurlCurl
       MI   // Magnetic induction
     };
 
-    Analyticalsolution_mvp(
-      const Geometry<dim> &                geometry,
-      const PermeabilityCoefficient<dim> & coefficient,
-      const SourceFreeCurrentDensity<dim> &source_free_current,
-      const e_Field &                      field)
+    AnalyticalSolution(const Geometry<dim> &                geometry,
+                       const PermeabilityCoefficient<dim> & coefficient,
+                       const SourceFreeCurrentDensity<dim> &source_free_current,
+                       const e_Field &                      field)
       : Function<dim>(dim)
       , geometry(geometry)
       , coefficient(coefficient)
@@ -873,7 +874,7 @@ namespace StepTransientCurlCurl
       , field(field)
     {}
 
-    virtual ~Analyticalsolution_mvp()
+    virtual ~AnalyticalSolution()
     {}
 
     virtual void
@@ -891,16 +892,16 @@ namespace StepTransientCurlCurl
 
   template <int dim>
   void
-  Analyticalsolution_mvp<dim>::vector_value(const Point<dim> &,
-                                            Vector<double> &) const
+  AnalyticalSolution<dim>::vector_value(const Point<dim> &,
+                                        Vector<double> &) const
   {
     AssertThrow(false, ExcInternalError());
   }
 
   template <>
   void
-  Analyticalsolution_mvp<3>::vector_value(const Point<3> &p,
-                                          Vector<double> &values) const
+  AnalyticalSolution<3>::vector_value(const Point<3> &p,
+                                      Vector<double> &values) const
   {
     const unsigned int dim = 3;
     Assert(values.size() == dim, ExcDimensionMismatch(values.size(), dim));
@@ -1125,8 +1126,8 @@ namespace StepTransientCurlCurl
     const types::manifold_id refinement_manifold_id;
     CylindricalManifold<dim> surface_description;
 
-    Triangulation<dim>      triangulation;
-    RefinementStrategy<dim> refinement_strategy;
+    parallel::distributed::Triangulation<dim> triangulation;
+    RefinementStrategy<dim>                   refinement_strategy;
 
     const unsigned int  degree;
     const unsigned int  degree_offset;
@@ -1174,7 +1175,7 @@ namespace StepTransientCurlCurl
     PermeabilityCoefficient<dim>  function_material_permeability_coefficients;
     ConductivityCoefficient<dim>  function_material_conductivity_coefficients;
     SourceFreeCurrentDensity<dim> function_free_current_density;
-    Analyticalsolution_mvp<dim>   function_analytical_solution_mvp_MI;
+    AnalyticalSolution<dim>       function_analytical_solution_mvp_MI;
   };
 
 
@@ -1197,7 +1198,7 @@ namespace StepTransientCurlCurl
     , refinement_manifold_id(1)
     , surface_description(Point<dim>(0, 0, 1) /*direction*/,
                           Point<dim>(0, 0, 0) /*point_on_axis*/)
-    , triangulation(Triangulation<dim>::maximum_smoothing)
+    , triangulation(mpi_communicator, Triangulation<dim>::maximum_smoothing)
     , refinement_strategy(parameters.refinement_strategy)
     , degree(parameters.poly_degree_min)
     , degree_offset(
@@ -1234,7 +1235,7 @@ namespace StepTransientCurlCurl
         geometry,
         function_material_permeability_coefficients,
         function_free_current_density,
-        Analyticalsolution_mvp<dim>::MI)
+        AnalyticalSolution<dim>::MI)
   {
     if (parameters.discretisation_type != "Cartesian")
       AssertThrow(parameters.radius_wire <
@@ -1259,41 +1260,24 @@ namespace StepTransientCurlCurl
   void
   StepTransientCurlCurl_Base<dim>::setup_system()
   {
-    std::vector<IndexSet> all_locally_owned_dofs_mvp;
-    std::vector<IndexSet> all_locally_owned_dofs_esp;
-
     {
       TimerOutput::Scope timer_scope(computing_timer, "Setup: distribute DoFs");
 
-      // Partition triangulation
-      GridTools::partition_triangulation(n_mpi_processes, triangulation);
-
       // Distribute DoFs
       dof_handler_mvp.distribute_dofs(fe_mvp);
-      DoFRenumbering::subdomain_wise(dof_handler_mvp);
 
       // Construct DoF indices
-      locally_owned_dofs_mvp.clear();
-      locally_relevant_dofs_mvp.clear();
-      all_locally_owned_dofs_mvp =
-        DoFTools::locally_owned_dofs_per_subdomain(dof_handler_mvp);
-      locally_owned_dofs_mvp    = all_locally_owned_dofs_mvp[this_mpi_process];
-      locally_relevant_dofs_mvp = DoFTools::locally_relevant_dofs_per_subdomain(
-        dof_handler_mvp)[this_mpi_process];
+      locally_owned_dofs_mvp = dof_handler_mvp.locally_owned_dofs();
+      DoFTools::extract_locally_relevant_dofs(dof_handler_mvp,
+                                              locally_relevant_dofs_mvp);
 
       if (parameters.use_voltage_excitation())
         {
           dof_handler_esp.distribute_dofs(fe_esp);
-          DoFRenumbering::subdomain_wise(dof_handler_esp);
 
-          locally_owned_dofs_esp.clear();
-          locally_relevant_dofs_esp.clear();
-          all_locally_owned_dofs_esp =
-            DoFTools::locally_owned_dofs_per_subdomain(dof_handler_esp);
-          locally_owned_dofs_esp = all_locally_owned_dofs_esp[this_mpi_process];
-          locally_relevant_dofs_esp =
-            DoFTools::locally_relevant_dofs_per_subdomain(
-              dof_handler_esp)[this_mpi_process];
+          locally_owned_dofs_esp = dof_handler_esp.locally_owned_dofs();
+          DoFTools::extract_locally_relevant_dofs(dof_handler_esp,
+                                                  locally_relevant_dofs_esp);
         }
     }
 
@@ -1356,6 +1340,9 @@ namespace StepTransientCurlCurl
             endc = this->dof_handler_esp.end();
           for (; cell != endc; ++cell)
             {
+              if (cell->is_locally_owned() == false)
+                continue;
+
               if (this->geometry.within_wire(cell->center()))
                 {
                   const unsigned int &n_dofs_per_cell = fe_esp.dofs_per_cell;
@@ -1366,6 +1353,17 @@ namespace StepTransientCurlCurl
                                         local_dof_indices.end());
                 }
             }
+
+          // Sync across MPI ranks
+          wire_dofs = Utilities::MPI::all_reduce<IndexSet>(
+            wire_dofs,
+            mpi_communicator,
+            [](const IndexSet &idx1, const IndexSet &idx2) -> IndexSet
+            {
+              IndexSet out(idx1);
+              out.add_indices(idx2);
+              return out;
+            });
 
           for (unsigned int dof = 0; dof < dof_handler_esp.n_dofs(); ++dof)
             if (wire_dofs.is_element(dof) == false)
@@ -1378,29 +1376,14 @@ namespace StepTransientCurlCurl
     {
       TimerOutput::Scope timer_scope(computing_timer, "Setup: matrix, vectors");
 
-      std::vector<dealii::types::global_dof_index>
-        n_locally_owned_dofs_mvp_per_processor(n_mpi_processes);
-      {
-        AssertThrow(all_locally_owned_dofs_mvp.size() ==
-                      n_locally_owned_dofs_mvp_per_processor.size(),
-                    ExcInternalError());
-        for (unsigned int i = 0;
-             i < n_locally_owned_dofs_mvp_per_processor.size();
-             ++i)
-          n_locally_owned_dofs_mvp_per_processor[i] =
-            all_locally_owned_dofs_mvp[i].n_elements();
-      }
-
       DynamicSparsityPattern dsp(locally_relevant_dofs_mvp);
       DoFTools::make_sparsity_pattern(dof_handler_mvp,
                                       dsp,
                                       constraints_mvp,
-                                      /* keep constrained dofs */ false,
-                                      Utilities::MPI::this_mpi_process(
-                                        mpi_communicator));
+                                      false /* keep constrained dofs */);
       dealii::SparsityTools::distribute_sparsity_pattern(
         dsp,
-        n_locally_owned_dofs_mvp_per_processor,
+        locally_owned_dofs_mvp,
         mpi_communicator,
         locally_relevant_dofs_mvp);
 
@@ -1419,33 +1402,16 @@ namespace StepTransientCurlCurl
                                locally_relevant_dofs_mvp,
                                mpi_communicator);
 
-
-
       if (parameters.use_voltage_excitation())
         {
-          std::vector<dealii::types::global_dof_index>
-            n_locally_owned_dofs_esp_per_processor(n_mpi_processes);
-          {
-            AssertThrow(all_locally_owned_dofs_esp.size() ==
-                          n_locally_owned_dofs_esp_per_processor.size(),
-                        ExcInternalError());
-            for (unsigned int i = 0;
-                 i < n_locally_owned_dofs_esp_per_processor.size();
-                 ++i)
-              n_locally_owned_dofs_esp_per_processor[i] =
-                all_locally_owned_dofs_esp[i].n_elements();
-          }
-
           DynamicSparsityPattern dsp(locally_relevant_dofs_esp);
           DoFTools::make_sparsity_pattern(dof_handler_esp,
                                           dsp,
                                           constraints_esp,
-                                          /* keep constrained dofs */ false,
-                                          Utilities::MPI::this_mpi_process(
-                                            mpi_communicator));
+                                          false /* keep constrained dofs */);
           dealii::SparsityTools::distribute_sparsity_pattern(
             dsp,
-            n_locally_owned_dofs_esp_per_processor,
+            locally_owned_dofs_esp,
             mpi_communicator,
             locally_relevant_dofs_esp);
 
@@ -1490,8 +1456,7 @@ namespace StepTransientCurlCurl
                                                    endc = dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
-        //    if (cell->is_locally_owned() == false) continue;
-        if (cell->subdomain_id() != this_mpi_process)
+        if (cell->is_locally_owned() == false)
           continue;
 
         double div_J_f = 0.0;
@@ -1559,8 +1524,7 @@ namespace StepTransientCurlCurl
                                                    endc = dof_handler_mvp.end();
     for (; cell != endc; ++cell)
       {
-        //    if (cell->is_locally_owned() == false) continue;
-        if (cell->subdomain_id() != this_mpi_process)
+        if (cell->is_locally_owned() == false)
           continue;
 
         double div_B = 0.0;
@@ -1693,8 +1657,7 @@ namespace StepTransientCurlCurl
               endc = dof_handler.end();
             for (; cell != endc; ++cell)
               {
-                //    if (cell->is_locally_owned() == false) continue;
-                if (cell->subdomain_id() != this_mpi_process)
+                if (cell->is_locally_owned() == false)
                   continue;
 
                 const unsigned int cell_fe_idx = cell->active_fe_index();
@@ -1831,8 +1794,7 @@ namespace StepTransientCurlCurl
               endc = dof_handler_mvp.end();
             for (; cell != endc; ++cell)
               {
-                //    if (cell->is_locally_owned() == false) continue;
-                if (cell->subdomain_id() != this_mpi_process)
+                if (cell->is_locally_owned() == false)
                   {
                     // Clear flags on non-owned cell that would
                     // be cleared on the owner processor anyway...
@@ -2249,8 +2211,7 @@ namespace StepTransientCurlCurl
         endc = triangulation.end();
       for (; cell != endc; ++cell, ++c)
         {
-          //      if (cell->is_locally_owned() == false) continue;
-          if (cell->subdomain_id() != this_mpi_process)
+          if (cell->is_locally_owned() == false)
             continue;
 
           material_id(c) = cell->material_id();
@@ -2317,6 +2278,17 @@ namespace StepTransientCurlCurl
     const unsigned int timestep,
     const unsigned int cycle) const
   {
+    const auto output_result = [this](const Point<dim> &    point,
+                                      const Tensor<1, dim> &B,
+                                      const Tensor<1, dim> &J_eddy,
+                                      const Tensor<1, dim> &J_free)
+    {
+      deallog << " ; Point: " << point
+              << " ; Within wire: " << geometry.within_wire(point)
+              << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
+              << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
+    };
+
     const QMidpoint<dim> soln_qrule;
 
     FEValues<dim> fe_values(mapping,
@@ -2336,37 +2308,52 @@ namespace StepTransientCurlCurl
         const auto cell_iterator_and_point =
           GridTools::find_active_cell_around_point(mapping, dof_handler_mvp, p);
         const auto &cell = cell_iterator_and_point.first;
-        fe_values.reinit(cell);
 
-        const unsigned int &n_q_points = fe_values.n_quadrature_points;
-        const unsigned int  q_point    = 0;
-        const auto          point = fe_values.get_quadrature_points()[q_point];
+        // We don't know which process owns the cell, so we have to accumulate
+        // the result from all ranks.
+        Point<dim>     point;
+        Tensor<1, dim> B;
+        Tensor<1, dim> J_eddy;
+        Tensor<1, dim> J_free;
 
-        std::vector<double>         conductivity_coefficient_values(n_q_points);
-        std::vector<Tensor<1, dim>> source_values(n_q_points);
+        if (cell != dof_handler_mvp.end() && cell->is_locally_owned())
+          {
+            fe_values.reinit(cell);
 
-        this->function_material_conductivity_coefficients.value_list(
-          fe_values.get_quadrature_points(), conductivity_coefficient_values);
-        this->function_free_current_density.value_list(
-          fe_values.get_quadrature_points(), source_values);
+            const unsigned int &n_q_points = fe_values.n_quadrature_points;
+            const unsigned int  q_point    = 0;
+            point = fe_values.get_quadrature_points()[q_point];
 
-        std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
-        std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
-        fe_values[mvp_extractor].get_function_curls(solution_mvp,
-                                                    solution_mvp_curls);
-        fe_values[mvp_extractor].get_function_values(d_solution_mvp_dt,
-                                                     d_solution_mvp_dt_values);
+            std::vector<double> conductivity_coefficient_values(n_q_points);
+            std::vector<Tensor<1, dim>> source_values(n_q_points);
 
-        const double          sigma  = conductivity_coefficient_values[q_point];
-        const Tensor<1, dim>  B      = solution_mvp_curls[q_point];
-        const Tensor<1, dim>  dA_dt  = d_solution_mvp_dt_values[q_point];
-        const Tensor<1, dim>  J_eddy = -sigma * dA_dt;
-        const Tensor<1, dim> &J_free = source_values[q_point];
+            this->function_material_conductivity_coefficients.value_list(
+              fe_values.get_quadrature_points(),
+              conductivity_coefficient_values);
+            this->function_free_current_density.value_list(
+              fe_values.get_quadrature_points(), source_values);
 
-        deallog << " ; Point: " << point
-                << " ; Within wire: " << geometry.within_wire(point)
-                << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
-                << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
+            std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
+            std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
+            fe_values[mvp_extractor].get_function_curls(solution_mvp,
+                                                        solution_mvp_curls);
+            fe_values[mvp_extractor].get_function_values(
+              d_solution_mvp_dt, d_solution_mvp_dt_values);
+
+            const double sigma = conductivity_coefficient_values[q_point];
+            B                  = solution_mvp_curls[q_point];
+            const Tensor<1, dim> dA_dt = d_solution_mvp_dt_values[q_point];
+            J_eddy                     = -sigma * dA_dt;
+            J_free                     = source_values[q_point];
+          }
+
+        // Sync between all ranks
+        point  = Utilities::MPI::sum(Tensor<1, dim>(point), mpi_communicator);
+        B      = Utilities::MPI::sum(B, mpi_communicator);
+        J_eddy = Utilities::MPI::sum(J_eddy, mpi_communicator);
+        J_free = Utilities::MPI::sum(J_free, mpi_communicator);
+
+        output_result(point, B, J_eddy, J_free);
       }
   }
 

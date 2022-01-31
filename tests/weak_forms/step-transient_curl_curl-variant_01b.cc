@@ -127,7 +127,7 @@ namespace StepTransientCurlCurl
         .template dA<double>(this->dof_handler_mvp,
                              this->qf_cell_mvp,
                              this->qf_face_mvp);
-    std::cout << "I_total: " << I_total << std::endl;
+    // std::cout << "I_total: " << I_total << std::endl;
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;
