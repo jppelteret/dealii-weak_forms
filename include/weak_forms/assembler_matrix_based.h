@@ -20,6 +20,8 @@
 
 #include <deal.II/fe/fe_values.h>
 
+#include <deal.II/grid/filtered_iterator.h>
+
 #include <deal.II/lac/affine_constraints.h>
 #include <deal.II/lac/full_matrix.h>
 #include <deal.II/lac/vector.h>
@@ -1233,7 +1235,8 @@ namespace WeakForms
       // Finally! We can perform the assembly.
       if (assembly_flags)
         {
-          MeshWorker::mesh_loop(dof_handler.active_cell_iterators(),
+          MeshWorker::mesh_loop(dof_handler.active_cell_iterators() |
+                                  IteratorFilters::LocallyOwnedCell(),
                                 cell_worker,
                                 copier,
                                 sample_scratch_data,
