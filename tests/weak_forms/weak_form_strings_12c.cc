@@ -69,6 +69,17 @@ run()
 
     deallog << "Symmetrization: " << symmetrize(f1).as_ascii(decorator)
             << std::endl;
+
+    deallog << "Trace: " << trace(f1).as_ascii(decorator) << std::endl;
+
+    deallog << "Adjugate: " << adjugate(f1).as_ascii(decorator) << std::endl;
+
+    deallog << "Cofactor: " << cofactor(f1).as_ascii(decorator) << std::endl;
+
+    deallog << "l1-norm: " << l1_norm(f1).as_ascii(decorator) << std::endl;
+
+    deallog << "linfty-norm: " << linfty_norm(f1).as_ascii(decorator)
+            << std::endl;
   }
 
   // Test LaTeX
@@ -88,6 +99,17 @@ run()
     deallog << "Transpose: " << transpose(f1).as_latex(decorator) << std::endl;
 
     deallog << "Symmetrization: " << symmetrize(f1).as_latex(decorator)
+            << std::endl;
+
+    deallog << "Trace: " << trace(f1).as_latex(decorator) << std::endl;
+
+    deallog << "Adjugate: " << adjugate(f1).as_latex(decorator) << std::endl;
+
+    deallog << "Cofactor: " << cofactor(f1).as_latex(decorator) << std::endl;
+
+    deallog << "l1-norm: " << l1_norm(f1).as_latex(decorator) << std::endl;
+
+    deallog << "linfty-norm: " << linfty_norm(f1).as_latex(decorator)
             << std::endl;
   }
 

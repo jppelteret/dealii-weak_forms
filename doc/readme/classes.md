@@ -182,10 +182,15 @@ doxygen documentation is in preparation.
        - `abs()`:absolute value
        - [TODO] Other math functions
     - Tensor operations
-      - `determinant()`: determinant
-      - `invert()`: invert
-      - `transpose()`: transpose
-      - `symmetrize()`: symmetrize
+      - `determinant()`: determinant of a tensor or symmetric tensor
+      - `invert()`: invert a tensor or symmetric tensor
+      - `transpose()`: transpose of a tensor or symmetric tensor
+      - `trace()`: trace of a tensor or symmetric tensor
+      - `symmetrize()`: symmetrize a tensor 
+      - `adjugate()`: adjugate of a tensor
+      - `cofactor()`: cofactor of a tensor
+      - `l1_norm()`: l(1) norm of a tensor (NOTE: Not yet available for vectorised numbers)
+      - `linfty_norm()`: l(infty) norm of a tensor (NOTE: Not yet available for vectorised numbers)
     - Interface operations (evaluating a function across an interface)
       - [TODO] jump
       - [TODO] average 

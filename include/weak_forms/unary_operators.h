@@ -100,26 +100,41 @@ namespace WeakForms
 
       // --- Tensor operations ---
       /**
-       * Form the determinant of a tensor
+       * Form the determinant of a tensor or symmetric tensor
        */
       determinant,
       /**
-       * Form the inverse of a tensor
+       * Form the inverse of a tensor or symmetric tensor
        */
       invert,
       /**
-       * Form the transpose of a tensor
+       * Form the transpose of a tensor or symmetric tensor
        */
       transpose,
+      /**
+       * Form the trace of a tensor or symmetric tensor
+       */
+      trace,
       /**
        * Symmetrize a tensor
        */
       symmetrize,
-      // trace
-      // adjugate
-      // cofactor
-      // l1_norm
-      // linfty_norm
+      /**
+       * Form the adjugate of a tensor
+       */
+      adjugate,
+      /**
+       * Form the cofactor of a tensor
+       */
+      cofactor,
+      /**
+       * Form the l1-norm of a tensor
+       */
+      l1_norm,
+      /**
+       * Form the l(infinity)-norm of a tensor
+       */
+      linfty_norm,
 
       // --- Symmetric tensor operations ---
 
@@ -634,6 +649,96 @@ namespace WeakForms
 
       template <typename ScalarType>
       using value_type = decltype(symmetrize(
+        std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::trace>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::trace;
+
+      static_assert(Op::rank == 2, "Invalid operator rank");
+      static const int rank = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        trace(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::adjugate>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::adjugate;
+
+      static_assert(Op::rank == 2, "Invalid operator rank");
+      static const int rank = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        adjugate(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::cofactor>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::cofactor;
+
+      static_assert(Op::rank == 2, "Invalid operator rank");
+      static const int rank = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        cofactor(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::l1_norm>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::l1_norm;
+
+      static_assert(Op::rank == 2, "Invalid operator rank");
+      static const int rank = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(
+        l1_norm(std::declval<typename Op::template value_type<ScalarType>>()));
+
+      // Implement the common part of the class
+      DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL(Op)
+    };
+
+
+
+    template <typename Op>
+    struct UnaryOpTypeTraits<UnaryOp<Op, UnaryOpCodes::linfty_norm>>
+    {
+      static const enum UnaryOpCodes op_code = UnaryOpCodes::linfty_norm;
+
+      static_assert(Op::rank == 2, "Invalid operator rank");
+      static const int rank = Op::rank;
+
+      template <typename ScalarType>
+      using value_type = decltype(linfty_norm(
         std::declval<typename Op::template value_type<ScalarType>>()));
 
       // Implement the common part of the class
@@ -1747,6 +1852,270 @@ private:                                                                 \
     };
 
 
+
+    /**
+     * Trace operator for integrands of symbolic integrals
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::trace,
+                  typename std::enable_if<!is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::trace>>
+    {
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::trace)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "tr", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("tr"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return trace(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return trace(value);
+      }
+    };
+
+
+
+    /**
+     * Adjugate operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::adjugate,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::adjugate>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The adjugate operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::adjugate)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "adj", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("adj"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return adjugate(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return adjugate(value);
+      }
+    };
+
+
+
+    /**
+     * Cofactor operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::cofactor,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::cofactor>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The cofactor operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::cofactor)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
+          "cof", operand);
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return decorator.prefixed_parenthesized_symbolic_op_operand_as_latex(
+          Utilities::LaTeX::decorate_text("cof"), operand);
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return cofactor(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        return cofactor(value);
+      }
+    };
+
+
+
+    /**
+     * l1-norm operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::l1_norm,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::l1_norm>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The l1-norm operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::l1_norm)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return "||" + operand.as_ascii(decorator) + "||_(1)";
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return Utilities::LaTeX::decorate_norm(operand.as_latex(decorator),
+                                               "1");
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return l1_norm(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        // static_assert(false,
+        //   "Need to first implement std::fabs() for vectorized values.");
+        return l1_norm(value);
+      }
+    };
+
+
+
+    /**
+     * l(infinity)-norm operator for integrands of symbolic integrals
+     *
+     * @note Not available for test functions and trial solutions.
+     */
+    template <typename Op>
+    class UnaryOp<Op,
+                  UnaryOpCodes::linfty_norm,
+                  typename std::enable_if<
+                    !is_or_has_test_function_or_trial_solution_op<Op>::value &&
+                    !is_integral_op<Op>::value>::type>
+      : public UnaryOpBase<UnaryOp<Op, UnaryOpCodes::linfty_norm>>
+    {
+      static_assert(
+        !is_or_has_test_function_or_trial_solution_op<Op>::value,
+        "The linfty-norm operation is not permitted for test functions or trial solutions.");
+
+      DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::linfty_norm)
+
+    public:
+      std::string
+      as_ascii(const SymbolicDecorations &decorator) const
+      {
+        return "||" + operand.as_ascii(decorator) + "||_(inf)";
+      }
+
+      std::string
+      as_latex(const SymbolicDecorations &decorator) const
+      {
+        return Utilities::LaTeX::decorate_norm(operand.as_latex(decorator),
+                                               "\\infty");
+      }
+
+      template <typename ScalarType>
+      value_type<ScalarType>
+      operator()(
+        const typename Op::template value_type<ScalarType> &value) const
+      {
+        return linfty_norm(value);
+      }
+
+      template <typename ScalarType, std::size_t width>
+      vectorized_value_type<ScalarType, width>
+      operator()(
+        const typename Op::template vectorized_value_type<ScalarType, width>
+          &value) const
+      {
+        // static_assert(false,
+        //   "Need to first implement std::fabs() for vectorized values.");
+        return linfty_norm(value);
+      }
+    };
+
+
     /* ------------------------ Tensor contractions ------------------------ */
 
 
@@ -1795,6 +2164,11 @@ DEAL_II_UNARY_OP_OF_UNARY_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_UNARY_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_UNARY_OP(transpose, transpose)
 DEAL_II_UNARY_OP_OF_UNARY_OP(symmetrize, symmetrize)
+DEAL_II_UNARY_OP_OF_UNARY_OP(trace, trace)
+DEAL_II_UNARY_OP_OF_UNARY_OP(adjugate, adjugate)
+DEAL_II_UNARY_OP_OF_UNARY_OP(cofactor, cofactor)
+DEAL_II_UNARY_OP_OF_UNARY_OP(l1_norm, l1_norm)
+DEAL_II_UNARY_OP_OF_UNARY_OP(linfty_norm, linfty_norm)
 
 #undef DEAL_II_UNARY_OP_OF_UNARY_OP
 
@@ -1889,6 +2263,36 @@ namespace WeakForms
   struct is_unary_op<
     Operators::UnaryOp<Op, Operators::UnaryOpCodes::symmetrize, UnderlyingType>>
     : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::trace, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::adjugate, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::cofactor, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::l1_norm, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct is_unary_op<Operators::UnaryOp<Op,
+                                        Operators::UnaryOpCodes::linfty_norm,
+                                        UnderlyingType>> : std::true_type
   {};
 
 } // namespace WeakForms

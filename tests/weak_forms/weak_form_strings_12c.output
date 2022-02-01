@@ -6,12 +6,22 @@ DEAL:string::Determinant: det(<<T>>)
 DEAL:string::Inverse: inv(<<T>>)
 DEAL:string::Transpose: trans(<<T>>)
 DEAL:string::Symmetrization: symm(<<T>>)
+DEAL:string::Trace: tr(<<T>>)
+DEAL:string::Adjugate: adj(<<T>>)
+DEAL:string::Cofactor: cof(<<T>>)
+DEAL:string::l1-norm: ||<<T>>||_(1)
+DEAL:string::linfty-norm: ||<<T>>||_(inf)
 DEAL:LaTeX::Negation: -\mathbf{T}
 DEAL:LaTeX::Normalization: \frac{\mathbf{T}}{\left\vert\mathbf{T}\right\vert}
-DEAL:LaTeX::Determinant: \text{det}\left(<<T>>\right)
+DEAL:LaTeX::Determinant: \text{det}\left(\mathbf{T}\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{T}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{T}\right]^{T}
 DEAL:LaTeX::Symmetrization: \left[\mathbf{T}\right]^{S}
+DEAL:LaTeX::Trace: \text{tr}\left(\mathbf{T}\right)
+DEAL:LaTeX::Adjugate: \text{adj}\left(\mathbf{T}\right)
+DEAL:LaTeX::Cofactor: \text{cof}\left(\mathbf{T}\right)
+DEAL:LaTeX::l1-norm: \left\Vert\mathbf{T}\right\Vert_{1}
+DEAL:LaTeX::linfty-norm: \left\Vert\mathbf{T}\right\Vert_{\infty}
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
@@ -21,12 +31,22 @@ DEAL:string::Determinant: det(<<T>>)
 DEAL:string::Inverse: inv(<<T>>)
 DEAL:string::Transpose: trans(<<T>>)
 DEAL:string::Symmetrization: symm(<<T>>)
+DEAL:string::Trace: tr(<<T>>)
+DEAL:string::Adjugate: adj(<<T>>)
+DEAL:string::Cofactor: cof(<<T>>)
+DEAL:string::l1-norm: ||<<T>>||_(1)
+DEAL:string::linfty-norm: ||<<T>>||_(inf)
 DEAL:LaTeX::Negation: -\mathbf{T}
 DEAL:LaTeX::Normalization: \frac{\mathbf{T}}{\left\vert\mathbf{T}\right\vert}
-DEAL:LaTeX::Determinant: \text{det}\left(<<T>>\right)
+DEAL:LaTeX::Determinant: \text{det}\left(\mathbf{T}\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{T}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{T}\right]^{T}
 DEAL:LaTeX::Symmetrization: \left[\mathbf{T}\right]^{S}
+DEAL:LaTeX::Trace: \text{tr}\left(\mathbf{T}\right)
+DEAL:LaTeX::Adjugate: \text{adj}\left(\mathbf{T}\right)
+DEAL:LaTeX::Cofactor: \text{cof}\left(\mathbf{T}\right)
+DEAL:LaTeX::l1-norm: \left\Vert\mathbf{T}\right\Vert_{1}
+DEAL:LaTeX::linfty-norm: \left\Vert\mathbf{T}\right\Vert_{\infty}
 DEAL::OK
 DEAL::
 DEAL::OK

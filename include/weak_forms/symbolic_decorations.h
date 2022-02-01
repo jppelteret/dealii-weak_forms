@@ -440,7 +440,7 @@ namespace WeakForms
     {
       const SymbolicDecorations &decorator = *this;
       return Utilities::LaTeX::decorate_function_with_arguments(
-        prefix, operand.as_ascii(decorator));
+        prefix, operand.as_latex(decorator));
     }
 
     template <typename Operand>
