@@ -452,6 +452,9 @@ namespace WeakForms
       static constexpr char l_vert[] = "\\left\\vert";
       static constexpr char r_vert[] = "\\right\\vert";
 
+      static constexpr char l_Vert[] = "\\left\\Vert";
+      static constexpr char r_Vert[] = "\\right\\Vert";
+
       static constexpr char decrease_space[] = "\\!";
 
       static std::string
@@ -503,6 +506,15 @@ namespace WeakForms
         const std::string &rbrace = r_parenthesis;
 
         return function + lbrace + arguments + rbrace;
+      }
+
+      static std::string
+      decorate_norm(const std::string &function, const std::string &norm)
+      {
+        const std::string &lbrace = l_Vert;
+        const std::string &rbrace = r_Vert;
+
+        return lbrace + function + rbrace + "_{" + norm + "}";
       }
 
       static std::string

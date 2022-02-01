@@ -83,6 +83,11 @@ DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(transpose, transpose)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(symmetrize, symmetrize)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(trace, trace)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(adjugate, adjugate)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(cofactor, cofactor)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(l1_norm, l1_norm)
+DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(linfty_norm, linfty_norm)
 
 #undef DEAL_II_UNARY_OP_OF_SYMBOLIC_OP
 
@@ -127,6 +132,11 @@ DEAL_II_UNARY_OP_OF_BINARY_OP(determinant, determinant)
 DEAL_II_UNARY_OP_OF_BINARY_OP(invert, invert)
 DEAL_II_UNARY_OP_OF_BINARY_OP(transpose, transpose)
 DEAL_II_UNARY_OP_OF_BINARY_OP(symmetrize, symmetrize)
+DEAL_II_UNARY_OP_OF_BINARY_OP(trace, trace)
+DEAL_II_UNARY_OP_OF_BINARY_OP(adjugate, adjugate)
+DEAL_II_UNARY_OP_OF_BINARY_OP(cofactor, cofactor)
+DEAL_II_UNARY_OP_OF_BINARY_OP(l1_norm, l1_norm)
+DEAL_II_UNARY_OP_OF_BINARY_OP(linfty_norm, linfty_norm)
 
 #undef DEAL_II_UNARY_OP_OF_BINARY_OP
 
