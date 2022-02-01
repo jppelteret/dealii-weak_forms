@@ -227,6 +227,35 @@ run()
 
     static_assert(decltype(symmetrize(f1))::rank == 2, "Incorrect rank");
 
+    std::cout << "Trace: "
+              << ((trace(f1)).template operator()<NumberType, width>(
+                   fe_values, q_point_range))
+              << std::endl;
+
+    std::cout << "Adjugate: "
+              << ((adjugate(f1))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
+    std::cout << "Cofactor: "
+              << ((cofactor(f1))
+                    .template operator()<NumberType, width>(fe_values,
+                                                            q_point_range))
+              << std::endl;
+
+    // std::cout
+    //   << "l1-norm: "
+    //   << ((l1_norm(f1)).template operator()<NumberType, width>(fe_values,
+    //                                                         q_point_range))
+    //   << std::endl;
+
+    // std::cout
+    //   << "linfty-norm: "
+    //   << ((linfty_norm(f1)).template operator()<NumberType, width>(fe_values,
+    //                                                         q_point_range))
+    //   << std::endl;
+
     deallog << "OK" << std::endl;
   }
 

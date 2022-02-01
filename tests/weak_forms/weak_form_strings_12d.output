@@ -5,11 +5,13 @@ DEAL:string::Normalization: <<S>>/|<<S>>|
 DEAL:string::Determinant: det(<<S>>)
 DEAL:string::Inverse: inv(<<S>>)
 DEAL:string::Transpose: trans(<<S>>)
+DEAL:string::Trace: tr(<<S>>)
 DEAL:LaTeX::Negation: -\mathbf{S}
 DEAL:LaTeX::Normalization: \frac{\mathbf{S}}{\left\vert\mathbf{S}\right\vert}
-DEAL:LaTeX::Determinant: \text{det}\left(<<S>>\right)
+DEAL:LaTeX::Determinant: \text{det}\left(\mathbf{S}\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{S}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{S}\right]^{T}
+DEAL:LaTeX::Trace: \text{tr}\left(\mathbf{S}\right)
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
@@ -18,11 +20,13 @@ DEAL:string::Normalization: <<S>>/|<<S>>|
 DEAL:string::Determinant: det(<<S>>)
 DEAL:string::Inverse: inv(<<S>>)
 DEAL:string::Transpose: trans(<<S>>)
+DEAL:string::Trace: tr(<<S>>)
 DEAL:LaTeX::Negation: -\mathbf{S}
 DEAL:LaTeX::Normalization: \frac{\mathbf{S}}{\left\vert\mathbf{S}\right\vert}
-DEAL:LaTeX::Determinant: \text{det}\left(<<S>>\right)
+DEAL:LaTeX::Determinant: \text{det}\left(\mathbf{S}\right)
 DEAL:LaTeX::Inverse: \left[\mathbf{S}\right]^{-1}
 DEAL:LaTeX::Transpose: \left[\mathbf{S}\right]^{T}
+DEAL:LaTeX::Trace: \text{tr}\left(\mathbf{S}\right)
 DEAL::OK
 DEAL::
 DEAL::OK

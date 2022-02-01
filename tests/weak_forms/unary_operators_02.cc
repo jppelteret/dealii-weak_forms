@@ -251,6 +251,48 @@ run()
         deallog << "OK" << std::endl;
       }
     }
+
+    {
+      LogStream::Prefix prefix("Trace");
+
+      {
+        const std::string title = "Test function: " + type;
+        std::cout << title << std::endl;
+        deallog << title << std::endl;
+
+        using namespace WeakForms;
+        const TestFunction<dim, spacedim> test;
+
+        std::cout << "Trace" << std::endl;
+
+        std::cout << "Hessian: "
+                  << trace(test.hessian())
+                       .template operator()<NumberType>(
+                         fe_values_dofs, fe_values_op)[dof_index][q_point]
+                  << std::endl;
+
+        deallog << "OK" << std::endl;
+      }
+
+      {
+        const std::string title = "Trial solution: " + type;
+        std::cout << title << std::endl;
+        deallog << title << std::endl;
+
+        using namespace WeakForms;
+        const TrialSolution<dim, spacedim> trial;
+
+        std::cout << "Trace" << std::endl;
+
+        std::cout << "Hessian: "
+                  << trace(trial.hessian())
+                       .template operator()<NumberType>(
+                         fe_values_dofs, fe_values_op)[dof_index][q_point]
+                  << std::endl;
+
+        deallog << "OK" << std::endl;
+      }
+    }
   };
 
   test(fe_values, fe_values, "Cell");

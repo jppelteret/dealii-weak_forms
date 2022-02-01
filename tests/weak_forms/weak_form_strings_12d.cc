@@ -66,6 +66,8 @@ run()
     deallog << "Inverse: " << invert(f1).as_ascii(decorator) << std::endl;
 
     deallog << "Transpose: " << transpose(f1).as_ascii(decorator) << std::endl;
+
+    deallog << "Trace: " << trace(f1).as_ascii(decorator) << std::endl;
   }
 
   // Test LaTeX
@@ -83,6 +85,8 @@ run()
     deallog << "Inverse: " << invert(f1).as_latex(decorator) << std::endl;
 
     deallog << "Transpose: " << transpose(f1).as_latex(decorator) << std::endl;
+
+    deallog << "Trace: " << trace(f1).as_latex(decorator) << std::endl;
   }
 
   deallog << "OK" << std::endl << std::endl;
