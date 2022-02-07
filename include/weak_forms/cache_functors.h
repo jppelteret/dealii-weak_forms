@@ -370,14 +370,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -549,14 +553,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -728,14 +736,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }

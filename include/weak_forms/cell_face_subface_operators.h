@@ -245,11 +245,12 @@ namespace WeakForms
 
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              fe_face_values)[q_point_range[i]]);
+          if (q_point_range[i] < fe_face_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                fe_face_values)[q_point_range[i]]);
 
         return out;
       }
@@ -276,11 +277,12 @@ namespace WeakForms
 
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              fe_interface_values)[q_point_range[i]]);
+          if (q_point_range[i] < fe_interface_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                fe_interface_values)[q_point_range[i]]);
 
         return out;
       }

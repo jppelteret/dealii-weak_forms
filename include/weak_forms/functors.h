@@ -534,11 +534,12 @@ public:                                                                       \
     /* TODO: Can we guarantee that the underlying function is immutable? */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                   \
-      numbers::set_vectorized_values(                                         \
-        out,                                                                  \
-        i,                                                                    \
-        this->template operator()<ResultScalarType>(fe_values,                \
-                                                    q_point_range[i]));       \
+      if (q_point_range[i] < fe_values.n_quadrature_points)                   \
+        numbers::set_vectorized_values(                                       \
+          out,                                                                \
+          i,                                                                  \
+          this->template operator()<ResultScalarType>(fe_values,              \
+                                                      q_point_range[i]));     \
                                                                               \
     return out;                                                               \
   }                                                                           \
@@ -555,11 +556,12 @@ public:                                                                       \
     /* TODO: Can we guarantee that the underlying function is immutable? */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                   \
-      numbers::set_vectorized_values(                                         \
-        out,                                                                  \
-        i,                                                                    \
-        this->template operator()<ResultScalarType>(fe_interface_values,      \
-                                                    q_point_range[i]));       \
+      if (q_point_range[i] < fe_interface_values.n_quadrature_points)         \
+        numbers::set_vectorized_values(                                       \
+          out,                                                                \
+          i,                                                                  \
+          this->template operator()<ResultScalarType>(fe_interface_values,    \
+                                                      q_point_range[i]));     \
                                                                               \
     return out;                                                               \
   }                                                                           \
@@ -792,11 +794,12 @@ public:                                                                        \
     /* TODO: Can we guarantee that the underlying function is immutable?  */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(                           \
-          fe_values.quadrature_point(q_point_range[i])));                      \
+      if (q_point_range[i] < fe_values.n_quadrature_points)                    \
+        numbers::set_vectorized_values(                                        \
+          out,                                                                 \
+          i,                                                                   \
+          this->template operator()<ResultScalarType>(                         \
+            fe_values.quadrature_point(q_point_range[i])));                    \
                                                                                \
     return out;                                                                \
   }                                                                            \
@@ -816,11 +819,12 @@ public:                                                                        \
     /* TODO: Can we guarantee that the underlying function is immutable?  */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(                           \
-          fe_interface_values.quadrature_point(q_point_range[i])));            \
+      if (q_point_range[i] < fe_interface_values.n_quadrature_points)          \
+        numbers::set_vectorized_values(                                        \
+          out,                                                                 \
+          i,                                                                   \
+          this->template operator()<ResultScalarType>(                         \
+            fe_interface_values.quadrature_point(q_point_range[i])));          \
                                                                                \
     return out;                                                                \
   }                                                                            \
