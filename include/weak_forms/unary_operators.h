@@ -271,16 +271,38 @@ namespace WeakForms
       };
 
 
+
+      template <typename T>
+      void
+      switch_zero_for_unit_value_in_denominator(T &denominator)
+      {
+        (void)denominator;
+      }
+
+
+      template <typename T, std::size_t width>
+      VectorizedArray<T, width>
+      switch_zero_for_unit_value_in_denominator(
+        VectorizedArray<T, width> &denominator)
+      {
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int v = 0; v < width; v++)
+          if (denominator[v] == dealii::internal::NumberType<T>::value(0.0))
+            denominator[v] = dealii::internal::NumberType<T>::value(1.0);
+      }
+
+
       template <typename ScalarType,
                 typename = typename WeakForms::is_scalar_type<ScalarType>::type>
       ScalarType
       normalize(const ScalarType &value)
       {
         using namespace std;
-        const ScalarType norm = std::abs(value);
+        ScalarType norm = std::abs(value);
         if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
           return norm;
 
+        switch_zero_for_unit_value_in_denominator(norm);
         return value / norm;
       }
 
@@ -290,10 +312,11 @@ namespace WeakForms
       std::complex<ScalarType>
       normalize(const std::complex<ScalarType> &value)
       {
-        const std::complex<ScalarType> norm = std::abs(value);
+        std::complex<ScalarType> norm = std::abs(value);
         if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
           return norm;
 
+        switch_zero_for_unit_value_in_denominator(norm);
         return value / norm;
       }
 
@@ -305,10 +328,11 @@ namespace WeakForms
       Tensor<rank, dim, ScalarType>
       normalize(const Tensor<rank, dim, ScalarType> &value)
       {
-        const ScalarType norm = value.norm();
+        ScalarType norm = value.norm();
         if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
           return Tensor<rank, dim, ScalarType>();
 
+        switch_zero_for_unit_value_in_denominator(norm);
         return value / norm;
       }
 
@@ -320,10 +344,11 @@ namespace WeakForms
       SymmetricTensor<rank, dim, ScalarType>
       normalize(const SymmetricTensor<rank, dim, ScalarType> &value)
       {
-        const ScalarType norm = value.norm();
+        ScalarType norm = value.norm();
         if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
           return SymmetricTensor<rank, dim, ScalarType>();
 
+        switch_zero_for_unit_value_in_denominator(norm);
         return value / norm;
       }
 
@@ -336,7 +361,12 @@ namespace WeakForms
 
         DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int v = 0; v < width; v++)
-          out[v] = normalize(value[v]);
+          {
+            if (value[v] != dealii::internal::NumberType<T>::value(0.0))
+              out[v] = normalize(value[v]);
+            else
+              out[v] = dealii::internal::NumberType<T>::value(0.0);
+          }
 
         return out;
       }
