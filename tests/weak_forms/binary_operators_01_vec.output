@@ -1,4 +1,5 @@
 
+DEAL:Dim 2::Q-offset: 0
 DEAL:Dim 2::Scalar functor
 DEAL:Dim 2::OK
 DEAL:Dim 2::Tensor functor
@@ -8,6 +9,47 @@ DEAL:Dim 2::OK
 DEAL:Dim 2::Tensor function functor
 DEAL:Dim 2::OK
 DEAL:Dim 2::OK
+DEAL:Dim 3::Q-offset: 0
+DEAL:Dim 3::Scalar functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Tensor functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Scalar function functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Tensor function functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::OK
+DEAL:Dim 2::Q-offset: 1
+DEAL:Dim 2::Scalar functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Tensor functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Scalar function functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Tensor function functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::OK
+DEAL:Dim 3::Q-offset: 1
+DEAL:Dim 3::Scalar functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Tensor functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Scalar function functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::Tensor function functor
+DEAL:Dim 3::OK
+DEAL:Dim 3::OK
+DEAL:Dim 2::Q-offset: 2
+DEAL:Dim 2::Scalar functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Tensor functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Scalar function functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::Tensor function functor
+DEAL:Dim 2::OK
+DEAL:Dim 2::OK
+DEAL:Dim 3::Q-offset: 2
 DEAL:Dim 3::Scalar functor
 DEAL:Dim 3::OK
 DEAL:Dim 3::Tensor functor
