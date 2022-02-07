@@ -622,10 +622,10 @@ namespace WeakForms
       /**
        * Return values at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       return_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &solution_extraction_data) const
       {
         // Follow the recipe described in the documentation:
@@ -1025,10 +1025,10 @@ namespace WeakForms
       /**
        * Return values at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       return_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &solution_extraction_data) const
       {
         // Follow the recipe described in the documentation:

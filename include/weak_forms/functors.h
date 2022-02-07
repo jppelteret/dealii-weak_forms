@@ -414,181 +414,183 @@ namespace WeakForms
   {
     /* ------------------------ Functors: Custom ------------------------ */
 
-#define DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()                              \
-public:                                                                        \
-  /**                                                                          \
-   * Dimension in which this object operates.                                  \
-   */                                                                          \
-  static const unsigned int dimension = dim;                                   \
-                                                                               \
-  /**                                                                          \
-   * Dimension of the space in which this object operates.                     \
-   */                                                                          \
-  static const unsigned int space_dimension = spacedim;                        \
-                                                                               \
-  using scalar_type = ScalarType;                                              \
-                                                                               \
-  template <typename ResultScalarType>                                         \
-  using return_type = std::vector<value_type<ResultScalarType>>;               \
-                                                                               \
-  template <typename ResultScalarType, std::size_t width>                      \
-  using vectorized_value_type = typename numbers::VectorizedValue<             \
-    value_type<ResultScalarType>>::template type<width>;                       \
-                                                                               \
-  template <typename ResultScalarType, std::size_t width>                      \
-  using vectorized_return_type = typename numbers::VectorizedValue<            \
-    value_type<ResultScalarType>>::template type<width>;                       \
-                                                                               \
-  static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;          \
-                                                                               \
-  explicit SymbolicOp(                                                         \
-    const Op &                                 operand,                        \
-    const function_type<ScalarType> &          function,                       \
-    const interface_function_type<ScalarType> &interface_function,             \
-    const UpdateFlags                          update_flags)                   \
-    : operand(operand)                                                         \
-    , function(function)                                                       \
-    , interface_function(interface_function)                                   \
-    , update_flags(update_flags)                                               \
-  {}                                                                           \
-                                                                               \
-  explicit SymbolicOp(const Op &operand, const value_type<ScalarType> &value)  \
-    : SymbolicOp(                                                              \
-        operand,                                                               \
-        [value](const FEValuesBase<dim, spacedim> &, const unsigned int)       \
-        { return value; },                                                     \
-        [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int)  \
-        { return value; })                                                     \
-  {}                                                                           \
-                                                                               \
-  std::string as_ascii(const SymbolicDecorations &decorator) const             \
-  {                                                                            \
-    const auto &naming = decorator.get_naming_ascii().differential_operators;  \
-    return decorator.decorate_with_operator_ascii(                             \
-      naming.value, operand.as_ascii(decorator));                              \
-  }                                                                            \
-                                                                               \
-  std::string as_latex(const SymbolicDecorations &decorator) const             \
-  {                                                                            \
-    const auto &naming = decorator.get_naming_latex().differential_operators;  \
-    return decorator.decorate_with_operator_latex(                             \
-      naming.value, operand.as_latex(decorator));                              \
-  }                                                                            \
-                                                                               \
-  UpdateFlags get_update_flags() const                                         \
-  {                                                                            \
-    return update_flags;                                                       \
-  }                                                                            \
-                                                                               \
-  /**                                                                          \
-   * Return values at all quadrature points                                    \
-   *                                                                           \
-   * This is generic enough that it can operate on cells, faces and            \
-   * subfaces. The user can cast the @p fe_values values object into           \
-   * the base type for face values if necessary. The user can get the          \
-   * current cell by a call to `fe_values.get_cell()` and, if cast to          \
-   * an FEFaceValuesBase type, then `fe_face_values.get_face_index()`          \
-   * returns the face index.                                                   \
-   */                                                                          \
-  template <typename ResultScalarType, int dim2>                               \
-  return_type<ResultScalarType> operator()(                                    \
-    const FEValuesBase<dim2, spacedim> &fe_values) const                       \
-  {                                                                            \
-    return_type<ResultScalarType> out;                                         \
-    out.reserve(fe_values.n_quadrature_points);                                \
-                                                                               \
-    for (const auto q_point : fe_values.quadrature_point_indices())            \
-      out.emplace_back(                                                        \
-        this->template operator()<ResultScalarType>(fe_values, q_point));      \
-                                                                               \
-    return out;                                                                \
-  }                                                                            \
-                                                                               \
-  template <typename ResultScalarType, int dim2>                               \
-  return_type<ResultScalarType> operator()(                                    \
-    const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const        \
-  {                                                                            \
-    return_type<ResultScalarType> out;                                         \
-    out.reserve(fe_interface_values.n_quadrature_points);                      \
-                                                                               \
-    for (const auto q_point : fe_interface_values.quadrature_point_indices())  \
-      out.emplace_back(                                                        \
-        this->template operator()<ResultScalarType>(fe_interface_values,       \
-                                                    q_point));                 \
-                                                                               \
-    return out;                                                                \
-  }                                                                            \
-                                                                               \
-  /**                                                                          \
-   * Return a vectorized set of values for a given quadrature point range.     \
-   */                                                                          \
-  template <typename ResultScalarType, std::size_t width, int dim2>            \
-  vectorized_return_type<ResultScalarType, width> operator()(                  \
-    const FEValuesBase<dim2, spacedim> &fe_values,                             \
-    const types::vectorized_qp_range_t &q_point_range) const                   \
-  {                                                                            \
-    vectorized_return_type<ResultScalarType, width> out;                       \
-    Assert(q_point_range.size() <= width,                                      \
-           ExcIndexRange(q_point_range.size(), 0, width));                     \
-                                                                               \
-    /* TODO: Can we guarantee that the underlying function is immutable? */    \
-    DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
-    for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(fe_values,                 \
-                                                    q_point_range[i]));        \
-                                                                               \
-    return out;                                                                \
-  }                                                                            \
-                                                                               \
-  template <typename ResultScalarType, std::size_t width, int dim2>            \
-  vectorized_return_type<ResultScalarType, width> operator()(                  \
-    const FEInterfaceValues<dim2, spacedim> &fe_interface_values,              \
-    const types::vectorized_qp_range_t &     q_point_range) const                   \
-  {                                                                            \
-    vectorized_return_type<ResultScalarType, width> out;                       \
-    Assert(q_point_range.size() <= width,                                      \
-           ExcIndexRange(q_point_range.size(), 0, width));                     \
-                                                                               \
-    /* TODO: Can we guarantee that the underlying function is immutable? */    \
-    DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
-    for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(fe_interface_values,       \
-                                                    q_point_range[i]));        \
-                                                                               \
-    return out;                                                                \
-  }                                                                            \
-                                                                               \
-private:                                                                       \
-  const Op                                  operand;                           \
-  const function_type<ScalarType>           function;                          \
-  const interface_function_type<ScalarType> interface_function;                \
-  const UpdateFlags                         update_flags;                      \
-                                                                               \
-  template <typename ResultScalarType, int dim2>                               \
-  value_type<ResultScalarType> operator()(                                     \
-    const FEValuesBase<dim2, spacedim> &fe_values, const unsigned int q_point) \
-    const                                                                      \
-  {                                                                            \
-    Assert(function,                                                           \
-           ExcMessage(                                                         \
-             "Function not initialized for use on cells or boundaries."));     \
-    return function(fe_values, q_point);                                       \
-  }                                                                            \
-                                                                               \
-  template <typename ResultScalarType, int dim2>                               \
-  value_type<ResultScalarType> operator()(                                     \
-    const FEInterfaceValues<dim2, spacedim> &fe_interface_values,              \
-    const unsigned int                       q_point) const                                          \
-  {                                                                            \
-    Assert(interface_function,                                                 \
-           ExcMessage("Function not initialized for use on interfaces."));     \
-    return interface_function(fe_interface_values, q_point);                   \
+#define DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()                             \
+public:                                                                       \
+  /**                                                                         \
+   * Dimension in which this object operates.                                 \
+   */                                                                         \
+  static const unsigned int dimension = dim;                                  \
+                                                                              \
+  /**                                                                         \
+   * Dimension of the space in which this object operates.                    \
+   */                                                                         \
+  static const unsigned int space_dimension = spacedim;                       \
+                                                                              \
+  using scalar_type = ScalarType;                                             \
+                                                                              \
+  template <typename ResultScalarType>                                        \
+  using return_type = std::vector<value_type<ResultScalarType>>;              \
+                                                                              \
+  template <typename ResultScalarType, std::size_t width>                     \
+  using vectorized_value_type = typename numbers::VectorizedValue<            \
+    value_type<ResultScalarType>>::template type<width>;                      \
+                                                                              \
+  template <typename ResultScalarType, std::size_t width>                     \
+  using vectorized_return_type = typename numbers::VectorizedValue<           \
+    value_type<ResultScalarType>>::template type<width>;                      \
+                                                                              \
+  static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;         \
+                                                                              \
+  explicit SymbolicOp(                                                        \
+    const Op &                                 operand,                       \
+    const function_type<ScalarType> &          function,                      \
+    const interface_function_type<ScalarType> &interface_function,            \
+    const UpdateFlags                          update_flags)                  \
+    : operand(operand)                                                        \
+    , function(function)                                                      \
+    , interface_function(interface_function)                                  \
+    , update_flags(update_flags)                                              \
+  {}                                                                          \
+                                                                              \
+  explicit SymbolicOp(const Op &operand, const value_type<ScalarType> &value) \
+    : SymbolicOp(                                                             \
+        operand,                                                              \
+        [value](const FEValuesBase<dim, spacedim> &, const unsigned int)      \
+        { return value; },                                                    \
+        [value](const FEInterfaceValues<dim, spacedim> &, const unsigned int) \
+        { return value; })                                                    \
+  {}                                                                          \
+                                                                              \
+  std::string as_ascii(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_ascii().differential_operators; \
+    return decorator.decorate_with_operator_ascii(                            \
+      naming.value, operand.as_ascii(decorator));                             \
+  }                                                                           \
+                                                                              \
+  std::string as_latex(const SymbolicDecorations &decorator) const            \
+  {                                                                           \
+    const auto &naming = decorator.get_naming_latex().differential_operators; \
+    return decorator.decorate_with_operator_latex(                            \
+      naming.value, operand.as_latex(decorator));                             \
+  }                                                                           \
+                                                                              \
+  UpdateFlags get_update_flags() const                                        \
+  {                                                                           \
+    return update_flags;                                                      \
+  }                                                                           \
+                                                                              \
+  /**                                                                         \
+   * Return values at all quadrature points                                   \
+   *                                                                          \
+   * This is generic enough that it can operate on cells, faces and           \
+   * subfaces. The user can cast the @p fe_values values object into          \
+   * the base type for face values if necessary. The user can get the         \
+   * current cell by a call to `fe_values.get_cell()` and, if cast to         \
+   * an FEFaceValuesBase type, then `fe_face_values.get_face_index()`         \
+   * returns the face index.                                                  \
+   */                                                                         \
+  template <typename ResultScalarType>                                        \
+  return_type<ResultScalarType> operator()(                                   \
+    const FEValuesBase<dim, spacedim> &fe_values) const                       \
+  {                                                                           \
+    return_type<ResultScalarType> out;                                        \
+    out.reserve(fe_values.n_quadrature_points);                               \
+                                                                              \
+    for (const auto q_point : fe_values.quadrature_point_indices())           \
+      out.emplace_back(                                                       \
+        this->template operator()<ResultScalarType>(fe_values, q_point));     \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+  template <typename ResultScalarType>                                        \
+  return_type<ResultScalarType> operator()(                                   \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values) const        \
+  {                                                                           \
+    return_type<ResultScalarType> out;                                        \
+    out.reserve(fe_interface_values.n_quadrature_points);                     \
+                                                                              \
+    for (const auto q_point : fe_interface_values.quadrature_point_indices()) \
+      out.emplace_back(                                                       \
+        this->template operator()<ResultScalarType>(fe_interface_values,      \
+                                                    q_point));                \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+  /**                                                                         \
+   * Return a vectorized set of values for a given quadrature point range.    \
+   */                                                                         \
+  template <typename ResultScalarType, std::size_t width>                     \
+  vectorized_return_type<ResultScalarType, width> operator()(                 \
+    const FEValuesBase<dim, spacedim> & fe_values,                            \
+    const types::vectorized_qp_range_t &q_point_range) const                  \
+  {                                                                           \
+    vectorized_return_type<ResultScalarType, width> out;                      \
+    Assert(q_point_range.size() <= width,                                     \
+           ExcIndexRange(q_point_range.size(), 0, width));                    \
+                                                                              \
+    /* TODO: Can we guarantee that the underlying function is immutable? */   \
+    DEAL_II_OPENMP_SIMD_PRAGMA                                                \
+    for (unsigned int i = 0; i < q_point_range.size(); ++i)                   \
+      if (q_point_range[i] < fe_values.n_quadrature_points)                   \
+        numbers::set_vectorized_values(                                       \
+          out,                                                                \
+          i,                                                                  \
+          this->template operator()<ResultScalarType>(fe_values,              \
+                                                      q_point_range[i]));     \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+  template <typename ResultScalarType, std::size_t width>                     \
+  vectorized_return_type<ResultScalarType, width> operator()(                 \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values,              \
+    const types::vectorized_qp_range_t &    q_point_range) const                  \
+  {                                                                           \
+    vectorized_return_type<ResultScalarType, width> out;                      \
+    Assert(q_point_range.size() <= width,                                     \
+           ExcIndexRange(q_point_range.size(), 0, width));                    \
+                                                                              \
+    /* TODO: Can we guarantee that the underlying function is immutable? */   \
+    DEAL_II_OPENMP_SIMD_PRAGMA                                                \
+    for (unsigned int i = 0; i < q_point_range.size(); ++i)                   \
+      if (q_point_range[i] < fe_interface_values.n_quadrature_points)         \
+        numbers::set_vectorized_values(                                       \
+          out,                                                                \
+          i,                                                                  \
+          this->template operator()<ResultScalarType>(fe_interface_values,    \
+                                                      q_point_range[i]));     \
+                                                                              \
+    return out;                                                               \
+  }                                                                           \
+                                                                              \
+private:                                                                      \
+  const Op                                  operand;                          \
+  const function_type<ScalarType>           function;                         \
+  const interface_function_type<ScalarType> interface_function;               \
+  const UpdateFlags                         update_flags;                     \
+                                                                              \
+  template <typename ResultScalarType>                                        \
+  value_type<ResultScalarType> operator()(                                    \
+    const FEValuesBase<dim, spacedim> &fe_values, const unsigned int q_point) \
+    const                                                                     \
+  {                                                                           \
+    Assert(function,                                                          \
+           ExcMessage(                                                        \
+             "Function not initialized for use on cells or boundaries."));    \
+    return function(fe_values, q_point);                                      \
+  }                                                                           \
+                                                                              \
+  template <typename ResultScalarType>                                        \
+  value_type<ResultScalarType> operator()(                                    \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values,              \
+    const unsigned int                      q_point) const                                         \
+  {                                                                           \
+    Assert(interface_function,                                                \
+           ExcMessage("Function not initialized for use on interfaces."));    \
+    return interface_function(fe_interface_values, q_point);                  \
   }
 
 
@@ -751,9 +753,9 @@ public:                                                                        \
   /**                                                                          \
    * Return values at all quadrature points                                    \
    */                                                                          \
-  template <typename ResultScalarType, int dim2>                               \
+  template <typename ResultScalarType>                                         \
   return_type<ResultScalarType> operator()(                                    \
-    const FEValuesBase<dim2, spacedim> &fe_values) const                       \
+    const FEValuesBase<dim, spacedim> &fe_values) const                        \
   {                                                                            \
     return_type<ResultScalarType> out;                                         \
     out.reserve(fe_values.n_quadrature_points);                                \
@@ -764,9 +766,9 @@ public:                                                                        \
     return out;                                                                \
   }                                                                            \
                                                                                \
-  template <typename ResultScalarType, int dim2>                               \
+  template <typename ResultScalarType>                                         \
   return_type<ResultScalarType> operator()(                                    \
-    const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const        \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values) const         \
   {                                                                            \
     return_type<ResultScalarType> out;                                         \
     out.reserve(fe_interface_values.n_quadrature_points);                      \
@@ -780,9 +782,9 @@ public:                                                                        \
   /**                                                                          \
    * Return a vectorized set of values for a given quadrature point range.     \
    */                                                                          \
-  template <typename ResultScalarType, std::size_t width, int dim2>            \
+  template <typename ResultScalarType, std::size_t width>                      \
   vectorized_return_type<ResultScalarType, width> operator()(                  \
-    const FEValuesBase<dim2, spacedim> &fe_values,                             \
+    const FEValuesBase<dim, spacedim> & fe_values,                             \
     const types::vectorized_qp_range_t &q_point_range) const                   \
   {                                                                            \
     vectorized_return_type<ResultScalarType, width> out;                       \
@@ -792,11 +794,12 @@ public:                                                                        \
     /* TODO: Can we guarantee that the underlying function is immutable?  */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(                           \
-          fe_values.quadrature_point(q_point_range[i])));                      \
+      if (q_point_range[i] < fe_values.n_quadrature_points)                    \
+        numbers::set_vectorized_values(                                        \
+          out,                                                                 \
+          i,                                                                   \
+          this->template operator()<ResultScalarType>(                         \
+            fe_values.quadrature_point(q_point_range[i])));                    \
                                                                                \
     return out;                                                                \
   }                                                                            \
@@ -804,10 +807,10 @@ public:                                                                        \
   /**                                                                          \
    * Return a vectorized set of values for a given quadrature point range.     \
    */                                                                          \
-  template <typename ResultScalarType, std::size_t width, int dim2>            \
+  template <typename ResultScalarType, std::size_t width>                      \
   vectorized_return_type<ResultScalarType, width> operator()(                  \
-    const FEInterfaceValues<dim2, spacedim> &fe_interface_values,              \
-    const types::vectorized_qp_range_t &     q_point_range) const                   \
+    const FEInterfaceValues<dim, spacedim> &fe_interface_values,               \
+    const types::vectorized_qp_range_t &    q_point_range) const                   \
   {                                                                            \
     vectorized_return_type<ResultScalarType, width> out;                       \
     Assert(q_point_range.size() <= width,                                      \
@@ -816,11 +819,12 @@ public:                                                                        \
     /* TODO: Can we guarantee that the underlying function is immutable?  */   \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ResultScalarType>(                           \
-          fe_interface_values.quadrature_point(q_point_range[i])));            \
+      if (q_point_range[i] < fe_interface_values.n_quadrature_points)          \
+        numbers::set_vectorized_values(                                        \
+          out,                                                                 \
+          i,                                                                   \
+          this->template operator()<ResultScalarType>(                         \
+            fe_interface_values.quadrature_point(q_point_range[i])));          \
                                                                                \
     return out;                                                                \
   }                                                                            \

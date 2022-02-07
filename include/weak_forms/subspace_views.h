@@ -1659,12 +1659,13 @@ public:                                                                      \
       {                                                                      \
         DEAL_II_OPENMP_SIMD_PRAGMA                                           \
         for (unsigned int i = 0; i < q_point_range.size(); ++i)              \
-          numbers::set_vectorized_values(                                    \
-            out[dof_index],                                                  \
-            i,                                                               \
-            this->template operator()<ScalarType>(fe_values_op,              \
-                                                  dof_index,                 \
-                                                  q_point_range[i]));        \
+          if (q_point_range[i] < fe_values_op.n_quadrature_points)           \
+            numbers::set_vectorized_values(                                  \
+              out[dof_index],                                                \
+              i,                                                             \
+              this->template operator()<ScalarType>(fe_values_op,            \
+                                                    dof_index,               \
+                                                    q_point_range[i]));      \
       }                                                                      \
                                                                              \
     return out;                                                              \
@@ -2171,12 +2172,13 @@ public:                                                                         
       {                                                                                    \
         DEAL_II_OPENMP_SIMD_PRAGMA                                                         \
         for (unsigned int i = 0; i < q_point_range.size(); ++i)                            \
-          numbers::set_vectorized_values(                                                  \
-            out[interface_dof_index],                                                      \
-            i,                                                                             \
-            this->template operator()<ScalarType>(fe_interface_values,                     \
-                                                  interface_dof_index,                     \
-                                                  q_point_range[i]));                      \
+          if (q_point_range[i] < fe_interface_values.n_quadrature_points)                  \
+            numbers::set_vectorized_values(                                                \
+              out[interface_dof_index],                                                    \
+              i,                                                                           \
+              this->template operator()<ScalarType>(fe_interface_values,                   \
+                                                    interface_dof_index,                   \
+                                                    q_point_range[i]));                    \
       }                                                                                    \
                                                                                            \
     return out;                                                                            \
@@ -2585,13 +2587,17 @@ public:                                                                        \
     Assert(q_point_range.size() <= width,                                      \
            ExcIndexRange(q_point_range.size(), 0, width));                     \
                                                                                \
+    const FEValuesBase<dimension, space_dimension> &fe_values =                \
+      scratch_data.get_current_fe_values();                                    \
+                                                                               \
     DEAL_II_OPENMP_SIMD_PRAGMA                                                 \
     for (unsigned int i = 0; i < q_point_range.size(); ++i)                    \
-      numbers::set_vectorized_values(                                          \
-        out,                                                                   \
-        i,                                                                     \
-        this->template operator()<ScalarType>(                                 \
-          scratch_data, solution_extraction_data)[q_point_range[i]]);          \
+      if (q_point_range[i] < fe_values.n_quadrature_points)                    \
+        numbers::set_vectorized_values(                                        \
+          out,                                                                 \
+          i,                                                                   \
+          this->template operator()<ScalarType>(                               \
+            scratch_data, solution_extraction_data)[q_point_range[i]]);        \
                                                                                \
     return out;                                                                \
   }                                                                            \

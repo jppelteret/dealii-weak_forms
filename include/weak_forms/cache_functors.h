@@ -313,10 +313,10 @@ namespace WeakForms
        * This is generic enough that it can operate on cells, faces and
        * subfaces.
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       return_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &solution_extraction_data) const
       {
         if (function)
@@ -327,8 +327,8 @@ namespace WeakForms
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return_type<ScalarType>             out;
-            const FEValuesBase<dim2, spacedim> &fe_values =
+            return_type<ScalarType>            out;
+            const FEValuesBase<dim, spacedim> &fe_values =
               scratch_data.get_current_fe_values();
             out.reserve(fe_values.n_quadrature_points);
 
@@ -340,10 +340,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       value_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                solution_extraction_data,
                  const unsigned int q_point) const
       {
@@ -359,10 +359,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, std::size_t width, int dim2>
+      template <typename ResultScalarType, std::size_t width>
       vectorized_return_type<ResultScalarType, width>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                                 solution_extraction_data,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
@@ -370,14 +370,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -492,10 +496,10 @@ namespace WeakForms
       /**
        * Return values at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       return_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &solution_extraction_data) const
       {
         if (function)
@@ -506,8 +510,8 @@ namespace WeakForms
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return_type<ScalarType>             out;
-            const FEValuesBase<dim2, spacedim> &fe_values =
+            return_type<ScalarType>            out;
+            const FEValuesBase<dim, spacedim> &fe_values =
               scratch_data.get_current_fe_values();
             out.reserve(fe_values.n_quadrature_points);
 
@@ -519,10 +523,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       value_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                solution_extraction_data,
                  const unsigned int q_point) const
       {
@@ -538,10 +542,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, std::size_t width, int dim2>
+      template <typename ResultScalarType, std::size_t width>
       vectorized_return_type<ResultScalarType, width>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                                 solution_extraction_data,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
@@ -549,14 +553,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }
@@ -671,10 +679,10 @@ namespace WeakForms
       /**
        * Return values at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       return_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &solution_extraction_data) const
       {
         if (function)
@@ -685,8 +693,8 @@ namespace WeakForms
           {
             Assert(qp_function, ExcNotInitialized());
 
-            return_type<ScalarType>             out;
-            const FEValuesBase<dim2, spacedim> &fe_values =
+            return_type<ScalarType>            out;
+            const FEValuesBase<dim, spacedim> &fe_values =
               scratch_data.get_current_fe_values();
             out.reserve(fe_values.n_quadrature_points);
 
@@ -698,10 +706,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       value_type<ResultScalarType>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                solution_extraction_data,
                  const unsigned int q_point) const
       {
@@ -717,10 +725,10 @@ namespace WeakForms
           }
       }
 
-      template <typename ResultScalarType, std::size_t width, int dim2>
+      template <typename ResultScalarType, std::size_t width>
       vectorized_return_type<ResultScalarType, width>
-      operator()(MeshWorker::ScratchData<dim2, spacedim> &scratch_data,
-                 const std::vector<SolutionExtractionData<dim2, spacedim>>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
                    &                                 solution_extraction_data,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
@@ -728,14 +736,18 @@ namespace WeakForms
         Assert(q_point_range.size() <= width,
                ExcIndexRange(q_point_range.size(), 0, width));
 
+        const FEValuesBase<dim, spacedim> &fe_values =
+          scratch_data.get_current_fe_values();
+
         // TODO: Can we guarantee that the underlying function is immutable?
         // DEAL_II_OPENMP_SIMD_PRAGMA
         for (unsigned int i = 0; i < q_point_range.size(); ++i)
-          numbers::set_vectorized_values(
-            out,
-            i,
-            this->template operator()<ResultScalarType>(
-              scratch_data, solution_extraction_data, q_point_range[i]));
+          if (q_point_range[i] < fe_values.n_quadrature_points)
+            numbers::set_vectorized_values(
+              out,
+              i,
+              this->template operator()<ResultScalarType>(
+                scratch_data, solution_extraction_data, q_point_range[i]));
 
         return out;
       }

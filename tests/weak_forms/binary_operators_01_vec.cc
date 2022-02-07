@@ -38,13 +38,14 @@
 
 template <int dim, int spacedim = dim, typename NumberType = double>
 void
-run()
+run(const unsigned int q_offset = 0)
 {
   LogStream::Prefix prefix("Dim " + Utilities::to_string(dim));
+  deallog << "Q-offset: " << q_offset << std::endl;
   std::cout << "Dim: " << dim << std::endl;
 
   const FE_Q<dim, spacedim> fe(1);
-  const QGauss<spacedim>    qf_cell(fe.degree + 1);
+  const QGauss<spacedim>    qf_cell(fe.degree + 1 + q_offset);
 
   Triangulation<dim, spacedim> triangulation;
   GridGenerator::hyper_cube(triangulation);
@@ -486,6 +487,12 @@ main(int argc, char *argv[])
 
   run<2>();
   run<3>();
+
+  run<2>(1);
+  run<3>(1);
+
+  run<2>(2);
+  run<3>(2);
 
   deallog << "OK" << std::endl;
 }
