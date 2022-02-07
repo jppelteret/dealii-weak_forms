@@ -612,7 +612,10 @@ namespace WeakForms
       auto
       invert_impl(const T &value)
       {
-        return dealii::internal::NumberType<T>::value(1.0) / value;
+        if (value != dealii::internal::NumberType<T>::value(0.0))
+          return dealii::internal::NumberType<T>::value(1.0) / value;
+        else
+          return dealii::internal::NumberType<T>::value(0.0);
       }
 
       template <int rank, int dim, typename NumberType>
