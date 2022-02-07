@@ -824,7 +824,7 @@ namespace WeakForms
       // =============================
 
       // Provide access to accumulation function
-      template <int dim2,
+      template <int dim,
                 int spacedim,
                 typename ScalarType,
                 bool use_vectorization>
@@ -1530,7 +1530,7 @@ namespace WeakForms
       // =============================
 
       // Provide access to accumulation function
-      template <int dim2,
+      template <int dim,
                 int spacedim,
                 typename ScalarType,
                 bool use_vectorization>

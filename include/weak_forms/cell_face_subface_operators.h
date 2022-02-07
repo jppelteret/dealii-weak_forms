@@ -222,21 +222,21 @@ namespace WeakForms
       /**
        * Return normals at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       const return_type<ResultScalarType> &
-      operator()(const FEValuesBase<dim2, spacedim> &fe_face_values) const
+      operator()(const FEValuesBase<dim, spacedim> &fe_face_values) const
       {
-        Assert((dynamic_cast<const FEFaceValuesBase<dim2, spacedim> *>(
+        Assert((dynamic_cast<const FEFaceValuesBase<dim, spacedim> *>(
                  &fe_face_values)),
                ExcNotCastableToFEFaceValuesBase());
-        return static_cast<const FEFaceValuesBase<dim2, spacedim> &>(
+        return static_cast<const FEFaceValuesBase<dim, spacedim> &>(
                  fe_face_values)
           .get_normal_vectors();
       }
 
-      template <typename ResultScalarType, std::size_t width, int dim2>
+      template <typename ResultScalarType, std::size_t width>
       vectorized_return_type<ResultScalarType, width>
-      operator()(const FEValuesBase<dim2, spacedim> &fe_face_values,
+      operator()(const FEValuesBase<dim, spacedim> & fe_face_values,
                  const types::vectorized_qp_range_t &q_point_range) const
       {
         vectorized_return_type<ResultScalarType, width> out;
@@ -257,18 +257,18 @@ namespace WeakForms
       /**
        * Return normals at all quadrature points
        */
-      template <typename ResultScalarType, int dim2>
+      template <typename ResultScalarType>
       const return_type<ResultScalarType> &
       operator()(
-        const FEInterfaceValues<dim2, spacedim> &fe_interface_values) const
+        const FEInterfaceValues<dim, spacedim> &fe_interface_values) const
       {
         return fe_interface_values.get_normal_vectors();
       }
 
-      template <typename ResultScalarType, std::size_t width, int dim2>
+      template <typename ResultScalarType, std::size_t width>
       vectorized_return_type<ResultScalarType, width>
-      operator()(const FEInterfaceValues<dim2, spacedim> &fe_interface_values,
-                 const types::vectorized_qp_range_t &     q_point_range) const
+      operator()(const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+                 const types::vectorized_qp_range_t &    q_point_range) const
       {
         vectorized_return_type<ResultScalarType, width> out;
         Assert(q_point_range.size() <= width,
