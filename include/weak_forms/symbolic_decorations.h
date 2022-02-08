@@ -449,8 +449,8 @@ namespace WeakForms
       const Operand &    operand,
       const std::string &superscript_suffix) const
     {
-      const std::string lbrace = Utilities::LaTeX::l_square_brace;
-      const std::string rbrace = Utilities::LaTeX::r_square_brace;
+      const std::string lbrace = Utilities::LaTeX::l_square_brace();
+      const std::string rbrace = Utilities::LaTeX::r_square_brace();
 
       const SymbolicDecorations &decorator = *this;
       return lbrace + operand.as_latex(decorator) + rbrace + "^{" +

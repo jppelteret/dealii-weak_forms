@@ -75,8 +75,8 @@ namespace WeakForms
     std::string
     as_latex(const SymbolicDecorations &decorator) const
     {
-      const std::string lbrace = Utilities::LaTeX::l_square_brace;
-      const std::string rbrace = Utilities::LaTeX::r_square_brace;
+      const std::string lbrace = Utilities::LaTeX::l_square_brace();
+      const std::string rbrace = Utilities::LaTeX::r_square_brace();
 
       // If the functor is scalar valued, then we need to be a bit careful about
       // what the test and trial space ops are (e.g. rank > 0)

@@ -440,22 +440,71 @@ namespace WeakForms
 
     struct LaTeX
     {
-      static constexpr char l_parenthesis[] = "\\left(";
-      static constexpr char r_parenthesis[] = "\\right)";
+      static std::string
+      l_parenthesis()
+      {
+        return "\\left(";
+      }
 
-      static constexpr char l_square_brace[] = "\\left[";
-      static constexpr char r_square_brace[] = "\\right]";
+      static std::string
+      r_parenthesis()
+      {
+        return "\\right)";
+      }
 
-      static constexpr char l_curly_brace[] = "\\left\\lbrace";
-      static constexpr char r_curly_brace[] = "\\right\\rbrace";
+      static std::string
+      l_square_brace()
+      {
+        return "\\left[";
+      }
 
-      static constexpr char l_vert[] = "\\left\\vert";
-      static constexpr char r_vert[] = "\\right\\vert";
+      static std::string
+      r_square_brace()
+      {
+        return "\\right]";
+      }
 
-      static constexpr char l_Vert[] = "\\left\\Vert";
-      static constexpr char r_Vert[] = "\\right\\Vert";
+      static std::string
+      l_curly_brace()
+      {
+        return "\\left\\lbrace";
+      }
 
-      static constexpr char decrease_space[] = "\\!";
+      static std::string
+      r_curly_brace()
+      {
+        return "\\right\\rbrace";
+      }
+
+      static std::string
+      l_vert()
+      {
+        return "\\left\\vert";
+      }
+
+      static std::string
+      r_vert()
+      {
+        return "\\right\\vert";
+      }
+
+      static std::string
+      l_Vert()
+      {
+        return "\\left\\Vert";
+      }
+
+      static std::string
+      r_Vert()
+      {
+        return "\\right\\Vert";
+      }
+
+      static std::string
+      decrease_space()
+      {
+        return "\\!";
+      }
 
       static std::string
       decorate_latex_op(const std::string &op)
@@ -466,21 +515,21 @@ namespace WeakForms
       static std::string
       decorate_jump(const std::string &op)
       {
-        const std::string &lbrace = l_square_brace;
-        const std::string &rbrace = r_square_brace;
+        const std::string lbrace = l_square_brace();
+        const std::string rbrace = r_square_brace();
 
-        return lbrace + decrease_space + lbrace + op + rbrace + decrease_space +
-               rbrace;
+        return lbrace + decrease_space() + lbrace + op + rbrace +
+               decrease_space() + rbrace;
       }
 
       static std::string
       decorate_average(const std::string &op)
       {
-        const std::string &lbrace = l_curly_brace;
-        const std::string &rbrace = r_curly_brace;
+        const std::string lbrace = l_curly_brace();
+        const std::string rbrace = r_curly_brace();
 
-        return lbrace + decrease_space + lbrace + op + rbrace + decrease_space +
-               rbrace;
+        return lbrace + decrease_space() + lbrace + op + rbrace +
+               decrease_space() + rbrace;
       }
 
       static std::string
@@ -492,8 +541,8 @@ namespace WeakForms
       static std::string
       decorate_term(const std::string &term)
       {
-        const std::string &lbrace = l_square_brace;
-        const std::string &rbrace = r_square_brace;
+        const std::string lbrace = l_square_brace();
+        const std::string rbrace = r_square_brace();
 
         return lbrace + term + rbrace;
       }
@@ -502,8 +551,8 @@ namespace WeakForms
       decorate_function_with_arguments(const std::string &function,
                                        const std::string &arguments)
       {
-        const std::string &lbrace = l_parenthesis;
-        const std::string &rbrace = r_parenthesis;
+        const std::string lbrace = l_parenthesis();
+        const std::string rbrace = r_parenthesis();
 
         return function + lbrace + arguments + rbrace;
       }
@@ -511,8 +560,8 @@ namespace WeakForms
       static std::string
       decorate_norm(const std::string &function, const std::string &norm)
       {
-        const std::string &lbrace = l_Vert;
-        const std::string &rbrace = r_Vert;
+        const std::string lbrace = l_Vert();
+        const std::string rbrace = r_Vert();
 
         return lbrace + function + rbrace + "_{" + norm + "}";
       }

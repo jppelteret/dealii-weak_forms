@@ -1222,9 +1222,9 @@ private:                                                                 \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        const std::string &lvert = Utilities::LaTeX::l_vert;
-        const std::string &rvert = Utilities::LaTeX::r_vert;
-        const auto         op    = operand.as_latex(decorator);
+        const std::string lvert = Utilities::LaTeX::l_vert();
+        const std::string rvert = Utilities::LaTeX::r_vert();
+        const auto        op    = operand.as_latex(decorator);
         return "\\frac{" + op + "}{" + lvert + op + rvert + "}";
       }
 
@@ -1608,8 +1608,8 @@ private:                                                                 \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        const std::string &lvert = Utilities::LaTeX::l_vert;
-        const std::string &rvert = Utilities::LaTeX::r_vert;
+        const std::string lvert = Utilities::LaTeX::l_vert();
+        const std::string rvert = Utilities::LaTeX::r_vert();
         return lvert + operand.as_latex(decorator) + rvert;
       }
 

@@ -64,8 +64,8 @@ namespace WeakForms
     std::string
     as_latex(const SymbolicDecorations &decorator) const
     {
-      const std::string lbrace = Utilities::LaTeX::l_square_brace;
-      const std::string rbrace = Utilities::LaTeX::r_square_brace;
+      const std::string lbrace = Utilities::LaTeX::l_square_brace();
+      const std::string rbrace = Utilities::LaTeX::r_square_brace();
 
       constexpr unsigned int n_contracting_indices_tf = WeakForms::Utilities::
         FullIndexContraction<TestSpaceOp, Functor>::n_contracting_indices;
