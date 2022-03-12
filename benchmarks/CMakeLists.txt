@@ -1,9 +1,6 @@
-# CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
-# INCLUDE(../setup_testsubproject.cmake)
-# PROJECT(testsuite CXX)
-
-# DEAL_II_PICKUP_TESTS()
-
-SET(TEST_LIBRARIES ${TARGET_LIB})
+##
+# Configure the libraries to link the benchmark tests against
+##
+SET(TEST_LIBRARIES ${WEAK_FORMS_LIB})
 
 ADD_SUBDIRECTORY(weak_forms)
