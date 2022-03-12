@@ -69,7 +69,7 @@ end
 
 subsection Time
   # End time
-  set End time       = 0.2
+  set End time       = 0.3
   
 
   # Time step size
