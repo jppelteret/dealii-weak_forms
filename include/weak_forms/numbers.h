@@ -100,6 +100,40 @@ namespace WeakForms
     };
 
 
+    template <typename ScalarType>
+    struct VectorizedValue<
+      std::complex<ScalarType>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type = VectorizedArray<std::complex<ScalarType>, width>;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct VectorizedValue<
+      Tensor<rank, dim, std::complex<ScalarType>>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type =
+        Tensor<rank, dim, VectorizedArray<std::complex<ScalarType>, width>>;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct VectorizedValue<
+      SymmetricTensor<rank, dim, std::complex<ScalarType>>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type =
+        SymmetricTensor<rank,
+                        dim,
+                        VectorizedArray<std::complex<ScalarType>, width>>;
+    };
+
+
     template <typename ScalarType,
               std::size_t width,
               typename = typename std::enable_if<
