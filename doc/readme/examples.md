@@ -31,6 +31,9 @@ improved in the future.
 - [step-57](#step-57):
   - Fluid mechanics (Incompressible stationary Navier-Stokes equations)
   - Nonlinear term
+- [step-58](#step-58):
+  - Nonlinear Schroedinger equation
+  - Complex valued problem
 - [step-72](#step-72):
   - A nonlinear elliptic problem (the minimal surface equation)
   - Field-dependent material coefficient (and trial solution in bilinear form)
@@ -379,6 +382,42 @@ improved in the future.
   ```
 
   <img src="./images/step-57-latex_output.png">
+
+## Step-58
+----------
+- [Native deal.II implementation](../../tests/weak_forms/step-58-variant_01a.cc)
+- [Weak forms implementation](../../tests/weak_forms/step-58-variant_01b.cc)
+  
+- ASCII output
+  - LHS
+  ```
+  0 = #(d{U}, -i, D{U})#dV 
+  + #(Grad(d{U}), [0.25 * dt], Grad(D{U}))#dV 
+  + #(d{U}, [[0.5 * dt] * Psi(X)], D{U})#d
+  ```
+  - RHS
+  ```
+  0 = #(d{U}, -i, D{U})#dV 
+  - #(Grad(d{U}), [0.25 * dt], Grad(D{U}))#dV 
+  - #(d{U}, [[0.5 * dt] * Psi(X)], D{U})#dV
+  ```
+
+- LaTeX output
+  - LHS
+  ```latex
+  0 = \int\left[\delta{\varphi}\,\left[-{i}\,\Delta{\varphi}\right]\right]\textrm{dV}
+  + \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[\left[{0.25}\,{\Delta t}\right]\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV}
+  + \int\left[\delta{\varphi}\,\left[\left[\left[{0.5}\,{\Delta t}\right]\,{\Psi\left(\mathbf{X}\right)}\right]\,\Delta{\varphi}\right]\right]\textrm{dV}
+  ```
+  - RHS
+  ```latex
+  0 = \int\left[\delta{\varphi}\,\left[-{i}\,\Delta{\varphi}\right]\right]\textrm{dV} 
+  - \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[\left[{0.25}\,{\Delta t}\right]\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} 
+  - \int\left[\delta{\varphi}\,\left[\left[\left[{0.5}\,{\Delta t}\right]\,{\Psi\left(\mathbf{X}\right)}\right]\,\Delta{\varphi}\right]\right]\textrm{dV}
+  ```
+
+  <img src="./images/step-58-latex_output-lhs.png">
+  <img src="./images/step-58-latex_output-rhs.png">
 
 ## Step-72
 ----------
