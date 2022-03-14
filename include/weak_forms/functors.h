@@ -835,99 +835,109 @@ private:                                                                       \
   const UpdateFlags                                   update_flags;
 
 
-#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()              \
-public:                                                                       \
-  template <typename ResultScalarType>                                        \
-  using value_type = typename Op::template value_type<ResultScalarType>;      \
-                                                                              \
-  std::string as_ascii(const SymbolicDecorations &decorator) const            \
-  {                                                                           \
-    const auto &naming = decorator.get_naming_ascii().differential_operators; \
-    return decorator.decorate_with_operator_ascii(                            \
-      naming.value, operand.as_ascii(decorator));                             \
-  }                                                                           \
-                                                                              \
-  std::string as_latex(const SymbolicDecorations &decorator) const            \
-  {                                                                           \
-    const auto &naming = decorator.get_naming_latex().differential_operators; \
-    return decorator.decorate_with_operator_latex(                            \
-      naming.value, operand.as_latex(decorator));                             \
-  }                                                                           \
-                                                                              \
-  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                          \
-                                                                              \
-private:                                                                      \
-  /**                                                                         \
-   * Return single entry                                                      \
-   */                                                                         \
-  template <typename ResultScalarType>                                        \
-  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
-  {                                                                           \
-    /* We require this try-catch block because the user may not               \
-     * overload the value function, but rather chooses to implement           \
-     * the value_list function directly.                                      \
-     */                                                                       \
-    /*                                                                        \
-   try                                                                        \
-     {                                                                        \
-       const value_type<ResultScalarType> value = function->value(point);     \
-       return value;                                                          \
-     }                                                                        \
-   catch (...)                                                                \
-   */                                                                         \
-    {                                                                         \
-      std::vector<value_type<ResultScalarType>> values(1);                    \
-      function->value_list({point}, values);                                  \
-      return values[0];                                                       \
-    }                                                                         \
+#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL()               \
+public:                                                                        \
+  template <typename ResultScalarType>                                         \
+  using value_type = typename Op::template value_type<ResultScalarType>;       \
+                                                                               \
+  std::string as_ascii(const SymbolicDecorations &decorator) const             \
+  {                                                                            \
+    const auto &naming = decorator.get_naming_ascii().differential_operators;  \
+    return decorator.decorate_with_operator_ascii(                             \
+      naming.value, operand.as_ascii(decorator));                              \
+  }                                                                            \
+                                                                               \
+  std::string as_latex(const SymbolicDecorations &decorator) const             \
+  {                                                                            \
+    const auto &naming = decorator.get_naming_latex().differential_operators;  \
+    return decorator.decorate_with_operator_latex(                             \
+      naming.value, operand.as_latex(decorator));                              \
+  }                                                                            \
+                                                                               \
+  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                           \
+                                                                               \
+private:                                                                       \
+  /**                                                                          \
+   * Return single entry                                                       \
+   */                                                                          \
+  template <typename ResultScalarType>                                         \
+  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const  \
+  {                                                                            \
+    /* We require this try-catch block because the user may not                \
+     * overload the value function, but rather chooses to implement            \
+     * the value_list function directly.                                       \
+     */                                                                        \
+    /*                                                                         \
+   try                                                                         \
+     {                                                                         \
+       const value_type<ResultScalarType> value = function->value(point);      \
+       return value;                                                           \
+     }                                                                         \
+   catch (...)                                                                 \
+   */                                                                          \
+    {                                                                          \
+      /* The ResultScalarType might not be compatible with the RangeNumberType \
+       * of the function.                                                      \
+       */                                                                      \
+      /* using Result_t = value_type<ResultScalarType>; */                     \
+      using Result_t = decltype(function->value(point));                       \
+      std::vector<Result_t> values(1);                                         \
+      function->value_list({point}, values);                                   \
+      return values[0];                                                        \
+    }                                                                          \
   }
 
-#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()           \
-public:                                                                       \
-  template <typename ResultScalarType>                                        \
-  using value_type = typename Op::template gradient_type<ResultScalarType>;   \
-                                                                              \
-  std::string as_ascii(const SymbolicDecorations &decorator) const            \
-  {                                                                           \
-    const auto &naming = decorator.get_naming_ascii().differential_operators; \
-    return decorator.decorate_with_operator_ascii(                            \
-      naming.gradient, operand.as_ascii(decorator));                          \
-  }                                                                           \
-                                                                              \
-  std::string as_latex(const SymbolicDecorations &decorator) const            \
-  {                                                                           \
-    const auto &naming = decorator.get_naming_latex().differential_operators; \
-    return decorator.decorate_with_operator_latex(                            \
-      naming.gradient, operand.as_latex(decorator));                          \
-  }                                                                           \
-                                                                              \
-  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                          \
-                                                                              \
-private:                                                                      \
-  /**                                                                         \
-   * Return single entry                                                      \
-   */                                                                         \
-  template <typename ResultScalarType>                                        \
-  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const \
-  {                                                                           \
-    /* We require this try-catch block because the user may not               \
-     * overload the gradient function, but rather chooses to implement        \
-     * the gradient_list function directly.                                   \
-     */                                                                       \
-    /*                                                                        \
-   try                                                                        \
-     {                                                                        \
-       const value_type<ResultScalarType> gradient =                          \
-         function->gradient(point);                                           \
-       return gradient;                                                       \
-     }                                                                        \
-   catch (...)                                                                \
-   */                                                                         \
-    {                                                                         \
-      std::vector<value_type<ResultScalarType>> gradients(1);                 \
-      function->gradient_list({point}, gradients);                            \
-      return gradients[0];                                                    \
-    }                                                                         \
+#define DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL()            \
+public:                                                                        \
+  template <typename ResultScalarType>                                         \
+  using value_type = typename Op::template gradient_type<ResultScalarType>;    \
+                                                                               \
+  std::string as_ascii(const SymbolicDecorations &decorator) const             \
+  {                                                                            \
+    const auto &naming = decorator.get_naming_ascii().differential_operators;  \
+    return decorator.decorate_with_operator_ascii(                             \
+      naming.gradient, operand.as_ascii(decorator));                           \
+  }                                                                            \
+                                                                               \
+  std::string as_latex(const SymbolicDecorations &decorator) const             \
+  {                                                                            \
+    const auto &naming = decorator.get_naming_latex().differential_operators;  \
+    return decorator.decorate_with_operator_latex(                             \
+      naming.gradient, operand.as_latex(decorator));                           \
+  }                                                                            \
+                                                                               \
+  DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL()                           \
+                                                                               \
+private:                                                                       \
+  /**                                                                          \
+   * Return single entry                                                       \
+   */                                                                          \
+  template <typename ResultScalarType>                                         \
+  value_type<ResultScalarType> operator()(const Point<spacedim> &point) const  \
+  {                                                                            \
+    /* We require this try-catch block because the user may not                \
+     * overload the gradient function, but rather chooses to implement         \
+     * the gradient_list function directly.                                    \
+     */                                                                        \
+    /*                                                                         \
+   try                                                                         \
+     {                                                                         \
+       const value_type<ResultScalarType> gradient =                           \
+         function->gradient(point);                                            \
+       return gradient;                                                        \
+     }                                                                         \
+   catch (...)                                                                 \
+   */                                                                          \
+    {                                                                          \
+      /* The ResultScalarType might not be compatible with the RangeNumberType \
+       * of the function.                                                      \
+       */                                                                      \
+      /* using Result_t = value_type<ResultScalarType>; */                     \
+      using Result_t = decltype(function->gradient(point));                    \
+      std::vector<Result_t> gradients(1);                                      \
+      function->gradient_list({point}, gradients);                             \
+      return gradients[0];                                                     \
+    }                                                                          \
   }
 
 
