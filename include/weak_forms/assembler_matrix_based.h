@@ -64,29 +64,34 @@ namespace WeakForms
     }
 
 
-    template <int n_matrices    = 1,
+    template <typename ScalarType,
+              int n_matrices    = 1,
               int n_vectors     = n_matrices,
               int n_dof_indices = n_matrices>
     struct CopyDataWithInterfaceSupport
-      : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>
+      : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices, ScalarType>
     {
       explicit CopyDataWithInterfaceSupport(const unsigned int size)
-        : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>(size)
+        : MeshWorker::
+            CopyData<n_matrices, n_vectors, n_dof_indices, ScalarType>(size)
       {}
 
       explicit CopyDataWithInterfaceSupport(
         const ndarray<unsigned int, n_matrices, 2> &   matrix_sizes,
         const std::array<unsigned int, n_vectors> &    vector_sizes,
         const std::array<unsigned int, n_dof_indices> &dof_indices_sizes)
-        : MeshWorker::CopyData<n_matrices, n_vectors, n_dof_indices>(
-            matrix_sizes,
-            vector_sizes,
-            dof_indices_sizes)
+        : MeshWorker::
+            CopyData<n_matrices, n_vectors, n_dof_indices, ScalarType>(
+              matrix_sizes,
+              vector_sizes,
+              dof_indices_sizes)
       {}
 
       CopyDataWithInterfaceSupport(
-        const CopyDataWithInterfaceSupport<n_matrices, n_vectors, n_dof_indices>
-          &other) = default;
+        const CopyDataWithInterfaceSupport<ScalarType,
+                                           n_matrices,
+                                           n_vectors,
+                                           n_dof_indices> &other) = default;
 
       // Interface operators have a different number of local DoFs
       // than cell and boundary operators. So we extend CopyData in a
@@ -96,12 +101,12 @@ namespace WeakForms
         /**
          * An array of local matrices.
          */
-        std::array<FullMatrix<double>, n_matrices> matrices;
+        std::array<FullMatrix<ScalarType>, n_matrices> matrices;
 
         /**
          * An array of local vectors.
          */
-        std::array<Vector<double>, n_vectors> vectors;
+        std::array<Vector<ScalarType>, n_vectors> vectors;
 
         /**
          * An array of local degrees of freedom indices.
@@ -776,7 +781,8 @@ namespace WeakForms
 
       using CellIteratorType = typename DoFHandlerType::active_cell_iterator;
       using ScratchData      = MeshWorker::ScratchData<dim, spacedim>;
-      using CopyData         = internal::CopyDataWithInterfaceSupport<1, 1, 1>;
+      using CopyData =
+        internal::CopyDataWithInterfaceSupport<ScalarType, 1, 1, 1>;
 
       // Define a cell worker
       const auto &cell_matrix_operations = this->cell_matrix_operations;
@@ -1032,7 +1038,7 @@ namespace WeakForms
 
             // Follow the method used by step-74
             copy_data.interface_data.emplace_back();
-            CopyData::InterfaceData &copy_data_interface =
+            typename CopyData::InterfaceData &copy_data_interface =
               copy_data.interface_data.back();
 
             copy_data_interface.local_dof_indices[0] =
@@ -1194,7 +1200,7 @@ namespace WeakForms
                              copy_data.local_dof_indices[0]);
 
         // Interface contributions
-        for (const CopyData::InterfaceData &copy_data_interface :
+        for (const typename CopyData::InterfaceData &copy_data_interface :
              copy_data.interface_data)
           {
             copy_local_to_global(copy_data_interface.matrices[0],
