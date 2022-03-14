@@ -172,137 +172,22 @@ namespace WeakForms
       minus
     };
 
-    // template<typename ReturnType, typename T1, typename T2, typename T =
-    // void> struct FullContraction;
-
-    // /**
-    //  * Generic contraction
-    //  *
-    //  * Type T1 is a scalar
-    //  */
-    // template<typename ReturnType, typename T1, typename T2>
-    // struct FullContraction<ReturnType,T1,T2, typename
-    // std::enable_if<std::is_arithmetic<T1>::value ||
-    // std::is_arithmetic<T2>::value>::type>
-    // {
-    //   static ReturnType
-    //   contract(const T1 &t1, const T2 &t2)
-    //   {
-    //     return t1*t2;
-    //   }
-    // };
-
-
-    // /**
-    //  * Generic contraction
-    //  *
-    //  * Type T2 is a scalar
-    //  */
-    // template<typename T1, typename T2>
-    // struct FullContraction<T1,T2, typename
-    // std::enable_if<std::is_arithmetic<T2>::value &&
-    // !std::is_arithmetic<T1>::value>::type>
-    // {
-    //   static ReturnType
-    //   contract(const T1 &t1, const T2 &t2)
-    //   {
-    //     // Call other implementation
-    //     return FullContraction<ReturnType,T2,T1>::contract(t2,t1);
-    //   }
-    // };
-
 
     template <typename T1, typename T2, typename T = void>
     struct FullContraction;
 
     /**
-     * Contraction with a scalar or complex scalar
-     *
-     * At least one of the templated types is an arithmetic type
+     * Contraction with a scalars or complex scalars or vectorized arrays
      */
     template <typename T1, typename T2>
     struct FullContraction<
       T1,
       T2,
-      typename std::enable_if<std::is_arithmetic<T1>::value ||
-                              std::is_arithmetic<T2>::value>::type>
+      typename std::enable_if<is_scalar_type<T1>::value &&
+                              is_scalar_type<T2>::value>::type>
     {
       static auto
       contract(const T1 &t1, const T2 &t2) -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-    template <typename T1, typename T2>
-    struct FullContraction<
-      std::complex<T1>,
-      T2,
-      typename std::enable_if<std::is_arithmetic<T1>::value ||
-                              std::is_arithmetic<T2>::value>::type>
-    {
-      static auto
-      contract(const std::complex<T1> &t1, const T2 &t2) -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-    template <typename T1, typename T2>
-    struct FullContraction<
-      T1,
-      std::complex<T2>,
-      typename std::enable_if<std::is_arithmetic<T1>::value ||
-                              std::is_arithmetic<T2>::value>::type>
-    {
-      static auto
-      contract(const T1 &t1, const std::complex<T2> &t2) -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-    template <typename T1, typename T2>
-    struct FullContraction<
-      std::complex<T1>,
-      std::complex<T2>,
-      typename std::enable_if<std::is_arithmetic<T1>::value ||
-                              std::is_arithmetic<T2>::value>::type>
-    {
-      static auto
-      contract(const std::complex<T1> &t1, const std::complex<T2> &t2)
-        -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-
-    /**
-     * Contraction with a vectorized scalar
-     *
-     * At least one of the templated types is a VectorizedArray
-     */
-    template <typename T1, typename T2>
-    struct FullContraction<VectorizedArray<T1>, T2>
-    {
-      static auto
-      contract(const VectorizedArray<T1> &t1, const T2 &t2) -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-    template <typename T1, typename T2>
-    struct FullContraction<T1, VectorizedArray<T2>>
-    {
-      static auto
-      contract(const T1 &t1, const VectorizedArray<T2> &t2) -> decltype(t1 * t2)
-      {
-        return t1 * t2;
-      }
-    };
-    template <typename T1, typename T2>
-    struct FullContraction<VectorizedArray<T1>, VectorizedArray<T2>>
-    {
-      static auto
-      contract(const VectorizedArray<T1> &t1, const VectorizedArray<T2> &t2)
-        -> decltype(t1 * t2)
       {
         return t1 * t2;
       }
@@ -327,6 +212,32 @@ namespace WeakForms
       static Tensor<rank_1 + rank_2, dim, typename ProductType<T1, T2>::type>
       contract(const Tensor<rank_1, dim, T1> &t1,
                const Tensor<rank_2, dim, T2> &t2)
+      {
+        return t1 * t2;
+      }
+    };
+
+    template <int rank, int dim, typename T1, typename T2>
+    struct FullContraction<
+      T1,
+      Tensor<rank, dim, T2>,
+      typename std::enable_if<is_scalar_type<T1>::value>::type>
+    {
+      static Tensor<rank, dim, typename ProductType<T1, T2>::type>
+      contract(const T1 &t1, const Tensor<rank, dim, T2> &t2)
+      {
+        return t1 * t2;
+      }
+    };
+
+    template <int rank, int dim, typename T1, typename T2>
+    struct FullContraction<
+      Tensor<rank, dim, T1>,
+      T2,
+      typename std::enable_if<is_scalar_type<T2>::value>::type>
+    {
+      static Tensor<rank, dim, typename ProductType<T1, T2>::type>
+      contract(const Tensor<rank, dim, T1> &t1, const T2 &t2)
       {
         return t1 * t2;
       }
@@ -377,6 +288,32 @@ namespace WeakForms
                const Tensor<rank_2, dim, T2> &t2)
       {
         return scalar_product(t1, t2);
+      }
+    };
+
+    template <int rank, int dim, typename T1, typename T2>
+    struct FullContraction<
+      T1,
+      SymmetricTensor<rank, dim, T2>,
+      typename std::enable_if<is_scalar_type<T1>::value>::type>
+    {
+      static SymmetricTensor<rank, dim, typename ProductType<T1, T2>::type>
+      contract(const T1 &t1, const SymmetricTensor<rank, dim, T2> &t2)
+      {
+        return t1 * t2;
+      }
+    };
+
+    template <int rank, int dim, typename T1, typename T2>
+    struct FullContraction<
+      SymmetricTensor<rank, dim, T1>,
+      T2,
+      typename std::enable_if<is_scalar_type<T2>::value>::type>
+    {
+      static SymmetricTensor<rank, dim, typename ProductType<T1, T2>::type>
+      contract(const SymmetricTensor<rank, dim, T1> &t1, const T2 &t2)
+      {
+        return t1 * t2;
       }
     };
 
