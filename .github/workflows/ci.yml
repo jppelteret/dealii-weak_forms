@@ -1,0 +1,31 @@
+name: github-linux
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: 
+      image: docker://dealii/dealii:master-focal-root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_INSTALL_PREFIX=/opt \
+            -DDEAL_II_SOURCE_DIR=/usr/src/dealii \
+            -DBUILD_BENCHMARKS=OFF \
+            -DBUILD_TESTS=ON \
+            ../
+      - name: Compile
+        run: |
+          cd build
+          make install
+      - name: Testing
+        run: |
+          cd build
+          ctest --output-on-failure
