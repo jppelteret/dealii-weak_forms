@@ -201,9 +201,8 @@ run()
   {
     using namespace WeakForms;
 
-    deallog
-      << "Weak form assembly (bilinear form, position dependent scalar coefficient)"
-      << std::endl;
+    deallog << "Weak form assembly (bilinear form, tensor coefficient)"
+            << std::endl;
     system_matrix_wf = 0;
 
     // Symbolic types for test function, trial solution and a coefficient.
