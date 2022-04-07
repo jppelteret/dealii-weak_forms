@@ -21,6 +21,7 @@
 // - Optimizer type: LLVM
 // - Optimization method: All
 // - AD/SD Cache
+// - Parameter file: parameters-step-44-refined_short.prm
 
 #include <deal.II/differentiation/sd.h>
 
@@ -64,7 +65,7 @@ namespace Step44
     constexpr Differentiation::SD::OptimizerType optimizer_type =
       Differentiation::SD::OptimizerType::llvm;
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
-      Differentiation::SD::OptimizationFlags::optimize_all;
+      Differentiation::SD::OptimizationFlags::optimize_default;
 
     this->timer.enter_subsection("Construct assembler");
 
@@ -302,7 +303,8 @@ main(int argc, char **argv)
   try
     {
       const unsigned int  dim = 3;
-      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44-refined_short.prm");
+      Step44::Step44<dim> solid(SOURCE_DIR
+                                "/prm/parameters-step-44-refined_short.prm");
       solid.run();
     }
   catch (std::exception &exc)

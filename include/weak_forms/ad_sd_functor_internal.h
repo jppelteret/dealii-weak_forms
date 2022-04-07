@@ -1470,6 +1470,27 @@ namespace WeakForms
 
     } // namespace internal
   }   // namespace Operators
+
+
+  inline void
+  assertOptimizerSettings(
+    const enum Differentiation::SD::OptimizerType     optimization_method,
+    const enum Differentiation::SD::OptimizationFlags optimization_flags)
+  {
+    if (optimization_method != Differentiation::SD::OptimizerType::llvm)
+      return;
+
+    // Adding this flag doesn't return any benefit (there's actualy only some
+    // extra overhead in SymEngine) so let's not allow it.
+    const bool use_cse_opt =
+      static_cast<int>(optimization_flags &
+                       Differentiation::SD::OptimizationFlags::optimize_cse);
+    Assert(
+      use_cse_opt == false,
+      ExcMessage(
+        "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
+  }
+
 } // namespace WeakForms
 
 

@@ -164,7 +164,9 @@ namespace StepTransientCurlCurl
 
     struct SourceTerms
     {
-      double wire_current;
+      std::string wire_excitation;
+      double      wire_current;
+      double      wire_voltage;
 
       static void
       declare_parameters(ParameterHandler &prm);
@@ -178,10 +180,20 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Source terms");
       {
+        prm.declare_entry("Excitation method",
+                          "Current",
+                          Patterns::Selection("Current|Voltage"),
+                          "Specification for how the wire is excited");
+
         prm.declare_entry("Wire current",
                           "1.0",
                           Patterns::Double(),
                           "Total current through the wire CSA (A/m2)");
+
+        prm.declare_entry("Wire voltage drop",
+                          "1.0",
+                          Patterns::Double(),
+                          "Total voltage drop across the wire length (V)");
       }
       prm.leave_subsection();
     }
@@ -191,7 +203,9 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Source terms");
       {
-        wire_current = prm.get_double("Wire current");
+        wire_excitation = prm.get("Excitation method");
+        wire_current    = prm.get_double("Wire current");
+        wire_voltage    = prm.get_double("Wire voltage drop");
       }
       prm.leave_subsection();
     }
@@ -205,9 +219,9 @@ namespace StepTransientCurlCurl
     // at the element level leads to the mean-dilatation method. The
     // discontinuous approximation allows $\widetilde{p}$ and $\widetilde{J}$ to
     // be condensed out and a classical displacement based method is recovered.
-    // Here we specify the polynomial order used to approximate the solution.
-    // The quadrature order should be adjusted accordingly, but this is done at
-    // a later stage.
+    // Here we specify the polynomial order used to approximate the
+    // solution. The quadrature order should be adjusted accordingly, but
+    // this is done at a later stage.
     struct FESystem
     {
       unsigned int poly_degree_min;
@@ -546,6 +560,12 @@ namespace StepTransientCurlCurl
 
       void
       parse_parameters(ParameterHandler &prm);
+
+      bool
+      use_voltage_excitation() const;
+
+      bool
+      use_current_excitation() const;
     };
 
     AllParameters::AllParameters(const std::string &input_file)
@@ -581,6 +601,23 @@ namespace StepTransientCurlCurl
       Refinement::parse_parameters(prm);
       Materials::parse_parameters(prm);
       LinearSolver::parse_parameters(prm);
+    }
+
+    bool
+    AllParameters::use_voltage_excitation() const
+    {
+      if (wire_excitation == "Voltage")
+        return true;
+
+      Assert(wire_excitation == "Current",
+             ExcMessage("Unknown wire excitation option selected."));
+      return false;
+    }
+
+    bool
+    AllParameters::use_current_excitation() const
+    {
+      return !use_voltage_excitation();
     }
   } // namespace Parameters
 
@@ -1368,6 +1405,7 @@ namespace StepTransientCurlCurl
               }
           }
 
+        std::cout << "std::abs(div_J_f): " << std::abs(div_J_f) << std::endl;
         AssertThrow(std::abs(div_J_f) < 1e-9,
                     ExcMessage("Source term is not divergence free!"));
       }

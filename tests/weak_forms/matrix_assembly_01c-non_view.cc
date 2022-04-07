@@ -116,8 +116,7 @@ run()
     std::cout << "Standard assembly" << std::endl;
     system_matrix_std = 0;
 
-    FEValues<dim, spacedim>    fe_values(fe, qf_cell, update_flags);
-    FEValuesExtractors::Vector field(0);
+    FEValues<dim, spacedim> fe_values(fe, qf_cell, update_flags);
 
     const unsigned int dofs_per_cell = fe.dofs_per_cell;
     FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
@@ -132,8 +131,8 @@ run()
         for (const unsigned int q : fe_values.quadrature_point_indices())
           for (const unsigned int i : fe_values.dof_indices())
             for (const unsigned int j : fe_values.dof_indices())
-              cell_matrix(i, j) += fe_values[field].value(i, q) *
-                                   fe_values[field].value(j, q) *
+              cell_matrix(i, j) += fe_values.shape_value(i, q) *
+                                   fe_values.shape_value(j, q) *
                                    fe_values.JxW(q);
 
 
@@ -192,10 +191,8 @@ run()
   // {
   //   using namespace WeakForms;
 
-  //   deallog
-  //     << "Weak form assembly (bilinear form, position dependent scalar
-  //     coefficient)"
-  //     << std::endl;
+  //   deallog << "Weak form assembly (bilinear form, tensor coefficient)"
+  //           << std::endl;
   //   system_matrix_wf = 0;
 
   //   // Symbolic types for test function, trial solution and a coefficient.
@@ -203,11 +200,12 @@ run()
   //   const TrialSolution<dim, spacedim> trial;
   //   const TensorFunctor<2, spacedim>   coeff("C", "C");
 
-  //   const auto test_val  = value(test);
-  //   const auto trial_val = value(trial);
-  //   const auto coeff_func = value<double>(coeff, [](const unsigned int) {
-  //     return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>());
-  //   });
+  //   const auto test_val  = test.value();
+  //   const auto trial_val = trial.value();
+
+  //   const auto coeff_func = coeff.template value<double, spacedim>(
+  //     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+  //     { return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>()); });
 
   //   // Still no concrete definitions
   //   MatrixBasedAssembler<dim, spacedim> assembler;
@@ -215,14 +213,17 @@ run()
 
   //   // Look at what we're going to compute
   //   const SymbolicDecorations decorator;
-  //   deallog << "Weak form (ascii):\n" << assembler.as_ascii(decorator) <<
-  //   std::endl; deallog << "Weak form (LaTeX):\n" <<
-  //   assembler.as_latex(decorator) << std::endl;
+  //   deallog << "Weak form (ascii):\n"
+  //           << assembler.as_ascii(decorator) << std::endl;
+  //   deallog << "Weak form (LaTeX):\n"
+  //           << assembler.as_latex(decorator) << std::endl;
 
   //   // Now we pass in concrete objects to get data from
   //   // and assemble into.
-  //   assembler.assemble_matrix(system_matrix_wf, constraints, dof_handler,
-  //   qf_cell);
+  //   assembler.assemble_matrix(system_matrix_wf,
+  //                             constraints,
+  //                             dof_handler,
+  //                             qf_cell);
 
   //   // system_matrix_wf.print(std::cout);
   //   verify_assembly(system_matrix_std, system_matrix_wf);

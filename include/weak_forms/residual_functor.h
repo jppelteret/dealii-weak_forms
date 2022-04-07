@@ -21,6 +21,7 @@
 #include <deal.II/algorithms/general_data_storage.h>
 
 #include <deal.II/base/exceptions.h>
+#include <deal.II/base/multithread_info.h>
 
 #include <deal.II/differentiation/ad.h>
 #include <deal.II/differentiation/sd.h>
@@ -42,6 +43,7 @@
 #include <weak_forms/utilities.h>
 
 #include <functional>
+#include <mutex>
 #include <thread>
 #include <tuple>
 
@@ -1118,7 +1120,21 @@ namespace WeakForms
             initialize_optimizer(batch_optimizer);
 
             // Finalize the optimizer.
-            batch_optimizer.optimize();
+            // If using the LLVM optimiser in a threaded environment, we have to
+            // stagger initialisation so as not to cause some race condition
+            // that leads to a segfault.
+            if (optimization_method ==
+                  Differentiation::SD::OptimizerType::llvm &&
+                MultithreadInfo::is_running_single_threaded() == false)
+              {
+                static std::mutex           mutex;
+                std::lock_guard<std::mutex> lock(mutex);
+                batch_optimizer.optimize();
+              }
+            else
+              {
+                batch_optimizer.optimize();
+              }
           }
 
         // Check that we've actually got a state that we can do some work with.
@@ -1373,6 +1389,8 @@ namespace WeakForms
     const enum Differentiation::SD::OptimizationFlags optimization_flags,
     const UpdateFlags                                 update_flags) const
   {
+    assertOptimizerSettings(optimization_method, optimization_flags);
+
     using namespace WeakForms;
     using namespace WeakForms::Operators;
 

@@ -91,7 +91,7 @@ Step6<dim>::assemble_system()
       return Differentiation::SD::make_substitution_map(coefficient, c);
     },
     Differentiation::SD::OptimizerType::llvm,
-    Differentiation::SD::OptimizationFlags::optimize_all,
+    Differentiation::SD::OptimizationFlags::optimize_default,
     UpdateFlags::update_quadrature_points);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(

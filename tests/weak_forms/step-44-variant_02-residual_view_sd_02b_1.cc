@@ -18,13 +18,10 @@
 // This test replicates step-44 exactly.
 // This test follows the implementation of
 // step-44-variant_02-residual_view_ad_02.
-// - Optimizer type: LLVM
+// - Optimizer type: Lambda
 // - Optimization method: All
 // - AD/SD Cache
-//
-// Note: The performance of this implementation is very much sub-optimal.
-// With the AD/SD cache, the assembler should be constructed once up-front
-// like is done in step-44-variant_02-residual_view_sd_03b.
+// - Parameter file: parameters-step-44-refined_short.prm
 
 #include <deal.II/differentiation/sd.h>
 
@@ -41,10 +38,15 @@ namespace Step44
   public:
     Step44(const std::string &input_file)
       : Step44_Base<dim>(input_file)
+      , assembler(ad_sd_cache)
     {}
 
   protected:
-    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+    WeakForms::AD_SD_Functor_Cache       ad_sd_cache;
+    WeakForms::MatrixBasedAssembler<dim> assembler;
+
+    void
+    build_assembler();
 
     void
     assemble_system(const BlockVector<double> &solution_delta) override;
@@ -52,7 +54,7 @@ namespace Step44
 
   template <int dim>
   void
-  Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
+  Step44<dim>::build_assembler()
   {
     using namespace WeakForms;
     using namespace Differentiation;
@@ -61,16 +63,11 @@ namespace Step44
     using SDNumber_t       = typename Differentiation::SD::Expression;
 
     constexpr Differentiation::SD::OptimizerType optimizer_type =
-      Differentiation::SD::OptimizerType::llvm;
+      Differentiation::SD::OptimizerType::lambda;
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
-      Differentiation::SD::OptimizationFlags::optimize_default;
+      Differentiation::SD::OptimizationFlags::optimize_all;
 
-    this->timer.enter_subsection("Assemble system");
-    std::cout << " ASM_SYS " << std::flush;
-    this->tangent_matrix = 0.0;
-    this->system_rhs     = 0.0;
-    const BlockVector<double> solution_total(
-      this->get_total_solution(solution_delta));
+    this->timer.enter_subsection("Construct assembler");
 
     // Symbolic types for test function, and the field solution.
     const TestFunction<dim, spacedim>  test;
@@ -232,7 +229,6 @@ namespace Step44
     const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
-    MatrixBasedAssembler<dim> assembler(ad_sd_cache);
     assembler += residual_form(residual_u).dV() +
                  residual_form(residual_p).dV() +
                  residual_form(residual_J).dV() -
@@ -251,6 +247,32 @@ namespace Step44
         deallog << "\n" << std::endl;
         output = false;
       }
+
+    this->timer.leave_subsection();
+  }
+
+  template <int dim>
+  void
+  Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
+  {
+    // Initialise the assembler.
+    // We need to do it here because the need to have the grid built
+    // first (we fetch the lqph for a cell).
+    {
+      static bool assembler_initialised = false;
+      if (!assembler_initialised)
+        {
+          build_assembler();
+          assembler_initialised = true;
+        }
+    }
+
+    this->timer.enter_subsection("Assemble system");
+    std::cout << " ASM_SYS " << std::flush;
+    this->tangent_matrix = 0.0;
+    this->system_rhs     = 0.0;
+    const BlockVector<double> solution_total(
+      this->get_total_solution(solution_delta));
 
     // Now we pass in concrete objects to get data from
     // and assemble into.
@@ -281,7 +303,8 @@ main(int argc, char **argv)
   try
     {
       const unsigned int  dim = 3;
-      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44-short.prm");
+      Step44::Step44<dim> solid(SOURCE_DIR
+                                "/prm/parameters-step-44-refined_short.prm");
       solid.run();
     }
   catch (std::exception &exc)

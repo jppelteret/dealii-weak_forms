@@ -100,7 +100,7 @@ Step8<dim>::assemble_system()
       return Differentiation::SD::make_substitution_map(symb_coeff, C);
     },
     Differentiation::SD::OptimizerType::llvm,
-    Differentiation::SD::OptimizationFlags::optimize_all,
+    Differentiation::SD::OptimizationFlags::optimize_default,
     UpdateFlags::update_quadrature_points);
 
   MatrixBasedAssembler<dim> assembler;

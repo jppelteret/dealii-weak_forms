@@ -15,6 +15,11 @@
 
 // Transient, uncoupled curl-curl problem using hp finite elements.
 
+// --- NOTE ------------------------------------------------------------------
+// This test is currently disabled. This test should be completely reworked,
+// starting from its non-hp variant that is now more advanced than this one.
+// ---------------------------------------------------------------------------
+
 #include "../weak_forms_tests.h"
 #include "wf_common_tests/step-transient_curl_curl-hp.h"
 

@@ -21,6 +21,7 @@
 // - Optimizer type: LLVM
 // - Optimization method: All
 // - AD/SD Cache
+// - Parameter file: parameters-step-44.prm
 
 #include <deal.II/differentiation/sd.h>
 
@@ -64,7 +65,7 @@ namespace Step44
     constexpr Differentiation::SD::OptimizerType optimizer_type =
       Differentiation::SD::OptimizerType::llvm;
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
-      Differentiation::SD::OptimizationFlags::optimize_all;
+      Differentiation::SD::OptimizationFlags::optimize_default;
 
     this->timer.enter_subsection("Construct assembler");
 

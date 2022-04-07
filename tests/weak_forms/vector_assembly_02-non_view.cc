@@ -18,6 +18,14 @@
 // - Volume and boundary vector contributions (scalar-valued finite element)
 // - Check field solution + gradients
 
+// --- NOTE ------------------------------------------------------------------
+// This test is currently disabled. The reason for this is because we use
+// ScratchData to extract data from FieldSolutions, and currently deal.II
+// does not support this without the use of extractors. So, effectively, in
+// order to use FieldSolutions we need to also use a subspace view to the
+// solution.
+// ---------------------------------------------------------------------------
+
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/function_parser.h>
 #include <deal.II/base/quadrature_lib.h>

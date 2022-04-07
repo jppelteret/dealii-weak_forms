@@ -4,7 +4,7 @@ DEAL:Dim 2::Weak form (ascii):
 0 = #(d{T}, c, D{T})#dV
 DEAL:Dim 2::Weak form (LaTeX):
 0 = \int\left[\delta{\mathbf{T}} \colon \left[{c}\,\Delta{\mathbf{T}}\right]\right]\textrm{dV}
-DEAL:Dim 2::Weak form assembly (bilinear form, position dependent scalar coefficient)
+DEAL:Dim 2::Weak form assembly (bilinear form, tensor coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(d{T}, <<<<C>>>>, D{T})#dV
 DEAL:Dim 2::Weak form (LaTeX):
@@ -15,7 +15,7 @@ DEAL:Dim 3::Weak form (ascii):
 0 = #(d{T}, c, D{T})#dV
 DEAL:Dim 3::Weak form (LaTeX):
 0 = \int\left[\delta{\mathbf{T}} \colon \left[{c}\,\Delta{\mathbf{T}}\right]\right]\textrm{dV}
-DEAL:Dim 3::Weak form assembly (bilinear form, position dependent scalar coefficient)
+DEAL:Dim 3::Weak form assembly (bilinear form, tensor coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(d{T}, <<<<C>>>>, D{T})#dV
 DEAL:Dim 3::Weak form (LaTeX):
