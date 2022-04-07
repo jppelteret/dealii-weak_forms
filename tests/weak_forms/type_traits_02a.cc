@@ -16,11 +16,7 @@
 
 // Check type traits for space functions
 
-
-#include <weak_forms/spaces.h>
-#include <weak_forms/symbolic_operators.h>
-#include <weak_forms/type_traits.h>
-#include <weak_forms/unary_operators.h>
+#include <weak_forms/weak_forms.h>
 
 #include "../weak_forms_tests.h"
 
@@ -51,7 +47,7 @@ main()
 
   // Values
   {
-    LogStream::Prefix prefix("Value: Symbolic");
+    LogStream::Prefix prefix("Value:Symbolic");
 
     deallog << "is_test_function_op()" << std::endl;
     deallog << is_test_function_op<test_val_t>::value << std::endl;
@@ -74,17 +70,17 @@ main()
 
     deallog << std::endl;
 
-    deallog << "has_test_function_op()" << std::endl;
-    deallog << has_test_function_op<test_val_t>::value << std::endl;
-    deallog << has_test_function_op<trial_val_t>::value << std::endl;
-    deallog << has_test_function_op<soln_val_t>::value << std::endl;
+    deallog << "is_or_has_test_function_op()" << std::endl;
+    deallog << is_or_has_test_function_op<test_val_t>::value << std::endl;
+    deallog << is_or_has_test_function_op<trial_val_t>::value << std::endl;
+    deallog << is_or_has_test_function_op<soln_val_t>::value << std::endl;
 
     deallog << std::endl;
 
-    deallog << "has_trial_solution_op()" << std::endl;
-    deallog << has_trial_solution_op<test_val_t>::value << std::endl;
-    deallog << has_trial_solution_op<trial_val_t>::value << std::endl;
-    deallog << has_trial_solution_op<soln_val_t>::value << std::endl;
+    deallog << "is_or_has_trial_solution_op()" << std::endl;
+    deallog << is_or_has_trial_solution_op<test_val_t>::value << std::endl;
+    deallog << is_or_has_trial_solution_op<trial_val_t>::value << std::endl;
+    deallog << is_or_has_trial_solution_op<soln_val_t>::value << std::endl;
 
     deallog << std::endl;
 
@@ -94,9 +90,22 @@ main()
     deallog << has_field_solution_op<soln_val_t>::value << std::endl;
 
     deallog << std::endl;
+
+    // It doesn't make sense for us to have a is_or_has_field_solution_op type
+    // trait, but we get the equivalent information by looking at whether the
+    // type is evaluated with cached data.
+    deallog << "is_or_has_evaluated_with_scratch_data()" << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<test_val_t>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<trial_val_t>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<soln_val_t>::value
+            << std::endl;
+
+    deallog << std::endl;
   }
   {
-    LogStream::Prefix prefix("Value: Unary");
+    LogStream::Prefix prefix("Value:Unary");
 
     deallog << "is_test_function_op()" << std::endl;
     deallog << is_test_function_op<decltype(-std::declval<test_val_t>())>::value
@@ -135,29 +144,29 @@ main()
 
     deallog << std::endl;
 
-    deallog << "has_test_function_op()" << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<test_val_t>())>::value
-      << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<trial_val_t>())>::value
-      << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<soln_val_t>())>::value
-      << std::endl;
+    deallog << "is_or_has_test_function_op()" << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<test_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<trial_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<soln_val_t>())>::value
+            << std::endl;
 
     deallog << std::endl;
 
-    deallog << "has_trial_solution_op()" << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<test_val_t>())>::value
-      << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<trial_val_t>())>::value
-      << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<soln_val_t>())>::value
-      << std::endl;
+    deallog << "is_or_has_trial_solution_op()" << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<test_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<trial_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<soln_val_t>())>::value
+            << std::endl;
 
     deallog << std::endl;
 
@@ -173,11 +182,24 @@ main()
       << std::endl;
 
     deallog << std::endl;
+
+    deallog << "is_or_has_evaluated_with_scratch_data()" << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<test_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<trial_val_t>())>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<soln_val_t>())>::value
+            << std::endl;
+
+    deallog << std::endl;
   }
 
   // Gradients
   {
-    LogStream::Prefix prefix("Gradient: Symbolic");
+    LogStream::Prefix prefix("Gradient:Symbolic");
 
     deallog << "is_test_function_op()" << std::endl;
     deallog << is_test_function_op<test_grad_t>::value << std::endl;
@@ -200,17 +222,17 @@ main()
 
     deallog << std::endl;
 
-    deallog << "has_test_function_op()" << std::endl;
-    deallog << has_test_function_op<test_grad_t>::value << std::endl;
-    deallog << has_test_function_op<trial_grad_t>::value << std::endl;
-    deallog << has_test_function_op<soln_grad_t>::value << std::endl;
+    deallog << "is_or_has_test_function_op()" << std::endl;
+    deallog << is_or_has_test_function_op<test_grad_t>::value << std::endl;
+    deallog << is_or_has_test_function_op<trial_grad_t>::value << std::endl;
+    deallog << is_or_has_test_function_op<soln_grad_t>::value << std::endl;
 
     deallog << std::endl;
 
-    deallog << "has_trial_solution_op()" << std::endl;
-    deallog << has_trial_solution_op<test_grad_t>::value << std::endl;
-    deallog << has_trial_solution_op<trial_grad_t>::value << std::endl;
-    deallog << has_trial_solution_op<soln_grad_t>::value << std::endl;
+    deallog << "is_or_has_trial_solution_op()" << std::endl;
+    deallog << is_or_has_trial_solution_op<test_grad_t>::value << std::endl;
+    deallog << is_or_has_trial_solution_op<trial_grad_t>::value << std::endl;
+    deallog << is_or_has_trial_solution_op<soln_grad_t>::value << std::endl;
 
     deallog << std::endl;
 
@@ -220,9 +242,19 @@ main()
     deallog << has_field_solution_op<soln_grad_t>::value << std::endl;
 
     deallog << std::endl;
+
+    deallog << "is_or_has_evaluated_with_scratch_data()" << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<test_grad_t>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<trial_grad_t>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<soln_grad_t>::value
+            << std::endl;
+
+    deallog << std::endl;
   }
   {
-    LogStream::Prefix prefix("Gradient: Unary");
+    LogStream::Prefix prefix("Gradient:Unary");
 
     deallog << "is_test_function_op()" << std::endl;
     deallog
@@ -263,29 +295,29 @@ main()
 
     deallog << std::endl;
 
-    deallog << "has_test_function_op()" << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<test_grad_t>())>::value
-      << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<trial_grad_t>())>::value
-      << std::endl;
-    deallog
-      << has_test_function_op<decltype(-std::declval<soln_grad_t>())>::value
-      << std::endl;
+    deallog << "is_or_has_test_function_op()" << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<test_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<trial_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_test_function_op<decltype(
+                 -std::declval<soln_grad_t>())>::value
+            << std::endl;
 
     deallog << std::endl;
 
-    deallog << "has_trial_solution_op()" << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<test_grad_t>())>::value
-      << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<trial_grad_t>())>::value
-      << std::endl;
-    deallog
-      << has_trial_solution_op<decltype(-std::declval<soln_grad_t>())>::value
-      << std::endl;
+    deallog << "is_or_has_trial_solution_op()" << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<test_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<trial_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_trial_solution_op<decltype(
+                 -std::declval<soln_grad_t>())>::value
+            << std::endl;
 
     deallog << std::endl;
 
@@ -299,6 +331,19 @@ main()
     deallog
       << has_field_solution_op<decltype(-std::declval<soln_grad_t>())>::value
       << std::endl;
+
+    deallog << std::endl;
+
+    deallog << "is_or_has_evaluated_with_scratch_data()" << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<test_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<trial_grad_t>())>::value
+            << std::endl;
+    deallog << is_or_has_evaluated_with_scratch_data<decltype(
+                 -std::declval<soln_grad_t>())>::value
+            << std::endl;
 
     deallog << std::endl;
   }

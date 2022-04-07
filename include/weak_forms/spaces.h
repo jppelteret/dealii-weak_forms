@@ -2331,6 +2331,14 @@ public:                                                                    \
   template <typename ScalarType>                                           \
   using return_type = typename Base_t::template qp_value_type<ScalarType>; \
                                                                            \
+  template <typename ScalarType, std::size_t width>                        \
+  using vectorized_value_type =                                            \
+    typename Base_t::template vectorized_value_type<ScalarType, width>;    \
+                                                                           \
+  template <typename ScalarType, std::size_t width>                        \
+  using vectorized_return_type =                                           \
+    typename Base_t::template vectorized_qp_value_type<ScalarType, width>; \
+                                                                           \
   explicit SymbolicOp(const Op &operand)                                   \
     : Base_t(operand)                                                      \
   {}
