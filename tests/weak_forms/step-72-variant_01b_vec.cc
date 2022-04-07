@@ -15,7 +15,7 @@
 
 // Minimal surface problem: Assembly using composite weak forms
 // This test replicates step-72 (unassisted formulation) exactly.
-// - Non-vectorized variant
+// - Vectorized variant
 
 #include <weak_forms/weak_forms.h>
 
@@ -65,7 +65,7 @@ namespace Step72
     const auto coeff  = 1.0 / sqrt(1.0 + grad_u * grad_u);
 
     // Assembly
-    MatrixBasedAssembler<dim, dim, double, false> assembler;
+    MatrixBasedAssembler<dim> assembler;
     assembler += bilinear_form(grad_test_u, coeff, grad_trial_u).dV();
     assembler -= bilinear_form(grad_test_u,
                                coeff * coeff * coeff, // pow(coeff, 3)
