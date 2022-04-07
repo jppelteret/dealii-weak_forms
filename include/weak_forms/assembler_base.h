@@ -2191,7 +2191,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_values,
@@ -2207,12 +2207,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2521,7 +2530,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_face_values,
@@ -2537,12 +2546,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -2858,7 +2876,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_interface_values,
@@ -2874,12 +2892,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -3074,7 +3101,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_values,
@@ -3090,12 +3117,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -3245,7 +3281,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_face_values,
@@ -3261,12 +3297,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
@@ -3426,7 +3471,7 @@ namespace WeakForms
                     solution_extraction_data,
                     q_point_range);
 
-                const VectorizedValueTypeFunctor values_functor =
+                VectorizedValueTypeFunctor values_functor =
                   internal::evaluate_functor<ScalarType, width>(
                     functor,
                     fe_interface_values,
@@ -3442,12 +3487,21 @@ namespace WeakForms
                 // we need to correct out-of-bounds contributions:
                 // These elements still participate in the assembly,
                 // so we need to make sure that their contributions
-                // integrate to zero.
+                // integrate to zero. For the functor, we have to be
+                // conscientious of the case where we divide by zero when
+                // we work with out-of-bounds vectorization lanes.
                 DEAL_II_OPENMP_SIMD_PRAGMA
                 for (unsigned int v = 0; v < width; v++)
                   {
                     if (v >= q_point_range.size())
-                      numbers::set_vectorized_values(JxW, v, 0.0);
+                      {
+                        using ValueTypeFunctor =
+                          typename Functor::template value_type<ScalarType>;
+                        numbers::set_vectorized_values(values_functor,
+                                                       v,
+                                                       ValueTypeFunctor{});
+                        numbers::set_vectorized_values(JxW, v, 0.0);
+                      }
                   }
 
                 // Do the assembly for the current batch of quadrature points
