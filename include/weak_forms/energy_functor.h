@@ -1204,6 +1204,8 @@ namespace WeakForms
     const enum Differentiation::SD::OptimizationFlags optimization_flags,
     const UpdateFlags                                 update_flags) const
   {
+    assertOptimizerSettings(optimization_method, optimization_flags);
+
     using namespace WeakForms;
     using namespace WeakForms::Operators;
 
