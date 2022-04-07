@@ -116,7 +116,8 @@ main(int argc, char *argv[])
 
   try
     {
-      Utilities::MPI::MPI_InitFinalize mpi_initialization(argc, argv);
+      Utilities::MPI::MPI_InitFinalize mpi_initialization(
+        argc, argv, testing_max_num_threads());
 
       std::string prm_file;
       if (argc > 1)
