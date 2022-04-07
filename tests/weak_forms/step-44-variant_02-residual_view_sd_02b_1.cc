@@ -18,10 +18,10 @@
 // This test replicates step-44 exactly.
 // This test follows the implementation of
 // step-44-variant_02-residual_view_ad_02.
-// - Optimizer type: LLVM
+// - Optimizer type: Lambda
 // - Optimization method: All
 // - AD/SD Cache
-// - Parameter file: parameters-step-44.prm
+// - Parameter file: parameters-step-44-refined_short.prm
 
 #include <deal.II/differentiation/sd.h>
 
@@ -63,9 +63,9 @@ namespace Step44
     using SDNumber_t       = typename Differentiation::SD::Expression;
 
     constexpr Differentiation::SD::OptimizerType optimizer_type =
-      Differentiation::SD::OptimizerType::llvm;
+      Differentiation::SD::OptimizerType::lambda;
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
-      Differentiation::SD::OptimizationFlags::optimize_default;
+      Differentiation::SD::OptimizationFlags::optimize_all;
 
     this->timer.enter_subsection("Construct assembler");
 
@@ -303,7 +303,8 @@ main(int argc, char **argv)
   try
     {
       const unsigned int  dim = 3;
-      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44.prm");
+      Step44::Step44<dim> solid(SOURCE_DIR
+                                "/prm/parameters-step-44-refined_short.prm");
       solid.run();
     }
   catch (std::exception &exc)

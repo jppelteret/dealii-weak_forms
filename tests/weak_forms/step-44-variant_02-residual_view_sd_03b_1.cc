@@ -21,6 +21,7 @@
 // - Optimizer type: LLVM
 // - Optimization method: All
 // - AD/SD Cache
+// - Parameter file: parameters-step-44-refined_short.prm
 
 #include <deal.II/differentiation/sd.h>
 
