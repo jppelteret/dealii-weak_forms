@@ -228,7 +228,8 @@ main(int argc, char **argv)
   try
     {
       const unsigned int  dim = 3;
-      Step44::Step44<dim> solid(SOURCE_DIR "/prm/parameters-step-44-refined_short.prm");
+      Step44::Step44<dim> solid(SOURCE_DIR
+                                "/prm/parameters-step-44-refined_short.prm");
       solid.run();
     }
   catch (std::exception &exc)
