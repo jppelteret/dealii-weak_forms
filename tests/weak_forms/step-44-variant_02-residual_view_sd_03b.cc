@@ -64,7 +64,7 @@ namespace Step44
     constexpr Differentiation::SD::OptimizerType optimizer_type =
       Differentiation::SD::OptimizerType::llvm;
     constexpr Differentiation::SD::OptimizationFlags optimization_flags =
-      Differentiation::SD::OptimizationFlags::optimize_all;
+      Differentiation::SD::OptimizationFlags::optimize_default;
 
     this->timer.enter_subsection("Construct assembler");
 

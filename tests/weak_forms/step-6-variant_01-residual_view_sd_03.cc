@@ -79,7 +79,7 @@ Step6<dim>::assemble_system()
     [&spacedim](const Tensor<1, spacedim, SDNumber_t> &grad_u)
     { return grad_u; },
     Differentiation::SD::OptimizerType::llvm,
-    Differentiation::SD::OptimizationFlags::optimize_all);
+    Differentiation::SD::OptimizationFlags::optimize_default);
 
   const auto rhs_coeff_func = rhs_coeff.template value<double, dim, spacedim>(
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
