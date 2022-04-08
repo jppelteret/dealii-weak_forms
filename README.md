@@ -117,7 +117,7 @@ the analysis done here and following any guidance given by the author.
 
 # Building the library
 ----------------------
-This library requires `deal.II` version `10.0.0` (at the time of writing, this
+This library requires `deal.II` version `9.4.0` (at the time of writing, this
 means the developer version), and a `C++14` compliant compiler (the minimum
 requirement to build `deal.II`). At the moment it is required that `deal.II`
 is built with the following dependencies:
@@ -136,7 +136,7 @@ compilation.
 cmake \
 -DCMAKE_BUILD_TYPE=[Debug/Release] \
 -DCMAKE_INSTALL_PREFIX=<path_to_installation_location> \
--BUILD_BENCHMARKS=[ON/OFF] \
+-DBUILD_BENCHMARKS=[ON/OFF] \
 -DBUILD_DOCUMENTATION=[ON/OFF] \
 -DBUILD_TESTS=[ON/OFF] \
 -DDEAL_II_DIR=<path> \
