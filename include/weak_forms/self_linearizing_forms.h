@@ -43,6 +43,8 @@
 
 WEAK_FORMS_NAMESPACE_OPEN
 
+#if defined(DEAL_II_WITH_SYMENGINE) || \
+  defined(DEAL_II_WITH_AUTO_DIFFERENTIATION)
 
 namespace WeakForms
 {
@@ -466,7 +468,7 @@ namespace WeakForms
       // AD operations
       // =============
 
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
@@ -630,7 +632,7 @@ namespace WeakForms
           field_2);
       }
 
-#else
+#  else
 
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
@@ -667,13 +669,13 @@ namespace WeakForms
         return void;
       }
 
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       // =============
       // SD operations
       // =============
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
@@ -862,7 +864,7 @@ namespace WeakForms
           field_2);
       }
 
-#else
+#  else
 
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
@@ -897,7 +899,7 @@ namespace WeakForms
         return void;
       }
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
       // =============================
       // Self-linearization operations
@@ -1270,7 +1272,7 @@ namespace WeakForms
       // AD operations
       // =============
 
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       template <typename AssemblerScalar_t, typename T = ResidualFunctor>
       auto
@@ -1423,7 +1425,7 @@ namespace WeakForms
           field);
       }
 
-#else
+#  else
 
       template <typename AssemblerScalar_t, typename T = ResidualFunctor>
       auto
@@ -1453,13 +1455,13 @@ namespace WeakForms
         return void;
       }
 
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       // =============
       // SD operations
       // =============
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
       template <typename AssemblerScalar_t, typename T = ResidualFunctor>
       auto
@@ -1641,7 +1643,7 @@ namespace WeakForms
           field);
       }
 
-#else
+#  else
 
       template <typename AssemblerScalar_t, typename T = ResidualFunctor>
       auto
@@ -1669,7 +1671,7 @@ namespace WeakForms
         return void;
       }
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
       // =============================
       // Self-linearization operations
@@ -1871,7 +1873,7 @@ namespace WeakForms
 
 
 
-#ifndef DOXYGEN
+#  ifndef DOXYGEN
 
 
 namespace WeakForms
@@ -1890,8 +1892,11 @@ namespace WeakForms
 } // namespace WeakForms
 
 
-#endif // DOXYGEN
+#  endif // DOXYGEN
 
+
+#endif // defined(DEAL_II_WITH_SYMENGINE) ||
+       // defined(DEAL_II_WITH_AUTO_DIFFERENTIATION)
 
 WEAK_FORMS_NAMESPACE_CLOSE
 

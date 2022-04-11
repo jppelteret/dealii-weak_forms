@@ -50,6 +50,9 @@
 
 WEAK_FORMS_NAMESPACE_OPEN
 
+#if defined(DEAL_II_WITH_SYMENGINE) || \
+  defined(DEAL_II_WITH_AUTO_DIFFERENTIATION)
+
 
 namespace WeakForms
 {
@@ -168,7 +171,7 @@ namespace WeakForms
       const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
         ADNumberType> &...field_solutions)>;
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
     template <typename ScalarType>
     using sd_type               = Differentiation::SD::Expression;
@@ -200,7 +203,7 @@ namespace WeakForms
         &                solution_extraction_data,
       const unsigned int q_point)>;
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
     explicit ResidualViewFunctor(const std::string &        symbol_ascii,
                                  const std::string &        symbol_latex,
@@ -250,7 +253,7 @@ namespace WeakForms
 
     // Methods to promote this class to a SymbolicOp
 
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
     template <typename ADNumberType, int dim, int spacedim = dim>
     auto
@@ -265,9 +268,9 @@ namespace WeakForms
         function, UpdateFlags::update_default);
     }
 
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
     template <typename SDNumberType, int dim, int spacedim = dim>
     auto
@@ -362,7 +365,7 @@ namespace WeakForms
         UpdateFlags::update_default);
     }
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
     typename Operators::internal::SpaceOpComponentInfo<
       TestSpaceOp>::extractor_type
@@ -466,7 +469,7 @@ namespace WeakForms
   {
     /* ------------------------ Functors: Custom ------------------------ */
 
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
     /**
      * Extract the value from a residual view functor.
@@ -841,10 +844,10 @@ namespace WeakForms
       }
     };
 
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
 
     /**
@@ -1341,7 +1344,7 @@ namespace WeakForms
       }
     };
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
   } // namespace Operators
 } // namespace WeakForms
@@ -1356,7 +1359,7 @@ namespace WeakForms
 
 namespace WeakForms
 {
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
   template <typename ADNumberType, int dim, int spacedim>
@@ -1385,10 +1388,10 @@ namespace WeakForms
     return OpType(operand, function, update_flags);
   }
 
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
 
-#ifdef DEAL_II_WITH_SYMENGINE
+#  ifdef DEAL_II_WITH_SYMENGINE
 
 
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
@@ -1441,20 +1444,20 @@ namespace WeakForms
                   update_flags);
   }
 
-#endif // DEAL_II_WITH_SYMENGINE
+#  endif // DEAL_II_WITH_SYMENGINE
 
 } // namespace WeakForms
 
 
 
-#ifndef DOXYGEN
+#  ifndef DOXYGEN
 
 
 namespace WeakForms
 {
   // ======= AD =======
 
-#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+#    ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
 
   template <typename ADNumberType,
@@ -1484,13 +1487,13 @@ namespace WeakForms
     internal::DimPack<dim, spacedim>>> : std::true_type
   {};
 
-#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+#    endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
 
   // ======= SD =======
 
 
-#  ifdef DEAL_II_WITH_SYMENGINE
+#    ifdef DEAL_II_WITH_SYMENGINE
 
 
   template <int dim,
@@ -1519,13 +1522,16 @@ namespace WeakForms
   {};
 
 
-#  endif // DEAL_II_WITH_SYMENGINE
+#    endif // DEAL_II_WITH_SYMENGINE
 
 } // namespace WeakForms
 
 
-#endif // DOXYGEN
+#  endif // DOXYGEN
 
+
+#endif // defined(DEAL_II_WITH_SYMENGINE) ||
+       // defined(DEAL_II_WITH_AUTO_DIFFERENTIATION)
 
 WEAK_FORMS_NAMESPACE_CLOSE
 
