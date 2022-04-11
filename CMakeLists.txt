@@ -137,17 +137,29 @@ ELSE()
   )
 ENDIF()
 
-##
-# Check that dependencies are fulfilled
-##
-IF(NOT DEAL_II_WITH_ADOLC OR NOT DEAL_II_WITH_TRILINOS OR NOT DEAL_II_WITH_SYMENGINE)
-  MESSAGE(FATAL_ERROR "
-Error! The deal.II library found at ${DEAL_II_PATH} was not configured with
-    DEAL_II_WITH_ADOLC = ON
-    DEAL_II_WITH_TRILINOS = ON
-    DEAL_II_WITH_SYMENGINE = ON
-One or all of these are OFF in your installation but are required for this project."
+IF(DEAL_II_WITH_ADOLC OR DEAL_II_WITH_TRILINOS)
+  IF(DEAL_II_WITH_TRILINOS)
+    MESSAGE(STATUS 
+    "DEAL_II_WITH_ADOLC = ON"
     )
+  ENDIF()
+  IF(DEAL_II_WITH_ADOLC)
+    MESSAGE(STATUS 
+    "DEAL_II_WITH_ADOLC = ON"
+    )
+  ENDIF()
+  MESSAGE(STATUS 
+  "Found deal.II with AD library support. Auto-differentiation support enabled."
+  )
+ENDIF()
+
+IF(DEAL_II_WITH_SYMENGINE)
+  MESSAGE(STATUS 
+  "DEAL_II_WITH_SYMENGINE = ON"
+  )
+  MESSAGE(STATUS 
+  "Found deal.II with SD library support. Symbolic differentiation support enabled."
+  )
 ENDIF()
 
 ##

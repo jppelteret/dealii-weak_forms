@@ -74,6 +74,8 @@ namespace WeakForms
       const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
         ADNumberType> &...field_solutions)>;
 
+#ifdef DEAL_II_WITH_SYMENGINE
+
     template <typename ScalarType>
     using sd_type               = Differentiation::SD::Expression;
     using substitution_map_type = Differentiation::SD::types::substitution_map;
@@ -103,6 +105,8 @@ namespace WeakForms
       const std::vector<SolutionExtractionData<dim, spacedim>>
         &                solution_extraction_data,
       const unsigned int q_point)>;
+
+#endif // DEAL_II_WITH_SYMENGINE
 
 
     EnergyFunctor(
@@ -148,6 +152,8 @@ namespace WeakForms
 
     // Methods to promote this class to a SymbolicOp
 
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+
     template <typename ADNumberType, int dim, int spacedim = dim>
     auto
     value(const ad_function_type<ADNumberType, dim, spacedim> &function,
@@ -160,6 +166,10 @@ namespace WeakForms
       return this->template value<ADNumberType, dim, spacedim>(
         function, UpdateFlags::update_default);
     }
+
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
+#ifdef DEAL_II_WITH_SYMENGINE
 
     template <typename SDNumberType, int dim, int spacedim = dim>
     auto
@@ -254,6 +264,8 @@ namespace WeakForms
         UpdateFlags::update_default);
     }
 
+#endif // DEAL_II_WITH_SYMENGINE
+
     // Independent fields
     const std::tuple<SymbolicOpsSubSpaceFieldSolution...> &
     get_field_args() const
@@ -316,6 +328,8 @@ namespace WeakForms
   namespace Operators
   {
     /* ------------------------ Functors: Custom ------------------------ */
+
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
     /**
      * Extract the value from a scalar functor.
@@ -672,6 +686,10 @@ namespace WeakForms
       }
     };
 
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
+
+#ifdef DEAL_II_WITH_SYMENGINE
 
 
     /**
@@ -1140,6 +1158,8 @@ namespace WeakForms
       }
     };
 
+#endif // DEAL_II_WITH_SYMENGINE
+
   } // namespace Operators
 } // namespace WeakForms
 
@@ -1153,6 +1173,8 @@ namespace WeakForms
 
 namespace WeakForms
 {
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   template <typename ADNumberType, int dim, int spacedim>
   DEAL_II_ALWAYS_INLINE inline auto
@@ -1177,6 +1199,10 @@ namespace WeakForms
     const auto &operand = *this;
     return OpType(operand, function, update_flags);
   }
+
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
+#ifdef DEAL_II_WITH_SYMENGINE
 
 
   template <typename... SymbolicOpsSubSpaceFieldSolution>
@@ -1227,6 +1253,8 @@ namespace WeakForms
                   update_flags);
   }
 
+#endif // DEAL_II_WITH_SYMENGINE
+
 } // namespace WeakForms
 
 
@@ -1237,6 +1265,8 @@ namespace WeakForms
 namespace WeakForms
 {
   // ======= AD =======
+
+#  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
   template <typename ADNumberType,
             int dim,
@@ -1263,8 +1293,13 @@ namespace WeakForms
     internal::DimPack<dim, spacedim>>> : std::true_type
   {};
 
+#  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
 
   // ======= SD =======
+
+
+#  ifdef DEAL_II_WITH_SYMENGINE
 
 
   template <int dim, int spacedim, typename... SymbolicOpsSubSpaceFieldSolution>
@@ -1287,6 +1322,9 @@ namespace WeakForms
                           WeakForms::internal::DimPack<dim, spacedim>>>
     : std::true_type
   {};
+
+
+#  endif // DEAL_II_WITH_SYMENGINE
 
 } // namespace WeakForms
 

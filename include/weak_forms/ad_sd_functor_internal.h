@@ -62,123 +62,6 @@ namespace WeakForms
           value_type>::extractor_type;
       };
 
-      // template <typename T>
-      // struct SymbolicOpUnpacker;
-
-      // template <typename... SymbolicOps>
-      // struct SymbolicOpUnpacker
-      // {
-      //   // TEMP
-      //   static constexpr int n_components = 0 ;
-      //   ///SymbolicOpUnpacker<SymbolicOps...>
-      // };
-
-      // template<typename T>
-      // T adder(T first) {
-      //   return first;
-      // }
-
-      // template<typename T, typename... Args>
-      // T adder(T first, Args... args) {
-      //   return first + adder(args...);
-      // }
-
-
-      // template <typename T, typename U = void>
-      // struct FieldType;
-
-      // template <typename T>
-      // struct FieldType<T,
-      //                  typename
-      //                  std::enable_if<is_scalar_type<T>::value>::type>
-      // {
-      //   static constexpr unsigned int n_components = 1;
-      // };
-
-      // template <int rank, int dim, typename T>
-      // struct FieldType<Tensor<rank, dim, T>,
-      //                  typename
-      //                  std::enable_if<is_scalar_type<T>::value>::type>
-      // {
-      //   static constexpr unsigned int n_components =
-      //     Tensor<rank, dim, T>::n_independent_components;
-      // };
-
-      // template <int rank, int dim, typename T>
-      // struct FieldType<SymmetricTensor<rank, dim, T>,
-      //                  typename
-      //                  std::enable_if<is_scalar_type<T>::value>::type>
-      // {
-      //   static constexpr unsigned int n_components =
-      //     SymmetricTensor<rank, dim, T>::n_independent_components;
-      // };
-
-      // template <typename T>
-      // struct SymbolicOpSubSpaceViewsHelper;
-
-      // // For SubSpaceViews::Scalar and SubSpaceViews::Vector
-      // template <template <class> typename SubSpaceViewsType,
-      //           typename SpaceType,
-      //           enum WeakForms::Operators::SymbolicOpCodes OpCode,
-      //           std::size_t                             solution_index>
-      // struct SymbolicOpSubSpaceViewsHelper<WeakForms::Operators::SymbolicOp<
-      //   SubSpaceViewsType<SpaceType>,
-      //   OpCode,
-      //   void,
-      //   WeakForms::internal::SolutionIndex<solution_index>>>
-      // {
-      //   //  static const unsigned int space_dimension =
-      //   //  SubSpaceViewsType<SpaceType>::space_dimension; static constexpr
-      //   int
-      //   //  n_components = FieldType<typename
-      //   //
-      //   SubSpaceViewsType<rank,SpaceType>::value_type<double>>::n_components;
-
-      //   using FEValuesExtractorType =
-      //     typename SubSpaceViewsType<SpaceType>::FEValuesExtractorType;
-      // };
-
-      // // For SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor
-      // template <template <int, class> class SubSpaceViewsType,
-      //           typename SpaceType,
-      //           int                                     rank,
-      //           enum WeakForms::Operators::SymbolicOpCodes OpCode,
-      //           std::size_t                             solution_index>
-      // struct SymbolicOpSubSpaceViewsHelper<WeakForms::Operators::SymbolicOp<
-      //   SubSpaceViewsType<rank, SpaceType>,
-      //   OpCode,
-      //   void,
-      //   WeakForms::internal::SolutionIndex<solution_index>>>
-      // {
-      //   //  static const unsigned int space_dimension =
-      //   //  SubSpaceViewsType<rank,SpaceType>::space_dimension; static
-      //   constexpr
-      //   //  int n_components = FieldType<typename
-      //   //
-      //   SubSpaceViewsType<rank,SpaceType>::value_type<double>>::n_components;
-
-      //   using FEValuesExtractorType =
-      //     typename SubSpaceViewsType<rank, SpaceType>::FEValuesExtractorType;
-      // };
-
-      // // https://stackoverflow.com/a/11251408
-      // // https://stackoverflow.com/a/13101086
-      // template<typename T, typename U>
-      // struct is_specialization_of;
-
-      // template < typename NonTemplate, typename T >
-      // struct is_specialization_of<NonTemplate,T> : std::false_type {};
-
-      // template < template <typename...> class Template, typename T >
-      // struct is_specialization_of<Template, T> : std::false_type {};
-
-      // // template < template <typename...> class Template, typename T >
-      // // struct is_specialization_of : std::false_type {};
-
-      // template < template <typename...> class Template, typename... Args >
-      // struct is_specialization_of< Template, Template<Args...> > :
-      // std::true_type {};
-
 
 
       // Ensure that template arguments contain no duplicates.
@@ -231,6 +114,33 @@ namespace WeakForms
           static constexpr bool value = IsUnique<Ts...>::value;
         };
 
+
+        // Check that all types in a parameter pack are not tuples
+        // without using C++17 fold expressions...
+        // https://stackoverflow.com/a/29671981
+        // https://stackoverflow.com/a/29603896
+        // https://stackoverflow.com/a/32234520
+
+        template <typename>
+        struct is_tuple : std::false_type
+        {};
+
+        template <typename... T>
+        struct is_tuple<std::tuple<T...>> : std::true_type
+        {};
+
+        template <bool...>
+        struct bool_pack;
+        template <bool... bs>
+        using all_true =
+          std::is_same<bool_pack<bs..., true>, bool_pack<true, bs...>>;
+        template <bool... bs>
+        using all_false =
+          std::is_same<bool_pack<bs..., false>, bool_pack<false, bs...>>;
+        template <typename... Ts>
+        using are_tuples = all_true<is_tuple<Ts>::value...>;
+        template <typename... Ts>
+        using are_not_tuples = all_false<is_tuple<Ts>::value...>;
 
         template <typename T, typename... Us>
         struct is_subspace_field_solution_op
@@ -290,7 +200,20 @@ namespace WeakForms
         };
       } // namespace TemplateRestrictions
 
+    } // namespace internal
+  }   // namespace Operators
 
+
+  // =========================
+  // === SD IMPLEMENTATION ===
+  // =========================
+
+#ifdef DEAL_II_WITH_SYMENGINE
+
+  namespace Operators
+  {
+    namespace internal
+    {
       // ===================
       // SD helper functions
       // ===================
@@ -378,33 +301,40 @@ namespace WeakForms
         return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
 
-      // Check that all types in a parameter pack are not tuples
-      // without using C++17 fold expressions...
-      // https://stackoverflow.com/a/29671981
-      // https://stackoverflow.com/a/29603896
-      // https://stackoverflow.com/a/32234520
+    } // namespace internal
+  }   // namespace Operators
 
-      template <typename>
-      struct is_tuple : std::false_type
-      {};
 
-      template <typename... T>
-      struct is_tuple<std::tuple<T...>> : std::true_type
-      {};
+  inline void
+  assertOptimizerSettings(
+    const enum Differentiation::SD::OptimizerType     optimization_method,
+    const enum Differentiation::SD::OptimizationFlags optimization_flags)
+  {
+    if (optimization_method != Differentiation::SD::OptimizerType::llvm)
+      return;
 
-      template <bool...>
-      struct bool_pack;
-      template <bool... bs>
-      using all_true =
-        std::is_same<bool_pack<bs..., true>, bool_pack<true, bs...>>;
-      template <bool... bs>
-      using all_false =
-        std::is_same<bool_pack<bs..., false>, bool_pack<false, bs...>>;
-      template <typename... Ts>
-      using are_tuples = all_true<is_tuple<Ts>::value...>;
-      template <typename... Ts>
-      using are_not_tuples = all_false<is_tuple<Ts>::value...>;
+    // Adding this flag doesn't return any benefit (there's actualy only some
+    // extra overhead in SymEngine) so let's not allow it.
+    const bool use_cse_opt =
+      static_cast<int>(optimization_flags &
+                       Differentiation::SD::OptimizationFlags::optimize_cse);
+    Assert(
+      use_cse_opt == false,
+      ExcMessage(
+        "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
+  }
 
+#endif // DEAL_II_WITH_SYMENGINE
+
+
+  // ================================
+  // === AD and SD IMPLEMENTATION ===
+  // ================================
+
+  namespace Operators
+  {
+    namespace internal
+    {
       template <typename... SymbolicOpsSubSpaceFieldSolution>
       struct SymbolicOpsSubSpaceFieldSolutionHelper
       {
@@ -440,32 +370,6 @@ namespace WeakForms
           typename WeakForms::internal::Differentiation::DiffOpResult<
             first_derivatives_value_t<ScalarType, FunctionType>,
             field_values_t<ScalarType>>::type;
-
-        //--------
-        // template<typename ScalarType, typename FunctionType, typename
-        // SymbolicOpSubSpaceFieldSolution> using first_derivative_t =
-        // WeakForms::internal::Differentiation::
-        //   DiffOpResult<FunctionType, typename
-        //   SymbolicOpSubSpaceFieldSolution::template
-        //   value_type<ScalarType>>::type;
-
-        // template<typename ScalarType, typename FunctionType>
-        // using first_derivatives_t = std::tuple<first_derivative_t<ScalarType,
-        // FunctionType, SymbolicOpsSubSpaceFieldSolution>...>;
-
-        // template<typename ScalarType, typename FunctionType, typename
-        // SymbolicOpSubSpaceFieldSolution_1, typename
-        // SymbolicOpSubSpaceFieldSolution_2> using second_first_derivative_t =
-        // first_derivative_t<ScalarType, first_derivative_t<ScalarType,
-        // FunctionType, SymbolicOpSubSpaceFieldSolution_1>,
-        // SymbolicOpSubSpaceFieldSolution_2>;
-        //--------
-
-        // template<typename ScalarType, typename FunctionType>
-        // using second_derivatives_t =
-        // std::tuple<WeakForms::internal::Differentiation::
-        //   DiffOpResult<first_derivatives_t<ScalarType,FunctionType>, typename
-        //   SymbolicOpsSubSpaceFieldSolution::value_type<ScalarType>...>>;
 
         // ========================
         // Generic helper functions
@@ -521,6 +425,8 @@ namespace WeakForms
         // AD operations
         // =============
 
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+
         template <typename ADHelperType, int dim, int spacedim>
         static void
         ad_register_independent_variables(
@@ -571,9 +477,13 @@ namespace WeakForms
               std::tuple_size<field_extractors_t>::value>());
         }
 
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
         // ===================
         // SD helper functions
         // ===================
+
+#ifdef DEAL_II_WITH_SYMENGINE
 
         template <typename SDNumberType>
         static field_values_t<SDNumberType>
@@ -634,10 +544,11 @@ namespace WeakForms
         // Unfortunately it looks like we need to use the SFINAE idiom to help
         // the compiler, as it might try to implicitly convert these types
         // to tuples and get confused between the two functions.
-        template <typename SDNumberType,
-                  typename SDExpressionType,
-                  typename = typename std::enable_if<
-                    !is_tuple<SDExpressionType>::value>::type>
+        template <
+          typename SDNumberType,
+          typename SDExpressionType,
+          typename = typename std::enable_if<
+            !TemplateRestrictions::is_tuple<SDExpressionType>::value>::type>
         static first_derivatives_value_t<SDNumberType, SDExpressionType>
         sd_differentiate(
           const SDExpressionType &            sd_expression,
@@ -797,6 +708,8 @@ namespace WeakForms
           return substitution_map;
         }
 
+#endif // DEAL_II_WITH_SYMENGINE
+
       private:
         // ===================
         // AD helper functions
@@ -923,6 +836,8 @@ namespace WeakForms
         // AD operations
         // =============
 
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+
         template <std::size_t I = 0,
                   typename ADHelperType,
                   int dim,
@@ -1021,9 +936,13 @@ namespace WeakForms
                                std::get<I>(field_extractors))...);
         }
 
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
         // ===================
         // SD helper functions
         // ===================
+
+#ifdef DEAL_II_WITH_SYMENGINE
 
         template <typename SDNumberType,
                   typename... FieldArgs,
@@ -1300,14 +1219,14 @@ namespace WeakForms
                   typename... SDExpressions,
                   typename BatchOptimizerType,
                   std::size_t... I>
-        static
-          typename std::enable_if<(are_not_tuples<SDExpressions...>::value) &&
-                                  (sizeof...(I) == 1)>::type
-          unpack_sd_register_1st_order_functions(
-            BatchOptimizerType &                batch_optimizer,
-            const std::tuple<SDExpressions...> &derivatives,
-            const bool                          check_hash_computed,
-            const std::index_sequence<I...>)
+        static typename std::enable_if<
+          (TemplateRestrictions::are_not_tuples<SDExpressions...>::value) &&
+          (sizeof...(I) == 1)>::type
+        unpack_sd_register_1st_order_functions(
+          BatchOptimizerType &                batch_optimizer,
+          const std::tuple<SDExpressions...> &derivatives,
+          const bool                          check_hash_computed,
+          const std::index_sequence<I...>)
         {
           if (check_hash_computed)
             assert_hash_computed(std::get<I>(derivatives)...);
@@ -1322,14 +1241,14 @@ namespace WeakForms
                   typename... SDExpressions,
                   typename BatchOptimizerType,
                   std::size_t... I>
-        static
-          typename std::enable_if<(are_not_tuples<SDExpressions...>::value) &&
-                                  (sizeof...(I) > 1)>::type
-          unpack_sd_register_1st_order_functions(
-            BatchOptimizerType &                batch_optimizer,
-            const std::tuple<SDExpressions...> &derivatives,
-            const bool                          check_hash_computed,
-            const std::index_sequence<I...>)
+        static typename std::enable_if<
+          (TemplateRestrictions::are_not_tuples<SDExpressions...>::value) &&
+          (sizeof...(I) > 1)>::type
+        unpack_sd_register_1st_order_functions(
+          BatchOptimizerType &                batch_optimizer,
+          const std::tuple<SDExpressions...> &derivatives,
+          const bool                          check_hash_computed,
+          const std::index_sequence<I...>)
         {
           if (check_hash_computed)
             assert_hash_computed(std::get<I>(derivatives)...);
@@ -1349,7 +1268,7 @@ namespace WeakForms
           const std::tuple<Ts...> &higher_order_derivatives,
           const bool               check_hash_computed)
         {
-          static_assert(are_tuples<Ts...>::value,
+          static_assert(TemplateRestrictions::are_tuples<Ts...>::value,
                         "Expected all inner objects to be tuples");
 
           // Filter through the outer tuple and dispatch the work to the
@@ -1466,30 +1385,12 @@ namespace WeakForms
           (void)symbolic_op_field_solutions;
         }
 
+#endif // DEAL_II_WITH_SYMENGINE
+
       }; // struct SymbolicOpsSubSpaceFieldSolutionHelper
 
     } // namespace internal
   }   // namespace Operators
-
-
-  inline void
-  assertOptimizerSettings(
-    const enum Differentiation::SD::OptimizerType     optimization_method,
-    const enum Differentiation::SD::OptimizationFlags optimization_flags)
-  {
-    if (optimization_method != Differentiation::SD::OptimizerType::llvm)
-      return;
-
-    // Adding this flag doesn't return any benefit (there's actualy only some
-    // extra overhead in SymEngine) so let's not allow it.
-    const bool use_cse_opt =
-      static_cast<int>(optimization_flags &
-                       Differentiation::SD::OptimizationFlags::optimize_cse);
-    Assert(
-      use_cse_opt == false,
-      ExcMessage(
-        "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
-  }
 
 } // namespace WeakForms
 
