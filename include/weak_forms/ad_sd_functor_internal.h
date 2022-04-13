@@ -1405,6 +1405,7 @@ namespace WeakForms
     const bool use_cse_opt =
       static_cast<int>(optimization_flags &
                        Differentiation::SD::OptimizationFlags::optimize_cse);
+    (void)use_cse_opt;
     Assert(
       use_cse_opt == false,
       ExcMessage(
