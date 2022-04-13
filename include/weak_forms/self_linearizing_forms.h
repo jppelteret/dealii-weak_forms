@@ -632,43 +632,6 @@ namespace WeakForms
           field_2);
       }
 
-#  else
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex,
-                typename SymbolicOpField,
-                typename T = EnergyFunctor>
-      auto
-      get_functor_first_derivative(
-        const SymbolicOpField &field,
-        typename std::enable_if<is_ad_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(
-          false,
-          "An auto-differentiation library has not been enabled in deal.II.");
-        return void;
-      }
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex_1,
-                std::size_t FieldIndex_2,
-                typename SymbolicOpField_1,
-                typename SymbolicOpField_2,
-                typename T = EnergyFunctor>
-      auto
-      get_functor_second_derivative(
-        const SymbolicOpField_1 &field_1,
-        const SymbolicOpField_2 &field_2,
-        typename std::enable_if<is_ad_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(
-          false,
-          "An auto-differentiation library has not been enabled in deal.II.");
-        return void;
-      }
-
 #  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       // =============
@@ -862,41 +825,6 @@ namespace WeakForms
           functor,
           field_1,
           field_2);
-      }
-
-#  else
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex,
-                typename SymbolicOpField,
-                typename T = EnergyFunctor>
-      auto
-      get_functor_first_derivative(
-        const SymbolicOpField &field,
-        typename std::enable_if<is_sd_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(false,
-                      "The SymEngine library is not enabled in deal.II.");
-        return void;
-      }
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex_1,
-                std::size_t FieldIndex_2,
-                typename SymbolicOpField_1,
-                typename SymbolicOpField_2,
-                typename T = EnergyFunctor>
-      auto
-      get_functor_second_derivative(
-        const SymbolicOpField_1 &field_1,
-        const SymbolicOpField_2 &field_2,
-        typename std::enable_if<is_sd_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(false,
-                      "The SymEngine library is not enabled in deal.II.");
-        return void;
       }
 
 #  endif // DEAL_II_WITH_SYMENGINE
@@ -1425,36 +1353,6 @@ namespace WeakForms
           field);
       }
 
-#  else
-
-      template <typename AssemblerScalar_t, typename T = ResidualFunctor>
-      auto
-      get_functor_value(
-        typename std::enable_if<is_ad_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(
-          false,
-          "An auto-differentiation library has not been enabled in deal.II.");
-        return void;
-      }
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex,
-                typename SymbolicOpField,
-                typename T = ResidualFunctor>
-      auto
-      get_functor_first_derivative(
-        const SymbolicOpField &field,
-        typename std::enable_if<is_ad_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(
-          false,
-          "An auto-differentiation library has not been enabled in deal.II.");
-        return void;
-      }
-
 #  endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
 
       // =============
@@ -1641,34 +1539,6 @@ namespace WeakForms
           },
           functor,
           field);
-      }
-
-#  else
-
-      template <typename AssemblerScalar_t, typename T = ResidualFunctor>
-      auto
-      get_functor_value(
-        typename std::enable_if<is_sd_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(false,
-                      "The SymEngine library is not enabled in deal.II.");
-        return void;
-      }
-
-      template <typename AssemblerScalar_t,
-                std::size_t FieldIndex,
-                typename SymbolicOpField,
-                typename T = ResidualFunctor>
-      auto
-      get_functor_first_derivative(
-        const SymbolicOpField &field,
-        typename std::enable_if<is_sd_functor_op<T>::value>::type * =
-          nullptr) const
-      {
-        static_assert(false,
-                      "The SymEngine library is not enabled in deal.II.");
-        return void;
       }
 
 #  endif // DEAL_II_WITH_SYMENGINE
