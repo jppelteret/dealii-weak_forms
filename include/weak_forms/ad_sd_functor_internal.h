@@ -205,6 +205,378 @@ namespace WeakForms
 
 
   // =========================
+  // === AD IMPLEMENTATION ===
+  // =========================
+
+
+#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
+
+  namespace Operators
+  {
+    namespace internal
+    {
+      template <typename... SymbolicOpsSubSpaceFieldSolution>
+      struct SymbolicOpsSubSpaceFieldSolutionHelperBase
+      {
+        // ================
+        // Type definitions
+        // ================
+        using field_args_t = std::tuple<SymbolicOpsSubSpaceFieldSolution...>;
+
+        // ================
+        // Helper functions
+        // ================
+
+        static constexpr int
+        n_operators()
+        {
+          return sizeof...(SymbolicOpsSubSpaceFieldSolution);
+        }
+
+        static constexpr unsigned int
+        get_n_components()
+        {
+          return unpack_n_components<SymbolicOpsSubSpaceFieldSolution...>();
+        }
+
+      protected:
+        template <typename SymbolicOpType>
+        static constexpr unsigned int
+        get_symbolic_op_field_n_components()
+        {
+          return internal::SpaceOpComponentInfo<SymbolicOpType>::n_components;
+        }
+
+      private:
+        // End point
+        template <typename SymbolicOpType>
+        static constexpr unsigned int
+        unpack_n_components()
+        {
+          return get_symbolic_op_field_n_components<SymbolicOpType>();
+        }
+
+        template <typename SymbolicOpType, typename... OtherSymbolicOpTypes>
+        static constexpr
+          typename std::enable_if<(sizeof...(OtherSymbolicOpTypes) > 0),
+                                  unsigned int>::type
+          unpack_n_components()
+        {
+          return unpack_n_components<SymbolicOpType>() +
+                 unpack_n_components<OtherSymbolicOpTypes...>();
+        }
+      }; // SymbolicOpsSubSpaceFieldSolutionHelperBase
+
+
+      template <typename... SymbolicOpsSubSpaceFieldSolution>
+      struct SymbolicOpsSubSpaceFieldSolutionADHelper
+        : SymbolicOpsSubSpaceFieldSolutionHelperBase<
+            SymbolicOpsSubSpaceFieldSolution...>
+      {
+        using Base = SymbolicOpsSubSpaceFieldSolutionHelperBase<
+          SymbolicOpsSubSpaceFieldSolution...>;
+        using field_args_t = typename Base::field_args_t;
+
+        // ================
+        // Type definitions
+        // ================
+        using field_extractors_t =
+          std::tuple<typename internal::SpaceOpComponentInfo<
+            SymbolicOpsSubSpaceFieldSolution>::extractor_type...>;
+
+        // ================
+        // Helper functions
+        // ================
+
+        static field_extractors_t
+        get_initialized_extractors()
+        {
+          field_extractors_t field_extractors;
+          unsigned int       n_previous_field_components = 0;
+
+          unpack_initialize_extractors<0, SymbolicOpsSubSpaceFieldSolution...>(
+            field_extractors, n_previous_field_components);
+
+          return field_extractors;
+        }
+
+        template <typename SymbolicOpField>
+        static typename SymbolicOpField::extractor_type
+        get_initialized_extractor(const SymbolicOpField &field,
+                                  const field_args_t &   field_args)
+        {
+          using Extractor_t = typename SymbolicOpField::extractor_type;
+          unsigned int n_previous_field_components = 0;
+
+          unpack_n_previous_field_components<
+            0,
+            SymbolicOpField,
+            SymbolicOpsSubSpaceFieldSolution...>(field,
+                                                 field_args,
+                                                 n_previous_field_components);
+
+          return Extractor_t(n_previous_field_components);
+        }
+
+        // ==========
+        // Operations
+        // ==========
+
+        template <typename ADHelperType, int dim, int spacedim>
+        static void
+        ad_register_independent_variables(
+          ADHelperType &                          ad_helper,
+          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                       solution_extraction_data,
+          const unsigned int        q_point,
+          const field_args_t &      field_args,
+          const field_extractors_t &field_extractors)
+        {
+          unpack_ad_register_independent_variables<
+            0,
+            ADHelperType,
+            dim,
+            spacedim,
+            SymbolicOpsSubSpaceFieldSolution...>(ad_helper,
+                                                 scratch_data,
+                                                 solution_extraction_data,
+                                                 q_point,
+                                                 field_args,
+                                                 field_extractors);
+        }
+
+        template <typename ADHelperType,
+                  typename ADFunctionType,
+                  int dim,
+                  int spacedim>
+        static auto
+        ad_call_function(
+          const ADHelperType &                    ad_helper,
+          const ADFunctionType &                  ad_function,
+          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                       solution_extraction_data,
+          const unsigned int        q_point,
+          const field_extractors_t &field_extractors)
+        {
+          // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
+          return unpack_ad_call_function(
+            ad_helper,
+            ad_function,
+            scratch_data,
+            solution_extraction_data,
+            q_point,
+            field_extractors,
+            std::make_index_sequence<
+              std::tuple_size<field_extractors_t>::value>());
+        }
+
+
+      private:
+        // ================
+        // Helper functions
+        // ================
+
+        template <std::size_t I = 0,
+                  typename... SymbolicOpType,
+                  typename... FieldExtractors>
+          static typename std::enable_if <
+          I<sizeof...(SymbolicOpType), void>::type
+          unpack_initialize_extractors(
+            std::tuple<FieldExtractors...> &field_extractors,
+            unsigned int &                  n_previous_field_components)
+        {
+          using FEValuesExtractorType = decltype(std::get<I>(field_extractors));
+          std::get<I>(field_extractors) =
+            FEValuesExtractorType(n_previous_field_components);
+
+          // Move on to the next field, noting that we've allocated a certain
+          // number of components to this scalar/vector/tensor field.
+          using SymbolicOp_t = typename std::decay<decltype(
+            std::get<I>(std::declval<field_args_t>()))>::type;
+          n_previous_field_components +=
+            Base::template get_symbolic_op_field_n_components<SymbolicOp_t>();
+          unpack_initialize_extractors<I + 1, SymbolicOpType...>(
+            field_extractors, n_previous_field_components);
+        }
+
+        // End point
+        template <std::size_t I = 0,
+                  typename... SymbolicOpType,
+                  typename... FieldExtractors>
+        static
+          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
+          unpack_initialize_extractors(
+            std::tuple<FieldExtractors...> &field_extractors,
+            unsigned int &                  n_previous_field_components)
+        {
+          (void)field_extractors;
+          (void)n_previous_field_components;
+        }
+
+        template <std::size_t I = 0,
+                  typename SymbolicOpField,
+                  typename... SymbolicOpType,
+                  typename... FieldArgs>
+          static typename std::enable_if <
+          I<sizeof...(SymbolicOpType), void>::type
+          unpack_n_previous_field_components(
+            const SymbolicOpField &         field,
+            const std::tuple<FieldArgs...> &field_args,
+            unsigned int &                  n_previous_field_components)
+        {
+          // Exit if we've found the entry in the tuple that matches the input
+          // field. We can only do this through string matching, since multiple
+          // fields might be using an op with the same signature.
+          const SymbolicDecorations decorator;
+          const auto &              listed_field = std::get<I>(field_args);
+          if (listed_field.as_ascii(decorator) == field.as_ascii(decorator))
+            return;
+
+          // Move on to the next field, noting that we've allocated a certain
+          // number of components to this scalar/vector/tensor field.
+          using SymbolicOp_t =
+            typename std::decay<decltype(listed_field)>::type;
+          n_previous_field_components +=
+            Base::template get_symbolic_op_field_n_components<SymbolicOp_t>();
+          unpack_n_previous_field_components<I + 1,
+                                             SymbolicOpField,
+                                             SymbolicOpType...>(
+            field, field_args, n_previous_field_components);
+        }
+
+        // End point
+        template <std::size_t I = 0,
+                  typename SymbolicOpField,
+                  typename... SymbolicOpType,
+                  typename... FieldArgs>
+        static
+          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
+          unpack_n_previous_field_components(
+            const SymbolicOpField &         field,
+            const std::tuple<FieldArgs...> &field_args,
+            unsigned int &                  n_previous_field_components)
+        {
+          (void)field;
+          (void)field_args;
+          (void)n_previous_field_components;
+          AssertThrow(false,
+                      ExcMessage(
+                        "Could not find SymbolicOp for the field solution."));
+        }
+
+        // ==========
+        // Operations
+        // ==========
+
+        template <std::size_t I = 0,
+                  typename ADHelperType,
+                  int dim,
+                  int spacedim,
+                  typename... SymbolicOpType,
+                  typename... FieldExtractors>
+          static typename std::enable_if <
+          I<sizeof...(SymbolicOpType), void>::type
+          unpack_ad_register_independent_variables(
+            ADHelperType &                          ad_helper,
+            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                   solution_extraction_data,
+            const unsigned int                    q_point,
+            const std::tuple<SymbolicOpType...> & symbolic_op_field_solutions,
+            const std::tuple<FieldExtractors...> &field_extractors)
+        {
+          using scalar_type = typename ADHelperType::scalar_type;
+
+          const auto &symbolic_op_field_solution =
+            std::get<I>(symbolic_op_field_solutions);
+          const auto &                          field_solutions =
+            symbolic_op_field_solution.template operator()<scalar_type>(
+              scratch_data,
+              solution_extraction_data); // Cached solution at all QPs
+          Assert(q_point < field_solutions.size(),
+                 ExcIndexRange(q_point, 0, field_solutions.size()));
+          const auto &field_solution  = field_solutions[q_point];
+          const auto &field_extractor = std::get<I>(field_extractors);
+
+          ad_helper.register_independent_variable(field_solution,
+                                                  field_extractor);
+
+          unpack_ad_register_independent_variables<I + 1,
+                                                   ADHelperType,
+                                                   dim,
+                                                   spacedim,
+                                                   SymbolicOpType...>(
+            ad_helper,
+            scratch_data,
+            solution_extraction_data,
+            q_point,
+            symbolic_op_field_solutions,
+            field_extractors);
+        }
+
+        // Get update flags from a unary op: End point
+        template <std::size_t I = 0,
+                  typename ADHelperType,
+                  int dim,
+                  int spacedim,
+                  typename... SymbolicOpType,
+                  typename... FieldExtractors>
+        static
+          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
+          unpack_ad_register_independent_variables(
+            ADHelperType &                          ad_helper,
+            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                                   solution_extraction_data,
+            const unsigned int                    q_point,
+            const std::tuple<SymbolicOpType...> & symbolic_op_field_solution,
+            const std::tuple<FieldExtractors...> &field_extractors)
+        {
+          // Do nothing
+          (void)ad_helper;
+          (void)scratch_data;
+          (void)solution_extraction_data;
+          (void)q_point;
+          (void)symbolic_op_field_solution;
+          (void)field_extractors;
+        }
+
+        template <typename ADHelperType,
+                  typename ADFunctionType,
+                  int dim,
+                  int spacedim,
+                  typename... FieldExtractors,
+                  std::size_t... I>
+        static auto
+        unpack_ad_call_function(
+          const ADHelperType &                    ad_helper,
+          const ADFunctionType &                  ad_function,
+          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+          const std::vector<SolutionExtractionData<dim, spacedim>>
+            &                                   solution_extraction_data,
+          const unsigned int &                  q_point,
+          const std::tuple<FieldExtractors...> &field_extractors,
+          const std::index_sequence<I...>)
+        {
+          // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
+          return ad_function(scratch_data,
+                             solution_extraction_data,
+                             q_point,
+                             ad_helper.get_sensitive_variables(
+                               std::get<I>(field_extractors))...);
+        }
+
+      }; // struct SymbolicOpsSubSpaceFieldSolutionADHelper
+
+    } // namespace internal
+  }   // namespace Operators
+
+#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
+
+
+  // =========================
   // === SD IMPLEMENTATION ===
   // =========================
 
@@ -301,56 +673,20 @@ namespace WeakForms
         return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
 
-    } // namespace internal
-  }   // namespace Operators
 
 
-  inline void
-  assertOptimizerSettings(
-    const enum Differentiation::SD::OptimizerType     optimization_method,
-    const enum Differentiation::SD::OptimizationFlags optimization_flags)
-  {
-    if (optimization_method != Differentiation::SD::OptimizerType::llvm)
-      return;
-
-    // Adding this flag doesn't return any benefit (there's actualy only some
-    // extra overhead in SymEngine) so let's not allow it.
-    const bool use_cse_opt =
-      static_cast<int>(optimization_flags &
-                       Differentiation::SD::OptimizationFlags::optimize_cse);
-    Assert(
-      use_cse_opt == false,
-      ExcMessage(
-        "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
-  }
-
-#endif // DEAL_II_WITH_SYMENGINE
-
-
-  // ================================
-  // === AD and SD IMPLEMENTATION ===
-  // ================================
-
-  namespace Operators
-  {
-    namespace internal
-    {
       template <typename... SymbolicOpsSubSpaceFieldSolution>
-      struct SymbolicOpsSubSpaceFieldSolutionHelper
+      struct SymbolicOpsSubSpaceFieldSolutionSDHelper
+        : SymbolicOpsSubSpaceFieldSolutionHelperBase<
+            SymbolicOpsSubSpaceFieldSolution...>
       {
-        // ===================
-        // AD type definitions
-        // ===================
+        using Base = SymbolicOpsSubSpaceFieldSolutionHelperBase<
+          SymbolicOpsSubSpaceFieldSolution...>;
+        using field_args_t = typename Base::field_args_t;
 
-        using field_args_t = std::tuple<SymbolicOpsSubSpaceFieldSolution...>;
-        using field_extractors_t =
-          std::tuple<typename internal::SpaceOpComponentInfo<
-            SymbolicOpsSubSpaceFieldSolution>::extractor_type...>;
-
-
-        // ===================
-        // SD type definitions
-        // ===================
+        // ================
+        // Type definitions
+        // ================
         template <typename ScalarType>
         using field_values_t =
           std::tuple<typename SymbolicOpsSubSpaceFieldSolution::
@@ -371,119 +707,15 @@ namespace WeakForms
             first_derivatives_value_t<ScalarType, FunctionType>,
             field_values_t<ScalarType>>::type;
 
-        // ========================
-        // Generic helper functions
-        // ========================
+        // ================
+        // Helper functions
+        // ================
 
         static constexpr int
         n_operators()
         {
           return sizeof...(SymbolicOpsSubSpaceFieldSolution);
         }
-
-        // ===================
-        // AD helper functions
-        // ===================
-
-        static constexpr unsigned int
-        get_n_components()
-        {
-          return unpack_n_components<SymbolicOpsSubSpaceFieldSolution...>();
-        }
-
-        static field_extractors_t
-        get_initialized_extractors()
-        {
-          field_extractors_t field_extractors;
-          unsigned int       n_previous_field_components = 0;
-
-          unpack_initialize_extractors<0, SymbolicOpsSubSpaceFieldSolution...>(
-            field_extractors, n_previous_field_components);
-
-          return field_extractors;
-        }
-
-        template <typename SymbolicOpField>
-        static typename SymbolicOpField::extractor_type
-        get_initialized_extractor(const SymbolicOpField &field,
-                                  const field_args_t &   field_args)
-        {
-          using Extractor_t = typename SymbolicOpField::extractor_type;
-          unsigned int n_previous_field_components = 0;
-
-          unpack_n_previous_field_components<
-            0,
-            SymbolicOpField,
-            SymbolicOpsSubSpaceFieldSolution...>(field,
-                                                 field_args,
-                                                 n_previous_field_components);
-
-          return Extractor_t(n_previous_field_components);
-        }
-
-        // =============
-        // AD operations
-        // =============
-
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
-
-        template <typename ADHelperType, int dim, int spacedim>
-        static void
-        ad_register_independent_variables(
-          ADHelperType &                          ad_helper,
-          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<SolutionExtractionData<dim, spacedim>>
-            &                       solution_extraction_data,
-          const unsigned int        q_point,
-          const field_args_t &      field_args,
-          const field_extractors_t &field_extractors)
-        {
-          unpack_ad_register_independent_variables<
-            0,
-            ADHelperType,
-            dim,
-            spacedim,
-            SymbolicOpsSubSpaceFieldSolution...>(ad_helper,
-                                                 scratch_data,
-                                                 solution_extraction_data,
-                                                 q_point,
-                                                 field_args,
-                                                 field_extractors);
-        }
-
-        template <typename ADHelperType,
-                  typename ADFunctionType,
-                  int dim,
-                  int spacedim>
-        static auto
-        ad_call_function(
-          const ADHelperType &                    ad_helper,
-          const ADFunctionType &                  ad_function,
-          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<SolutionExtractionData<dim, spacedim>>
-            &                       solution_extraction_data,
-          const unsigned int        q_point,
-          const field_extractors_t &field_extractors)
-        {
-          // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
-          return unpack_ad_call_function(
-            ad_helper,
-            ad_function,
-            scratch_data,
-            solution_extraction_data,
-            q_point,
-            field_extractors,
-            std::make_index_sequence<
-              std::tuple_size<field_extractors_t>::value>());
-        }
-
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
-
-        // ===================
-        // SD helper functions
-        // ===================
-
-#ifdef DEAL_II_WITH_SYMENGINE
 
         template <typename SDNumberType>
         static field_values_t<SDNumberType>
@@ -708,241 +940,10 @@ namespace WeakForms
           return substitution_map;
         }
 
-#endif // DEAL_II_WITH_SYMENGINE
-
       private:
-        // ===================
-        // AD helper functions
-        // ===================
-
-        template <typename SymbolicOpType>
-        static constexpr unsigned int
-        get_symbolic_op_field_n_components()
-        {
-          return internal::SpaceOpComponentInfo<SymbolicOpType>::n_components;
-
-          // using ArbitraryType = double;
-          // return FieldType<typename SymbolicOpType::template value_type<
-          //   ArbitraryType>>::n_components;
-        }
-
-        // End point
-        template <typename SymbolicOpType>
-        static constexpr unsigned int
-        unpack_n_components()
-        {
-          return get_symbolic_op_field_n_components<SymbolicOpType>();
-        }
-
-        template <typename SymbolicOpType, typename... OtherSymbolicOpTypes>
-        static constexpr
-          typename std::enable_if<(sizeof...(OtherSymbolicOpTypes) > 0),
-                                  unsigned int>::type
-          unpack_n_components()
-        {
-          return unpack_n_components<SymbolicOpType>() +
-                 unpack_n_components<OtherSymbolicOpTypes...>();
-        }
-
-        template <std::size_t I = 0,
-                  typename... SymbolicOpType,
-                  typename... FieldExtractors>
-          static typename std::enable_if <
-          I<sizeof...(SymbolicOpType), void>::type
-          unpack_initialize_extractors(
-            std::tuple<FieldExtractors...> &field_extractors,
-            unsigned int &                  n_previous_field_components)
-        {
-          using FEValuesExtractorType = decltype(std::get<I>(field_extractors));
-          std::get<I>(field_extractors) =
-            FEValuesExtractorType(n_previous_field_components);
-
-          // Move on to the next field, noting that we've allocated a certain
-          // number of components to this scalar/vector/tensor field.
-          using SymbolicOp_t = typename std::decay<decltype(
-            std::get<I>(std::declval<field_args_t>()))>::type;
-          n_previous_field_components +=
-            get_symbolic_op_field_n_components<SymbolicOp_t>();
-          unpack_initialize_extractors<I + 1, SymbolicOpType...>(
-            field_extractors, n_previous_field_components);
-        }
-
-        // End point
-        template <std::size_t I = 0,
-                  typename... SymbolicOpType,
-                  typename... FieldExtractors>
-        static
-          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
-          unpack_initialize_extractors(
-            std::tuple<FieldExtractors...> &field_extractors,
-            unsigned int &                  n_previous_field_components)
-        {
-          (void)field_extractors;
-          (void)n_previous_field_components;
-        }
-
-        template <std::size_t I = 0,
-                  typename SymbolicOpField,
-                  typename... SymbolicOpType,
-                  typename... FieldArgs>
-          static typename std::enable_if <
-          I<sizeof...(SymbolicOpType), void>::type
-          unpack_n_previous_field_components(
-            const SymbolicOpField &         field,
-            const std::tuple<FieldArgs...> &field_args,
-            unsigned int &                  n_previous_field_components)
-        {
-          // Exit if we've found the entry in the tuple that matches the input
-          // field. We can only do this through string matching, since multiple
-          // fields might be using an op with the same signature.
-          const SymbolicDecorations decorator;
-          const auto &              listed_field = std::get<I>(field_args);
-          if (listed_field.as_ascii(decorator) == field.as_ascii(decorator))
-            return;
-
-          // Move on to the next field, noting that we've allocated a certain
-          // number of components to this scalar/vector/tensor field.
-          using SymbolicOp_t =
-            typename std::decay<decltype(listed_field)>::type;
-          n_previous_field_components +=
-            get_symbolic_op_field_n_components<SymbolicOp_t>();
-          unpack_n_previous_field_components<I + 1,
-                                             SymbolicOpField,
-                                             SymbolicOpType...>(
-            field, field_args, n_previous_field_components);
-        }
-
-        // End point
-        template <std::size_t I = 0,
-                  typename SymbolicOpField,
-                  typename... SymbolicOpType,
-                  typename... FieldArgs>
-        static
-          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
-          unpack_n_previous_field_components(
-            const SymbolicOpField &         field,
-            const std::tuple<FieldArgs...> &field_args,
-            unsigned int &                  n_previous_field_components)
-        {
-          (void)field;
-          (void)field_args;
-          (void)n_previous_field_components;
-          AssertThrow(false,
-                      ExcMessage(
-                        "Could not find SymbolicOp for the field solution."));
-        }
-
-        // =============
-        // AD operations
-        // =============
-
-#ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
-
-        template <std::size_t I = 0,
-                  typename ADHelperType,
-                  int dim,
-                  int spacedim,
-                  typename... SymbolicOpType,
-                  typename... FieldExtractors>
-          static typename std::enable_if <
-          I<sizeof...(SymbolicOpType), void>::type
-          unpack_ad_register_independent_variables(
-            ADHelperType &                          ad_helper,
-            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<SolutionExtractionData<dim, spacedim>>
-              &                                   solution_extraction_data,
-            const unsigned int                    q_point,
-            const std::tuple<SymbolicOpType...> & symbolic_op_field_solutions,
-            const std::tuple<FieldExtractors...> &field_extractors)
-        {
-          using scalar_type = typename ADHelperType::scalar_type;
-
-          const auto &symbolic_op_field_solution =
-            std::get<I>(symbolic_op_field_solutions);
-          const auto &                          field_solutions =
-            symbolic_op_field_solution.template operator()<scalar_type>(
-              scratch_data,
-              solution_extraction_data); // Cached solution at all QPs
-          Assert(q_point < field_solutions.size(),
-                 ExcIndexRange(q_point, 0, field_solutions.size()));
-          const auto &field_solution  = field_solutions[q_point];
-          const auto &field_extractor = std::get<I>(field_extractors);
-
-          ad_helper.register_independent_variable(field_solution,
-                                                  field_extractor);
-
-          unpack_ad_register_independent_variables<I + 1,
-                                                   ADHelperType,
-                                                   dim,
-                                                   spacedim,
-                                                   SymbolicOpType...>(
-            ad_helper,
-            scratch_data,
-            solution_extraction_data,
-            q_point,
-            symbolic_op_field_solutions,
-            field_extractors);
-        }
-
-        // Get update flags from a unary op: End point
-        template <std::size_t I = 0,
-                  typename ADHelperType,
-                  int dim,
-                  int spacedim,
-                  typename... SymbolicOpType,
-                  typename... FieldExtractors>
-        static
-          typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
-          unpack_ad_register_independent_variables(
-            ADHelperType &                          ad_helper,
-            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-            const std::vector<SolutionExtractionData<dim, spacedim>>
-              &                                   solution_extraction_data,
-            const unsigned int                    q_point,
-            const std::tuple<SymbolicOpType...> & symbolic_op_field_solution,
-            const std::tuple<FieldExtractors...> &field_extractors)
-        {
-          // Do nothing
-          (void)ad_helper;
-          (void)scratch_data;
-          (void)solution_extraction_data;
-          (void)q_point;
-          (void)symbolic_op_field_solution;
-          (void)field_extractors;
-        }
-
-        template <typename ADHelperType,
-                  typename ADFunctionType,
-                  int dim,
-                  int spacedim,
-                  typename... FieldExtractors,
-                  std::size_t... I>
-        static auto
-        unpack_ad_call_function(
-          const ADHelperType &                    ad_helper,
-          const ADFunctionType &                  ad_function,
-          MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-          const std::vector<SolutionExtractionData<dim, spacedim>>
-            &                                   solution_extraction_data,
-          const unsigned int &                  q_point,
-          const std::tuple<FieldExtractors...> &field_extractors,
-          const std::index_sequence<I...>)
-        {
-          // https://riptutorial.com/cplusplus/example/26687/turn-a-std--tuple-t-----into-function-parameters
-          return ad_function(scratch_data,
-                             solution_extraction_data,
-                             q_point,
-                             ad_helper.get_sensitive_variables(
-                               std::get<I>(field_extractors))...);
-        }
-
-#endif // DEAL_II_WITH_AUTO_DIFFERENTIATION
-
-        // ===================
-        // SD helper functions
-        // ===================
-
-#ifdef DEAL_II_WITH_SYMENGINE
+        // ================
+        // Helper functions
+        // ================
 
         template <typename SDNumberType,
                   typename... FieldArgs,
@@ -1385,12 +1386,33 @@ namespace WeakForms
           (void)symbolic_op_field_solutions;
         }
 
-#endif // DEAL_II_WITH_SYMENGINE
-
-      }; // struct SymbolicOpsSubSpaceFieldSolutionHelper
+      }; // struct SymbolicOpsSubSpaceFieldSolutionSDHelper
 
     } // namespace internal
   }   // namespace Operators
+
+
+  inline void
+  assertOptimizerSettings(
+    const enum Differentiation::SD::OptimizerType     optimization_method,
+    const enum Differentiation::SD::OptimizationFlags optimization_flags)
+  {
+    if (optimization_method != Differentiation::SD::OptimizerType::llvm)
+      return;
+
+    // Adding this flag doesn't return any benefit (there's actualy only some
+    // extra overhead in SymEngine) so let's not allow it.
+    const bool use_cse_opt =
+      static_cast<int>(optimization_flags &
+                       Differentiation::SD::OptimizationFlags::optimize_cse);
+    Assert(
+      use_cse_opt == false,
+      ExcMessage(
+        "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
+  }
+
+
+#endif // DEAL_II_WITH_SYMENGINE
 
 } // namespace WeakForms
 

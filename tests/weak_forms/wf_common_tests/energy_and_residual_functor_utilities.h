@@ -22,15 +22,15 @@ namespace WeakForms
 
 
     template <typename... SymbolicOpsSubSpaceFieldSolution>
-    using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionHelper<
+    using OpADHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionADHelper<
       SymbolicOpsSubSpaceFieldSolution...>;
 
     // End point
     template <std::size_t I = 0, typename... SymbolicOpType>
     static typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
     unpack_print_ad_functor_field_args_and_extractors(
-      const typename OpHelper_t<SymbolicOpType...>::field_args_t &field_args,
-      const typename OpHelper_t<SymbolicOpType...>::field_extractors_t
+      const typename OpADHelper_t<SymbolicOpType...>::field_args_t &field_args,
+      const typename OpADHelper_t<SymbolicOpType...>::field_extractors_t
         &                        field_extractors,
       const SymbolicDecorations &decorator)
     {
@@ -44,8 +44,9 @@ namespace WeakForms
       static typename std::enable_if <
       I<sizeof...(SymbolicOpType), void>::type
       unpack_print_ad_functor_field_args_and_extractors(
-        const typename OpHelper_t<SymbolicOpType...>::field_args_t &field_args,
-        const typename OpHelper_t<SymbolicOpType...>::field_extractors_t
+        const typename OpADHelper_t<SymbolicOpType...>::field_args_t
+          &field_args,
+        const typename OpADHelper_t<SymbolicOpType...>::field_extractors_t
           &                        field_extractors,
         const SymbolicDecorations &decorator)
     {
@@ -70,7 +71,7 @@ namespace WeakForms
     {
       deallog << "Number of components: "
               << dealii::Utilities::to_string(
-                   OpHelper_t<
+                   OpADHelper_t<
                      SymbolicOpsSubSpaceFieldSolution...>::get_n_components())
               << std::endl;
 
@@ -125,9 +126,9 @@ namespace WeakForms
     // ======= SD =======
 
 
-    // template <typename... SymbolicOpsSubSpaceFieldSolution>
-    // using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionHelper<
-    //   SymbolicOpsSubSpaceFieldSolution...>;
+    template <typename... SymbolicOpsSubSpaceFieldSolution>
+    using OpSDHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionSDHelper<
+      SymbolicOpsSubSpaceFieldSolution...>;
 
     // End point
     template <std::size_t I = 0,
@@ -135,8 +136,8 @@ namespace WeakForms
               typename... SymbolicOpType>
     static typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
     unpack_print_sd_functor_print_field_args_and_symbolic_fields(
-      const typename OpHelper_t<SymbolicOpType...>::field_args_t &field_args,
-      const typename OpHelper_t<SymbolicOpType...>::template field_values_t<
+      const typename OpSDHelper_t<SymbolicOpType...>::field_args_t &field_args,
+      const typename OpSDHelper_t<SymbolicOpType...>::template field_values_t<
         SDNumberType> &          symbolic_fields,
       const SymbolicDecorations &decorator)
     {
@@ -152,8 +153,9 @@ namespace WeakForms
       static typename std::enable_if <
       I<sizeof...(SymbolicOpType), void>::type
       unpack_print_sd_functor_print_field_args_and_symbolic_fields(
-        const typename OpHelper_t<SymbolicOpType...>::field_args_t &field_args,
-        const typename OpHelper_t<SymbolicOpType...>::template field_values_t<
+        const typename OpSDHelper_t<SymbolicOpType...>::field_args_t
+          &field_args,
+        const typename OpSDHelper_t<SymbolicOpType...>::template field_values_t<
           SDNumberType> &          symbolic_fields,
         const SymbolicDecorations &decorator)
     {
@@ -179,7 +181,7 @@ namespace WeakForms
     {
       deallog << "Number of components: "
               << dealii::Utilities::to_string(
-                   OpHelper_t<
+                   OpSDHelper_t<
                      SymbolicOpsSubSpaceFieldSolution...>::get_n_components())
               << std::endl;
 

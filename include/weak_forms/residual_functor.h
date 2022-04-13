@@ -499,7 +499,7 @@ namespace WeakForms
       using Op =
         ResidualViewFunctor<TestSpaceOp, SymbolicOpsSubSpaceFieldSolution...>;
 
-      using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionHelper<
+      using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionADHelper<
         SymbolicOpsSubSpaceFieldSolution...>;
 
     public:
@@ -893,7 +893,7 @@ namespace WeakForms
       using Op =
         ResidualViewFunctor<TestSpaceOp, SymbolicOpsSubSpaceFieldSolution...>;
 
-      using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionHelper<
+      using OpHelper_t = internal::SymbolicOpsSubSpaceFieldSolutionSDHelper<
         SymbolicOpsSubSpaceFieldSolution...>;
 
     public:
