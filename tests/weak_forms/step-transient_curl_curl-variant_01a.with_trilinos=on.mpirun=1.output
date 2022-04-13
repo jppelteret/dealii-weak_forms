@@ -1,38 +1,38 @@
 
 DEAL::Timestep: 0 ; Cycle: 0
-DEAL:: ; Point: 0.0178347087 0.00754441738 -0.0500000000 ; Within wire: 1 ; B: -5.68329127e-12 1.18643156e-11 6.16046193e-20 ; J_eddy (axial): -5092.95708 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0356694174 0.0169194174 -0.0500000000 ; Within wire: 0 ; B: -2.62063517e-12 7.16353696e-12 4.33468209e-14 ; J_eddy (axial): -7.25192627e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -5.68329127e-12 1.18643156e-11 6.16046193e-20 ; J_eddy (axial): -5092.95708 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.62063517e-12 7.16353696e-12 4.33468209e-14 ; J_eddy (axial): -7.25192627e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 0 ; Cycle: 1
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.83147089e-12 1.64453719e-11 -3.12561201e-14 ; J_eddy (axial): -5092.95684 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.83316087e-12 1.34165696e-11 -5.02068512e-15 ; J_eddy (axial): -8.85776757e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.83147089e-12 1.64453719e-11 -3.12561201e-14 ; J_eddy (axial): -5092.95684 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.83316087e-12 1.34165696e-11 -5.02068512e-15 ; J_eddy (axial): -8.85776757e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 1 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85073047e-12 1.65531041e-11 -3.14636524e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82959257e-12 1.34182823e-11 -5.05893335e-15 ; J_eddy (axial): -8.85776740e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85073047e-12 1.65531041e-11 -3.14636524e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82959257e-12 1.34182823e-11 -5.05893335e-15 ; J_eddy (axial): -8.85776740e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 2 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85100861e-12 1.65548513e-11 -3.14667802e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953272e-12 1.34183027e-11 -5.06016752e-15 ; J_eddy (axial): -8.85776711e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85100861e-12 1.65548513e-11 -3.14667802e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953272e-12 1.34183027e-11 -5.06016752e-15 ; J_eddy (axial): -8.85776711e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 3 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85101414e-12 1.65548900e-11 -3.14671965e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953012e-12 1.34183038e-11 -5.06010719e-15 ; J_eddy (axial): -8.85776684e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85101414e-12 1.65548900e-11 -3.14671965e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953012e-12 1.34183038e-11 -5.06010719e-15 ; J_eddy (axial): -8.85776684e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 4 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85101677e-12 1.65548922e-11 -3.14656870e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953088e-12 1.34183016e-11 -5.05919224e-15 ; J_eddy (axial): -8.85776657e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85101677e-12 1.65548922e-11 -3.14656870e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953088e-12 1.34183016e-11 -5.05919224e-15 ; J_eddy (axial): -8.85776657e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 5 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85101661e-12 1.65548926e-11 -3.14676277e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953348e-12 1.34183025e-11 -5.05885811e-15 ; J_eddy (axial): -8.85776629e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85101661e-12 1.65548926e-11 -3.14676277e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953348e-12 1.34183025e-11 -5.05885811e-15 ; J_eddy (axial): -8.85776629e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 6 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85102005e-12 1.65548956e-11 -3.14659783e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953782e-12 1.34183016e-11 -5.06183393e-15 ; J_eddy (axial): -8.85776599e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85102005e-12 1.65548956e-11 -3.14659783e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953782e-12 1.34183016e-11 -5.06183393e-15 ; J_eddy (axial): -8.85776599e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 7 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85102598e-12 1.65548976e-11 -3.14659513e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953782e-12 1.34183008e-11 -5.05858091e-15 ; J_eddy (axial): -8.85776571e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85102598e-12 1.65548976e-11 -3.14659513e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953782e-12 1.34183008e-11 -5.05858091e-15 ; J_eddy (axial): -8.85776571e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 8 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85102147e-12 1.65549053e-11 -3.14649028e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82954476e-12 1.34182934e-11 -5.05670478e-15 ; J_eddy (axial): -8.85776543e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85102147e-12 1.65549053e-11 -3.14649028e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82954476e-12 1.34182934e-11 -5.05670478e-15 ; J_eddy (axial): -8.85776543e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 9 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85102457e-12 1.65549018e-11 -3.14618916e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953522e-12 1.34182982e-11 -5.05664426e-15 ; J_eddy (axial): -8.85776518e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85102457e-12 1.65549018e-11 -3.14618916e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953522e-12 1.34182982e-11 -5.05664426e-15 ; J_eddy (axial): -8.85776518e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 10 ; Cycle: 0
-DEAL:: ; Point: 0.0211885315 -0.00409581304 0.0250000000 ; Within wire: 1 ; B: 3.85101225e-12 1.65548955e-11 -3.14656314e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Point: 0.0298770630 0.00643956304 -0.0250000000 ; Within wire: 0 ; B: -2.82953869e-12 1.34183038e-11 -5.05571556e-15 ; J_eddy (axial): -8.85776487e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: 3.85101225e-12 1.65548955e-11 -3.14656314e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -2.82953869e-12 1.34183038e-11 -5.05571556e-15 ; J_eddy (axial): -8.85776487e-05 ; J_free (axial): 0.00000000
 DEAL::OK
