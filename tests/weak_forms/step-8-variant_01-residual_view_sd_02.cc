@@ -59,7 +59,7 @@ Step8<dim>::assemble_system()
   using namespace Differentiation;
 
   constexpr int spacedim = dim;
-  using SDNumber_t       = typename Differentiation::SD::Expression;
+  using SDNumber_t       = Differentiation::SD::Expression;
 
   // Symbolic types for test function, and a coefficient.
   const TestFunction<dim>          test;

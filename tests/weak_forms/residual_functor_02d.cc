@@ -43,7 +43,7 @@ run(const SubSpaceExtractorTestSpace &      subspace_extractor_test,
   using namespace Differentiation;
 
   constexpr int spacedim = dim;
-  using SDNumber_t       = typename Differentiation::SD::Expression;
+  using SDNumber_t       = Differentiation::SD::Expression;
 
   // Symbolic types
   const TestFunction<dim>  test;
