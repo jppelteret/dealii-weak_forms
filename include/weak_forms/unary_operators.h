@@ -1297,7 +1297,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The sine operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::sine)
 
@@ -1352,7 +1352,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The cosine operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::cosine)
 
@@ -1407,7 +1407,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The tangent operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::tangent)
 
@@ -1462,7 +1462,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The exponential operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::exponential)
 
@@ -1517,7 +1517,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The logarithm operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::logarithm)
 
@@ -1626,7 +1626,7 @@ private:                                                                 \
     {
       static_assert(
         !is_or_has_test_function_or_trial_solution_op<Op>::value,
-        "The square root operation is not permitted for test functions or trial solutions.");
+        "The absolute value operation is not permitted for test functions or trial solutions.");
 
       DEAL_II_UNARY_OP_COMMON_IMPL(Op, UnaryOpCodes::absolute_value)
 
