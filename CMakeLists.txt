@@ -168,8 +168,27 @@ ENDIF()
 DEAL_II_INITIALIZE_CACHED_VARIABLES()
 PROJECT(${WEAK_FORMS_LIB} CXX)
 
+##
 # Reset the module path
+##
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
+
+##
+# Load CMake macros
+##
+MESSAGE(STATUS "Include ${CMAKE_SOURCE_DIR}/cmake/setup_external_macros.cmake")
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/setup_external_macros.cmake)
+
+##
+# Run system checks
+# (These might require the deal.II project to be configured first)
+##
+FILE(GLOB _check_files "cmake/checks/*.cmake")
+LIST(SORT _check_files)
+FOREACH(_file ${_check_files})
+  MESSAGE(STATUS "Include ${_file}")
+  INCLUDE(${_file})
+ENDFOREACH()
 
 ##
 # Setup Clang format:
