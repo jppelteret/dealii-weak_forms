@@ -2283,8 +2283,8 @@ namespace StepTransientCurlCurl
                                       const Tensor<1, dim> &J_eddy,
                                       const Tensor<1, dim> &J_free)
     {
-      deallog << " ; Point: " << point
-              << " ; Within wire: " << geometry.within_wire(point)
+      // deallog << " ; Point: " << point;
+      deallog << " ; Within wire: " << geometry.within_wire(point)
               << " ; B: " << B << " ; J_eddy (axial): " << J_eddy[dim - 1]
               << " ; J_free (axial): " << J_free[dim - 1] << std::endl;
     };

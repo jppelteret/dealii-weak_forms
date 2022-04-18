@@ -281,7 +281,7 @@ namespace WeakForms
 
 
       template <typename T, std::size_t width>
-      VectorizedArray<T, width>
+      void
       switch_zero_for_unit_value_in_denominator(
         VectorizedArray<T, width> &denominator)
       {

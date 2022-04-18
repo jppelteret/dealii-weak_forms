@@ -37,4 +37,9 @@ WEAK_FORMS_NAMESPACE_OPEN
 using namespace dealii;
 WEAK_FORMS_NAMESPACE_CLOSE
 
+// Check if deal.II has some auto-differentiation support
+#if defined(DEAL_II_TRILINOS_WITH_SACADO) || defined(DEAL_II_WITH_ADOLC)
+  #define DEAL_II_WITH_AUTO_DIFFERENTIATION
+#endif
+
 #endif // dealii_weakforms_config_h
