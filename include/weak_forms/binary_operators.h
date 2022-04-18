@@ -1892,6 +1892,7 @@ private:                                                                   \
                                                                  width>
           &rhs_value) const
       {
+#ifdef WEAK_FORMS_VECTORIZATION_FPE_DIVIDE_BY_ZERO
         // We should check tht we're not dividing by zero, but there in a case
         // where it is a "valid" operation: if we're evaluating the functor at
         // the end of the valid range of quadrature points, and there are not
@@ -1926,10 +1927,9 @@ private:                                                                   \
 
             return amended_lhs_value / amended_rhs_value;
           }
-        else
-          {
-            return lhs_value / rhs_value;
-          }
+#endif // WEAK_FORMS_VECTORIZATION_FPE_DIVIDE_BY_ZERO
+
+        return lhs_value / rhs_value;
       }
 
       template <typename ScalarType,

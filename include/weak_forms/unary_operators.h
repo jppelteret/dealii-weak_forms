@@ -1606,6 +1606,26 @@ private:                                                                 \
           &value) const
       {
         using namespace std;
+
+#ifdef WEAK_FORMS_VECTORIZATION_FPE_SQRT_OF_ZERO
+        // We need to check if the vector is a zero vector. If so, simply
+        // avoid the operation that would result in an FPE as we know the
+        // result already.
+        bool has_non_zero_value = false;
+        DEAL_II_OPENMP_SIMD_PRAGMA
+        for (unsigned int v = 0; v < width; v++)
+          {
+            if (std::abs(value[v]) >
+                dealii::internal::NumberType<ScalarType>::value(
+                  10.0 * std::numeric_limits<ScalarType>::epsilon()))
+              {
+                has_non_zero_value = true;
+              }
+          }
+        if (!has_non_zero_value)
+          return vectorized_value_type<ScalarType, width>{};
+#endif
+
         return sqrt(value);
       }
     };
