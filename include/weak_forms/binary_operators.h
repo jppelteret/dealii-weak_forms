@@ -1855,6 +1855,8 @@ private:                                                                   \
         const typename LhsOp::template value_type<ScalarType> &lhs_value,
         const typename RhsOp::template value_type<ScalarType> &rhs_value) const
       {
+        Assert(!dealii::numbers::value_is_zero(rhs_value),
+               ExcMessage("Division by zero."));
         return lhs_value / rhs_value;
       }
 
@@ -1890,6 +1892,43 @@ private:                                                                   \
                                                                  width>
           &rhs_value) const
       {
+#ifdef WEAK_FORMS_VECTORIZATION_FPE_DIVIDE_BY_ZERO
+        // We should check tht we're not dividing by zero, but there in a case
+        // where it is a "valid" operation: if we're evaluating the functor at
+        // the end of the valid range of quadrature points, and there are not
+        // enough quadrature points to fill all of the lanes.
+        // If we observe that some of the lanes of the denominator are filled
+        // with zero but not all of them, then we assume to be working in this
+        // scenario. We proceed with an amended calculation, and recognise that
+        // this should be accounted for in the assembly loop.
+        std::size_t n_zero_denominator_entries = 0;
+        for (unsigned int v = 0; v < width; v++)
+          {
+            if (dealii::numbers::value_is_zero(rhs_value[v]))
+              ++n_zero_denominator_entries;
+          }
+        Assert(n_zero_denominator_entries != width,
+               ExcMessage("Division by zero (in all lanes)."));
+
+        if (n_zero_denominator_entries > 0)
+          {
+            auto amended_lhs_value = lhs_value;
+            auto amended_rhs_value = rhs_value;
+            for (unsigned int v = 0; v < width; v++)
+              {
+                if (dealii::numbers::value_is_zero(rhs_value[v]))
+                  {
+                    amended_lhs_value[v] =
+                      dealii::internal::NumberType<ScalarType>::value(0.0);
+                    amended_rhs_value[v] =
+                      dealii::internal::NumberType<ScalarType>::value(1.0);
+                  }
+              }
+
+            return amended_lhs_value / amended_rhs_value;
+          }
+#endif // WEAK_FORMS_VECTORIZATION_FPE_DIVIDE_BY_ZERO
+
         return lhs_value / rhs_value;
       }
 

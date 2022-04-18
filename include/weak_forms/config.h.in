@@ -17,12 +17,34 @@
 #define dealii_weakforms_config_h
 
 
+// =====================================================================
+// Information about the project:
+// =====================================================================
+
+
 #define WEAK_FORMS_MAJOR_VERSION ${WEAK_FORMS_MAJOR_VERSION}
 #define WEAK_FORMS_MINOR_VERSION ${WEAK_FORMS_MINOR_VERSION}
 #define WEAK_FORMS_PATCH_VERSION ${WEAK_FORMS_PATCH_VERSION}
 #define WEAK_FORMS_VERSION "${WEAK_FORMS_VERSION}"
 
 
+// =====================================================================
+// Compiler features:
+//
+// For documentation see cmake/checks/check_compiler_features.cmake
+// =====================================================================
+
+
+#cmakedefine WEAK_FORMS_VECTORIZATION_FPE_DIVIDE_BY_ZERO
+#cmakedefine WEAK_FORMS_VECTORIZATION_FPE_SQRT_OF_ZERO
+
+
+// =====================================================================
+// Project specific macros:
+// =====================================================================
+
+
+// Namespacing
 #define WEAK_FORMS_NAMESPACE_NAME dealiiWeakForms
 
 #define WEAK_FORMS_NAMESPACE_OPEN     \
@@ -31,15 +53,22 @@
 #define WEAK_FORMS_NAMESPACE_CLOSE } // namespace dealiiWeakForms
 
 
+// Check if deal.II has some auto-differentiation support
+#if defined(DEAL_II_TRILINOS_WITH_SACADO) || defined(DEAL_II_WITH_ADOLC)
+  #define DEAL_II_WITH_AUTO_DIFFERENTIATION
+#endif
+
+
+// =====================================================================
+// Project specific settings:
+// =====================================================================
+
+
 // Unconditionally import the deal.II namespace
 #include <deal.II/base/config.h>
 WEAK_FORMS_NAMESPACE_OPEN
 using namespace dealii;
 WEAK_FORMS_NAMESPACE_CLOSE
 
-// Check if deal.II has some auto-differentiation support
-#if defined(DEAL_II_TRILINOS_WITH_SACADO) || defined(DEAL_II_WITH_ADOLC)
-  #define DEAL_II_WITH_AUTO_DIFFERENTIATION
-#endif
 
 #endif // dealii_weakforms_config_h

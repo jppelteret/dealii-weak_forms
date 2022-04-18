@@ -2298,8 +2298,12 @@ namespace StepTransientCurlCurl
                               update_quadrature_points);
 
     std::vector<Point<dim>> points_of_interest({
-      Point<dim>(0.9 * parameters.radius_wire * parameters.grid_scale, 0, 0),
-      Point<dim>(1.1 * parameters.radius_wire * parameters.grid_scale, 0, 0),
+      Point<dim>(0.9 * parameters.radius_wire * parameters.grid_scale,
+                 0.1 * parameters.radius_wire * parameters.grid_scale,
+                 1.0 * parameters.grid_scale),
+      Point<dim>(1.1 * parameters.radius_wire * parameters.grid_scale,
+                 0.1 * parameters.radius_wire * parameters.grid_scale,
+                 1.0 * parameters.grid_scale),
     });
 
     deallog << "Timestep: " << timestep << " ; Cycle: " << cycle << std::endl;
