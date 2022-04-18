@@ -1,9 +1,14 @@
 name: github-linux
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   linux:
+    if: ${{ github.event.label.name == 'ready to test' }}
     runs-on: ubuntu-latest
     container: 
       image: docker://dealii/dealii:master-focal-root
