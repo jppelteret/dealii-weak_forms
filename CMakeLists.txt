@@ -76,12 +76,8 @@ ENDFOREACH()
 
 
 ##
-# Configuration files for this project:
+# Configuration files for this project (part 1):
 ##
-CONFIGURE_FILE(
-  "${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h"
-)
 
 # Declare all header files the target consists of:
 INCLUDE_DIRECTORIES(
@@ -189,6 +185,16 @@ FOREACH(_file ${_check_files})
   MESSAGE(STATUS "Include ${_file}")
   INCLUDE(${_file})
 ENDFOREACH()
+
+##
+# Configuration files for this project (part 2):
+#
+# These files require the setup checks to be run fist
+##
+CONFIGURE_FILE(
+  "${CMAKE_SOURCE_DIR}/include/weak_forms/config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/${WEAK_FORMS_CONFIGURED_FILES_RELDIR}/weak_forms/config.h"
+)
 
 ##
 # Setup Clang format:
