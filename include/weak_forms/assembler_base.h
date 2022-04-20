@@ -2013,20 +2013,6 @@ namespace WeakForms
       using Functor      = typename std::decay<decltype(functor)>::type;
       using TrialSpaceOp = typename std::decay<decltype(trial_space_op)>::type;
 
-      // // Improve the error message that might stem from misuse of a templated
-      // function. static_assert(!is_field_solution_op<Functor>::value,
-      //               "This add_cell_operation() can only work with functors
-      //               that are not " "field solutions. This is because we do
-      //               not provide the solution vector " "to the functor to
-      //               perform is operation.");
-
-      using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
-      using ValueTypeFunctor =
-        typename Functor::template value_type<ScalarType>;
-      using ValueTypeTrial =
-        typename TrialSpaceOp::template value_type<ScalarType>;
-
       // Contribution symmetry
       // We consider the case that the user adjust the symmetry at any point
       // before the actual operation. We therefore capture the local symmetry
@@ -2152,131 +2138,17 @@ namespace WeakForms
         auto &assembly_cell_matrix =
           (use_scratch_cell_matrix ? scratch_cell_matrix : cell_matrix);
 
-        if (use_vectorization)
-          {
-            using VectorizedValueTypeTest =
-              typename TestSpaceOp::template vectorized_value_type<ScalarType,
-                                                                   width>;
-            using VectorizedValueTypeFunctor =
-              typename Functor::template vectorized_value_type<ScalarType,
-                                                               width>;
-            using VectorizedValueTypeTrial =
-              typename TrialSpaceOp::template vectorized_value_type<ScalarType,
-                                                                    width>;
-
-            const unsigned int n_q_points = fe_values.n_quadrature_points;
-            for (unsigned int batch_start = 0; batch_start < n_q_points;
-                 batch_start += width)
-              {
-                // Make sure that the range doesn't go out of bounds if we
-                // cannot divide up the work evenly.
-                const unsigned int batch_end =
-                  std::min(batch_start + static_cast<unsigned int>(width),
-                           n_q_points);
-                const types::vectorized_qp_range_t q_point_range{batch_start,
-                                                                 batch_end};
-
-                const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(
-                    test_space_op,
-                    fe_values,
-                    fe_values,
-                    scratch_data,
-                    solution_extraction_data,
-                    q_point_range);
-
-                const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-                  internal::evaluate_fe_space<ScalarType, width>(
-                    trial_space_op,
-                    fe_values,
-                    fe_values,
-                    scratch_data,
-                    solution_extraction_data,
-                    q_point_range);
-
-                VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(
-                    functor,
-                    fe_values,
-                    scratch_data,
-                    solution_extraction_data,
-                    q_point_range);
-
-                VectorizedArray<double, width> JxW =
-                  volume_integral.template     operator()<ScalarType, width>(
-                    fe_values, q_point_range);
-
-                // The entire vectorization lane might not be filled, so
-                // we need to correct out-of-bounds contributions:
-                // These elements still participate in the assembly,
-                // so we need to make sure that their contributions
-                // integrate to zero. For the functor, we have to be
-                // conscientious of the case where we divide by zero when
-                // we work with out-of-bounds vectorization lanes.
-                DEAL_II_OPENMP_SIMD_PRAGMA
-                for (unsigned int v = 0; v < width; v++)
-                  {
-                    if (v >= q_point_range.size())
-                      {
-                        using ValueTypeFunctor =
-                          typename Functor::template value_type<ScalarType>;
-                        numbers::set_vectorized_values(values_functor,
-                                                       v,
-                                                       ValueTypeFunctor{});
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                      }
-                  }
-
-                // Do the assembly for the current batch of quadrature points
-                internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
-                  Sign>(assembly_cell_matrix,
-                        fe_values,
-                        shapes_test,
-                        values_functor,
-                        shapes_trial,
-                        JxW,
-                        symmetric_contribution);
-              }
-          }
-        else
-          {
-            // Get the shape function data (value, gradients, curls, etc.)
-            // for all quadrature points at all DoFs. We construct it in this
-            // manner (with the q_point indices fast) so that we can perform
-            // contractions in an optimal manner.
-            const std::vector<std::vector<ValueTypeTest>> shapes_test =
-              internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                      fe_values,
-                                                      fe_values,
-                                                      scratch_data,
-                                                      solution_extraction_data);
-
-            const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
-              internal::evaluate_fe_space<ScalarType>(trial_space_op,
-                                                      fe_values,
-                                                      fe_values,
-                                                      scratch_data,
-                                                      solution_extraction_data);
-
-            // Get all values at the quadrature points
-            const std::vector<ValueTypeFunctor> values_functor =
-              internal::evaluate_functor<ScalarType>(functor,
-                                                     fe_values,
-                                                     scratch_data,
-                                                     solution_extraction_data);
-            const std::vector<double> &JxW =
-              volume_integral.template operator()<ScalarType>(fe_values);
-
-            // Assemble for all DoFs and quadrature points
-            internal::assemble_cell_matrix_contribution<Sign>(
-              assembly_cell_matrix,
-              fe_values,
-              shapes_test,
-              values_functor,
-              shapes_trial,
-              JxW,
-              symmetric_contribution);
-          }
+        // Perform the assembly, taking into account whether or not to
+        // utilise vectorisation.
+        do_add_cell_operation<Sign>(assembly_cell_matrix,
+                                    scratch_data,
+                                    solution_extraction_data,
+                                    fe_values,
+                                    test_space_op,
+                                    functor,
+                                    trial_space_op,
+                                    volume_integral,
+                                    symmetric_contribution);
 
         if (use_scratch_cell_matrix)
           {
@@ -3537,6 +3409,188 @@ namespace WeakForms
     get_face_update_flags() const
     {
       return boundary_face_update_flags | interface_face_update_flags;
+    }
+
+  private:
+    /**
+     * Method to add cell volume assembly operations for bilinear forms:
+     * Vectorized variant
+     */
+    template <enum internal::AccumulationSign Sign,
+              typename TestSpaceOp,
+              typename Functor,
+              typename TrialSpaceOp,
+              typename SymbolicOpVolumeIntegral,
+              bool _use_vectorization = use_vectorization,
+              typename std::enable_if<
+                is_bilinear_form<
+                  typename SymbolicOpVolumeIntegral::IntegrandType>::value &&
+                (_use_vectorization && width > 1)>::type * = nullptr>
+    static void
+    do_add_cell_operation(
+      FullMatrix<ScalarType> &                cell_matrix,
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                                solution_extraction_data,
+      const FEValuesBase<dim, spacedim> &fe_values,
+      const TestSpaceOp &                test_space_op,
+      const Functor &                    functor,
+      const TrialSpaceOp &               trial_space_op,
+      const SymbolicOpVolumeIntegral &   volume_integral,
+      const bool                         symmetric_contribution)
+    {
+      using VectorizedValueTypeTest =
+        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeFunctor =
+        typename Functor::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTrial =
+        typename TrialSpaceOp::template vectorized_value_type<ScalarType,
+                                                              width>;
+
+      const unsigned int n_q_points = fe_values.n_quadrature_points;
+      for (unsigned int batch_start = 0; batch_start < n_q_points;
+           batch_start += width)
+        {
+          // Make sure that the range doesn't go out of bounds if we
+          // cannot divide up the work evenly.
+          const unsigned int batch_end =
+            std::min(batch_start + static_cast<unsigned int>(width),
+                     n_q_points);
+          const types::vectorized_qp_range_t q_point_range{batch_start,
+                                                           batch_end};
+
+          const AlignedVector<VectorizedValueTypeTest> shapes_test =
+            internal::evaluate_fe_space<ScalarType, width>(
+              test_space_op,
+              fe_values,
+              fe_values,
+              scratch_data,
+              solution_extraction_data,
+              q_point_range);
+
+          const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
+            internal::evaluate_fe_space<ScalarType, width>(
+              trial_space_op,
+              fe_values,
+              fe_values,
+              scratch_data,
+              solution_extraction_data,
+              q_point_range);
+
+          VectorizedValueTypeFunctor values_functor =
+            internal::evaluate_functor<ScalarType, width>(
+              functor,
+              fe_values,
+              scratch_data,
+              solution_extraction_data,
+              q_point_range);
+
+          VectorizedArray<double, width> JxW =
+            volume_integral.template     operator()<ScalarType, width>(
+              fe_values, q_point_range);
+
+          // The entire vectorization lane might not be filled, so
+          // we need to correct out-of-bounds contributions:
+          // These elements still participate in the assembly,
+          // so we need to make sure that their contributions
+          // integrate to zero. For the functor, we have to be
+          // conscientious of the case where we divide by zero when
+          // we work with out-of-bounds vectorization lanes.
+          DEAL_II_OPENMP_SIMD_PRAGMA
+          for (unsigned int v = 0; v < width; v++)
+            {
+              if (v >= q_point_range.size())
+                {
+                  using ValueTypeFunctor =
+                    typename Functor::template value_type<ScalarType>;
+                  numbers::set_vectorized_values(values_functor,
+                                                 v,
+                                                 ValueTypeFunctor{});
+                  numbers::set_vectorized_values(JxW, v, 0.0);
+                }
+            }
+
+          // Do the assembly for the current batch of quadrature points
+          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<Sign>(
+            cell_matrix,
+            fe_values,
+            shapes_test,
+            values_functor,
+            shapes_trial,
+            JxW,
+            symmetric_contribution);
+        }
+    }
+
+    /**
+     * Method to add cell volume assembly operations for bilinear forms:
+     * Non-vectorized variant
+     */
+    template <enum internal::AccumulationSign Sign,
+              typename TestSpaceOp,
+              typename Functor,
+              typename TrialSpaceOp,
+              typename SymbolicOpVolumeIntegral,
+              bool _use_vectorization = use_vectorization,
+              typename std::enable_if<
+                is_bilinear_form<
+                  typename SymbolicOpVolumeIntegral::IntegrandType>::value &&
+                (!_use_vectorization || width == 1)>::type * = nullptr>
+    static void
+    do_add_cell_operation(
+      FullMatrix<ScalarType> &                cell_matrix,
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                                solution_extraction_data,
+      const FEValuesBase<dim, spacedim> &fe_values,
+      const TestSpaceOp &                test_space_op,
+      const Functor &                    functor,
+      const TrialSpaceOp &               trial_space_op,
+      const SymbolicOpVolumeIntegral &   volume_integral,
+      const bool                         symmetric_contribution)
+    {
+      using ValueTypeTest =
+        typename TestSpaceOp::template value_type<ScalarType>;
+      using ValueTypeFunctor =
+        typename Functor::template value_type<ScalarType>;
+      using ValueTypeTrial =
+        typename TrialSpaceOp::template value_type<ScalarType>;
+
+      // Get the shape function data (value, gradients, curls, etc.)
+      // for all quadrature points at all DoFs. We construct it in this
+      // manner (with the q_point indices fast) so that we can perform
+      // contractions in an optimal manner.
+      const std::vector<std::vector<ValueTypeTest>> shapes_test =
+        internal::evaluate_fe_space<ScalarType>(test_space_op,
+                                                fe_values,
+                                                fe_values,
+                                                scratch_data,
+                                                solution_extraction_data);
+
+      const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
+        internal::evaluate_fe_space<ScalarType>(trial_space_op,
+                                                fe_values,
+                                                fe_values,
+                                                scratch_data,
+                                                solution_extraction_data);
+
+      // Get all values at the quadrature points
+      const std::vector<ValueTypeFunctor> values_functor =
+        internal::evaluate_functor<ScalarType>(functor,
+                                               fe_values,
+                                               scratch_data,
+                                               solution_extraction_data);
+      const std::vector<double> &JxW =
+        volume_integral.template operator()<ScalarType>(fe_values);
+
+      // Assemble for all DoFs and quadrature points
+      internal::assemble_cell_matrix_contribution<Sign>(cell_matrix,
+                                                        fe_values,
+                                                        shapes_test,
+                                                        values_functor,
+                                                        shapes_trial,
+                                                        JxW,
+                                                        symmetric_contribution);
     }
   };
 
