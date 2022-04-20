@@ -1255,7 +1255,16 @@ namespace WeakForms
 
 
 
-  template <int dim, int spacedim, typename ScalarType, bool use_vectorization>
+  /**
+   *
+   * @param width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
+   */
+  template <int dim,
+            int spacedim,
+            typename ScalarType,
+            bool use_vectorization,
+
+            std::size_t width>
   class AssemblerBase
   {
   public:
@@ -2145,12 +2154,6 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
@@ -2484,12 +2487,7 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
+            // Vectorization is done over the quadrature point data / indices.
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
@@ -2829,12 +2827,7 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
+            // Vectorization is done over the quadrature point data / indices.
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
@@ -3067,12 +3060,7 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
+            // Vectorization is done over the quadrature point data / indices.
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
@@ -3247,12 +3235,7 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
+            // Vectorization is done over the quadrature point data / indices.
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
@@ -3436,12 +3419,7 @@ namespace WeakForms
 
         if (use_vectorization)
           {
-            // We wish to vectorize the quadrature point data / indices.
-            // Determine the quadrature point batch size for all vectorized
-            // operations.
-            constexpr std::size_t width =
-              dealii::internal::VectorizedArrayWidthSpecifier<
-                ScalarType>::max_width;
+            // Vectorization is done over the quadrature point data / indices.
             using VectorizedValueTypeTest =
               typename TestSpaceOp::template vectorized_value_type<ScalarType,
                                                                    width>;
