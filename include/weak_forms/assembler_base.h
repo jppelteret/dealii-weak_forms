@@ -2808,117 +2808,15 @@ namespace WeakForms
             return;
           }
 
-        if (use_vectorization)
-          {
-            // Vectorization is done over the quadrature point data / indices.
-            using VectorizedValueTypeTest =
-              typename TestSpaceOp::template vectorized_value_type<ScalarType,
-                                                                   width>;
-            using VectorizedValueTypeFunctor =
-              typename Functor::template vectorized_value_type<ScalarType,
-                                                               width>;
-
-            const unsigned int n_q_points =
-              fe_interface_values.n_quadrature_points;
-            for (unsigned int batch_start = 0; batch_start < n_q_points;
-                 batch_start += width)
-              {
-                // Make sure that the range doesn't go out of bounds if we
-                // cannot divide up the work evenly.
-                const unsigned int batch_end =
-                  std::min(batch_start + static_cast<unsigned int>(width),
-                           n_q_points);
-                const types::vectorized_qp_range_t q_point_range{batch_start,
-                                                                 batch_end};
-
-                const AlignedVector<VectorizedValueTypeTest> shapes_test =
-                  internal::evaluate_fe_space<ScalarType, width>(
-                    test_space_op,
-                    fe_interface_values,
-                    fe_interface_values,
-                    scratch_data,
-                    solution_extraction_data,
-                    q_point_range);
-
-                VectorizedValueTypeFunctor values_functor =
-                  internal::evaluate_functor<ScalarType, width>(
-                    functor,
-                    fe_interface_values,
-                    scratch_data,
-                    solution_extraction_data,
-                    q_point_range);
-
-                VectorizedArray<double, width> JxW =
-                  interface_integral.template  operator()<ScalarType, width>(
-                    fe_interface_values, q_point_range);
-
-                // The entire vectorization lane might not be filled, so
-                // we need to correct out-of-bounds contributions:
-                // These elements still participate in the assembly,
-                // so we need to make sure that their contributions
-                // integrate to zero. For the functor, we have to be
-                // conscientious of the case where we divide by zero when
-                // we work with out-of-bounds vectorization lanes.
-                DEAL_II_OPENMP_SIMD_PRAGMA
-                for (unsigned int v = 0; v < width; v++)
-                  {
-                    if (v >= q_point_range.size())
-                      {
-                        using ValueTypeFunctor =
-                          typename Functor::template value_type<ScalarType>;
-                        numbers::set_vectorized_values(values_functor,
-                                                       v,
-                                                       ValueTypeFunctor{});
-                        numbers::set_vectorized_values(JxW, v, 0.0);
-                      }
-                  }
-
-                // Do the assembly for the current batch of quadrature points
-                internal::assemble_cell_vector_vectorized_qp_batch_contribution<
-                  Sign>(cell_vector,
-                        fe_interface_values,
-                        shapes_test,
-                        values_functor,
-                        JxW);
-              }
-          }
-        else
-          {
-            using ValueTypeTest =
-              typename TestSpaceOp::template value_type<ScalarType>;
-            using ValueTypeFunctor =
-              typename Functor::template value_type<ScalarType>;
-
-            // Get the shape function data (value, gradients, curls, etc.)
-            // for all quadrature points at all DoFs. We construct it in this
-            // manner (with the q_point indices fast) so that we can perform
-            // contractions in an optimal manner.
-            const std::vector<std::vector<ValueTypeTest>> shapes_test =
-              internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                      fe_interface_values,
-                                                      fe_interface_values,
-                                                      scratch_data,
-                                                      solution_extraction_data);
-
-            // Get all values at the quadrature points
-            const std::vector<ValueTypeFunctor> values_functor =
-              internal::evaluate_functor<ScalarType>(functor,
-                                                     fe_interface_values,
-                                                     scratch_data,
-                                                     solution_extraction_data);
-
-            const std::vector<double> &   JxW =
-              interface_integral.template operator()<ScalarType>(
-                fe_interface_values);
-
-            // Assemble for all DoFs and quadrature points
-            internal::assemble_cell_vector_contribution<Sign>(
-              cell_vector,
-              fe_interface_values,
-              shapes_test,
-              values_functor,
-              JxW);
-          }
+        // Perform the assembly, taking into account whether or not to
+        // utilise vectorisation.
+        do_add_interface_face_operation<Sign>(cell_vector,
+                                              scratch_data,
+                                              solution_extraction_data,
+                                              fe_interface_values,
+                                              test_space_op,
+                                              functor,
+                                              interface_integral);
       };
       interface_face_vector_operations.emplace_back(f);
     }
@@ -3796,6 +3694,153 @@ namespace WeakForms
                                                         shapes_test,
                                                         values_functor,
                                                         JxW);
+    }
+
+
+    /**
+     * Method to add interface face assembly operations for linear forms:
+     * Vectorized variant
+     */
+    template <enum internal::AccumulationSign Sign,
+              typename TestSpaceOp,
+              typename Functor,
+              typename SymbolicOpInterfaceIntegral,
+              bool _use_vectorization = use_vectorization,
+              typename std::enable_if<
+                is_linear_form<
+                  typename SymbolicOpInterfaceIntegral::IntegrandType>::value &&
+                (_use_vectorization && width > 1)>::type * = nullptr>
+    static void
+    do_add_interface_face_operation(
+      Vector<ScalarType> &                    cell_vector,
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                                     solution_extraction_data,
+      const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+      const TestSpaceOp &                     test_space_op,
+      const Functor &                         functor,
+      const SymbolicOpInterfaceIntegral &     interface_integral)
+    {
+      // Vectorization is done over the quadrature point data / indices.
+      using VectorizedValueTypeTest =
+        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeFunctor =
+        typename Functor::template vectorized_value_type<ScalarType, width>;
+
+      const unsigned int n_q_points = fe_interface_values.n_quadrature_points;
+      for (unsigned int batch_start = 0; batch_start < n_q_points;
+           batch_start += width)
+        {
+          // Make sure that the range doesn't go out of bounds if we
+          // cannot divide up the work evenly.
+          const unsigned int batch_end =
+            std::min(batch_start + static_cast<unsigned int>(width),
+                     n_q_points);
+          const types::vectorized_qp_range_t q_point_range{batch_start,
+                                                           batch_end};
+
+          const AlignedVector<VectorizedValueTypeTest> shapes_test =
+            internal::evaluate_fe_space<ScalarType, width>(
+              test_space_op,
+              fe_interface_values,
+              fe_interface_values,
+              scratch_data,
+              solution_extraction_data,
+              q_point_range);
+
+          VectorizedValueTypeFunctor values_functor =
+            internal::evaluate_functor<ScalarType, width>(
+              functor,
+              fe_interface_values,
+              scratch_data,
+              solution_extraction_data,
+              q_point_range);
+
+          VectorizedArray<double, width> JxW =
+            interface_integral.template  operator()<ScalarType, width>(
+              fe_interface_values, q_point_range);
+
+          // The entire vectorization lane might not be filled, so
+          // we need to correct out-of-bounds contributions:
+          // These elements still participate in the assembly,
+          // so we need to make sure that their contributions
+          // integrate to zero. For the functor, we have to be
+          // conscientious of the case where we divide by zero when
+          // we work with out-of-bounds vectorization lanes.
+          DEAL_II_OPENMP_SIMD_PRAGMA
+          for (unsigned int v = 0; v < width; v++)
+            {
+              if (v >= q_point_range.size())
+                {
+                  using ValueTypeFunctor =
+                    typename Functor::template value_type<ScalarType>;
+                  numbers::set_vectorized_values(values_functor,
+                                                 v,
+                                                 ValueTypeFunctor{});
+                  numbers::set_vectorized_values(JxW, v, 0.0);
+                }
+            }
+
+          // Do the assembly for the current batch of quadrature points
+          internal::assemble_cell_vector_vectorized_qp_batch_contribution<Sign>(
+            cell_vector, fe_interface_values, shapes_test, values_functor, JxW);
+        }
+    }
+
+
+    /**
+     * Method to add interface face assembly operations for linear forms:
+     * Non-vectorized variant
+     */
+    template <enum internal::AccumulationSign Sign,
+              typename TestSpaceOp,
+              typename Functor,
+              typename SymbolicOpInterfaceIntegral,
+              bool _use_vectorization = use_vectorization,
+              typename std::enable_if<
+                is_linear_form<
+                  typename SymbolicOpInterfaceIntegral::IntegrandType>::value &&
+                (!_use_vectorization || width == 1)>::type * = nullptr>
+    static void
+    do_add_interface_face_operation(
+      Vector<ScalarType> &                    cell_vector,
+      MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+      const std::vector<SolutionExtractionData<dim, spacedim>>
+        &                                     solution_extraction_data,
+      const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+      const TestSpaceOp &                     test_space_op,
+      const Functor &                         functor,
+      const SymbolicOpInterfaceIntegral &     interface_integral)
+    {
+      using ValueTypeTest =
+        typename TestSpaceOp::template value_type<ScalarType>;
+      using ValueTypeFunctor =
+        typename Functor::template value_type<ScalarType>;
+
+      // Get the shape function data (value, gradients, curls, etc.)
+      // for all quadrature points at all DoFs. We construct it in this
+      // manner (with the q_point indices fast) so that we can perform
+      // contractions in an optimal manner.
+      const std::vector<std::vector<ValueTypeTest>> shapes_test =
+        internal::evaluate_fe_space<ScalarType>(test_space_op,
+                                                fe_interface_values,
+                                                fe_interface_values,
+                                                scratch_data,
+                                                solution_extraction_data);
+
+      // Get all values at the quadrature points
+      const std::vector<ValueTypeFunctor> values_functor =
+        internal::evaluate_functor<ScalarType>(functor,
+                                               fe_interface_values,
+                                               scratch_data,
+                                               solution_extraction_data);
+
+      const std::vector<double> &   JxW =
+        interface_integral.template operator()<ScalarType>(fe_interface_values);
+
+      // Assemble for all DoFs and quadrature points
+      internal::assemble_cell_vector_contribution<Sign>(
+        cell_vector, fe_interface_values, shapes_test, values_functor, JxW);
     }
 
   }; // class MatrixBasedAssembler
