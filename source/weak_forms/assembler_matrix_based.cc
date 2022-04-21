@@ -14,6 +14,7 @@
 // ---------------------------------------------------------------------
 
 #include <weak_forms/assembler_matrix_based.h>
+#include <weak_forms/numbers.h>
 
 
 WEAK_FORMS_NAMESPACE_OPEN

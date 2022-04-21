@@ -114,12 +114,18 @@ namespace WeakForms
     };
   } // namespace internal
 
+  /**
+   *
+   * @param width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
+   */
   template <int dim,
-            int spacedim           = dim,
-            typename ScalarType    = double,
-            bool use_vectorization = numbers::UseVectorization::value>
+            int spacedim                  = dim,
+            typename ScalarType           = double,
+            bool        use_vectorization = numbers::UseVectorization::value,
+            std::size_t width =
+              numbers::VectorizationDefaults<ScalarType>::width>
   class MatrixBasedAssembler
-    : public AssemblerBase<dim, spacedim, ScalarType, use_vectorization>
+    : public AssemblerBase<dim, spacedim, ScalarType, use_vectorization, width>
   {
     template <typename CellIteratorType,
               typename ScratchData,
@@ -149,10 +155,10 @@ namespace WeakForms
 
   public:
     explicit MatrixBasedAssembler()
-      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(){};
+      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization, width>(){};
 
     explicit MatrixBasedAssembler(AD_SD_Functor_Cache &user_ad_sd_cache)
-      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization>(
+      : AssemblerBase<dim, spacedim, ScalarType, use_vectorization, width>(
           user_ad_sd_cache)
     {}
 

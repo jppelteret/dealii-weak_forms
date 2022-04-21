@@ -43,9 +43,22 @@ namespace WeakForms
 
 
 #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
+    template <typename ScalarType>
+    struct VectorizationDefaults
+    {
+      static constexpr std::size_t width =
+        dealii::internal::VectorizedArrayWidthSpecifier<ScalarType>::max_width;
+    };
+
     struct UseVectorization : std::true_type
     {};
 #else
+    template <typename ScalarType>
+    struct VectorizationDefaults
+    {
+      static constexpr std::size_t width = 1;
+    };
+
     struct UseVectorization : std::false_type
     {};
 #endif
