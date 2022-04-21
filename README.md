@@ -246,6 +246,26 @@ authors of those specific areas of work.
   }
   ```
 
+# Continuous integration status
+-------------------------------
+| System | Status |
+|--------|--------|
+| Linux  | ![Build Status](https://github.com/jppelteret/dealii-weak_forms/workflows/github-linux/badge.svg) |
+
+# Docker images
+---------------
+A [template](./docker/Dockerfile) for creating a docker image can be found in the `docker` folder.
+
+## Building the image
+```sh
+$ docker build . -t dealii-weak_forms-full_ci -f ./Dockerfile
+$ docker run -d dealii-weak_forms-full_ci
+```
+
+## Running the image
+```sh
+$ docker run --rm -t -i -v `pwd`:/home/dealii dealii-weak_forms-full_ci
+```
 
 # Similar projects that inspired this work
 ------------------------------------------
