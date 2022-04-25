@@ -30,6 +30,8 @@ end
 
 
 subsection Material properties
+  set Regularisation parameter = 1e-6
+
   # Wire relative permeability (copper)
   set Wire relative permeability = 0.999
   set Wire electrical conductivity = 5e7
@@ -47,7 +49,7 @@ subsection Source terms
   set Wire current      = 10
   
   # Total voltage drop across the wire's length
-  set Wire voltage drop = 2.25e-4
+  set Wire voltage drop = 225
 end
 
 
@@ -105,4 +107,12 @@ subsection Linear solver
   # Type of solver used to solve the linear system
   # Options: Direct ; Iterative
   set Solver type                = Direct
+end
+
+
+subsection Nonlinear solver
+  # Nonlinear solver residual
+  set Residual                   = 1e-9
+
+  set Max iterations             = 10
 end

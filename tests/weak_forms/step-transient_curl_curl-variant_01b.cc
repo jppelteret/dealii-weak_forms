@@ -94,28 +94,32 @@ namespace StepTransientCurlCurl
     // by the weak forms
     using VectorType = TrilinosWrappers::MPI::Vector;
     const SolutionStorage<VectorType> solution_storage(
-      {&this->solution_mvp, &this->solution_mvp_t1});
+      {&this->solution_mvp, &this->solution_mvp_t1, &this->d_solution_mvp_dt});
 
     // Field solution
-    constexpr WeakForms::types::solution_index solution_mvp_index_t1 = 1;
-    const auto A_t1 = field_solution[subspace_extractor_A]
-                        .template value<solution_mvp_index_t1>();
+    constexpr WeakForms::types::solution_index solution_mvp_index = 0;
+    const auto                                 curl_A =
+      field_solution[subspace_extractor_A].template curl<solution_mvp_index>();
+
+    constexpr WeakForms::types::solution_index d_solution_mvp_dt_index_t1 = 2;
+    const auto dA_dt = field_solution[subspace_extractor_A]
+                         .template value<d_solution_mvp_dt_index_t1>();
 
     // Functions
-    const ScalarFunctor                   timestep("dt", "\\Delta t");
     const ScalarFunctionFunctor<spacedim> permeability("mu(x)", "\\mu");
     const ScalarFunctionFunctor<spacedim> conductivity("sigma(x)", "\\sigma");
     const VectorFunctionFunctor<spacedim> current_source("Jf(x)",
                                                          "\\mathbf{J}^{free}");
 
-    const auto dt = timestep.value<double, dim, spacedim>(
-      [this](const FEValuesBase<dim, spacedim> &, const unsigned int)
-      { return this->parameters.delta_t; });
-
+    const auto dt =
+      constant_scalar<dim>(this->parameters.delta_t, "dt", "\\Delta t");
     const auto mu =
       permeability.value(this->function_material_permeability_coefficients);
+    const auto nu = 1.0 / mu;
     const auto sigma =
       conductivity.value(this->function_material_conductivity_coefficients);
+    const auto kappa =
+      (this->parameters.regularisation_parameter / spacedim) * nu;
     const auto J_f = current_source.value(this->function_free_current_density);
 
     // Check current running through boundary
@@ -124,19 +128,33 @@ namespace StepTransientCurlCurl
     const auto             J_dot_N = J_f * N;
     const double           I_total =
       WeakForms::Integrator<dim, decltype(J_dot_N)>(J_dot_N)
-        .template dA<double>(this->dof_handler_mvp,
-                             this->qf_cell_mvp,
-                             this->qf_face_mvp);
+        .template dA<double>(
+          this->dof_handler_mvp,
+          this->qf_cell_mvp,
+          this->qf_face_mvp,
+          {this->parameters.bid_wire_inlet} /*input boundary*/);
     // std::cout << "I_total: " << I_total << std::endl;
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;
-    assembler +=
-      bilinear_form(test_curl_A, 1.0 / mu, trial_curl_A).symmetrize().dV() +
-      bilinear_form(test_A, sigma / dt, trial_A).symmetrize().dV();
-    assembler -= linear_form(test_A, (sigma / dt) * A_t1).dV() +
-                 linear_form(test_A, J_f).dV();
     // assembler.symmetrize();
+
+    // Common contributions
+    assembler += linear_form(test_curl_A, nu * curl_A).dV() +
+                 bilinear_form(test_curl_A, nu, trial_curl_A).symmetrize().dV();
+
+    // Magneto-static region
+    const auto &mat_air = this->parameters.mid_surroundings;
+    assembler += bilinear_form(test_A, kappa, trial_A).symmetrize().dV(mat_air);
+
+    // Transient / conducting magnetic region
+    const auto &mat_wire = this->parameters.mid_wire;
+    assembler +=
+      linear_form(test_A, sigma * dA_dt).dV(mat_wire) +
+      bilinear_form(test_A, sigma / dt, trial_A).symmetrize().dV(mat_wire);
+
+    // Source term
+    assembler -= linear_form(test_A, J_f).dV(mat_wire);
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;

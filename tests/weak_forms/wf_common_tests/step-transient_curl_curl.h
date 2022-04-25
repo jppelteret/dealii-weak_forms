@@ -95,6 +95,11 @@ namespace StepTransientCurlCurl
 
     struct BoundaryConditions
     {
+      static const dealii::types::boundary_id bid_surroundings = 1;
+      static const dealii::types::boundary_id bid_wire_inlet   = 2; // Top face
+      static const dealii::types::boundary_id bid_wire_outlet =
+        3; // Bottom face
+
       static void
       declare_parameters(ParameterHandler &prm);
 
@@ -416,6 +421,10 @@ namespace StepTransientCurlCurl
 
     struct Materials
     {
+      const dealii::types::material_id mid_surroundings = 1;
+      const dealii::types::material_id mid_wire         = 2;
+
+      double regularisation_parameter;
       double mu_r_surroundings;
       double mu_r_wire;
       double sigma_surroundings;
@@ -433,6 +442,11 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Material properties");
       {
+        prm.declare_entry("Regularisation parameter",
+                          "1.01e-6",
+                          Patterns::Double(1e-12),
+                          "Regularisation parameter");
+
         prm.declare_entry("Wire relative permeability",
                           "1.0",
                           Patterns::Double(1e-9),
@@ -461,7 +475,8 @@ namespace StepTransientCurlCurl
     {
       prm.enter_subsection("Material properties");
       {
-        mu_r_wire         = prm.get_double("Wire relative permeability");
+        regularisation_parameter = prm.get_double("Regularisation parameter");
+        mu_r_wire                = prm.get_double("Wire relative permeability");
         mu_r_surroundings = prm.get_double("Surrounding relative permeability");
         sigma_wire        = prm.get_double("Wire electrical conductivity");
         sigma_surroundings =
@@ -538,6 +553,50 @@ namespace StepTransientCurlCurl
       prm.leave_subsection();
     }
 
+    // @sect4{Nonlinear solver}
+
+    // Next, we choose both solver and preconditioner set
+    struct NonLinearSolver
+    {
+      double nonlin_slvr_tol;
+      double nonlin_slvr_max_it;
+
+      static void
+      declare_parameters(ParameterHandler &prm);
+
+      void
+      parse_parameters(ParameterHandler &prm);
+    };
+
+    void
+    NonLinearSolver::declare_parameters(ParameterHandler &prm)
+    {
+      prm.enter_subsection("Nonlinear solver");
+      {
+        prm.declare_entry("Residual",
+                          "1e-9",
+                          Patterns::Double(0.0),
+                          "Maximum permissable nonlinear solver residual");
+
+        prm.declare_entry("Max iterations",
+                          "10",
+                          Patterns::Double(0.0),
+                          "Maximum permissible nonlinear solver iterations");
+      }
+      prm.leave_subsection();
+    }
+
+    void
+    NonLinearSolver::parse_parameters(ParameterHandler &prm)
+    {
+      prm.enter_subsection("Nonlinear solver");
+      {
+        nonlin_slvr_tol    = prm.get_double("Residual");
+        nonlin_slvr_max_it = prm.get_double("Max iterations");
+      }
+      prm.leave_subsection();
+    }
+
     // @sect4{All parameters}
 
     // Finally we consolidate all of the above structures into a single
@@ -549,7 +608,8 @@ namespace StepTransientCurlCurl
                            public Geometry,
                            public Refinement,
                            public Materials,
-                           public LinearSolver
+                           public LinearSolver,
+                           public NonLinearSolver
 
     {
       AllParameters(const std::string &input_file);
@@ -587,6 +647,7 @@ namespace StepTransientCurlCurl
       Refinement::declare_parameters(prm);
       Materials::declare_parameters(prm);
       LinearSolver::declare_parameters(prm);
+      NonLinearSolver::declare_parameters(prm);
     }
 
     void
@@ -600,6 +661,7 @@ namespace StepTransientCurlCurl
       Refinement::parse_parameters(prm);
       Materials::parse_parameters(prm);
       LinearSolver::parse_parameters(prm);
+      NonLinearSolver::parse_parameters(prm);
     }
 
     bool
@@ -1152,6 +1214,7 @@ namespace StepTransientCurlCurl
     TrilinosWrappers::MPI::Vector  solution_mvp;
     TrilinosWrappers::MPI::Vector  solution_mvp_t1;
     TrilinosWrappers::MPI::Vector  d_solution_mvp_dt;
+    TrilinosWrappers::MPI::Vector  newton_update_mvp;
 
     // ESP system
     const FE_Q<dim>   fe_esp;
@@ -1299,6 +1362,17 @@ namespace StepTransientCurlCurl
             constraints_mvp,
             mapping);
         }
+      // Surroundings too...
+      for (const auto b_id : {1})
+        {
+          VectorTools::project_boundary_values_curl_conforming_l2(
+            dof_handler_mvp,
+            first_mvp_dof,
+            Functions::ZeroFunction<dim>(dim),
+            b_id,
+            constraints_mvp,
+            mapping);
+        }
 
       constraints_mvp.close();
 
@@ -1399,6 +1473,9 @@ namespace StepTransientCurlCurl
                              locally_relevant_dofs_mvp,
                              mpi_communicator);
       d_solution_mvp_dt.reinit(locally_owned_dofs_mvp,
+                               locally_relevant_dofs_mvp,
+                               mpi_communicator);
+      newton_update_mvp.reinit(locally_owned_dofs_mvp,
                                locally_relevant_dofs_mvp,
                                mpi_communicator);
 
@@ -1711,7 +1788,7 @@ namespace StepTransientCurlCurl
     // The nonlinear problem would be an incremental problem in time.
     // solution += distributed_solution_increment;
 
-    pcout << "   Solver: " << parameters.lin_slvr_type
+    pcout << "    -- Solver: " << parameters.lin_slvr_type
           << "  Iterations: " << solver_control.last_step()
           << "  Residual: " << solver_control.last_value() << std::endl;
   }
@@ -2391,69 +2468,136 @@ namespace StepTransientCurlCurl
       }
     else
       {
-        Triangulation<dim> tria_surroundings;
+        // Triangulation<dim> tria_surroundings;
+        // {
+        //   const double inner_radius =
+        //     parameters.radius_wire * parameters.grid_scale;
+        //   const double length =
+        //     parameters.side_length_surroundings * parameters.grid_scale;
+        //   const double outer_radius =
+        //     std::min(2 * inner_radius, 0.5 * (length + inner_radius));
+        //   const double             pad               = length - outer_radius;
+        //   const double             pad_bottom        = pad;
+        //   const double             pad_top           = pad;
+        //   const double             pad_left          = pad;
+        //   const double             pad_right         = pad;
+        //   const Point<dim> &       center            = Point<dim>();
+        //   const types::manifold_id polar_manifold_id = 0;
+        //   const types::manifold_id tfi_manifold_id   = 1;
+        //   // The wire gets refined once, so account for that here.
+        //   Assert(
+        //     parameters.n_divisions_longitudinal % 2 == 0,
+        //     ExcMessage(
+        //       "The number of initial divisions must be a multiple of two."));
+        //   const unsigned int n_slices = parameters.n_divisions_longitudinal +
+        //   1; GridGenerator::plate_with_a_hole(tria_surroundings,
+        //                                    inner_radius,
+        //                                    outer_radius,
+        //                                    pad_bottom,
+        //                                    pad_top,
+        //                                    pad_left,
+        //                                    pad_right,
+        //                                    center,
+        //                                    polar_manifold_id,
+        //                                    tfi_manifold_id,
+        //                                    length,
+        //                                    n_slices);
+        // }
+
+        // Triangulation<dim> tria_wire;
+        // {
+        //   const double radius = parameters.radius_wire *
+        //   parameters.grid_scale; const double length =
+        //     parameters.side_length_surroundings * parameters.grid_scale;
+        //   const unsigned int n_divisions =
+        //   parameters.n_divisions_longitudinal;
+
+        //   Triangulation<dim> tria_wire_tmp;
+        //   GridGenerator::subdivided_cylinder(tria_wire_tmp,
+        //                                      n_divisions / 2,
+        //                                      radius,
+        //                                      length / 2.0);
+
+        //   // Refine before rotation, due to attached manifolds
+        //   tria_wire_tmp.refine_global(1);
+
+        //   // Align with axis of hole
+        //   GridTools::rotate(Tensor<1, dim>({0, 1, 0}),
+        //                     90.0 * (numbers::PI / 180.0),
+        //                     tria_wire_tmp);
+
+        //   GridGenerator::flatten_triangulation(tria_wire_tmp, tria_wire);
+        // }
+
+        const unsigned int n_divisions_length = 2;
+        AssertThrow(n_divisions_length % 2 == 0,
+                    ExcMessage(
+                      "Require even number of divisions along length."));
+        AssertThrow(n_divisions_length >= 2,
+                    ExcMessage(
+                      "Minimum number of divisions along length is 4."));
+
+        // Surroundings with hole
+        Triangulation<dim> tria_plate_with_hole;
         {
           const double inner_radius =
             parameters.radius_wire * parameters.grid_scale;
-          const double length =
+          const double outer_radius = 2.0 * inner_radius;
+          const double total_width =
             parameters.side_length_surroundings * parameters.grid_scale;
-          const double outer_radius =
-            std::min(2 * inner_radius, 0.5 * (length + inner_radius));
-          const double             pad               = length - outer_radius;
-          const double             pad_bottom        = pad;
-          const double             pad_top           = pad;
-          const double             pad_left          = pad;
-          const double             pad_right         = pad;
-          const Point<dim> &       center            = Point<dim>();
+          const double pad = 0.5 * (total_width - 2.0 * outer_radius);
+          AssertThrow(
+            pad > 0.0,
+            ExcMessage(
+              "Need to refactor padding method, or way of choosing outer radius."));
+
+          const Point<dim>         centre;
           const types::manifold_id polar_manifold_id = 0;
           const types::manifold_id tfi_manifold_id   = 1;
-          // The wire gets refined once, so account for that here.
-          Assert(
-            parameters.n_divisions_longitudinal % 2 == 0,
-            ExcMessage(
-              "The number of initial divisions must be a multiple of two."));
-          const unsigned int n_slices = parameters.n_divisions_longitudinal + 1;
-          GridGenerator::plate_with_a_hole(tria_surroundings,
+          const double             L                 = total_width;
+          const unsigned int       n_slices          = n_divisions_length + 1;
+          GridGenerator::plate_with_a_hole(tria_plate_with_hole,
                                            inner_radius,
                                            outer_radius,
-                                           pad_bottom,
-                                           pad_top,
-                                           pad_left,
-                                           pad_right,
-                                           center,
+                                           pad,
+                                           pad,
+                                           pad,
+                                           pad,
+                                           centre,
                                            polar_manifold_id,
                                            tfi_manifold_id,
-                                           length,
+                                           L,
                                            n_slices);
         }
 
-        Triangulation<dim> tria_wire;
+        // Wire (cyl)
+        Triangulation<dim> tria_cyl;
         {
+          Triangulation<dim> tria_cyl_ref;
+
+          const unsigned int repetitions = n_divisions_length / 2;
           const double radius = parameters.radius_wire * parameters.grid_scale;
-          const double length =
-            parameters.side_length_surroundings * parameters.grid_scale;
-          const unsigned int n_divisions = parameters.n_divisions_longitudinal;
-
-          Triangulation<dim> tria_wire_tmp;
-          GridGenerator::subdivided_cylinder(tria_wire_tmp,
-                                             n_divisions / 2,
+          const double half_length =
+            parameters.side_length_surroundings * parameters.grid_scale / 2;
+          GridGenerator::subdivided_cylinder(tria_cyl_ref,
+                                             repetitions,
                                              radius,
-                                             length / 2.0);
+                                             half_length);
 
-          // Refine before rotation, due to attached manifolds
-          tria_wire_tmp.refine_global(1);
+          // Refine before rotate -> manifolds attached
+          tria_cyl_ref.refine_global(1);
 
-          // Align with axis of hole
+          // Need to rotate: Z-aligned wire
+          tria_cyl_ref.reset_all_manifolds();
           GridTools::rotate(Tensor<1, dim>({0, 1, 0}),
-                            90.0 * (numbers::PI / 180.0),
-                            tria_wire_tmp);
-
-          GridGenerator::flatten_triangulation(tria_wire_tmp, tria_wire);
+                            90 * (dealii::numbers::PI / 180),
+                            tria_cyl_ref);
+          GridGenerator::flatten_triangulation(tria_cyl_ref, tria_cyl);
         }
 
         // Merge triangulations
-        GridGenerator::merge_triangulations(tria_surroundings,
-                                            tria_wire,
+        GridGenerator::merge_triangulations(tria_plate_with_hole,
+                                            tria_cyl,
                                             triangulation);
 
         // Remove all boundary and manifold IDs
@@ -2519,7 +2663,7 @@ namespace StepTransientCurlCurl
         // // already in place
         // if (parameters.n_global_refinements > 0)
         //   parameters.n_global_refinements -= 1;
-        // triangulation.refine_global(parameters.n_global_refinements);
+        triangulation.refine_global(parameters.n_global_refinements);
 
         // Reset the maximum number of levels if our original refinement
         // scheme violates it
@@ -2558,18 +2702,18 @@ namespace StepTransientCurlCurl
                 ++n_pts_in_wire;
 
             if (n_pts_in_wire == 0)
-              cell->set_material_id(1);
+              cell->set_material_id(this->parameters.mid_surroundings);
             else if (n_pts_in_wire == GeometryInfo<dim>::vertices_per_cell + 1)
-              cell->set_material_id(2);
+              cell->set_material_id(this->parameters.mid_wire);
             else
               cell->set_material_id(3);
           }
         else
           {
             if (geometry.within_wire(cell->center()) == true)
-              cell->set_material_id(2);
+              cell->set_material_id(this->parameters.mid_wire);
             else
-              cell->set_material_id(1);
+              cell->set_material_id(this->parameters.mid_surroundings);
           }
 
         // Boundary ID
@@ -2592,12 +2736,15 @@ namespace StepTransientCurlCurl
                 if (geometry.within_wire(pt) == true)
                   {
                     if (std::abs(pt[2] - half_length) < tol_b_id)
-                      cell->face(face)->set_boundary_id(2);
+                      cell->face(face)->set_boundary_id(
+                        this->parameters.bid_wire_inlet);
                     else if (std::abs(pt[2] + half_length) < tol_b_id)
-                      cell->face(face)->set_boundary_id(3);
+                      cell->face(face)->set_boundary_id(
+                        this->parameters.bid_wire_outlet);
                   }
                 else
-                  cell->face(face)->set_boundary_id(1);
+                  cell->face(face)->set_boundary_id(
+                    this->parameters.bid_surroundings);
               }
           }
       }
@@ -2682,6 +2829,7 @@ namespace StepTransientCurlCurl
         pcout << "   Assembling and solving... " << std::endl;
         if (parameters.use_voltage_excitation())
           {
+            pcout << "    -- Electrostatic potential system... " << std::endl;
             assemble_system_esp(system_matrix_esp,
                                 system_rhs_esp,
                                 constraints_esp);
@@ -2693,18 +2841,46 @@ namespace StepTransientCurlCurl
                       dof_handler_esp);
           }
 
-        assemble_system_mvp(system_matrix_mvp, system_rhs_mvp, constraints_mvp);
-        solve_mvp(system_matrix_mvp,
-                  solution_mvp,
-                  system_rhs_mvp,
-                  constraints_mvp,
-                  locally_owned_dofs_mvp,
-                  dof_handler_mvp);
+        for (unsigned int n = 0; n < parameters.nonlin_slvr_max_it; ++n)
+          {
+            // NB: All of the Dirichlet constraints are homogeneous for this
+            // problem. If this changes, then the constraint matrix must be
+            // modified appropriately.
 
-        // Update solution_mvp rate / time derivative
-        d_solution_mvp_dt = solution_mvp;
-        d_solution_mvp_dt -= solution_mvp_t1;
-        d_solution_mvp_dt /= parameters.delta_t;
+            pcout << "    -- Newton iteration: " << n << std::endl;
+            assemble_system_mvp(system_matrix_mvp,
+                                system_rhs_mvp,
+                                constraints_mvp);
+
+            const double residual = system_rhs_mvp.l2_norm();
+            if (residual < parameters.nonlin_slvr_tol)
+              {
+                pcout << "    -- Converged. Norm = " << residual << std::endl;
+                break;
+              }
+            else
+              {
+                pcout << "    -- Residual norm = " << residual << std::endl;
+              }
+
+            solve_mvp(system_matrix_mvp,
+                      newton_update_mvp,
+                      system_rhs_mvp,
+                      constraints_mvp,
+                      locally_owned_dofs_mvp,
+                      dof_handler_mvp);
+
+            // Update solution_mvp rate / time derivative
+            solution_mvp += newton_update_mvp;
+            newton_update_mvp = 0;
+            d_solution_mvp_dt = solution_mvp;
+            d_solution_mvp_dt -= solution_mvp_t1;
+            d_solution_mvp_dt /= parameters.delta_t;
+
+            if (n + 1 == parameters.nonlin_slvr_max_it)
+              pcout << "    -- No convergence in nonlinear solver."
+                    << std::endl;
+          }
 
         pcout << "   Postprocessing... " << std::endl;
 
@@ -2719,7 +2895,8 @@ namespace StepTransientCurlCurl
           {
             pcout << "   Update at end of timestep... " << std::endl;
             // Update old solution_mvp (history variable)
-            solution_mvp_t1 = solution_mvp;
+            solution_mvp_t1   = solution_mvp;
+            d_solution_mvp_dt = 0;
 
             current_time += parameters.delta_t;
             ++time_step;
