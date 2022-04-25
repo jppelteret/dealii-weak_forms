@@ -56,7 +56,7 @@ run()
 
     const auto s  = constant_scalar<dim>(1.0);
     const auto v  = constant_vector<dim>(Tensor<1, dim>());
-    const auto t2 = constant_tensor<2, dim>(Tensor<2, dim>());
+    const auto t2 = constant_tensor<dim>(Tensor<2, dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
@@ -89,8 +89,8 @@ run()
 
     const auto s  = constant_scalar<dim>(1.0);
     const auto v  = constant_vector<dim>(Tensor<1, dim>());
-    const auto t2 = constant_tensor<2, dim>(Tensor<2, dim>());
-    const auto t3 = constant_tensor<3, dim>(Tensor<3, dim>());
+    const auto t2 = constant_tensor<dim>(Tensor<2, dim>());
+    const auto t3 = constant_tensor<dim>(Tensor<3, dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;

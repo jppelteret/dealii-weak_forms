@@ -287,7 +287,7 @@ namespace WeakForms
     constexpr int spacedim = TestSpaceOp::space_dimension;
     // Delegate to the other function
     return bilinear_form(test_space_op,
-                         constant_scalar<dim, spacedim, ScalarType>(value),
+                         constant_scalar<dim, spacedim>(value),
                          trial_space_op);
   }
 
@@ -306,8 +306,7 @@ namespace WeakForms
     constexpr int dim = TestSpaceOp::dimension;
     // Delegate to the other function
     return bilinear_form(test_space_op,
-                         constant_tensor<rank, dim, spacedim, ScalarType>(
-                           value),
+                         constant_tensor<dim>(value),
                          trial_space_op);
   }
 
@@ -325,10 +324,9 @@ namespace WeakForms
   {
     constexpr int dim = TestSpaceOp::dimension;
     // Delegate to the other function
-    return bilinear_form(
-      test_space_op,
-      constant_symmetric_tensor<rank, dim, spacedim, ScalarType>(value),
-      trial_space_op);
+    return bilinear_form(test_space_op,
+                         constant_symmetric_tensor<dim>(value),
+                         trial_space_op);
   }
 
 

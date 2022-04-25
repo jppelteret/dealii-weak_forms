@@ -56,7 +56,7 @@ run()
     LogStream::Prefix prefix("SymmTensor2");
 
     const auto S2 =
-      constant_symmetric_tensor<2, dim>(unit_symmetric_tensor<dim>());
+      constant_symmetric_tensor<dim>(unit_symmetric_tensor<dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
@@ -81,7 +81,7 @@ run()
   {
     LogStream::Prefix prefix("SymmTensor4");
 
-    const auto S4 = constant_symmetric_tensor<4, dim>(identity_tensor<dim>());
+    const auto S4 = constant_symmetric_tensor<dim>(identity_tensor<dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
