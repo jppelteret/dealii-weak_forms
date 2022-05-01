@@ -48,9 +48,8 @@ main()
   // Functors
   {
     const auto s = constant_scalar<dim>(2.0);
-    const auto T = constant_tensor<2, spacedim>(Tensor<2, dim>{});
-    const auto S =
-      constant_symmetric_tensor<2, spacedim>(SymmetricTensor<2, dim>{});
+    const auto T = constant_tensor<dim>(Tensor<2, dim>{});
+    const auto S = constant_symmetric_tensor<dim>(SymmetricTensor<2, dim>{});
 
     // Multiply
     const auto s1 = scalar * s;

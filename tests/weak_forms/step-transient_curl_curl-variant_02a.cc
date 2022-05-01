@@ -178,6 +178,17 @@ namespace StepTransientCurlCurl
         FullMatrix<double> cell_matrix(n_dofs_per_cell, n_dofs_per_cell);
         Vector<double>     cell_rhs(n_dofs_per_cell);
 
+        if (cell->material_id() == this->parameters.mid_wire)
+          {
+            Assert(this->geometry.within_wire(cell->center()) == true,
+                   ExcMessage("Expected cell to be in wire."));
+          }
+        else
+          {
+            Assert(this->geometry.within_wire(cell->center()) == false,
+                   ExcMessage("Expected cell not to be in wire."));
+          }
+
         std::vector<double>         permeability_coefficient_values(n_q_points);
         std::vector<double>         conductivity_coefficient_values(n_q_points);
         std::vector<Tensor<1, dim>> source_values(n_q_points);
@@ -189,7 +200,7 @@ namespace StepTransientCurlCurl
         // this->function_free_current_density.value_list(
         //   fe_values.get_quadrature_points(), source_values);
         Assert(this->parameters.use_voltage_excitation(), ExcInternalError());
-        if (this->geometry.within_wire(cell->center()))
+        if (cell->material_id() == this->parameters.mid_wire)
           {
             typename DoFHandler<dim>::active_cell_iterator cell_esp(
               &this->triangulation,
@@ -204,15 +215,18 @@ namespace StepTransientCurlCurl
               source_values[q_point] *= -1.0;
           }
 
-        // std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
+        std::vector<Tensor<1, dim>> solution_mvp_values(n_q_points);
+        std::vector<Tensor<1, dim>> solution_mvp_curls(n_q_points);
         std::vector<Tensor<1, dim>> solution_mvp_values_t1(n_q_points);
-        // std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
-        // fe_values[this->mvp_extractor].get_function_curls(this->solution_mvp,
-        // solution_mvp_curls);
+        std::vector<Tensor<1, dim>> d_solution_mvp_dt_values(n_q_points);
+        fe_values[this->mvp_extractor].get_function_values(this->solution_mvp,
+                                                           solution_mvp_values);
+        fe_values[this->mvp_extractor].get_function_curls(this->solution_mvp,
+                                                          solution_mvp_curls);
         fe_values[this->mvp_extractor].get_function_values(
           this->solution_mvp_t1, solution_mvp_values_t1);
-        // fe_values[this->mvp_extractor].get_function_values(this->d_solution_mvp_dt,
-        //                                       d_solution_mvp_dt_values);
+        fe_values[this->mvp_extractor].get_function_values(
+          this->d_solution_mvp_dt, d_solution_mvp_dt_values);
 
         // Pre-compute QP data
         std::vector<std::vector<Tensor<1, dim>>> qp_Nx(
@@ -250,10 +264,13 @@ namespace StepTransientCurlCurl
             const double &sigma    = conductivity_coefficient_values[q_point];
             const double &dt       = this->parameters.delta_t;
             const double  sigma_dt = sigma / dt;
+            const double  kappa =
+              (this->parameters.regularisation_parameter / dim) * inv_mu_r_mu_0;
 
-            // const Tensor<1, dim> &curl_A = solution_mvp_curls[q_point];
-            const Tensor<1, dim> &A_t1 = solution_mvp_values_t1[q_point];
-            // const Tensor<1, dim> &dA_dt  = d_solution_mvp_dt_values[q_point];
+            const Tensor<1, dim> &A      = solution_mvp_values[q_point];
+            const Tensor<1, dim> &curl_A = solution_mvp_curls[q_point];
+            const Tensor<1, dim> &A_t1   = solution_mvp_values_t1[q_point];
+            const Tensor<1, dim> &dA_dt  = d_solution_mvp_dt_values[q_point];
 
             // Uniform current through wire
             // Note: J_f must be divergence free!
@@ -263,20 +280,36 @@ namespace StepTransientCurlCurl
               {
                 for (unsigned int J = 0; J <= I; ++J)
                   {
-                    cell_matrix(I, J) +=
-                      (curl_Nx[I] * inv_mu_r_mu_0 * curl_Nx[J] +
-                       Nx[I] * sigma_dt * Nx[J]) *
-                      JxW;
+                    if (cell->material_id() == this->parameters.mid_wire)
+                      {
+                        cell_matrix(I, J) +=
+                          (curl_Nx[I] * inv_mu_r_mu_0 * curl_Nx[J] +
+                           Nx[I] * sigma_dt * Nx[J]) *
+                          JxW;
+                      }
+                    else
+                      {
+                        cell_matrix(I, J) +=
+                          (curl_Nx[I] * inv_mu_r_mu_0 * curl_Nx[J] +
+                           Nx[I] * kappa * Nx[J]) *
+                          JxW;
+                      }
                   }
 
-                // For the linear problem, this is the contribution from the
-                // rate dependent term that comes from its time discretisation.
-                cell_rhs(I) += (Nx[I] * sigma_dt * A_t1) * JxW;
+                if (cell->material_id() == this->parameters.mid_wire)
+                  {
+                    cell_rhs(I) -= (curl_Nx[I] * inv_mu_r_mu_0 * curl_A +
+                                    Nx[I] * sigma * dA_dt) *
+                                   JxW;
+                  }
+                else
+                  {
+                    cell_rhs(I) -= (curl_Nx[I] * inv_mu_r_mu_0 * curl_A +
+                                    Nx[I] * kappa * A) *
+                                   JxW;
+                  }
 
-                // For the incremental non-linear problem, we'd add these terms
-                // cell_rhs(I) -= (curl_Nx[I] * inv_mu_r_mu_0 * curl_A) * JxW;
-                // cell_rhs(I) -= (Nx[I] * sigma * dA_dt) * JxW;
-
+                // Source term
                 cell_rhs(I) += (Nx[I] * J_f) * JxW;
               }
           }

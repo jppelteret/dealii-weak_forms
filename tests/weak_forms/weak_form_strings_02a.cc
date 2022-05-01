@@ -46,12 +46,11 @@ run()
 
   const auto s  = constant_scalar<dim>(1.0);
   const auto v  = constant_vector<dim>(Tensor<1, dim>());
-  const auto T2 = constant_tensor<2, dim>(Tensor<2, dim>());
-  const auto T3 = constant_tensor<3, dim>(Tensor<3, dim>());
-  const auto T4 = constant_tensor<4, dim>(Tensor<4, dim>());
-  const auto S2 =
-    constant_symmetric_tensor<2, dim>(unit_symmetric_tensor<dim>());
-  const auto S4 = constant_symmetric_tensor<4, dim>(identity_tensor<dim>());
+  const auto T2 = constant_tensor<dim>(Tensor<2, dim>());
+  const auto T3 = constant_tensor<dim>(Tensor<3, dim>());
+  const auto T4 = constant_tensor<dim>(Tensor<4, dim>());
+  const auto S2 = constant_symmetric_tensor<dim>(unit_symmetric_tensor<dim>());
+  const auto S4 = constant_symmetric_tensor<dim>(identity_tensor<dim>());
 
   // Test strings
   {

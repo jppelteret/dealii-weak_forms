@@ -1,38 +1,38 @@
 
 DEAL::Timestep: 0 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: -5.68329127e-12 1.18643156e-11 6.16046193e-20 ; J_eddy (axial): -5092.95708 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.62063517e-12 7.16353696e-12 4.33468209e-14 ; J_eddy (axial): -7.25192627e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -2.08961491e-05 4.33194338e-05 2.46121544e-20 ; J_eddy (axial): -1069.19817 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.19389037e-05 3.07468749e-05 1.05504746e-20 ; J_eddy (axial): -1.42245730e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 0 ; Cycle: 1
-DEAL:: ; Within wire: 1 ; B: 3.83147089e-12 1.64453719e-11 -3.12561201e-14 ; J_eddy (axial): -5092.95684 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.83316087e-12 1.34165696e-11 -5.02068512e-15 ; J_eddy (axial): -8.85776757e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.14596402e-05 5.03714553e-05 3.61557343e-20 ; J_eddy (axial): -1076.66403 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -9.21549779e-06 4.32537585e-05 -2.87160441e-20 ; J_eddy (axial): -1.74109297e-05 ; J_free (axial): 0.00000000
 DEAL::Timestep: 1 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85073047e-12 1.65531041e-11 -3.14636524e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82959257e-12 1.34182823e-11 -5.05893335e-15 ; J_eddy (axial): -8.85776740e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.41886000e-05 6.24419842e-05 1.53132261e-20 ; J_eddy (axial): -251.236289 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.13515693e-05 5.33380102e-05 -4.93058148e-21 ; J_eddy (axial): -4.05721687e-06 ; J_free (axial): 0.00000000
 DEAL::Timestep: 2 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85100861e-12 1.65548513e-11 -3.14667802e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953272e-12 1.34183027e-11 -5.06016752e-15 ; J_eddy (axial): -8.85776711e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.48307042e-05 6.52835929e-05 7.28343047e-21 ; J_eddy (axial): -59.0504861 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.18534158e-05 5.57080669e-05 -3.92999630e-21 ; J_eddy (axial): -9.53527751e-07 ; J_free (axial): 0.00000000
 DEAL::Timestep: 3 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85101414e-12 1.65548900e-11 -3.14671965e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953012e-12 1.34183038e-11 -5.06010719e-15 ; J_eddy (axial): -8.85776684e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.49817272e-05 6.59519706e-05 8.07570212e-21 ; J_eddy (axial): -13.8875266 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.19714361e-05 5.62654555e-05 8.53039050e-22 ; J_eddy (axial): -2.24249579e-07 ; J_free (axial): 0.00000000
 DEAL::Timestep: 4 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85101677e-12 1.65548922e-11 -3.14656870e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953088e-12 1.34183016e-11 -5.05919224e-15 ; J_eddy (axial): -8.85776657e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50172470e-05 6.61091700e-05 5.82083748e-21 ; J_eddy (axial): -3.26624624 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.19991936e-05 5.63965492e-05 -3.23798710e-22 ; J_eddy (axial): -5.27424052e-08 ; J_free (axial): 0.00000000
 DEAL::Timestep: 5 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85101661e-12 1.65548926e-11 -3.14676277e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953348e-12 1.34183025e-11 -5.05885811e-15 ; J_eddy (axial): -8.85776629e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50256010e-05 6.61461424e-05 3.79596246e-21 ; J_eddy (axial): -0.768201108 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20057219e-05 5.64273816e-05 -7.33032209e-22 ; J_eddy (axial): -1.24025699e-08 ; J_free (axial): 0.00000000
 DEAL::Timestep: 6 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85102005e-12 1.65548956e-11 -3.14659783e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953782e-12 1.34183016e-11 -5.06183393e-15 ; J_eddy (axial): -8.85776599e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50275658e-05 6.61548380e-05 6.09566291e-21 ; J_eddy (axial): -0.180676268 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20072574e-05 5.64346332e-05 2.78355511e-22 ; J_eddy (axial): -2.91855165e-09 ; J_free (axial): 0.00000000
 DEAL::Timestep: 7 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85102598e-12 1.65548976e-11 -3.14659513e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953782e-12 1.34183008e-11 -5.05858091e-15 ; J_eddy (axial): -8.85776571e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50280279e-05 6.61568832e-05 3.45275385e-21 ; J_eddy (axial): -0.0424939701 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20076185e-05 5.64363387e-05 -7.26251181e-22 ; J_eddy (axial): -6.86907966e-10 ; J_free (axial): 0.00000000
 DEAL::Timestep: 8 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85102147e-12 1.65549053e-11 -3.14649028e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82954476e-12 1.34182934e-11 -5.05670478e-15 ; J_eddy (axial): -8.85776543e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50281366e-05 6.61573642e-05 5.56882666e-21 ; J_eddy (axial): -0.00999432588 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20077034e-05 5.64367399e-05 1.06355439e-21 ; J_eddy (axial): -1.63605020e-10 ; J_free (axial): 0.00000000
 DEAL::Timestep: 9 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85102457e-12 1.65549018e-11 -3.14618916e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953522e-12 1.34182982e-11 -5.05664426e-15 ; J_eddy (axial): -8.85776518e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50281622e-05 6.61574773e-05 3.48219365e-21 ; J_eddy (axial): -0.00235060527 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20077234e-05 5.64368342e-05 -1.83143529e-21 ; J_eddy (axial): -3.53271483e-11 ; J_free (axial): 0.00000000
 DEAL::Timestep: 10 ; Cycle: 0
-DEAL:: ; Within wire: 1 ; B: 3.85101225e-12 1.65548955e-11 -3.14656314e-14 ; J_eddy (axial): -5092.95688 ; J_free (axial): 5092.95818
-DEAL:: ; Within wire: 0 ; B: -2.82953869e-12 1.34183038e-11 -5.05571556e-15 ; J_eddy (axial): -8.85776487e-05 ; J_free (axial): 0.00000000
+DEAL:: ; Within wire: 1 ; B: -1.50281682e-05 6.61575040e-05 5.01791458e-21 ; J_eddy (axial): -0.000552848204 ; J_free (axial): 5092.95818
+DEAL:: ; Within wire: 0 ; B: -1.20077281e-05 5.64368564e-05 -3.20483401e-22 ; J_eddy (axial): -7.75057760e-12 ; J_free (axial): 0.00000000
 DEAL::OK

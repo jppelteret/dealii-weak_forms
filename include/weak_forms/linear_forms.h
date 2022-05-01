@@ -204,8 +204,7 @@ namespace WeakForms
     constexpr int dim      = TestSpaceOp::dimension;
     constexpr int spacedim = TestSpaceOp::space_dimension;
     // Delegate to the other function
-    return linear_form(test_space_op,
-                       constant_scalar<dim, spacedim, ScalarType>(value));
+    return linear_form(test_space_op, constant_scalar<dim, spacedim>(value));
   }
 
 
@@ -220,8 +219,7 @@ namespace WeakForms
   {
     constexpr int dim = TestSpaceOp::dimension;
     // Delegate to the other function
-    return linear_form(test_space_op,
-                       constant_tensor<rank, dim, spacedim, ScalarType>(value));
+    return linear_form(test_space_op, constant_tensor<dim>(value));
   }
 
 
@@ -236,9 +234,7 @@ namespace WeakForms
   {
     constexpr int dim = TestSpaceOp::dimension;
     // Delegate to the other function
-    return linear_form(
-      test_space_op,
-      constant_symmetric_tensor<rank, dim, spacedim, ScalarType>(value));
+    return linear_form(test_space_op, constant_symmetric_tensor<dim>(value));
   }
 
 } // namespace WeakForms

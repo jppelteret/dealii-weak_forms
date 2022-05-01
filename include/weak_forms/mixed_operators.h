@@ -766,7 +766,8 @@ operator+(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_tensor<rank, spacedim>(value) + op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_tensor<dim>(value) + op;
 }
 
 
@@ -784,7 +785,8 @@ operator+(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op + WeakForms::constant_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op + WeakForms::constant_tensor<dim>(value);
 }
 
 
@@ -803,7 +805,8 @@ operator+(const SymmetricTensor<rank, spacedim, ScalarType> &value,
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_symmetric_tensor<rank, spacedim>(value) + op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_symmetric_tensor<dim>(value) + op;
 }
 
 
@@ -822,7 +825,8 @@ operator+(const SymbolicOp &                                 op,
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op + WeakForms::constant_symmetric_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op + WeakForms::constant_symmetric_tensor<dim>(value);
 }
 
 
@@ -875,7 +879,8 @@ operator-(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_tensor<rank, spacedim>(value) - op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_tensor<dim>(value) - op;
 }
 
 
@@ -893,7 +898,8 @@ operator-(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op - WeakForms::constant_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op - WeakForms::constant_tensor<dim>(value);
 }
 
 
@@ -912,7 +918,8 @@ operator-(const SymmetricTensor<rank, spacedim, ScalarType> &value,
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_symmetric_tensor<rank, spacedim>(value) - op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_symmetric_tensor<dim>(value) - op;
 }
 
 
@@ -931,7 +938,8 @@ operator-(const SymbolicOp &                                 op,
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op - WeakForms::constant_symmetric_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op - WeakForms::constant_symmetric_tensor<dim>(value);
 }
 
 
@@ -992,7 +1000,8 @@ operator*(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_tensor<rank, spacedim>(value) * op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_tensor<dim>(value) * op;
 }
 
 
@@ -1012,7 +1021,8 @@ operator*(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op * WeakForms::constant_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op * WeakForms::constant_tensor<dim>(value);
 }
 
 
@@ -1033,7 +1043,8 @@ operator*(const SymmetricTensor<rank, spacedim, ScalarType> &value,
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_symmetric_tensor<rank, spacedim>(value) * op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_symmetric_tensor<dim>(value) * op;
 }
 
 
@@ -1054,7 +1065,8 @@ operator*(const SymbolicOp &                                 op,
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op * WeakForms::constant_symmetric_tensor<rank, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op * WeakForms::constant_symmetric_tensor<dim>(value);
 }
 
 
@@ -1114,7 +1126,8 @@ operator/(const SymbolicOp &op, const Tensor<0, spacedim, ScalarType> &value)
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return op / WeakForms::constant_tensor<0, spacedim>(value);
+  constexpr int dim = SymbolicOp::dimension;
+  return op / WeakForms::constant_tensor<dim>(value);
 }
 
 
@@ -1134,7 +1147,8 @@ operator/(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_tensor<rank, spacedim>(value) / op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_tensor<dim>(value) / op;
 }
 
 
@@ -1155,7 +1169,8 @@ operator/(const SymmetricTensor<rank, spacedim, ScalarType> &value,
 
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return WeakForms::constant_symmetric_tensor<rank, spacedim>(value) / op;
+  constexpr int dim = SymbolicOp::dimension;
+  return WeakForms::constant_symmetric_tensor<dim>(value) / op;
 }
 
 
@@ -1206,7 +1221,8 @@ pow(const SymbolicOp &op, const Tensor<0, spacedim, ScalarType> &value)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return pow(op, WeakForms::constant_tensor<0, spacedim>(value));
+  constexpr int dim = SymbolicOp::dimension;
+  return pow(op, WeakForms::constant_tensor<dim>(value));
 }
 
 
@@ -1222,7 +1238,8 @@ pow(const Tensor<0, spacedim, ScalarType> &value, const SymbolicOp &op)
 {
   static_assert(spacedim == SymbolicOp::space_dimension,
                 "Incompatible spatial dimensions.");
-  return pow(WeakForms::constant_tensor<0, spacedim>(value), op);
+  constexpr int dim = SymbolicOp::dimension;
+  return pow(WeakForms::constant_tensor<dim>(value), op);
 }
 
 

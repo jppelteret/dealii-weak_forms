@@ -55,7 +55,7 @@ run()
   {
     LogStream::Prefix prefix("Tensor2");
 
-    const auto T2 = constant_tensor<2, dim>(Tensor<2, dim>());
+    const auto T2 = constant_tensor<dim>(Tensor<2, dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
@@ -80,7 +80,7 @@ run()
   {
     LogStream::Prefix prefix("Tensor3");
 
-    const auto T3 = constant_tensor<3, dim>(Tensor<3, dim>());
+    const auto T3 = constant_tensor<dim>(Tensor<3, dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
@@ -106,7 +106,7 @@ run()
   {
     LogStream::Prefix prefix("Tensor4");
 
-    const auto T4 = constant_tensor<4, dim>(Tensor<4, dim>());
+    const auto T4 = constant_tensor<dim>(Tensor<4, dim>());
 
     // Symbolic types for test function, trial solution and a coefficient.
     const TestFunction<dim>  test;
