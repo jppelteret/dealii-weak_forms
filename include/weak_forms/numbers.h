@@ -41,6 +41,29 @@ namespace WeakForms
 
     const types::solution_index linearizable_solution_index = 0;
 
+    // Promote a type to a vectorized type
+    template <typename T, typename U = void>
+    struct UnderlyingScalar;
+
+
+    template <typename ScalarType>
+    struct UnderlyingScalar<
+      ScalarType,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      using type = ScalarType;
+    };
+
+
+    template <typename ScalarType>
+    struct UnderlyingScalar<
+      std::complex<ScalarType>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      using type = ScalarType;
+    };
+
+
 
 #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
     template <typename ScalarType>

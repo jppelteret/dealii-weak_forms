@@ -2802,13 +2802,16 @@ namespace WeakForms
       const SymbolicOpVolumeIntegral &   volume_integral,
       const bool                         symmetric_contribution)
     {
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
+      // Vectorization is done over the quadrature point data / indices.
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
-      using VectorizedValueTypeTrial =
-        typename TrialSpaceOp::template vectorized_value_type<ScalarType,
-                                                              width>;
+      using VectorizedValueTypeTrial = typename TrialSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
 
       const unsigned int n_q_points = fe_values.n_quadrature_points;
       for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -2823,7 +2826,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_values,
               fe_values,
@@ -2832,7 +2835,7 @@ namespace WeakForms
               q_point_range);
 
           const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               trial_space_op,
               fe_values,
               fe_values,
@@ -2913,30 +2916,35 @@ namespace WeakForms
       const SymbolicOpVolumeIntegral &   volume_integral,
       const bool                         symmetric_contribution)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
       using ValueTypeTrial =
-        typename TrialSpaceOp::template value_type<ScalarType>;
+        typename TrialSpaceOp::template value_type<UnderlyingScalarType>;
 
       // Get the shape function data (value, gradients, curls, etc.)
       // for all quadrature points at all DoFs. We construct it in this
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_values,
-                                                fe_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_values,
+          fe_values,
+          scratch_data,
+          solution_extraction_data);
 
       const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
-        internal::evaluate_fe_space<ScalarType>(trial_space_op,
-                                                fe_values,
-                                                fe_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          trial_space_op,
+          fe_values,
+          fe_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
@@ -2986,14 +2994,16 @@ namespace WeakForms
       const SymbolicOpBoundaryIntegral &     boundary_integral,
       const bool                             symmetric_contribution)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       // Vectorization is done over the quadrature point data / indices.
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
-      using VectorizedValueTypeTrial =
-        typename TrialSpaceOp::template vectorized_value_type<ScalarType,
-                                                              width>;
+      using VectorizedValueTypeTrial = typename TrialSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
 
       const unsigned int n_q_points = fe_face_values.n_quadrature_points;
       for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -3008,7 +3018,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_values,
               fe_face_values,
@@ -3017,7 +3027,7 @@ namespace WeakForms
               q_point_range);
 
           const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               trial_space_op,
               fe_values,
               fe_face_values,
@@ -3099,30 +3109,35 @@ namespace WeakForms
       const SymbolicOpBoundaryIntegral &     boundary_integral,
       const bool                             symmetric_contribution)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
       using ValueTypeTrial =
-        typename TrialSpaceOp::template value_type<ScalarType>;
+        typename TrialSpaceOp::template value_type<UnderlyingScalarType>;
 
       // Get the shape function data (value, gradients, curls, etc.)
       // for all quadrature points at all DoFs. We construct it in this
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_values,
-                                                fe_face_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_values,
+          fe_face_values,
+          scratch_data,
+          solution_extraction_data);
 
       const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
-        internal::evaluate_fe_space<ScalarType>(trial_space_op,
-                                                fe_values,
-                                                fe_face_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          trial_space_op,
+          fe_values,
+          fe_face_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
@@ -3173,14 +3188,16 @@ namespace WeakForms
       const SymbolicOpInterfaceIntegral &     interface_integral,
       const bool                              symmetric_contribution)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       // Vectorization is done over the quadrature point data / indices.
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
-      using VectorizedValueTypeTrial =
-        typename TrialSpaceOp::template vectorized_value_type<ScalarType,
-                                                              width>;
+      using VectorizedValueTypeTrial = typename TrialSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
 
       const unsigned int n_q_points = fe_interface_values.n_quadrature_points;
       for (unsigned int batch_start = 0; batch_start < n_q_points;
@@ -3195,7 +3212,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_interface_values,
               fe_interface_values,
@@ -3204,7 +3221,7 @@ namespace WeakForms
               q_point_range);
 
           const AlignedVector<VectorizedValueTypeTrial> shapes_trial =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               trial_space_op,
               fe_interface_values,
               fe_interface_values,
@@ -3285,30 +3302,35 @@ namespace WeakForms
       const SymbolicOpInterfaceIntegral &     interface_integral,
       const bool                              symmetric_contribution)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
       using ValueTypeTrial =
-        typename TrialSpaceOp::template value_type<ScalarType>;
+        typename TrialSpaceOp::template value_type<UnderlyingScalarType>;
 
       // Get the shape function data (value, gradients, curls, etc.)
       // for all quadrature points at all DoFs. We construct it in this
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_interface_values,
-                                                fe_interface_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_interface_values,
+          fe_interface_values,
+          scratch_data,
+          solution_extraction_data);
 
       const std::vector<std::vector<ValueTypeTrial>> shapes_trial =
-        internal::evaluate_fe_space<ScalarType>(trial_space_op,
-                                                fe_interface_values,
-                                                fe_interface_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          trial_space_op,
+          fe_interface_values,
+          fe_interface_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
@@ -3358,9 +3380,12 @@ namespace WeakForms
       const Functor &                    functor,
       const SymbolicOpVolumeIntegral &   volume_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       // Vectorization is done over the quadrature point data / indices.
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
 
@@ -3377,7 +3402,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_values,
               fe_values,
@@ -3449,8 +3474,11 @@ namespace WeakForms
       const Functor &                    functor,
       const SymbolicOpVolumeIntegral &   volume_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
 
@@ -3459,11 +3487,12 @@ namespace WeakForms
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_values,
-                                                fe_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_values,
+          fe_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
@@ -3506,9 +3535,12 @@ namespace WeakForms
       const Functor &                        functor,
       const SymbolicOpBoundaryIntegral &     boundary_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       // Vectorization is done over the quadrature point data / indices.
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
 
@@ -3525,7 +3557,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_values,
               fe_face_values,
@@ -3598,8 +3630,11 @@ namespace WeakForms
       const Functor &                        functor,
       const SymbolicOpBoundaryIntegral &     boundary_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
 
@@ -3608,11 +3643,12 @@ namespace WeakForms
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_values,
-                                                fe_face_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_values,
+          fe_face_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
@@ -3658,9 +3694,12 @@ namespace WeakForms
       const Functor &                         functor,
       const SymbolicOpInterfaceIntegral &     interface_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       // Vectorization is done over the quadrature point data / indices.
-      using VectorizedValueTypeTest =
-        typename TestSpaceOp::template vectorized_value_type<ScalarType, width>;
+      using VectorizedValueTypeTest = typename TestSpaceOp::
+        template vectorized_value_type<UnderlyingScalarType, width>;
       using VectorizedValueTypeFunctor =
         typename Functor::template vectorized_value_type<ScalarType, width>;
 
@@ -3677,7 +3716,7 @@ namespace WeakForms
                                                            batch_end};
 
           const AlignedVector<VectorizedValueTypeTest> shapes_test =
-            internal::evaluate_fe_space<ScalarType, width>(
+            internal::evaluate_fe_space<UnderlyingScalarType, width>(
               test_space_op,
               fe_interface_values,
               fe_interface_values,
@@ -3749,8 +3788,11 @@ namespace WeakForms
       const Functor &                         functor,
       const SymbolicOpInterfaceIntegral &     interface_integral)
     {
+      // Shape functions are always real-valued
+      using UnderlyingScalarType =
+        typename numbers::UnderlyingScalar<ScalarType>::type;
       using ValueTypeTest =
-        typename TestSpaceOp::template value_type<ScalarType>;
+        typename TestSpaceOp::template value_type<UnderlyingScalarType>;
       using ValueTypeFunctor =
         typename Functor::template value_type<ScalarType>;
 
@@ -3759,11 +3801,12 @@ namespace WeakForms
       // manner (with the q_point indices fast) so that we can perform
       // contractions in an optimal manner.
       const std::vector<std::vector<ValueTypeTest>> shapes_test =
-        internal::evaluate_fe_space<ScalarType>(test_space_op,
-                                                fe_interface_values,
-                                                fe_interface_values,
-                                                scratch_data,
-                                                solution_extraction_data);
+        internal::evaluate_fe_space<UnderlyingScalarType>(
+          test_space_op,
+          fe_interface_values,
+          fe_interface_values,
+          scratch_data,
+          solution_extraction_data);
 
       // Get all values at the quadrature points
       const std::vector<ValueTypeFunctor> values_functor =
