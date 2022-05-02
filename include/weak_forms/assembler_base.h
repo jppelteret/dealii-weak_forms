@@ -172,7 +172,6 @@ namespace WeakForms
       minus
     };
 
-
     template <typename T1, typename T2, typename T = void>
     struct FullContraction;
 
