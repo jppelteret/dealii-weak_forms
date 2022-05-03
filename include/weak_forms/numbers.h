@@ -41,6 +41,29 @@ namespace WeakForms
 
     const types::solution_index linearizable_solution_index = 0;
 
+    // Promote a type to a vectorized type
+    template <typename T, typename U = void>
+    struct UnderlyingScalar;
+
+
+    template <typename ScalarType>
+    struct UnderlyingScalar<
+      ScalarType,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      using type = ScalarType;
+    };
+
+
+    template <typename ScalarType>
+    struct UnderlyingScalar<
+      std::complex<ScalarType>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      using type = ScalarType;
+    };
+
+
 
 #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
     template <typename ScalarType>
@@ -97,6 +120,40 @@ namespace WeakForms
       template <std::size_t width>
       using type =
         SymmetricTensor<rank, dim, VectorizedArray<ScalarType, width>>;
+    };
+
+
+    template <typename ScalarType>
+    struct VectorizedValue<
+      std::complex<ScalarType>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type = VectorizedArray<std::complex<ScalarType>, width>;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct VectorizedValue<
+      Tensor<rank, dim, std::complex<ScalarType>>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type =
+        Tensor<rank, dim, VectorizedArray<std::complex<ScalarType>, width>>;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct VectorizedValue<
+      SymmetricTensor<rank, dim, std::complex<ScalarType>>,
+      typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
+    {
+      template <std::size_t width>
+      using type =
+        SymmetricTensor<rank,
+                        dim,
+                        VectorizedArray<std::complex<ScalarType>, width>>;
     };
 
 

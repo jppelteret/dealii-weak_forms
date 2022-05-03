@@ -678,11 +678,14 @@ public:                                                                        \
    */                                                                          \
   template <typename ScalarType>                                               \
   using qp_value_type = std::vector<value_type<ScalarType>>;                   \
+                                                                               \
   /**                                                                          \
    * Value for all DoFs at all quadrature points                               \
+   * NOTE: Shape functions are always real-valued                              \
    */                                                                          \
   template <typename ScalarType>                                               \
-  using dof_value_type = std::vector<qp_value_type<ScalarType>>;               \
+  using dof_value_type = std::vector<                                          \
+    qp_value_type<typename numbers::UnderlyingScalar<ScalarType>::type>>;      \
                                                                                \
   template <typename ScalarType, std::size_t width>                            \
   using vectorized_value_type = typename numbers::VectorizedValue<             \
@@ -692,9 +695,14 @@ public:                                                                        \
   using vectorized_qp_value_type = typename numbers::VectorizedValue<          \
     value_type<ScalarType>>::template type<width>;                             \
                                                                                \
+  /**                                                                          \
+   * NOTE: Shape functions are always real-valued                              \
+   */                                                                          \
   template <typename ScalarType, std::size_t width>                            \
-  using vectorized_dof_value_type =                                            \
-    AlignedVector<vectorized_qp_value_type<ScalarType, width>>;                \
+  using vectorized_dof_value_type = AlignedVector<vectorized_qp_value_type<    \
+    typename numbers::UnderlyingScalar<ScalarType>::type,                      \
+    width>>;                                                                   \
+                                                                               \
   /**                                                                          \
    * The index in the solution history that this field solution                \
    * corresponds to. The default value (0) indicates that it relates           \

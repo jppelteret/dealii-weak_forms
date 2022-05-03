@@ -837,7 +837,9 @@ namespace WeakForms
       template <int dim,
                 int spacedim,
                 typename ScalarType,
-                bool use_vectorization>
+                bool use_vectorization,
+
+                std::size_t width>
       friend class WeakForms::AssemblerBase;
 
       template <enum WeakForms::internal::AccumulationSign OpSign,
@@ -1551,7 +1553,9 @@ namespace WeakForms
       template <int dim,
                 int spacedim,
                 typename ScalarType,
-                bool use_vectorization>
+                bool use_vectorization,
+
+                std::size_t width>
       friend class WeakForms::AssemblerBase;
 
       template <enum WeakForms::internal::AccumulationSign OpSign,
