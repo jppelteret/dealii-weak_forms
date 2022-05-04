@@ -139,7 +139,8 @@ namespace StepNavierStokesBeltrami
     // outside are the constructor itself and
     // the run function.
   public:
-    NavierStokesProblemBase();
+    NavierStokesProblemBase(const unsigned int stabilization);
+
     void
     run();
 
@@ -161,11 +162,14 @@ namespace StepNavierStokesBeltrami
     // L2 error, write the information to
     // files and print the computing
     // times of individual code aspects.
-  private:
+  protected:
     void
     make_grid_and_dofs();
 
     void
+    apply_boundary_values();
+
+    virtual void
     assemble_system();
 
     void
@@ -835,7 +839,8 @@ namespace StepNavierStokesBeltrami
   // stepping scheme, the time interval, viscosity,
   // output options and the stabilization.
   template <int dim>
-  NavierStokesProblemBase<dim>::NavierStokesProblemBase()
+  NavierStokesProblemBase<dim>::NavierStokesProblemBase(
+    const unsigned int stabilization)
     : degree(1)
     , fe(FE_Q<dim>(degree + 1), dim, FE_Q<dim>(degree), 1)
     , n_global_refinements(5)
@@ -848,7 +853,7 @@ namespace StepNavierStokesBeltrami
     , max_nl_iteration(10)
     , tol_nl_iteration(1e-5)
     , output_timestep_skip(1)
-    , stabilization(0)
+    , stabilization(stabilization)
     , pressure_constraint(false)
     , assembly_type(Serial)
     , solver_type(GMRES)
@@ -1101,6 +1106,8 @@ namespace StepNavierStokesBeltrami
           }
         default:
           {
+            AssertThrow(false, ExcNotImplemented());
+            break;
           }
       }
 
@@ -1140,7 +1147,16 @@ namespace StepNavierStokesBeltrami
     hanging_node_and_pressure_constraints.condense(system_matrix);
     hanging_node_and_pressure_constraints.condense(system_rhs);
 
+    comptimes(5) += computing_timer2.wall_time();
 
+    comptimes(1) += computing_timer.wall_time();
+    compcounter(1) += 1;
+  }
+
+  template <int dim>
+  void
+  NavierStokesProblemBase<dim>::apply_boundary_values()
+  {
     std::map<unsigned int, double> boundary_values;
     std::vector<bool>              velocity_mask(dim + 1, true);
 
@@ -1164,11 +1180,8 @@ namespace StepNavierStokesBeltrami
                                        system_matrix,
                                        solution_update,
                                        system_rhs);
-    comptimes(5) += computing_timer2.wall_time();
-
-    comptimes(1) += computing_timer.wall_time();
-    compcounter(1) += 1;
   }
+
 
 
   // @sect4{NavierStokesProblemBase::assemble_system_interval}
@@ -1710,6 +1723,9 @@ namespace StepNavierStokesBeltrami
     std::cout.precision(4);
     std::cout << "  L2-Errors: ||e_p||_L2 = " << p_l2_error
               << ",   ||e_u||_L2 = " << u_l2_error << std::endl;
+    deallog << "  L2-Errors: " << std::endl;
+    deallog << "    ||e_p||_L2 = " << p_l2_error << std::endl;
+    deallog << "    ||e_u||_L2 = " << u_l2_error << std::endl;
   }
 
 
@@ -1745,22 +1761,21 @@ namespace StepNavierStokesBeltrami
     // regarding to output format of a
     // <code>vtk</code> file.
     std::vector<std::string> solution_names(dim, "velocity");
-    solution_names.push_back("p");
-
-    DataOut<dim> data_out;
-
-    data_out.attach_dof_handler(dof_handler);
+    solution_names.push_back("pressure");
 
     std::vector<DataComponentInterpretation::DataComponentInterpretation>
       data_component_interpretation(
-        dim + 1, DataComponentInterpretation::component_is_scalar);
-    for (unsigned int i = 0; i < dim; ++i)
-      data_component_interpretation[i] =
-        DataComponentInterpretation::component_is_part_of_vector;
+        dim + 1, DataComponentInterpretation::component_is_part_of_vector);
+    data_component_interpretation[dim] =
+      DataComponentInterpretation::component_is_scalar;
 
     // First write out the numerical
     // solution.
     {
+      DataOut<dim> data_out;
+
+      data_out.attach_dof_handler(dof_handler);
+
       data_out.add_data_vector(solution,
                                solution_names,
                                DataOut<dim>::type_dof_data,
@@ -1781,6 +1796,10 @@ namespace StepNavierStokesBeltrami
     // which sometimes can be interesting
     // to study.
     {
+      DataOut<dim> data_out;
+
+      data_out.attach_dof_handler(dof_handler);
+
       data_out.add_data_vector(solution_update,
                                solution_names,
                                DataOut<dim>::type_dof_data,
@@ -1789,7 +1808,7 @@ namespace StepNavierStokesBeltrami
       data_out.build_patches(degree + 1);
 
       std::ostringstream filename;
-      filename << "difference-" << Utilities::int_to_string(timestep_number, 3)
+      filename << "error-" << Utilities::int_to_string(timestep_number, 3)
                << ".vtk";
       std::ofstream output(filename.str().c_str());
       data_out.write_vtk(output);
@@ -2017,6 +2036,11 @@ namespace StepNavierStokesBeltrami
                   << "(dt = " << time_step;
         std::cout << "). " << std::endl;
 
+        deallog << std::endl << "Time step #" << time_step_number << ", ";
+        deallog << "advancing to t = " << time << " "
+                << "(dt = " << time_step;
+        deallog << "). " << std::endl;
+
 
         // Now we prepare temporary variables for
         // the nonlinear iteration.
@@ -2028,6 +2052,8 @@ namespace StepNavierStokesBeltrami
         unsigned int iteration_count = 0;
         std::cout << "  Nonlinear iteration [nl error / lin. its]:   "
                   << std::flush;
+        deallog << "  Nonlinear iteration [nl error / lin. its]:   "
+                << std::endl;
 
 
         // @sect5{Nonlinear iteration}
@@ -2042,6 +2068,7 @@ namespace StepNavierStokesBeltrami
             iteration_count += 1;
 
             assemble_system();
+            apply_boundary_values();
 
             const unsigned int n_iterations = solve();
 
@@ -2063,6 +2090,10 @@ namespace StepNavierStokesBeltrami
             std::cout.precision(2);
             std::cout << system_rhs.l2_norm() / solution_norm << " / ";
             std::cout << n_iterations << "] " << std::flush;
+
+            deallog << "    [";
+            deallog << system_rhs.l2_norm() / solution_norm << " / ";
+            deallog << n_iterations << "] " << std::endl;
           }
         // We have to iterate as long as the relative error is
         // larger than the prescribed tolerance and the maximum

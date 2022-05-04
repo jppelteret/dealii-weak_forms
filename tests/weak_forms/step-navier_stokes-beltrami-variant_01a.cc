@@ -29,6 +29,9 @@
 // equations solving the whole system at once, i.e., without any projection
 // equation.
 // It is used as a baseline for the weak form tests.
+//
+// This variant has no stablisation enabled.
+
 
 #include "../weak_forms_tests.h"
 #include "wf_common_tests/step-navier_stokes-beltrami.h"
@@ -38,26 +41,14 @@ namespace StepNavierStokesBeltrami
   template <int dim>
   class NavierStokesProblem : public NavierStokesProblemBase<dim>
   {
-    //   using ScratchData = typename SIPGLaplace<dim>::ScratchData;
-
   public:
     NavierStokesProblem()
-      : NavierStokesProblemBase<dim>()
+      : NavierStokesProblemBase<dim>(0 /*stabilization*/)
     {}
-
-    // protected:
-    //   void
-    //   assemble_system() override;
   };
 
-
-  // template <int dim>
-  // void
-  // NavierStokesProblem<dim>::assemble_system()
-  // {
-  // }
-
 } // namespace StepNavierStokesBeltrami
+
 
 int
 main(int argc, char **argv)
