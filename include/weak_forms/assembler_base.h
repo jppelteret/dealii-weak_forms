@@ -172,7 +172,6 @@ namespace WeakForms
       minus
     };
 
-
     template <typename T1, typename T2, typename T = void>
     struct FullContraction;
 
@@ -1895,6 +1894,13 @@ namespace WeakForms
         });
     }
 
+// Warning due to an unnecessary lambda capture, but if the
+// capture is removed then we get a compilation error.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#  pragma GCC diagnostic ignored "-Wunused-lambda-capture"
+#endif
+
     /**
      * Cell operations for bilinear forms
      *
@@ -2526,6 +2532,9 @@ namespace WeakForms
       };
       interface_face_matrix_operations.emplace_back(f);
     }
+
+
+#pragma GCC diagnostic pop // "-Wunused-lambda-capture"
 
 
     /**
