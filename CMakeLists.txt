@@ -197,13 +197,13 @@ FOREACH(_file ${_check_files})
 ENDFOREACH()
 
 ##
-# Setup the desired compiler flags
+# Setup the desired compiler flags. Currently, for debugging purposes only.
 #
 # This is done after the system checks, just in case we've set some
 # pedantic build flags (e.g. -Werror) and this triggers unexpected
 # in the build checks.
 ##
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/setup_compiler_flags.cmake)
+# INCLUDE(${CMAKE_SOURCE_DIR}/cmake/setup_compiler_flags.cmake)
 
 ##
 # Setup Clang format:
