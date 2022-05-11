@@ -33,6 +33,8 @@
 // This variant has no stablisation enabled.
 
 
+#include <weak_forms/weak_forms.h>
+
 #include "../weak_forms_tests.h"
 #include "wf_common_tests/step-navier_stokes-beltrami.h"
 
@@ -55,6 +57,9 @@ namespace StepNavierStokesBeltrami
   void
   NavierStokesProblem<dim>::assemble_system()
   {
+    using namespace WeakForms;
+    constexpr int spacedim = dim;
+
     this->system_matrix = 0;
     this->system_rhs    = 0;
 
@@ -226,21 +231,24 @@ namespace StepNavierStokesBeltrami
                       this->fe.system_to_component_index(j).first;
 
                     if (component_j < dim && component_i == component_j)
+                    // {}
                       for (unsigned int q = 0; q < n_q_points; ++q)
                         local_matrix(i, j) +=
-                          phi_u[i][q] * phi_u_weight[j][q] +
-                          grad_phi_u[i][q] * grad_phi_u[j][q] +
-                          gradT_phi_u[i][q] * gradT_phi_u[j][q];
+                          phi_u[i][q] * phi_u_weight[j][q]; // +
+                          // grad_phi_u[i][q] * grad_phi_u[j][q] +
+                          // gradT_phi_u[i][q] * gradT_phi_u[j][q];
 
                     else if (component_j < dim)
-                      for (unsigned int q = 0; q < n_q_points; ++q)
-                        local_matrix(i, j) +=
-                          gradT_phi_u[i][q] * gradT_phi_u[j][q];
+                    {}
+                      // for (unsigned int q = 0; q < n_q_points; ++q)
+                      //   local_matrix(i, j) +=
+                      //     gradT_phi_u[i][q] * gradT_phi_u[j][q];
 
                     else if (component_j == dim)
-                      for (unsigned int q = 0; q < n_q_points; ++q)
-                        local_matrix(i, j) -=
-                          div_phi_u_p[i][q] * div_phi_u_p[j][q];
+                    {}
+                      // for (unsigned int q = 0; q < n_q_points; ++q)
+                      //   local_matrix(i, j) -=
+                      //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
                   }
 
                 for (unsigned int q = 0; q < n_q_points; ++q)
@@ -287,9 +295,10 @@ namespace StepNavierStokesBeltrami
                     const unsigned int component_j =
                       this->fe.system_to_component_index(j).first;
                     if (component_j < dim)
-                      for (unsigned int q = 0; q < n_q_points; ++q)
-                        local_matrix(i, j) +=
-                          div_phi_u_p[i][q] * div_phi_u_p[j][q];
+                    {}
+                      // for (unsigned int q = 0; q < n_q_points; ++q)
+                      //   local_matrix(i, j) +=
+                      //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
                   }
               } /* end case for pressure dofs w/o stabilization */
             else if (component_i == dim)
@@ -329,6 +338,188 @@ namespace StepNavierStokesBeltrami
         this->hanging_node_and_pressure_constraints.distribute_local_to_global(
           local_rhs, local_dof_indices, this->system_rhs);
       }
+
+    // Symbolic types for test function, trial solution
+    const TestFunction<dim, spacedim>  test;
+    const TrialSolution<dim, spacedim> trial;
+    const FieldSolution<dim, spacedim> field_solution;
+
+    // Subspace extractors
+    const SubSpaceExtractors::Vector   subspace_extractor_v(0,
+                                                          0,
+                                                          "v",
+                                                          "v");
+    const SubSpaceExtractors::Scalar   subspace_extractor_p(1,
+                                                          dim,
+                                                          "p",
+                                                          "p");
+
+    // Test function (subspaced)
+    const auto test_ss_v   = test[subspace_extractor_v];
+    const auto test_ss_p   = test[subspace_extractor_p];
+    const auto test_v      = test_ss_v.value();
+    const auto grad_test_v = test_ss_v.gradient();
+    const auto div_test_v = test_ss_v.divergence();
+    const auto test_p      = test_ss_p.value();
+
+    // Trial solution (subspaced)
+    const auto trial_ss_v   = trial[subspace_extractor_v];
+    const auto trial_ss_p   = trial[subspace_extractor_p];
+    const auto trial_v      = trial_ss_v.value();
+    const auto grad_trial_v = trial_ss_v.gradient();
+    const auto div_trial_v = trial_ss_v.divergence();
+    const auto trial_p      = trial_ss_p.value();
+
+    // Create storage for the solution vectors that may be referenced
+    // by the weak forms
+    const SolutionStorage<Vector<double>> solution_storage(
+      {&this->solution,
+       &this->solution_old_scaled});
+
+    // Field solution (subspaced)
+    constexpr WeakForms::types::solution_index solution_index_v    = 0;
+    constexpr WeakForms::types::solution_index solution_index_v_t1 = 1;
+
+    const auto v = field_solution[subspace_extractor_v]
+                            .template value<solution_index_v>();
+    const auto div_v = field_solution[subspace_extractor_v]
+                            .template divergence<solution_index_v>();
+
+    // const auto u_t1 = field_solution[subspace_extractor_v]
+    //                     .template value<solution_index_v_t1>();
+    // const auto grad_v_t1 = field_solution[subspace_extractor_v]
+    //                          .template gradient<solution_index_v_t1>();
+    // const auto v_t1 = field_solution[subspace_extractor_v]
+    //                     .template value<solution_index_v_t1>();
+
+    // Constants
+    const auto nu = constant_scalar<dim>(this->nu, "nu", "\\nu");
+    const auto tau = constant_scalar<dim>(this->time_step_weight, "tau", "\\tau");
+
+    // Functors
+        const std::string element_name  = fe_values.get_fe().base_element(0).get_name();
+    const unsigned int degree = atoi(&(element_name[8]));
+    const double constant_inverse_estimate =
+      (degree == 1) ? 24. : (244. + std::sqrt(9136.)) / 3.;
+          Tensor<1, dim> ones;
+          for (unsigned int d = 0; d < dim; ++d)
+            ones[d] = 1.;
+
+    const auto          tau_supg = ScalarCacheFunctor ("tau_supg", "\\tau^{\\text{supg}}").template value<double, dim, spacedim>(
+      [this, subspace_extractor_v, ones, constant_inverse_estimate](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point)
+      { 
+    const Tensor<1, dim> velocity = scratch_data.get_values(solution_extraction_data[solution_index_v].solution_name,
+                                   subspace_extractor_v.extractor)[q_point];
+
+          const FEValuesBase<dim> &fe_values = scratch_data.get_current_fe_values();
+          const Tensor<2, dim> inverse_jacobian = fe_values.inverse_jacobian(q_point);
+          const Tensor<2, dim> g_matrix =
+            inverse_jacobian * transpose(inverse_jacobian);
+          const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones;
+
+          double uGu = 0., GG = 0., gg = 0.;
+          for (unsigned int d = 0; d < dim; d++)
+            {
+              gg += g_vector[d] * g_vector[d];
+              for (unsigned int e = 0; e < dim; e++)
+                {
+                  uGu += velocity[d] * g_matrix[d][e] * velocity[e];
+                  GG += g_matrix[d][e] * g_matrix[d][e];
+                }
+            }
+
+          return 
+            1. / std::sqrt(4. * this->time_step_weight * this->time_step_weight + uGu +
+                           constant_inverse_estimate * this->nu * this->nu * GG);
+      },
+      UpdateFlags::update_inverse_jacobians);
+
+    const auto          tau_lsic = ScalarCacheFunctor ("tau_lsic", "\\tau^{\\text{lsic}}").template value<double, dim, spacedim>(
+      [this, subspace_extractor_v, ones, constant_inverse_estimate](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point)
+      { 
+        // TODO: Capture and call tau_supg
+        // deallog << "Scalar: "
+        //   << s.template operator()<NumberType>(
+        //         scratch_data, solution_extraction_data)[q_point]
+        //   << std::endl;
+
+    const Tensor<1, dim> velocity = scratch_data.get_values(solution_extraction_data[solution_index_v].solution_name,
+                                   subspace_extractor_v.extractor)[q_point];
+
+          const FEValuesBase<dim> &fe_values = scratch_data.get_current_fe_values();
+          const Tensor<2, dim> inverse_jacobian = fe_values.inverse_jacobian(q_point);
+          const Tensor<2, dim> g_matrix =
+            inverse_jacobian * transpose(inverse_jacobian);
+          const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones;
+
+          double uGu = 0., GG = 0., gg = 0.;
+          for (unsigned int d = 0; d < dim; d++)
+            {
+              gg += g_vector[d] * g_vector[d];
+              for (unsigned int e = 0; e < dim; e++)
+                {
+                  uGu += velocity[d] * g_matrix[d][e] * velocity[e];
+                  GG += g_matrix[d][e] * g_matrix[d][e];
+                }
+            }
+
+          const double tau_supg =
+            1. / std::sqrt(4. * this->time_step_weight * this->time_step_weight + uGu +
+                           constant_inverse_estimate * this->nu * this->nu * GG);
+
+          if (tau_supg > 1e-8 && gg > 1e-8)
+            return 1. / (tau_supg * gg);
+          else
+            return 1.;
+      },
+      UpdateFlags::update_inverse_jacobians);
+
+
+    // Assembly
+    // MatrixBasedAssembler<dim> assembler;
+    MatrixBasedAssembler<dim,dim,double,false> assembler;
+
+    // assembler += 
+    // bilinear_form(test_v, tau, trial_v).delta_IJ().dV() +
+    // bilinear_form(test_v, v * grad_trial_v).delta_IJ().dV() +
+    // bilinear_form(test_v, div_v * trial_v).delta_IJ().dV(); // phi_u[i][q] * phi_u_weight[j][q]
+    assembler += 
+    bilinear_form(grad_test_v, nu, grad_trial_v).delta_IJ().dV(); // grad_phi_u[i][q] * grad_phi_u[j][q]
+    assembler += 
+    bilinear_form(div_test_v, nu, div_trial_v).dV(); // gradT_phi_u[i][q] * gradT_phi_u[j][q]
+
+    assembler -= bilinear_form(div_test_v, trial_p).dV();
+    assembler += bilinear_form(test_p, div_trial_v).dV();
+
+    // Look at what we're going to compute
+    const SymbolicDecorations decorator;
+    static bool               output = true;
+    if (output)
+      {
+        std::cout << "\n\n" << std::endl;
+        std::cout << "Weak form (ascii):\n"
+                  << assembler.as_ascii(decorator) << std::endl;
+        std::cout << "Weak form (LaTeX):\n"
+                  << assembler.as_latex(decorator) << std::endl;
+        std::cout << "\n\n" << std::endl;
+        output = false;
+      }
+
+    // Now we pass in concrete objects to get data from
+    // and assemble into.
+    const auto &constraints = this->hanging_node_and_pressure_constraints;
+    assembler.assemble_system(this->system_matrix,
+                              this->system_rhs,
+                              solution_storage,
+                              constraints,
+                              this->dof_handler,
+                              quadrature_formula);
 
     this->hanging_node_and_pressure_constraints.condense(this->system_matrix);
     this->hanging_node_and_pressure_constraints.condense(this->system_rhs);

@@ -32,6 +32,9 @@
 //
 // This variant has maximum stablisation enabled.
 
+
+#include <weak_forms/weak_forms.h>
+
 #include "../weak_forms_tests.h"
 #include "wf_common_tests/step-navier_stokes-beltrami.h"
 
