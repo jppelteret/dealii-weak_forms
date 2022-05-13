@@ -229,26 +229,6 @@ namespace StepNavierStokesBeltrami
                   {
                     const unsigned int component_j =
                       this->fe.system_to_component_index(j).first;
-
-                    // if (component_j < dim && component_i == component_j)
-                    // {}
-                    //   // for (unsigned int q = 0; q < n_q_points; ++q)
-                    //   //   local_matrix(i, j) +=
-                    //   //     phi_u[i][q] * phi_u_weight[j][q]; // +
-                    //   //     grad_phi_u[i][q] * grad_phi_u[j][q] +
-                    //   //     gradT_phi_u[i][q] * gradT_phi_u[j][q];
-
-                    // else if (component_j < dim)
-                    // {}
-                    //   // for (unsigned int q = 0; q < n_q_points; ++q)
-                    //   //   local_matrix(i, j) +=
-                    //   //     gradT_phi_u[i][q] * gradT_phi_u[j][q];
-
-                    // else if (component_j == dim)
-                    // {}
-                    //   // for (unsigned int q = 0; q < n_q_points; ++q)
-                    //   //   local_matrix(i, j) -=
-                    //   //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
                   }
 
                 // for (unsigned int q = 0; q < n_q_points; ++q)
@@ -267,14 +247,14 @@ namespace StepNavierStokesBeltrami
                           // phi_u[i][q] * phi_u_weight[j][q] +
                           // grad_phi_u[i][q] * grad_phi_u[j][q] +
                           // gradT_phi_u[i][q] * gradT_phi_u[j][q] +
-                          div_phi_u_p[i][q] * div_phi_u_p[j][q] +
+                          // div_phi_u_p[i][q] * div_phi_u_p[j][q] +
                           stab_grad_phi[i][q][component_j] * residual_phi[j][q];
 
                     else if (component_j < dim)
                       for (unsigned int q = 0; q < n_q_points; ++q)
                         local_matrix(i, j) +=
                           // gradT_phi_u[i][q] * gradT_phi_u[j][q] +
-                          div_phi_u_p[i][q] * div_phi_u_p[j][q] +
+                          // div_phi_u_p[i][q] * div_phi_u_p[j][q] +
                           stab_grad_phi[i][q][component_j] * residual_phi[j][q];
 
                     else if (component_j == dim)
@@ -290,16 +270,6 @@ namespace StepNavierStokesBeltrami
               } /* end case for velocity dofs w/ stabilization */
             else if (component_i == dim && this->stabilization % 2 == 0)
               {
-                // for (unsigned int j = 0; j < dofs_per_cell; ++j)
-                //   {
-                //     const unsigned int component_j =
-                //       this->fe.system_to_component_index(j).first;
-                //     if (component_j < dim)
-                //     {}
-                //       // for (unsigned int q = 0; q < n_q_points; ++q)
-                //       //   local_matrix(i, j) +=
-                //       //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
-                //   }
               } /* end case for pressure dofs w/o stabilization */
             else if (component_i == dim)
               {
@@ -554,7 +524,7 @@ namespace StepNavierStokesBeltrami
     assembler += 
     bilinear_form(grad_test_v, nu, grad_trial_v).delta_IJ().dV(); // grad_phi_u[i][q] * grad_phi_u[j][q]
     assembler += 
-    bilinear_form(div_test_v, nu, div_trial_v).dV(); // gradT_phi_u[i][q] * gradT_phi_u[j][q]
+    bilinear_form(div_test_v, nu + tau_lsic, div_trial_v).dV(); // gradT_phi_u[i][q] * gradT_phi_u[j][q]
 
     assembler -= bilinear_form(div_test_v, trial_p).dV();
     assembler += bilinear_form(test_p, div_trial_v).dV();
