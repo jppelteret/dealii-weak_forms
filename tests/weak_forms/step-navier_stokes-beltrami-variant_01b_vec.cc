@@ -120,7 +120,7 @@ namespace StepNavierStokesBeltrami
   const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
 
     // Assembly
-    MatrixBasedAssembler<dim,dim,double,false> assembler;
+    MatrixBasedAssembler<dim> assembler;
 
     assembler += 
     bilinear_form(test_v, tau, trial_v).delta_IJ().dV() +
