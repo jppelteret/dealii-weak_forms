@@ -354,6 +354,28 @@ namespace StepNavierStokesBeltrami
   }
 
 
+  template <int dim>
+  class RightHandSideTF : public TensorFunction<1, dim, double>
+  {
+  public:
+    RightHandSideTF(const double time = 0.)
+      : TensorFunction<1, dim, double>(time)
+    {}
+
+    virtual Tensor<1, dim, double>
+    value(const Point<dim> &p) const override;
+  };
+
+  template <int dim>
+  Tensor<1, dim, double>
+  RightHandSideTF<dim>::value(const Point<dim> &p) const
+  {
+    // double time = this->get_time ();
+
+    return Tensor<1, dim, double>() + 0 * p;
+  }
+
+
 
   // @sect4{Exact Solution}
 

@@ -238,21 +238,21 @@ namespace StepNavierStokesBeltrami
                           // grad_phi_u[i][q] * grad_phi_u[j][q] +
                           // gradT_phi_u[i][q] * gradT_phi_u[j][q];
 
-                    else if (component_j < dim)
-                    {}
-                      // for (unsigned int q = 0; q < n_q_points; ++q)
-                      //   local_matrix(i, j) +=
-                      //     gradT_phi_u[i][q] * gradT_phi_u[j][q];
+                    // else if (component_j < dim)
+                    // {}
+                    //   // for (unsigned int q = 0; q < n_q_points; ++q)
+                    //   //   local_matrix(i, j) +=
+                    //   //     gradT_phi_u[i][q] * gradT_phi_u[j][q];
 
-                    else if (component_j == dim)
-                    {}
-                      // for (unsigned int q = 0; q < n_q_points; ++q)
-                      //   local_matrix(i, j) -=
-                      //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
+                    // else if (component_j == dim)
+                    // {}
+                    //   // for (unsigned int q = 0; q < n_q_points; ++q)
+                    //   //   local_matrix(i, j) -=
+                    //   //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
                   }
 
-                for (unsigned int q = 0; q < n_q_points; ++q)
-                  local_rhs(i) += phi_u[i][q] * func_rhs[q][component_i];
+                // for (unsigned int q = 0; q < n_q_points; ++q)
+                //   local_rhs(i) += phi_u[i][q] * func_rhs[q][component_i];
               } /* end case for velocity dofs w/o stabilization */
             else if (component_i < dim)
               {
@@ -290,16 +290,16 @@ namespace StepNavierStokesBeltrami
               } /* end case for velocity dofs w/ stabilization */
             else if (component_i == dim && this->stabilization % 2 == 0)
               {
-                for (unsigned int j = 0; j < dofs_per_cell; ++j)
-                  {
-                    const unsigned int component_j =
-                      this->fe.system_to_component_index(j).first;
-                    if (component_j < dim)
-                    {}
-                      // for (unsigned int q = 0; q < n_q_points; ++q)
-                      //   local_matrix(i, j) +=
-                      //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
-                  }
+                // for (unsigned int j = 0; j < dofs_per_cell; ++j)
+                //   {
+                //     const unsigned int component_j =
+                //       this->fe.system_to_component_index(j).first;
+                //     if (component_j < dim)
+                //     {}
+                //       // for (unsigned int q = 0; q < n_q_points; ++q)
+                //       //   local_matrix(i, j) +=
+                //       //     div_phi_u_p[i][q] * div_phi_u_p[j][q];
+                //   }
               } /* end case for pressure dofs w/o stabilization */
             else if (component_i == dim)
               {
@@ -382,6 +382,8 @@ namespace StepNavierStokesBeltrami
 
     const auto v = field_solution[subspace_extractor_v]
                             .template value<solution_index_v>();
+    const auto v_t1 = field_solution[subspace_extractor_v]
+                            .template value<solution_index_v_t1>();
     const auto div_v = field_solution[subspace_extractor_v]
                             .template divergence<solution_index_v>();
 
@@ -397,6 +399,9 @@ namespace StepNavierStokesBeltrami
     const auto tau = constant_scalar<dim>(this->time_step_weight, "tau", "\\tau");
 
     // Functors
+  const RightHandSideTF<dim>         rhs(this->time);
+  const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
+
         const std::string element_name  = fe_values.get_fe().base_element(0).get_name();
     const unsigned int degree = atoi(&(element_name[8]));
     const double constant_inverse_estimate =
@@ -496,6 +501,8 @@ namespace StepNavierStokesBeltrami
 
     assembler -= bilinear_form(div_test_v, trial_p).dV();
     assembler += bilinear_form(test_p, div_trial_v).dV();
+
+    assembler -= linear_form(test_v, rhs_coeff.value(rhs) + v_t1).dV();
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
