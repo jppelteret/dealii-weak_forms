@@ -69,21 +69,15 @@ namespace StepNavierStokesBeltrami
     const FieldSolution<dim, spacedim> field_solution;
 
     // Subspace extractors
-    const SubSpaceExtractors::Vector   subspace_extractor_v(0,
-                                                          0,
-                                                          "v",
-                                                          "v");
-    const SubSpaceExtractors::Scalar   subspace_extractor_p(1,
-                                                          dim,
-                                                          "p",
-                                                          "p");
+    const SubSpaceExtractors::Vector subspace_extractor_v(0, 0, "v", "v");
+    const SubSpaceExtractors::Scalar subspace_extractor_p(1, dim, "p", "p");
 
     // Test function (subspaced)
     const auto test_ss_v   = test[subspace_extractor_v];
     const auto test_ss_p   = test[subspace_extractor_p];
     const auto test_v      = test_ss_v.value();
     const auto grad_test_v = test_ss_v.gradient();
-    const auto div_test_v = test_ss_v.divergence();
+    const auto div_test_v  = test_ss_v.divergence();
     const auto test_p      = test_ss_p.value();
 
     // Trial solution (subspaced)
@@ -91,43 +85,43 @@ namespace StepNavierStokesBeltrami
     const auto trial_ss_p   = trial[subspace_extractor_p];
     const auto trial_v      = trial_ss_v.value();
     const auto grad_trial_v = trial_ss_v.gradient();
-    const auto div_trial_v = trial_ss_v.divergence();
+    const auto div_trial_v  = trial_ss_v.divergence();
     const auto trial_p      = trial_ss_p.value();
 
     // Create storage for the solution vectors that may be referenced
     // by the weak forms
     const SolutionStorage<Vector<double>> solution_storage(
-      {&this->solution,
-       &this->solution_old_scaled});
+      {&this->solution, &this->solution_old_scaled});
 
     // Field solution (subspaced)
     constexpr WeakForms::types::solution_index solution_index_v    = 0;
     constexpr WeakForms::types::solution_index solution_index_v_t1 = 1;
 
-    const auto v = field_solution[subspace_extractor_v]
-                            .template value<solution_index_v>();
+    const auto v =
+      field_solution[subspace_extractor_v].template value<solution_index_v>();
     const auto v_t1 = field_solution[subspace_extractor_v]
-                            .template value<solution_index_v_t1>();
+                        .template value<solution_index_v_t1>();
     const auto div_v = field_solution[subspace_extractor_v]
-                            .template divergence<solution_index_v>();
+                         .template divergence<solution_index_v>();
 
     // Constants
     const auto nu = constant_scalar<dim>(this->nu, "nu", "\\nu");
-    const auto tau = constant_scalar<dim>(this->time_step_weight, "tau", "\\tau");
+    const auto tau =
+      constant_scalar<dim>(this->time_step_weight, "tau", "\\tau");
 
     // Functors
-  const RightHandSideTF<dim>         rhs(this->time);
-  const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
+    const RightHandSideTF<dim>       rhs(this->time);
+    const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
 
     // Assembly
-    MatrixBasedAssembler<dim,dim,double,false> assembler;
+    MatrixBasedAssembler<dim, dim, double, false> assembler;
 
-    assembler += 
-    bilinear_form(test_v, tau, trial_v).delta_IJ().dV() +
-    bilinear_form(test_v, v, transpose(grad_trial_v)).delta_IJ().dV() +
-    bilinear_form(test_v, div_v, trial_v).delta_IJ().dV() +
-    bilinear_form(grad_test_v, nu, grad_trial_v).delta_IJ().dV() +
-    bilinear_form(div_test_v, nu, div_trial_v).dV(); 
+    assembler +=
+      bilinear_form(test_v, tau, trial_v).delta_IJ().dV() +
+      bilinear_form(test_v, v, transpose(grad_trial_v)).delta_IJ().dV() +
+      bilinear_form(test_v, div_v, trial_v).delta_IJ().dV() +
+      bilinear_form(grad_test_v, nu, grad_trial_v).delta_IJ().dV() +
+      bilinear_form(div_test_v, nu, div_trial_v).dV();
     assembler -= bilinear_form(div_test_v, trial_p).dV();
     assembler += bilinear_form(test_p, div_trial_v).dV();
 
@@ -149,7 +143,7 @@ namespace StepNavierStokesBeltrami
 
     // Now we pass in concrete objects to get data from
     // and assemble into.
-    const auto &constraints = this->hanging_node_and_pressure_constraints;
+    const auto &      constraints = this->hanging_node_and_pressure_constraints;
     const QGauss<dim> quadrature_formula(this->degree + 2);
     assembler.assemble_system(this->system_matrix,
                               this->system_rhs,
