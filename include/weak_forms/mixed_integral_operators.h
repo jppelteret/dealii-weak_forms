@@ -84,91 +84,104 @@ namespace WeakForms
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_symbolic_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const ScalarType &value, const IntegralOp &integral)
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
 {
-  return WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(value,
-                                                                integral);
-}
+  namespace Operators
+  {
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_symbolic_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const ScalarType &value, const IntegralOp &integral)
+    {
+      return WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(value,
+                                                                    integral);
+    }
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_symbolic_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const IntegralOp &integral, const ScalarType &value)
-{
-  // Delegate to the other function
-  return value * integral;
-}
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_symbolic_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesSymbolicIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const IntegralOp &integral, const ScalarType &value)
+    {
+      // Delegate to the other function
+      return value * integral;
+    }
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_unary_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const ScalarType &value, const IntegralOp &integral)
-{
-  return WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(value, integral);
-}
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_unary_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const ScalarType &value, const IntegralOp &integral)
+    {
+      return WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(value,
+                                                                 integral);
+    }
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_unary_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const IntegralOp &integral, const ScalarType &value)
-{
-  // Delegate to the other function
-  return value * integral;
-}
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_unary_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesUnaryIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const IntegralOp &integral, const ScalarType &value)
+    {
+      // Delegate to the other function
+      return value * integral;
+    }
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_binary_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const ScalarType &value, const IntegralOp &integral)
-{
-  return WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(value, integral);
-}
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_binary_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const ScalarType &value, const IntegralOp &integral)
+    {
+      return WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(value,
+                                                                  integral);
+    }
 
 
 
-template <typename ScalarType, typename IntegralOp>
-typename std::enable_if<
-  WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_binary_integral_op<IntegralOp>::value,
-  decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
-    std::declval<ScalarType>(),
-    std::declval<IntegralOp>()))>::type
-operator*(const IntegralOp &integral, const ScalarType &value)
-{
-  // Delegate to the other function
-  return value * integral;
-}
+    template <typename ScalarType, typename IntegralOp>
+    typename std::enable_if<
+      WeakForms::is_scalar_type<ScalarType>::value &&
+        WeakForms::is_binary_integral_op<IntegralOp>::value,
+      decltype(WeakForms::internal::ScalarTimesBinaryIntegralOpImpl(
+        std::declval<ScalarType>(),
+        std::declval<IntegralOp>()))>::type
+    operator*(const IntegralOp &integral, const ScalarType &value)
+    {
+      // Delegate to the other function
+      return value * integral;
+    }
+
+
+  } // namespace Operators
+} // namespace WeakForms
 
 
 

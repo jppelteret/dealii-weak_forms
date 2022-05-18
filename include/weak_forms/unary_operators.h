@@ -2199,8 +2199,18 @@ private:                                                                 \
     return OpType(operand);                                                \
   }
 
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_UNARY_OP_OF_UNARY_OP(operator-, negate)
+  } // namespace Operators
+} // namespace WeakForms
+
 // General operations
-DEAL_II_UNARY_OP_OF_UNARY_OP(operator-, negate)
 DEAL_II_UNARY_OP_OF_UNARY_OP(normalize, normalize)
 
 // Scalar operations

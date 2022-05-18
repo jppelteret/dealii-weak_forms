@@ -2617,10 +2617,18 @@ private:                                                                   \
   }
 
 // Arithmetic operations
-DEAL_II_BINARY_OP_OF_BINARY_OP(operator+, add)
-DEAL_II_BINARY_OP_OF_BINARY_OP(operator-, subtract)
-DEAL_II_BINARY_OP_OF_BINARY_OP(operator*, multiply)
-DEAL_II_BINARY_OP_OF_BINARY_OP(operator/, divide)
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_BINARY_OP_OF_BINARY_OP(operator+, add)
+    DEAL_II_BINARY_OP_OF_BINARY_OP(operator-, subtract)
+    DEAL_II_BINARY_OP_OF_BINARY_OP(operator*, multiply)
+    DEAL_II_BINARY_OP_OF_BINARY_OP(operator/, divide)
+  } // namespace Operators
+} // namespace WeakForms
 
 // Scalar operations
 DEAL_II_BINARY_OP_OF_BINARY_OP(pow, power)

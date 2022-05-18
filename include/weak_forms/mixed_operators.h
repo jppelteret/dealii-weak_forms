@@ -65,8 +65,18 @@ WEAK_FORMS_NAMESPACE_OPEN
     return OpType(operand);                                                      \
   }
 
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(operator-, negate)
+  } // namespace Operators
+} // namespace WeakForms
+
 // General operations
-DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(operator-, negate)
 DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(normalize, normalize)
 
 // Scalar operations
@@ -113,9 +123,17 @@ DEAL_II_UNARY_OP_OF_SYMBOLIC_OP(linfty_norm, linfty_norm)
                                                                              \
     return OpType(operand);                                                  \
   }
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_UNARY_OP_OF_BINARY_OP(operator-, negate)
+  } // namespace Operators
+} // namespace WeakForms
 
 // General operations
-DEAL_II_UNARY_OP_OF_BINARY_OP(operator-, negate)
 DEAL_II_UNARY_OP_OF_BINARY_OP(normalize, normalize)
 
 // Scalar operations
@@ -231,10 +249,18 @@ DEAL_II_UNARY_OP_OF_BINARY_OP(linfty_norm, linfty_norm)
   }
 
 // Arithmetic operations
-DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator+, add)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator-, subtract)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator*, multiply)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator/, divide)
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator+, add)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator-, subtract)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator*, multiply)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(operator/, divide)
+  } // namespace Operators
+} // namespace WeakForms
 
 // Scalar operations
 DEAL_II_BINARY_OP_OF_SYMBOLIC_OP(pow, power)
@@ -487,10 +513,18 @@ DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_SYMBOLIC_OP(double_contract,
   }
 
 // Arithmetic operations
-DEAL_II_BINARY_OP_OF_UNARY_OP(operator+, add)
-DEAL_II_BINARY_OP_OF_UNARY_OP(operator-, subtract)
-DEAL_II_BINARY_OP_OF_UNARY_OP(operator*, multiply)
-DEAL_II_BINARY_OP_OF_UNARY_OP(operator/, divide)
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_BINARY_OP_OF_UNARY_OP(operator+, add)
+    DEAL_II_BINARY_OP_OF_UNARY_OP(operator-, subtract)
+    DEAL_II_BINARY_OP_OF_UNARY_OP(operator*, multiply)
+    DEAL_II_BINARY_OP_OF_UNARY_OP(operator/, divide)
+  } // namespace Operators
+} // namespace WeakForms
 
 // Scalar operations
 DEAL_II_BINARY_OP_OF_UNARY_OP(pow, power)
@@ -707,471 +741,504 @@ DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_UNARY_OP(double_contract,
                                                                            \
     return OpType(lhs_op, rhs_op);                                         \
   }
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
+{
+  namespace Operators
+  {
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator+, add)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator-, subtract)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator*, multiply)
+    DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator/, divide)
+  } // namespace Operators
+} // namespace WeakForms
 
-DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator+, add)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator-, subtract)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator*, multiply)
-DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(operator/, divide)
+// Scalar operations
 DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP(pow, power)
 
 #undef DEAL_II_BINARY_OP_OF_SYMBOLIC_AND_UNARY_OP
 
 
-// ============================= Addition =============================
-
-
-// Scalar + Symbolic Operator
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const ScalarType &value, const SymbolicOp &op)
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
 {
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return WeakForms::constant_scalar<dim, spacedim>(value) + op;
-}
+  namespace Operators
+  {
+    // ============================= Addition =============================
 
 
-// Symbolic Operator + Scalar
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const SymbolicOp &op, const ScalarType &value)
-{
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return op + WeakForms::constant_scalar<dim, spacedim>(value);
-}
+    // Scalar + Symbolic Operator
+    template <
+      typename ScalarType,
+      typename SymbolicOp,
+      typename = typename std::enable_if<
+        WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
+        WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::
+        type>
+    auto
+    operator+(const ScalarType &value, const SymbolicOp &op)
+    {
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return WeakForms::constant_scalar<dim, spacedim>(value) + op;
+    }
 
 
-// Tensor + Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_tensor<dim>(value) + op;
-}
+    // Symbolic Operator + Scalar
+    template <
+      typename ScalarType,
+      typename SymbolicOp,
+      typename = typename std::enable_if<
+        WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
+        WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::
+        type>
+    auto
+    operator+(const SymbolicOp &op, const ScalarType &value)
+    {
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return op + WeakForms::constant_scalar<dim, spacedim>(value);
+    }
 
 
-// Symbolic Operator + Tensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op + WeakForms::constant_tensor<dim>(value);
-}
+    // Tensor + Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator+(const Tensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                        op)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_tensor<dim>(value) + op;
+    }
 
 
-// SymmetricTensor + Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const SymmetricTensor<rank, spacedim, ScalarType> &value,
-          const SymbolicOp &                                 op)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_symmetric_tensor<dim>(value) + op;
-}
+    // Symbolic Operator + Tensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator+(const SymbolicOp &                        op,
+              const Tensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op + WeakForms::constant_tensor<dim>(value);
+    }
 
 
-// Symbolic Operator + SymmetricTensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator+(const SymbolicOp &                                 op,
-          const SymmetricTensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op + WeakForms::constant_symmetric_tensor<dim>(value);
-}
+    // SymmetricTensor + Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator+(const SymmetricTensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                                 op)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_symmetric_tensor<dim>(value) + op;
+    }
 
 
-// ============================= Subtraction =============================
+    // Symbolic Operator + SymmetricTensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator+(const SymbolicOp &                                 op,
+              const SymmetricTensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op + WeakForms::constant_symmetric_tensor<dim>(value);
+    }
 
 
-// Scalar - Symbolic Operator
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const ScalarType &value, const SymbolicOp &op)
-{
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return WeakForms::constant_scalar<dim, spacedim>(value) - op;
-}
+    // ============================= Subtraction =============================
 
 
-// Symbolic Operator - Scalar
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const SymbolicOp &op, const ScalarType &value)
-{
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return op - WeakForms::constant_scalar<dim, spacedim>(value);
-}
+    // Scalar - Symbolic Operator
+    template <
+      typename ScalarType,
+      typename SymbolicOp,
+      typename = typename std::enable_if<
+        WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
+        WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::
+        type>
+    auto
+    operator-(const ScalarType &value, const SymbolicOp &op)
+    {
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return WeakForms::constant_scalar<dim, spacedim>(value) - op;
+    }
 
 
-// Tensor - Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_tensor<dim>(value) - op;
-}
+    // Symbolic Operator - Scalar
+    template <
+      typename ScalarType,
+      typename SymbolicOp,
+      typename = typename std::enable_if<
+        WeakForms::is_scalar_type<ScalarType>::value && SymbolicOp::rank == 0 &&
+        WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::
+        type>
+    auto
+    operator-(const SymbolicOp &op, const ScalarType &value)
+    {
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return op - WeakForms::constant_scalar<dim, spacedim>(value);
+    }
 
 
-// Symbolic Operator - Tensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op - WeakForms::constant_tensor<dim>(value);
-}
+    // Tensor - Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator-(const Tensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                        op)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_tensor<dim>(value) - op;
+    }
 
 
-// SymmetricTensor - Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const SymmetricTensor<rank, spacedim, ScalarType> &value,
-          const SymbolicOp &                                 op)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_symmetric_tensor<dim>(value) - op;
-}
+    // Symbolic Operator - Tensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator-(const SymbolicOp &                        op,
+              const Tensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op - WeakForms::constant_tensor<dim>(value);
+    }
 
 
-// Symbolic Operator - SymmetricTensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    SymbolicOp::rank == rank &&
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator-(const SymbolicOp &                                 op,
-          const SymmetricTensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op - WeakForms::constant_symmetric_tensor<dim>(value);
-}
+    // SymmetricTensor - Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator-(const SymmetricTensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                                 op)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_symmetric_tensor<dim>(value) - op;
+    }
 
 
-// ============================= Multiplication =============================
+    // Symbolic Operator - SymmetricTensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                SymbolicOp::rank == rank &&
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator-(const SymbolicOp &                                 op,
+              const SymmetricTensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op - WeakForms::constant_symmetric_tensor<dim>(value);
+    }
 
 
-// Scalar * Symbolic Operator
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const ScalarType &value, const SymbolicOp &op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
-
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return WeakForms::constant_scalar<dim, spacedim>(value) * op;
-}
+    // =========================== Multiplication ===========================
 
 
-// Symbolic Operator * Scalar
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const SymbolicOp &op, const ScalarType &value)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // Scalar * Symbolic Operator
+    template <typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_scalar_type<ScalarType>::value &&
+                WeakForms::is_compatible_with_scalar_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const ScalarType &value, const SymbolicOp &op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
 
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return op * WeakForms::constant_scalar<dim, spacedim>(value);
-}
-
-
-// Tensor * Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
-
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_tensor<dim>(value) * op;
-}
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return WeakForms::constant_scalar<dim, spacedim>(value) * op;
+    }
 
 
-// Symbolic Operator * Tensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const SymbolicOp &op, const Tensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // Symbolic Operator * Scalar
+    template <typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_scalar_type<ScalarType>::value &&
+                WeakForms::is_compatible_with_scalar_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const SymbolicOp &op, const ScalarType &value)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
 
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op * WeakForms::constant_tensor<dim>(value);
-}
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return op * WeakForms::constant_scalar<dim, spacedim>(value);
+    }
 
 
-// SymmetricTensor * Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const SymmetricTensor<rank, spacedim, ScalarType> &value,
-          const SymbolicOp &                                 op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // Tensor * Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const Tensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                        op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
 
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_symmetric_tensor<dim>(value) * op;
-}
-
-
-// Symbolic Operator * SymmetricTensor
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator*(const SymbolicOp &                                 op,
-          const SymmetricTensor<rank, spacedim, ScalarType> &value)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
-
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op * WeakForms::constant_symmetric_tensor<dim>(value);
-}
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_tensor<dim>(value) * op;
+    }
 
 
-// ============================= Division =============================
+    // Symbolic Operator * Tensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const SymbolicOp &                        op,
+              const Tensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op * WeakForms::constant_tensor<dim>(value);
+    }
 
 
-// Symbolic Operator / Scalar
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator/(const SymbolicOp &op, const ScalarType &value)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // SymmetricTensor * Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const SymmetricTensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                                 op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
 
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return op / WeakForms::constant_scalar<dim, spacedim>(value);
-}
-
-
-// Scalar / Symbolic Operator
-template <
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_scalar_type<ScalarType>::value &&
-    WeakForms::is_compatible_with_scalar_arithmetic<SymbolicOp>::value>::type>
-auto
-operator/(const ScalarType &value, const SymbolicOp &op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
-
-  constexpr int dim      = SymbolicOp::dimension;
-  constexpr int spacedim = SymbolicOp::space_dimension;
-  return WeakForms::constant_scalar<dim, spacedim>(value) / op;
-}
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_symmetric_tensor<dim>(value) * op;
+    }
 
 
-// Symbolic Operator / Tensor (rank-0)
-template <
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator/(const SymbolicOp &op, const Tensor<0, spacedim, ScalarType> &value)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // Symbolic Operator * SymmetricTensor
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator*(const SymbolicOp &                                 op,
+              const SymmetricTensor<rank, spacedim, ScalarType> &value)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
 
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return op / WeakForms::constant_tensor<dim>(value);
-}
-
-
-// Tensor / Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator/(const Tensor<rank, spacedim, ScalarType> &value, const SymbolicOp &op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
-
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_tensor<dim>(value) / op;
-}
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op * WeakForms::constant_symmetric_tensor<dim>(value);
+    }
 
 
-// SymmetricTensor / Symbolic Operator
-template <
-  int rank,
-  int spacedim,
-  typename ScalarType,
-  typename SymbolicOp,
-  typename = typename std::enable_if<
-    WeakForms::is_compatible_with_tensor_arithmetic<SymbolicOp>::value>::type>
-auto
-operator/(const SymmetricTensor<rank, spacedim, ScalarType> &value,
-          const SymbolicOp &                                 op)
-{
-  static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
-                "Expected not to be an integral op");
+    // ============================= Division =============================
 
-  static_assert(spacedim == SymbolicOp::space_dimension,
-                "Incompatible spatial dimensions.");
-  constexpr int dim = SymbolicOp::dimension;
-  return WeakForms::constant_symmetric_tensor<dim>(value) / op;
-}
+
+    // Symbolic Operator / Scalar
+    template <typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_scalar_type<ScalarType>::value &&
+                WeakForms::is_compatible_with_scalar_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator/(const SymbolicOp &op, const ScalarType &value)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return op / WeakForms::constant_scalar<dim, spacedim>(value);
+    }
+
+
+    // Scalar / Symbolic Operator
+    template <typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_scalar_type<ScalarType>::value &&
+                WeakForms::is_compatible_with_scalar_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator/(const ScalarType &value, const SymbolicOp &op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      constexpr int dim      = SymbolicOp::dimension;
+      constexpr int spacedim = SymbolicOp::space_dimension;
+      return WeakForms::constant_scalar<dim, spacedim>(value) / op;
+    }
+
+
+    // Symbolic Operator / Tensor (rank-0)
+    template <int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator/(const SymbolicOp &                     op,
+              const Tensor<0, spacedim, ScalarType> &value)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return op / WeakForms::constant_tensor<dim>(value);
+    }
+
+
+    // Tensor / Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator/(const Tensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                        op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_tensor<dim>(value) / op;
+    }
+
+
+    // SymmetricTensor / Symbolic Operator
+    template <int rank,
+              int spacedim,
+              typename ScalarType,
+              typename SymbolicOp,
+              typename = typename std::enable_if<
+                WeakForms::is_compatible_with_tensor_arithmetic<
+                  SymbolicOp>::value>::type>
+    auto
+    operator/(const SymmetricTensor<rank, spacedim, ScalarType> &value,
+              const SymbolicOp &                                 op)
+    {
+      static_assert(!WeakForms::is_integral_op<SymbolicOp>::value,
+                    "Expected not to be an integral op");
+
+      static_assert(spacedim == SymbolicOp::space_dimension,
+                    "Incompatible spatial dimensions.");
+      constexpr int dim = SymbolicOp::dimension;
+      return WeakForms::constant_symmetric_tensor<dim>(value) / op;
+    }
+
+
+  } // namespace Operators
+} // namespace WeakForms
 
 
 // ============================= Power =============================
