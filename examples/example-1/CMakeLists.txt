@@ -28,7 +28,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 ##
 # Setup deal.II
 ##
-FIND_PACKAGE(deal.II 10.0 QUIET
+FIND_PACKAGE(deal.II 9.4 QUIET
   HINTS ${deal.II_DIR} ${DEAL_II_DIR} ../ ../../ $ENV{DEAL_II_DIR}
   )
 IF(NOT ${deal.II_FOUND})
@@ -54,7 +54,7 @@ PROJECT(${TARGET} CXX)
 ##
 # Setup deal.II Weak Forms
 ##
-FIND_PACKAGE(weak_forms 0.1.0
+FIND_PACKAGE(dealii-weak_forms 0.1.0
   HINTS ${weak_forms_DIR} ${WEAK_FORMS_DIR} ../ ../../ $ENV{WEAK_FORMS_DIR}
   )
 IF(NOT ${weak_forms_FOUND})
