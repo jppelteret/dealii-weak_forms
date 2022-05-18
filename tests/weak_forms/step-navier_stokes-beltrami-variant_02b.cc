@@ -225,14 +225,6 @@ namespace StepNavierStokesBeltrami
               this->fe.system_to_component_index(i).first;
             if (component_i < dim && this->stabilization < 2)
               {
-                for (unsigned int j = 0; j < dofs_per_cell; ++j)
-                  {
-                    const unsigned int component_j =
-                      this->fe.system_to_component_index(j).first;
-                  }
-
-                // for (unsigned int q = 0; q < n_q_points; ++q)
-                //   local_rhs(i) += phi_u[i][q] * func_rhs[q][component_i];
               } /* end case for velocity dofs w/o stabilization */
             else if (component_i < dim)
               {
@@ -461,10 +453,22 @@ namespace StepNavierStokesBeltrami
     const unsigned int degree = atoi(&(element_name[8]));
     const double constant_inverse_estimate =
       (degree == 1) ? 24. : (244. + std::sqrt(9136.)) / 3.;
-          Tensor<1, dim> ones;
-          for (unsigned int d = 0; d < dim; ++d)
-            ones[d] = 1.;
+          // Tensor<1, dim> ones;
+          // for (unsigned int d = 0; d < dim; ++d)
+          //   ones[d] = 1.;
 
+    const auto ones = constant_tensor<dim>([](){Tensor<1, spacedim> ones;
+          for (unsigned int d = 0; d < spacedim; ++d)
+            ones[d] = 1.; return ones;}(), "ones", "\\mathbf{e}^{1}");
+
+    // const auto e_k = TensorFunctor<1,spacedim>("e_k", "\\mathbf{e}^{k}").template value<double, dim>(
+    //   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+    //         { 
+    //         const unsigned int component_k =
+    //           fe_values.get_fe().system_to_component_index(k).first;
+    //           return ; }
+    // );
+    
     const auto          tau_supg = ScalarCacheFunctor ("tau_supg",
     "\\tau^{\\text{supg}}").template value<double, dim, spacedim>(
       [this, subspace_extractor_v,
@@ -511,8 +515,9 @@ namespace StepNavierStokesBeltrami
       {
           const FEValuesBase<dim> &fe_values =
           scratch_data.get_current_fe_values(); const Tensor<2, dim>
-          inverse_jacobian = fe_values.inverse_jacobian(q_point); const
-          Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones;
+          inverse_jacobian = fe_values.inverse_jacobian(q_point);
+          const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones.template operator()<double>(
+                fe_values)[q_point];
 
           double gg = 0.;
           for (unsigned int d = 0; d < dim; d++)
@@ -547,24 +552,29 @@ namespace StepNavierStokesBeltrami
 
     assembler -= linear_form(test_v, rhs_coeff.value(rhs) + v_t1).dV();
 
+    // Velocity
     if (this->stabilization > 3 || this->stabilization % 2 != 0)
       {
         if (this->stabilization > 3)
-          {}
-      }
+          {
+            // const double u_grad_phi_k = velocity * fe_values.shape_grad(k, q) * weight_sqrt;
+            // stab_grad_phi[k][q][component_k] += u_grad_phi_k - residual * fe_values.shape_grad(k, q);
+            // for (unsigned int d = 0; d < dim; ++d)
+            //   stab_grad_phi[k][q][d] +=
+            //     fe_values.shape_grad(k, q) * velocity * weight_sqrt;
+            // stab_grad_phi[k][q] *= tau_supg_sqrt;
+          }
 
-    if (this->stabilization >= 2)
-    {
-      // Velocity
-      {
         // const auto stab_grad_test_v = grad_test_v;
         // assembler -= linear_form(stab_grad_test_v, tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
       }
-      // Pressure
-      if (this->stabilization % 2 != 0)
-      {
-        assembler -= linear_form(grad_test_p, tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
-      }
+
+    // Pressure
+    if (this->stabilization >= 2 && this->stabilization % 2 != 0)
+    {
+      // stab_grad_phi[k][q] = fe_values.shape_grad(k, q) * weight_sqrt * tau_supg_sqrt;
+
+      assembler -= linear_form(grad_test_p, tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
     }
 
     // Look at what we're going to compute
