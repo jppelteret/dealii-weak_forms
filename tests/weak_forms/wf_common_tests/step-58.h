@@ -354,8 +354,8 @@ Step58_Base<dim>::output_results() const
   if (output_vtk == false)
     return;
 
-  const DataPostprocessors::ComplexAmplitude<dim> complex_magnitude;
-  const DataPostprocessors::ComplexPhase<dim>     complex_phase;
+  const ::DataPostprocessors::ComplexAmplitude<dim> complex_magnitude;
+  const ::DataPostprocessors::ComplexPhase<dim>     complex_phase;
 
   DataOut<dim> data_out;
 
