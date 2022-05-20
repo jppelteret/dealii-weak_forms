@@ -32,74 +32,84 @@
 WEAK_FORMS_NAMESPACE_OPEN
 
 
-
-/* =============== Specialization of operators: Linear forms =============== */
-
-
-
-template <typename ScalarType,
-          typename TestSpaceOp,
-          typename Functor,
-          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
-auto
-operator*(const ScalarType &                                 value,
-          const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form)
+// Arithmetic operations
+// These should be in the same namespace as the SymbolicOps, so that ADL
+// can be exploited when namespace is not unconditionally exposed.
+namespace WeakForms
 {
-  return WeakForms::linear_form(linear_form.get_test_space_operation(),
-                                value * linear_form.get_functor());
-}
+  namespace Operators
+  {
+    /* ============= Specialization of operators: Linear forms ============= */
 
 
 
-template <typename ScalarType,
-          typename TestSpaceOp,
-          typename Functor,
-          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
-auto
-operator*(const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form,
-          const ScalarType &                                 value)
-{
-  // Delegate to the other function
-  return value * linear_form;
-}
+    template <typename ScalarType,
+              typename TestSpaceOp,
+              typename Functor,
+              typename = typename WeakForms::is_scalar_type<ScalarType>::type>
+    auto
+    operator*(const ScalarType &                                 value,
+              const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form)
+    {
+      return WeakForms::linear_form(linear_form.get_test_space_operation(),
+                                    value * linear_form.get_functor());
+    }
 
 
 
-/* ============== Specialization of operators: Bilinear forms ============== */
+    template <typename ScalarType,
+              typename TestSpaceOp,
+              typename Functor,
+              typename = typename WeakForms::is_scalar_type<ScalarType>::type>
+    auto
+    operator*(const WeakForms::LinearForm<TestSpaceOp, Functor> &linear_form,
+              const ScalarType &                                 value)
+    {
+      // Delegate to the other function
+      return value * linear_form;
+    }
 
 
 
-template <typename ScalarType,
-          typename TestSpaceOp,
-          typename Functor,
-          typename TrialSpaceOp,
-          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
-auto
-operator*(const ScalarType &value,
-          const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
-            &bilinear_form)
-{
-  return WeakForms::bilinear_form(bilinear_form.get_test_space_operation(),
-                                  value * bilinear_form.get_functor(),
-                                  bilinear_form.get_trial_space_operation());
-}
+    /* ============ Specialization of operators: Bilinear forms ============ */
 
 
 
-template <typename ScalarType,
-          typename TestSpaceOp,
-          typename Functor,
-          typename TrialSpaceOp,
-          typename = typename WeakForms::is_scalar_type<ScalarType>::type>
-auto
-operator*(const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
-            &               bilinear_form,
-          const ScalarType &value)
-{
-  // Delegate to the other function
-  return value * bilinear_form;
-}
+    template <typename ScalarType,
+              typename TestSpaceOp,
+              typename Functor,
+              typename TrialSpaceOp,
+              typename = typename WeakForms::is_scalar_type<ScalarType>::type>
+    auto
+    operator*(const ScalarType &value,
+              const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
+                &bilinear_form)
+    {
+      return WeakForms::bilinear_form(
+        bilinear_form.get_test_space_operation(),
+        value * bilinear_form.get_functor(),
+        bilinear_form.get_trial_space_operation());
+    }
 
+
+
+    template <typename ScalarType,
+              typename TestSpaceOp,
+              typename Functor,
+              typename TrialSpaceOp,
+              typename = typename WeakForms::is_scalar_type<ScalarType>::type>
+    auto
+    operator*(const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
+                &               bilinear_form,
+              const ScalarType &value)
+    {
+      // Delegate to the other function
+      return value * bilinear_form;
+    }
+
+
+  } // namespace Operators
+} // namespace WeakForms
 
 
 WEAK_FORMS_NAMESPACE_CLOSE
