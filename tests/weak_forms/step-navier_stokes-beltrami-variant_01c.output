@@ -1,0 +1,113 @@
+
+DEAL::
+DEAL::Time step #1, advancing to t = 0.00640000000 (dt = 0.00640000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [0.000794935914 / 32] 
+DEAL::    [8.81690556e-05 / 24] 
+DEAL::    [2.01606509e-08 / 9] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000218979482
+DEAL::    ||e_u||_L2 = 1.51215681e-06
+DEAL::
+DEAL::Time step #2, advancing to t = 0.0464000000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [0.000528302550 / 34] 
+DEAL::    [1.48405637e-06 / 25] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000206823731
+DEAL::    ||e_u||_L2 = 4.11385884e-06
+DEAL::
+DEAL::Time step #3, advancing to t = 0.0864000000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [2.78743870e-05 / 37] 
+DEAL::    [2.73602804e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000202304559
+DEAL::    ||e_u||_L2 = 5.17193889e-06
+DEAL::
+DEAL::Time step #4, advancing to t = 0.126400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [2.98917997e-05 / 37] 
+DEAL::    [2.78155463e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000199699165
+DEAL::    ||e_u||_L2 = 5.46486167e-06
+DEAL::
+DEAL::Time step #5, advancing to t = 0.166400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.05522489e-05 / 37] 
+DEAL::    [2.78543735e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000197707059
+DEAL::    ||e_u||_L2 = 5.49514664e-06
+DEAL::
+DEAL::Time step #6, advancing to t = 0.206400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.08047401e-05 / 37] 
+DEAL::    [2.77666246e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000195847638
+DEAL::    ||e_u||_L2 = 5.45559782e-06
+DEAL::
+DEAL::Time step #7, advancing to t = 0.246400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.08355944e-05 / 37] 
+DEAL::    [2.76452658e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000193993885
+DEAL::    ||e_u||_L2 = 5.40498490e-06
+DEAL::
+DEAL::Time step #8, advancing to t = 0.286400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.07914329e-05 / 37] 
+DEAL::    [2.75164068e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000192132187
+DEAL::    ||e_u||_L2 = 5.35571095e-06
+DEAL::
+DEAL::Time step #9, advancing to t = 0.326400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.07316561e-05 / 37] 
+DEAL::    [2.73865731e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000190272273
+DEAL::    ||e_u||_L2 = 5.30797368e-06
+DEAL::
+DEAL::Time step #10, advancing to t = 0.366400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.06727316e-05 / 37] 
+DEAL::    [2.72571927e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000188422842
+DEAL::    ||e_u||_L2 = 5.26040950e-06
+DEAL::
+DEAL::Time step #11, advancing to t = 0.406400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.06169929e-05 / 37] 
+DEAL::    [2.71285169e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000186588305
+DEAL::    ||e_u||_L2 = 5.21234137e-06
+DEAL::
+DEAL::Time step #12, advancing to t = 0.446400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.05635428e-05 / 37] 
+DEAL::    [2.70005583e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000184770262
+DEAL::    ||e_u||_L2 = 5.16372977e-06
+DEAL::
+DEAL::Time step #13, advancing to t = 0.486400000 (dt = 0.0400000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [3.05113875e-05 / 37] 
+DEAL::    [2.68732883e-06 / 26] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000182969048
+DEAL::    ||e_u||_L2 = 5.11480887e-06
+DEAL::
+DEAL::Time step #14, advancing to t = 0.500000000 (dt = 0.0136000000). 
+DEAL::  Nonlinear iteration [nl error / lin. its]:   
+DEAL::    [6.94000995e-06 / 27] 
+DEAL::  L2-Errors: 
+DEAL::    ||e_p||_L2 = 0.000182961996
+DEAL::    ||e_u||_L2 = 5.09134492e-06
