@@ -62,11 +62,14 @@ namespace WeakForms
       , functor_op(functor_op)
       , trial_space_op(trial_space_op)
       , local_contribution_symmetry_flag(false)
+      , local_shape_function_kronecker_delta_flag(false)
     {}
 
     std::string
     as_ascii(const SymbolicDecorations &decorator) const
     {
+      // TODO: has_kronecker_delta_property()
+      // TODO: is_symmetric()
       return "(" + test_space_op.as_ascii(decorator) + ", " +
              functor_op.as_ascii(decorator) + ", " +
              trial_space_op.as_ascii(decorator) + ")";
@@ -92,6 +95,8 @@ namespace WeakForms
           const std::string symb_mult_sclr =
             Utilities::LaTeX::get_symbol_multiply(Functor::rank);
 
+          // TODO: has_kronecker_delta_property()
+          // TODO: is_symmetric()
           return lbrace + test_space_op.as_latex(decorator) + symb_mult_tt +
                  lbrace + functor_op.as_latex(decorator) + symb_mult_sclr +
                  trial_space_op.as_latex(decorator) + rbrace + rbrace;
@@ -109,6 +114,8 @@ namespace WeakForms
           const std::string symb_mult_ft =
             Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_ft);
 
+          // TODO: has_kronecker_delta_property()
+          // TODO: is_symmetric()
           return lbrace + test_space_op.as_latex(decorator) + symb_mult_tf +
                  functor_op.as_latex(decorator) + symb_mult_ft +
                  trial_space_op.as_latex(decorator) + rbrace;
@@ -128,6 +135,24 @@ namespace WeakForms
     symmetrize()
     {
       local_contribution_symmetry_flag = true;
+      return *this;
+    }
+
+    bool
+    has_kronecker_delta_property() const
+    {
+      return local_shape_function_kronecker_delta_flag;
+    }
+
+    // Indicate that the contribution that comes from this form
+    // only participates when the shape function components of the
+    // test function and trial solution spaces are identical.
+    //
+    // Note: We return this object to facilitate operation chaining.
+    BilinearForm &
+    delta_IJ()
+    {
+      local_shape_function_kronecker_delta_flag = true;
       return *this;
     }
 
@@ -234,6 +259,7 @@ namespace WeakForms
     const TrialSpaceOp trial_space_op;
     bool local_contribution_symmetry_flag; // Indicate whether or not this local
                                            // contribution is a symmetric one
+    bool local_shape_function_kronecker_delta_flag;
   };
 
 } // namespace WeakForms
