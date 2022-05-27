@@ -203,7 +203,11 @@ ENDFOREACH()
 # pedantic build flags (e.g. -Werror) and this triggers unexpected
 # in the build checks.
 ##
-# INCLUDE(${CMAKE_SOURCE_DIR}/cmake/setup_compiler_flags.cmake)
+OPTION(STRICT_BUILD_FLAGS "Developer mode: Add strict flags for building the library and tests" OFF)
+IF(STRICT_BUILD_FLAGS)
+  MESSAGE(STATUS "Adding strict build flags")
+  INCLUDE(${CMAKE_SOURCE_DIR}/cmake/setup_compiler_flags.cmake)
+ENDIF()
 
 ##
 # Setup Clang format:

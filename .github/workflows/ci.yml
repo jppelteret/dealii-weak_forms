@@ -24,6 +24,7 @@ jobs:
             -DDEAL_II_SOURCE_DIR=/usr/src/dealii \
             -DBUILD_BENCHMARKS=OFF \
             -DBUILD_TESTS=ON \
+            -DSTRICT_BUILD_FLAGS=ON \
             ../
       - name: Compile
         run: |
