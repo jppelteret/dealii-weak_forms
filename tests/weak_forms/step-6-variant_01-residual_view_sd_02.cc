@@ -48,6 +48,14 @@ Step6<dim>::Step6()
 {}
 
 
+// Warning due to an unnecessary lambda capture, but if the
+// capture is removed then we get a compilation error.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#  pragma GCC diagnostic ignored "-Wunused-lambda-capture"
+#endif
+
+
 template <int dim>
 void
 Step6<dim>::assemble_system()

@@ -77,8 +77,8 @@ namespace Step47
     const ScalarFunctor gamma_over_h_functor("gamma/h", "\\frac{\\gamma}{h}");
     const auto          gamma_over_h =
       gamma_over_h_functor.template value<double, dim, spacedim>(
-        [this](const FEValuesBase<dim, spacedim> &fe_values,
-               const unsigned int                 q_point)
+        [](const FEValuesBase<dim, spacedim> &fe_values,
+           const unsigned int                 q_point)
         {
           Assert((dynamic_cast<const FEFaceValuesBase<dim, spacedim> *const>(
                    &fe_values)),
@@ -97,8 +97,8 @@ namespace Step47
 
           return gamma_over_h;
         },
-        [this](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
-               const unsigned int                      q_point)
+        [](const FEInterfaceValues<dim, spacedim> &fe_interface_values,
+           const unsigned int                      q_point)
         {
           Assert(fe_interface_values.at_boundary() == false,
                  ExcInternalError());
