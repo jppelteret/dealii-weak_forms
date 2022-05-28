@@ -419,6 +419,44 @@ namespace WeakForms
     };
 
 
+    template <int dim, int spacedim>
+    unsigned int
+    get_n_dofs(const FEValuesBase<dim, spacedim> &fe_values)
+    {
+      return fe_values.dofs_per_cell;
+    }
+
+    template <int dim, int spacedim>
+    unsigned int
+    get_n_dofs(const FEInterfaceValues<dim, spacedim> &fe_interface_values)
+    {
+      return fe_interface_values.n_current_interface_dofs();
+    }
+
+    template <int dim, int spacedim>
+    std::vector<unsigned int>
+    get_dof_component_indices(const FEValuesBase<dim, spacedim> &fe_values)
+    {
+      const unsigned int        n_dofs = get_n_dofs(fe_values);
+      std::vector<unsigned int> dof_component_indices(n_dofs);
+      DEAL_II_OPENMP_SIMD_PRAGMA
+      for (unsigned int k = 0; k < n_dofs; ++k)
+        dof_component_indices[k] =
+          fe_values.get_fe().system_to_component_index(k).first;
+      return dof_component_indices;
+    }
+
+    template <int dim, int spacedim>
+    std::vector<unsigned int>
+    get_dof_component_indices(
+      const FEInterfaceValues<dim, spacedim> &fe_interface_values)
+    {
+      AssertThrow(false, ExcNotImplemented());
+      (void)fe_interface_values;
+      return std::vector<unsigned int>();
+    }
+
+
     // Valid for cell and face assembly
     template <enum AccumulationSign Sign,
               typename ScalarType,
@@ -436,7 +474,8 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution)
+      const bool                                      symmetric_contribution,
+      const bool equal_components_contribution)
     {
       Assert(shapes_test.size() == fe_values_dofs.dofs_per_cell,
              ExcDimensionMismatch(shapes_test.size(),
@@ -473,6 +512,11 @@ namespace WeakForms
       const auto dof_range_j =
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
+      const std::vector<unsigned int> dof_component_index =
+        (equal_components_contribution ?
+           internal::get_dof_component_indices(fe_values_dofs) :
+           std::vector<unsigned int>());
+
       for (const unsigned int q : qp_range)
         {
           for (const unsigned int j : dof_range_j)
@@ -493,6 +537,12 @@ namespace WeakForms
                    fe_values_dofs.dof_indices());
               for (const unsigned int i : dof_range_i)
                 {
+                  if (equal_components_contribution &&
+                      (dof_component_index[i] != dof_component_index[j]))
+                    {
+                      continue;
+                    }
+
                   using ContractionType_SFS_JxW =
                     FullContraction<ValueTypeTest, ContractionType_FS_t>;
                   const ScalarType integrated_contribution =
@@ -531,7 +581,8 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution)
+      const bool                                      symmetric_contribution,
+      const bool equal_components_contribution)
     {
       (void)symmetric_contribution;
       Assert(shapes_test.size() == fe_values_dofs.n_current_interface_dofs(),
@@ -559,6 +610,7 @@ namespace WeakForms
                                       fe_values_q_points.n_quadrature_points));
         }
 
+
       // This is the equivalent of
       // for (q : q_points)
       //   for (i : dof_indices)
@@ -568,6 +620,10 @@ namespace WeakForms
       const auto qp_range    = fe_values_q_points.quadrature_point_indices();
       const auto dof_range_j = fe_values_dofs.dof_indices();
       const auto dof_range_i = fe_values_dofs.dof_indices();
+      const std::vector<unsigned int> dof_component_index =
+        (equal_components_contribution ?
+           internal::get_dof_component_indices(fe_values_dofs) :
+           std::vector<unsigned int>());
 
       for (const unsigned int q : qp_range)
         {
@@ -583,6 +639,12 @@ namespace WeakForms
 
               for (const unsigned int i : dof_range_i)
                 {
+                  if (equal_components_contribution &&
+                      (dof_component_index[i] != dof_component_index[j]))
+                    {
+                      continue;
+                    }
+
                   using ContractionType_SFS_JxW =
                     FullContraction<ValueTypeTest, ContractionType_FS_t>;
                   const ScalarType integrated_contribution =
@@ -621,7 +683,8 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution)
+      const bool                                      symmetric_contribution,
+      const bool equal_components_contribution)
     {
       assemble_cell_matrix_contribution<Sign>(cell_matrix,
                                               fe_values,
@@ -630,7 +693,8 @@ namespace WeakForms
                                               values_functor,
                                               shapes_trial,
                                               JxW,
-                                              symmetric_contribution);
+                                              symmetric_contribution,
+                                              equal_components_contribution);
     }
 
     // Valid only for interface assembly
@@ -649,7 +713,8 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution)
+      const bool                                      symmetric_contribution,
+      const bool equal_components_contribution)
     {
       assemble_cell_matrix_contribution<Sign>(cell_matrix,
                                               fe_interface_values,
@@ -658,26 +723,9 @@ namespace WeakForms
                                               values_functor,
                                               shapes_trial,
                                               JxW,
-                                              symmetric_contribution);
+                                              symmetric_contribution,
+                                              equal_components_contribution);
     }
-
-
-    namespace internal
-    {
-      template <int dim, int spacedim>
-      unsigned int
-      get_n_dofs(const FEValuesBase<dim, spacedim> &fe_values)
-      {
-        return fe_values.dofs_per_cell;
-      }
-
-      template <int dim, int spacedim>
-      unsigned int
-      get_n_dofs(const FEInterfaceValues<dim, spacedim> &fe_interface_values)
-      {
-        return fe_interface_values.n_current_interface_dofs();
-      }
-    } // namespace internal
 
 
     // Valid for cell, face and interface assembly
@@ -802,7 +850,8 @@ namespace WeakForms
       const VectorizedValueTypeFunctor &             values_functor,
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
       const VectorizedArray<double, width> &         JxW,
-      const bool                                     symmetric_contribution)
+      const bool                                     symmetric_contribution,
+      const bool equal_components_contribution)
     {
       // This is the equivalent of
       // for (q : q_points) --> vectorized
@@ -813,6 +862,11 @@ namespace WeakForms
       const auto dof_range_j =
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
+      const std::vector<unsigned int> dof_component_index =
+        (equal_components_contribution ?
+           internal::get_dof_component_indices(fe_values_dofs) :
+           std::vector<unsigned int>());
+
       for (const unsigned int j : dof_range_j)
         {
           using ContractionType_FS = FullContraction<VectorizedValueTypeFunctor,
@@ -829,6 +883,12 @@ namespace WeakForms
                                       fe_values_dofs.dof_indices());
           for (const unsigned int i : dof_range_i)
             {
+              if (equal_components_contribution &&
+                  (dof_component_index[i] != dof_component_index[j]))
+                {
+                  continue;
+                }
+
               using ContractionType_SFS_JxW =
                 FullContraction<VectorizedValueTypeTest, ContractionType_FS_t>;
               const VectorizedArray<ScalarType, width>
@@ -875,7 +935,8 @@ namespace WeakForms
       const VectorizedValueTypeFunctor &             values_functor,
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
       const VectorizedArray<double, width> &         JxW,
-      const bool                                     symmetric_contribution)
+      const bool                                     symmetric_contribution,
+      const bool equal_components_contribution)
     {
       (void)symmetric_contribution;
       // This is the equivalent of
@@ -886,6 +947,10 @@ namespace WeakForms
       //       shapes_trial[j][q]) * JxW[q]
       const auto dof_range_j = fe_values_dofs.dof_indices();
       const auto dof_range_i = fe_values_dofs.dof_indices();
+      const std::vector<unsigned int> dof_component_index =
+        (equal_components_contribution ?
+           internal::get_dof_component_indices(fe_values_dofs) :
+           std::vector<unsigned int>());
 
       for (const unsigned int j : dof_range_j)
         {
@@ -901,6 +966,12 @@ namespace WeakForms
           // delineate the symmetry condition for the coupling).
           for (const unsigned int i : dof_range_i)
             {
+              if (equal_components_contribution &&
+                  (dof_component_index[i] != dof_component_index[j]))
+                {
+                  continue;
+                }
+
               using ContractionType_SFS_JxW =
                 FullContraction<VectorizedValueTypeTest, ContractionType_FS_t>;
               const VectorizedArray<ScalarType, width>
@@ -1966,6 +2037,10 @@ namespace WeakForms
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
 
+      // Contribution shape function Kronecker delta property
+      const bool local_contribution_delta_IJ_flag =
+        form.has_kronecker_delta_property();
+
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
       // would occur in a "block" that is below the diagonal.
@@ -2038,6 +2113,7 @@ namespace WeakForms
                       trial_space_op,
                       local_contribution_symmetry_flag,
                       &global_system_symmetry_flag,
+                      local_contribution_delta_IJ_flag,
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2066,6 +2142,12 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
+        // Decide whether or not to only assemble the contribution if the
+        // shape function components for the test and trial spaces are
+        // identical.
+        const bool equal_components_contribution =
+          local_contribution_delta_IJ_flag;
+
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2091,7 +2173,8 @@ namespace WeakForms
                                     functor,
                                     trial_space_op,
                                     volume_integral,
-                                    symmetric_contribution);
+                                    symmetric_contribution,
+                                    equal_components_contribution);
 
         if (use_scratch_cell_matrix)
           {
@@ -2169,6 +2252,10 @@ namespace WeakForms
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
 
+      // Contribution shape function Kronecker delta property
+      const bool local_contribution_delta_IJ_flag =
+        form.has_kronecker_delta_property();
+
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
       // would occur in a "block" that is below the diagonal.
@@ -2241,6 +2328,7 @@ namespace WeakForms
                       trial_space_op,
                       local_contribution_symmetry_flag,
                       &global_system_symmetry_flag,
+                      local_contribution_delta_IJ_flag,
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2271,6 +2359,12 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
+        // Decide whether or not to only assemble the contribution if the
+        // shape function components for the test and trial spaces are
+        // identical.
+        const bool equal_components_contribution =
+          local_contribution_delta_IJ_flag;
+
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2297,7 +2391,8 @@ namespace WeakForms
                                              functor,
                                              trial_space_op,
                                              boundary_integral,
-                                             symmetric_contribution);
+                                             symmetric_contribution,
+                                             equal_components_contribution);
 
         if (use_scratch_cell_matrix)
           {
@@ -2372,6 +2467,10 @@ namespace WeakForms
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
 
+      // Contribution shape function Kronecker delta property
+      const bool local_contribution_delta_IJ_flag =
+        form.has_kronecker_delta_property();
+
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
       // would occur in a "block" that is below the diagonal.
@@ -2445,6 +2544,7 @@ namespace WeakForms
          trial_space_op,
          local_contribution_symmetry_flag,
          &global_system_symmetry_flag,
+         local_contribution_delta_IJ_flag,
          skip_contribution_due_to_global_symmetry](
           FullMatrix<ScalarType> &                cell_matrix,
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2477,6 +2577,12 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
+        // Decide whether or not to only assemble the contribution if the
+        // shape function components for the test and trial spaces are
+        // identical.
+        const bool equal_components_contribution =
+          local_contribution_delta_IJ_flag;
+
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2502,7 +2608,8 @@ namespace WeakForms
                                               functor,
                                               trial_space_op,
                                               interface_integral,
-                                              symmetric_contribution);
+                                              symmetric_contribution,
+                                              equal_components_contribution);
 
         // TODO[JPP]: Interfaces -- Uncomment this
         // if (use_scratch_cell_matrix)
@@ -2809,7 +2916,8 @@ namespace WeakForms
       const Functor &                    functor,
       const TrialSpaceOp &               trial_space_op,
       const SymbolicOpVolumeIntegral &   volume_integral,
-      const bool                         symmetric_contribution)
+      const bool                         symmetric_contribution,
+      const bool                         equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -2893,7 +3001,8 @@ namespace WeakForms
             values_functor,
             shapes_trial,
             JxW,
-            symmetric_contribution);
+            symmetric_contribution,
+            equal_components_contribution);
         }
     }
 
@@ -2923,7 +3032,8 @@ namespace WeakForms
       const Functor &                    functor,
       const TrialSpaceOp &               trial_space_op,
       const SymbolicOpVolumeIntegral &   volume_integral,
-      const bool                         symmetric_contribution)
+      const bool                         symmetric_contribution,
+      const bool                         equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -2965,13 +3075,15 @@ namespace WeakForms
         volume_integral.template operator()<ScalarType>(fe_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                                        fe_values,
-                                                        shapes_test,
-                                                        values_functor,
-                                                        shapes_trial,
-                                                        JxW,
-                                                        symmetric_contribution);
+      internal::assemble_cell_matrix_contribution<Sign>(
+        cell_matrix,
+        fe_values,
+        shapes_test,
+        values_functor,
+        shapes_trial,
+        JxW,
+        symmetric_contribution,
+        equal_components_contribution);
     }
 
 
@@ -3001,7 +3113,8 @@ namespace WeakForms
       const Functor &                        functor,
       const TrialSpaceOp &                   trial_space_op,
       const SymbolicOpBoundaryIntegral &     boundary_integral,
-      const bool                             symmetric_contribution)
+      const bool                             symmetric_contribution,
+      const bool                             equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3085,7 +3198,8 @@ namespace WeakForms
             values_functor,
             shapes_trial,
             JxW,
-            symmetric_contribution);
+            symmetric_contribution,
+            equal_components_contribution);
         }
     }
 
@@ -3116,7 +3230,8 @@ namespace WeakForms
       const Functor &                        functor,
       const TrialSpaceOp &                   trial_space_op,
       const SymbolicOpBoundaryIntegral &     boundary_integral,
-      const bool                             symmetric_contribution)
+      const bool                             symmetric_contribution,
+      const bool                             equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3159,14 +3274,16 @@ namespace WeakForms
         boundary_integral.template operator()<ScalarType>(fe_face_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                                        fe_values,
-                                                        fe_face_values,
-                                                        shapes_test,
-                                                        values_functor,
-                                                        shapes_trial,
-                                                        JxW,
-                                                        symmetric_contribution);
+      internal::assemble_cell_matrix_contribution<Sign>(
+        cell_matrix,
+        fe_values,
+        fe_face_values,
+        shapes_test,
+        values_functor,
+        shapes_trial,
+        JxW,
+        symmetric_contribution,
+        equal_components_contribution);
     }
 
 
@@ -3195,7 +3312,8 @@ namespace WeakForms
       const Functor &                         functor,
       const TrialSpaceOp &                    trial_space_op,
       const SymbolicOpInterfaceIntegral &     interface_integral,
-      const bool                              symmetric_contribution)
+      const bool                              symmetric_contribution,
+      const bool                              equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3279,7 +3397,8 @@ namespace WeakForms
             values_functor,
             shapes_trial,
             JxW,
-            symmetric_contribution);
+            symmetric_contribution,
+            equal_components_contribution);
         }
     }
 
@@ -3309,7 +3428,8 @@ namespace WeakForms
       const Functor &                         functor,
       const TrialSpaceOp &                    trial_space_op,
       const SymbolicOpInterfaceIntegral &     interface_integral,
-      const bool                              symmetric_contribution)
+      const bool                              symmetric_contribution,
+      const bool                              equal_components_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3352,13 +3472,15 @@ namespace WeakForms
         interface_integral.template operator()<ScalarType>(fe_interface_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                                        fe_interface_values,
-                                                        shapes_test,
-                                                        values_functor,
-                                                        shapes_trial,
-                                                        JxW,
-                                                        symmetric_contribution);
+      internal::assemble_cell_matrix_contribution<Sign>(
+        cell_matrix,
+        fe_interface_values,
+        shapes_test,
+        values_functor,
+        shapes_trial,
+        JxW,
+        symmetric_contribution,
+        equal_components_contribution);
     }
 
     // ==============
