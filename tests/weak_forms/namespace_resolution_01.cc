@@ -58,8 +58,6 @@ run()
   // using namespace Differentiation;
   namespace dealiiWF = dealiiWeakForms::WeakForms;
 
-  int constexpr spacedim = dim;
-
   // Symbolic types for test function, and a coefficient.
   dealiiWF::TestFunction<dim> const          test;
   dealiiWF::SubSpaceExtractors::Vector const subspace_extractor(0,
