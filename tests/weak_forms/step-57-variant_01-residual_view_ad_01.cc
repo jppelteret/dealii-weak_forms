@@ -38,6 +38,14 @@ namespace Step57
   };
 
 
+// Warning due to an unnecessary lambda capture, but if the
+// capture is removed then we get a compilation error.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#  pragma GCC diagnostic ignored "-Wunused-lambda-capture"
+#endif
+
+
   template <int dim>
   void
   Step57<dim>::assemble(const bool initial_step, const bool assemble_matrix)
@@ -221,6 +229,9 @@ namespace Step57
                                       quadrature_formula);
       }
   }
+
+
+#pragma GCC diagnostic pop // "-Wunused-lambda-capture"
 
 } // namespace Step57
 

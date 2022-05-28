@@ -41,6 +41,14 @@ namespace Step44
     assemble_system(const BlockVector<double> &solution_delta) override;
   };
 
+
+// Warning due to an unnecessary lambda capture, but if the
+// capture is removed then we get a compilation error.
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#  pragma GCC diagnostic ignored "-Wunused-lambda-capture"
+#endif
+
   template <int dim>
   void
   Step44<dim>::assemble_system(const BlockVector<double> &solution_delta)
@@ -238,6 +246,9 @@ namespace Step44
 
     this->timer.leave_subsection();
   }
+
+
+#pragma GCC diagnostic pop // "-Wunused-lambda-capture"
 } // namespace Step44
 
 int
