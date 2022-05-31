@@ -78,6 +78,10 @@ $(function() {
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01Tensor_3_01rank___00_01spaced2259d38bc9c84606de127d24db1de7fc.html#a1349a3a750f43cfded86fd993f0bdc80">WeakForms::internal::Differentiation::DiffOpResult&lt; Tensor&lt; rank_, spacedim, T &gt;, U, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01Tensor_3_01rank__1_00_01space25ba62bea1e6c1711d0d97d259164faa.html#a00158145c8ad0ebd504c758cf2c0866f">WeakForms::internal::Differentiation::DiffOpResult&lt; Tensor&lt; rank_1, spacedim, T &gt;, SymmetricTensor&lt; rank_2, spacedim, U &gt;, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01Tensor_3_01rank__1_00_01spacee3b07189e500c3b11ac6b9ee8b37f518.html#ab86021e64e4cb74b3820289bb9a0cda3">WeakForms::internal::Differentiation::DiffOpResult&lt; Tensor&lt; rank_1, spacedim, T &gt;, Tensor&lt; rank_2, spacedim, U &gt;, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutiona74e7171e80f75085533e75447e04814.html#adc5bd57cdfda72465d9ffa144e539e38">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#af23e5217dce2cddb4a649e682e2c458a">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO8ead37bfb9500b0000968100c9ed3780.html#ab64845a219e7a55c9535e4d0d35aec5b">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#abbe03cf7ce8713fd650a3f1ec39a4537">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ScalarCacheFunctor_00_01SymbolicOpCodes_1_1value_0cb71e82955d522cb306c693619f99ecb.html#acc13b706a29db17018e88c54d90994cb">WeakForms::Operators::SymbolicOp&lt; ScalarCacheFunctor, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SymmetricTensorCacheFunctor_3_01rank___00_01spacedd4ef3c3f05e88d4780549e0d2b75d5ec.html#a8c529797ba1f3277132226df20fb12ac">WeakForms::Operators::SymbolicOp&lt; SymmetricTensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TensorCacheFunctor_3_01rank___00_01spacedim_01_4_06a4e8f73e79fc2b5ee5bbc85e7109f66.html#a122f9238fd86fb5ee687cbc563e9f655">WeakForms::Operators::SymbolicOp&lt; TensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
@@ -100,6 +104,73 @@ $(function() {
 </li>
 <li>scratch_data
 : <a class="el" href="structWeakForms_1_1SolutionExtractionData.html#a9040731774cdd4437ccbbf10e0553645">WeakForms::SolutionExtractionData&lt; dim, spacedim &gt;</a>
+</li>
+<li>sd_assert_hash_computed()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a1506e53d0b0429a00c7f4ed6dcc9f268">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_call_function()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a8aaf69646c7682402134d307850d0ffb">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_call_substitution_function()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#abdba053cdb9c0e0180b526977aeddcf0">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_differentiate()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a7ccfde7a1ba4d7ecca1f91d655aaf768">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_function_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#a60e17019b804d35eeee1530bbcf69972">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a5e07d91a6e49b83a0d4e7593f711b83c">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a9c2c5969aa4572c1728e830a3bece276">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#a608f0f5b8e354139bd93274a5c997ba0">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_get_substitution_map()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#aeaf3df7d0347cf33eaca108881da275d">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_get_symbol_map()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a84a5610f95d069f7ce34019553d42697">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_helper_type
+: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#ac003e70320813777cf719f9f2dfcdc2c">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a7101963aca13616d34af0c4f03b3917f">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+</li>
+<li>sd_intermediate_substitution_function_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#a98b4406b098cd4fe7e1ed71daa7d6b4a">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a4fdbe7aa6606866316e9731bcd0fb9a4">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#acfecd793dd56fee7369b897824aac9dd">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#a1292d502913f85d87104d68922888ae6">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_register_functions()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a06a81c2f995d1406dc4ca86196e0d60e">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_register_symbols_function_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#aae6a676d15fd88254452ced78592ca11">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a38c4066f0cffa8de0cc71771662d1f17">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#aa1cc50e54f00fefcd5e8d22d57a2fe8f">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#aeeab2b42be5e7090df51fe7a721e3efb">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_substitute()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a4bbc3065f195d34c2b2cd64f737c1e46">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_substitute_and_differentiate()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a102e9c9469d9e48e998558236b61b4ec">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_substitution_function_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#a1353058b95893c844f54aad65e6add48">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a77fed7597a1b55fef604fbe9dc3b3738">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a3141a3c361a6173e4a3884f0db962ada">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#ae1c3dc192db3118604018d03ec54d28a">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>sd_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#a757c2e864c01ab80b057879839f7eb37">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a965291cf5403e468e359ae8784b40e0e">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a9f5da8fc915570d77a2e2d4ca599975c">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#ac5c91a4f40faff0ea095bce596c2cd51">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
+</li>
+<li>second_derivatives
+: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a38635990794727a57ec6245bd0057640">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+</li>
+<li>second_derivatives_value_t
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#ac63cfceeedf9ea22de59464951c4926f">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
 </li>
 <li>set_global_system_symmetry_flag()
 : <a class="el" href="classWeakForms_1_1AssemblerBase.html#a253676a020498f7a8c5fe2fffb47da94">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
@@ -142,10 +213,13 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Normal.html#aafd7535523e5b2b6146c5671236d3927">WeakForms::Normal&lt; dim, spacedim &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1BinaryOpBase.html#ade1bdba5af06793fd1cd3e4493cb548b">WeakForms::Operators::BinaryOpBase&lt; Derived &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01Normal_3_01dim_00_01spacedim_01_4_00_01SymbolicOpCodes_1_1value_01_4.html#ac21209046ab0cc307473df7c6e3ed4d6">WeakForms::Operators::SymbolicOp&lt; Normal&lt; dim, spacedim &gt;, SymbolicOpCodes::value &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO8ead37bfb9500b0000968100c9ed3780.html#a360b14164c1859336eaa528634b7e80a">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#aaaabdae3b57271e7e7d458464f93a587">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ScalarCacheFunctor_00_01SymbolicOpCodes_1_1value_0cb71e82955d522cb306c693619f99ecb.html#ae4ea79e83d52fbf94d7196d55a7fe43a">WeakForms::Operators::SymbolicOp&lt; ScalarCacheFunctor, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SymmetricTensorCacheFunctor_3_01rank___00_01spacedd4ef3c3f05e88d4780549e0d2b75d5ec.html#aaaf5fe392d742df740c4d1520d7610ce">WeakForms::Operators::SymbolicOp&lt; SymmetricTensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TensorCacheFunctor_3_01rank___00_01spacedim_01_4_06a4e8f73e79fc2b5ee5bbc85e7109f66.html#acb9c900fad7605a8bf4d6c6d89ff4730">WeakForms::Operators::SymbolicOp&lt; TensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1UnaryOpBase.html#a5b585d2085ee945ea6e010443f64ef03">WeakForms::Operators::UnaryOpBase&lt; Derived &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#af4aba505153e34f6172e45424fa3d600">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
 , <a class="el" href="classWeakForms_1_1Space.html#a5161491d4ae8551294bbeaeddc10306e">WeakForms::Space&lt; dim, spacedim &gt;</a>
 </li>
 <li>spacedim
@@ -166,13 +240,27 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Integral.html#a0074b951a500bca9b49aae94743df955">WeakForms::Integral&lt; SubDomainType &gt;</a>
 </li>
 <li>SubSpaceViewBase()
-: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#adc040bd65440e3ba1a0e0bcfed475318">WeakForms::SubSpaceViews::SubSpaceViewBase&lt; SpaceType, ExtractorType &gt;</a>
+: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#aec05d83cd9b6a09786046ef5f6504e35">WeakForms::SubSpaceViews::SubSpaceViewBase&lt; SpaceType, ExtractorType &gt;</a>
+</li>
+<li>substitution_map_type
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#abe7b0fa6a644d1474a12eea6936fa84c">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a787e28aed2675990158675900d00dd0c">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a11e37e3d4f22c29b87c41f865d75b5e7">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#a43f339850c89afa207ba026923018e48">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
 </li>
 <li>symbol_ascii
 : <a class="el" href="classWeakForms_1_1Functor.html#aa58e6f185003558386d714adca6bb02b">WeakForms::Functor&lt; rank_ &gt;</a>
 </li>
 <li>symbol_latex
 : <a class="el" href="classWeakForms_1_1Functor.html#a28d303073a499e4dacc694c8b568a40d">WeakForms::Functor&lt; rank_ &gt;</a>
+</li>
+<li>symbolic_fields
+: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#aa5b04cc567b8709a829bb9939c8080fc">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#aa03debe412f4e493cc900ac39b6890e0">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+</li>
+<li>symbolic_op_field_solutions
+: <a class="el" href="classWeakForms_1_1EnergyFunctor.html#a6813d5506d07fddf4bd61baf5547d8b0">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
+, <a class="el" href="classWeakForms_1_1ResidualFunctor.html#aabb39804f343eb87d4950d53484d6355">WeakForms::ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
 </li>
 <li>SymbolicDecorations()
 : <a class="el" href="structWeakForms_1_1SymbolicDecorations.html#a3c2a8145d7adf63a139d8e6f006f4174">WeakForms::SymbolicDecorations</a>
@@ -191,11 +279,15 @@ $(function() {
 </li>
 <li>SymbolicOp()
 : <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html#a0c5f194173cfa75fa5e64c02abcd1e12">WeakForms::Operators::SymbolicOp&lt; Op, OpCode, UnderlyingType, Args &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutiona74e7171e80f75085533e75447e04814.html#afba6125682862c32f53e0edd85e5a9d0">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutionf01f0f9c7ecc87a291c20e7d794a89e7.html#a2944ac3a13e8ae0d39c57c664fd27a76">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01IntegralType___00_01SymbolicOpCodes_1_1value_00_01b5dd922ccaf92ff61d346ba9d66b3428.html#a6960472c2870164f0df3a4c65056e013">WeakForms::Operators::SymbolicOp&lt; IntegralType_, SymbolicOpCodes::value, ScalarType_, IntegrandType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01Normal_3_01dim_00_01spacedim_01_4_00_01SymbolicOpCodes_1_1value_01_4.html#a640526c2db25e0da6c410b2196f3b50a">WeakForms::Operators::SymbolicOp&lt; Normal&lt; dim, spacedim &gt;, SymbolicOpCodes::value &gt;</a>
-, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ScalarCacheFunctor_00_01SymbolicOpCodes_1_1value_0cb71e82955d522cb306c693619f99ecb.html#ad5193f3c3aa6bd4ba230ed41a63cb715">WeakForms::Operators::SymbolicOp&lt; ScalarCacheFunctor, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO8ead37bfb9500b0000968100c9ed3780.html#ac62071dfad239df4b4a0eb1660562738">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO34c9684fc56e558c315083f240f64a5f.html#a64b10a543ac6e618d183b81e04a2de60">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, void, Differentiation::SD::Expression, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ScalarCacheFunctor_00_01SymbolicOpCodes_1_1value_0cb71e82955d522cb306c693619f99ecb.html#aa7d68a0aca1b005a763a85eae4b05793">WeakForms::Operators::SymbolicOp&lt; ScalarCacheFunctor, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SymmetricTensorCacheFunctor_3_01rank___00_01spacedd4ef3c3f05e88d4780549e0d2b75d5ec.html#ac074f98f3ad9ace7deefe12e4984c194">WeakForms::Operators::SymbolicOp&lt; SymmetricTensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
-, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TensorCacheFunctor_3_01rank___00_01spacedim_01_4_06a4e8f73e79fc2b5ee5bbc85e7109f66.html#a6436d160474248d0d3ea6d47e0ffa961">WeakForms::Operators::SymbolicOp&lt; TensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TensorCacheFunctor_3_01rank___00_01spacedim_01_4_06a4e8f73e79fc2b5ee5bbc85e7109f66.html#adbbf39bb780845dcadc804067eadf16f">WeakForms::Operators::SymbolicOp&lt; TensorCacheFunctor&lt; rank_, spacedim &gt;, SymbolicOpCodes::value, ScalarType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TestFunction_3_01dim_00_01spacedim_01_4_00_01OpCode_01_4.html#ab58641cc9bded37dcc7b3e25c9c70158">WeakForms::Operators::SymbolicOp&lt; TestFunction&lt; dim, spacedim &gt;, OpCode &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01TrialSolution_3_01dim_00_01spacedim_01_4_00_01OpCode_01_4.html#a4d310be338eaf6ebc952741a7574910c">WeakForms::Operators::SymbolicOp&lt; TrialSolution&lt; dim, spacedim &gt;, OpCode &gt;</a>
 </li>
@@ -207,7 +299,7 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a80da572f4f1708923fdf59aefe7884c0">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 </li>
 <li>SymmetricTensor()
-: <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1SymmetricTensor.html#abd9a5355067a08320bccde849dff1ec9">WeakForms::SubSpaceExtractors::SymmetricTensor&lt; rank_ &gt;</a>
+: <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1SymmetricTensor.html#a04b6aeb3f89ace9adc23f8b030a3c51d">WeakForms::SubSpaceExtractors::SymmetricTensor&lt; rank_ &gt;</a>
 </li>
 <li>SymmetricTensorCacheFunctor()
 : <a class="el" href="classWeakForms_1_1SymmetricTensorCacheFunctor.html#a3aa5cd66af79bd9d46c388bd157abd42">WeakForms::SymmetricTensorCacheFunctor&lt; rank, spacedim &gt;</a>

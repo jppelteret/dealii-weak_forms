@@ -69,6 +69,8 @@ $(function() {
 , <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#aa9dbf59874c91bb3159cd93626673224">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
 , <a class="el" href="classWeakForms_1_1Integrator.html#a290304a08c19367c87166c44e8a88362">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a5aa01c6914eab2630c5ce1c9b5a37127">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#ad39a2b15110b7319a980ae30530c411b">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a627d165880a7e3b8d06789f2153c5608">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
 </li>
 <li>DEAL_II_SUBSPACE_VIEW_COMMON_IMPL()
 : <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#a8274efc4db35321e3ae4ddd757923aec">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
@@ -124,6 +126,8 @@ $(function() {
 <li>dI()
 : <a class="el" href="classWeakForms_1_1BilinearForm.html#a1f15086f78ead8248875159db9fa93f4">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a516896d6ca52a4c391a46880e14558f0">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#a574e6fe89c0e38dc3bdff3e7a4a70e19">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aa179db1cd88cc6c17bd85190674defa2">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
 </li>
 <li>DifferentialGeometry()
 : <a class="el" href="structWeakForms_1_1Decorations_1_1DifferentialGeometry.html#afe06c5499f3a382ee1ac7dcb67d8de09">WeakForms::Decorations::DifferentialGeometry</a>
@@ -140,16 +144,16 @@ $(function() {
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a2851485031fb2085e2141f7be0f884cd">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 </li>
 <li>do_add_boundary_face_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a7a4e76c7ca1e2a2cdadd3deb30e64fd0">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a6763ecc6b2854a7c94ddde1cd21b873b">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_cell_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a40cf562db24628337882fbd1fdeef128">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a6777551b1d347bf72cd82ec47a20e886">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_interface_face_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a66c580455fc6fd514f25cf54d6f8826a">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a90412fb97dd5adccb54505ec21d260ff">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_assemble_system()
-: <a class="el" href="classWeakForms_1_1MatrixBasedAssembler.html#aed707b3b4e9bff37e5660529d604405c">WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1MatrixBasedAssembler.html#a41ae802d49d3fe1ab7b3d6ccb797ac6a">WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_dA()
 : <a class="el" href="classWeakForms_1_1Integrator.html#ad0aa0256568ba3b074628a4582bdb950">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
@@ -158,10 +162,12 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Integrator.html#aaed6f5e7e53e138927d61670643022b8">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
 </li>
 <li>dV()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#a1bd7e0d6b23f31937240e2445950e205">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a2912fa43861c5b718c143f73b213cc88">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#ac07f81f4b6f69041b936201a3a484faf">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
-, <a class="el" href="classWeakForms_1_1Integrator.html#a3f6979b80f0c1a11d30cdf5540d4952d">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
+, <a class="el" href="classWeakForms_1_1Integrator.html#a1869123d90a1d4d8738a9107b6bcc3f4">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a6dc02dd676e96a7f6131c50b733f3b24">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#a27bc86c0119b21a705eacbf9bb7a3ab2">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#afe83af54da84ccd37d0e57e313dee494">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->

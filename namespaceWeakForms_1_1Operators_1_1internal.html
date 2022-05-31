@@ -171,6 +171,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpExtractor_3_01SubSpaceViews_1_1Vector_3_01966cdcdb13924380b579ef39a774b850.html">SymbolicOpExtractor&lt; SubSpaceViews::Vector&lt; SpaceType &gt;, SymbolicOpCodes::value &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionADHelper.html">SymbolicOpsSubSpaceFieldSolutionADHelper</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionHelperBase.html">SymbolicOpsSubSpaceFieldSolutionHelperBase</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html">SymbolicOpsSubSpaceFieldSolutionSDHelper</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TwoIndexPack.html">TwoIndexPack</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1unary__op__test__trial__traits.html">unary_op_test_trial_traits</a></td></tr>
@@ -192,6 +198,20 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a7b415fbf98ad5e13dba7c2db5ddc4a9c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a7b415fbf98ad5e13dba7c2db5ddc4a9c">replace_protected_characters</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a7b415fbf98ad5e13dba7c2db5ddc4a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
+<tr class="memitem:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, Differentiation::SD::Expression &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#ad266e7e6cc930e68927f8c1ae0d28b9b">make_symbolic</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af22e6d11d826dca740c9c0cf0565aabc"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
+<tr class="memitem:af22e6d11d826dca740c9c0cf0565aabc"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, Tensor&lt; ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression &gt; &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#af22e6d11d826dca740c9c0cf0565aabc">make_symbolic</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:af22e6d11d826dca740c9c0cf0565aabc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18be18c5ff53acc94a39708098272283"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
+<tr class="memitem:a18be18c5ff53acc94a39708098272283"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, SymmetricTensor&lt; ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression &gt; &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a18be18c5ff53acc94a39708098272283">make_symbolic</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a18be18c5ff53acc94a39708098272283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6621a54649e3960af8624e83c41abef1"><td class="memTemplParams" colspan="2">template&lt;typename ExpressionType , typename SymbolicOpField &gt; </td></tr>
+<tr class="memitem:a6621a54649e3960af8624e83c41abef1"><td class="memTemplItemLeft" align="right" valign="top">SymbolicOpField::template value_type&lt; ExpressionType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a6621a54649e3960af8624e83c41abef1">make_symbolic</a> (const SymbolicOpField &amp;field, const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator)</td></tr>
+<tr class="separator:a6621a54649e3960af8624e83c41abef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f5656456f103c34eb3c0d2c2304836"><td class="memTemplParams" colspan="2">template&lt;typename T1 , typename T2 &gt; </td></tr>
 <tr class="memitem:a93f5656456f103c34eb3c0d2c2304836"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a93f5656456f103c34eb3c0d2c2304836">pow_impl</a> (const T1 &amp;t1, const T2 &amp;t2)</td></tr>
 <tr class="separator:a93f5656456f103c34eb3c0d2c2304836"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,6 +274,132 @@ Functions</h2></td></tr>
 <tr class="separator:afe670c7c3e6e9d56527a2714509c0295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a7b415fbf98ad5e13dba7c2db5ddc4a9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b415fbf98ad5e13dba7c2db5ddc4a9c">&#9670;&nbsp;</a></span>replace_protected_characters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string WeakForms::Operators::internal::replace_protected_characters </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ad__sd__functor__internal_8h_source.html#l00594">594</a> of file <a class="el" href="ad__sd__functor__internal_8h_source.html">ad_sd_functor_internal.h</a>.</p>
+
+</div>
+</div>
+<a id="ad266e7e6cc930e68927f8c1ae0d28b9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad266e7e6cc930e68927f8c1ae0d28b9b">&#9670;&nbsp;</a></span>make_symbolic() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReturnType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if&lt; std::is_same&lt;ReturnType, Differentiation::SD::Expression&gt;::value, ReturnType&gt;::type WeakForms::Operators::internal::make_symbolic </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ad__sd__functor__internal_8h_source.html#l00628">628</a> of file <a class="el" href="ad__sd__functor__internal_8h_source.html">ad_sd_functor_internal.h</a>.</p>
+
+</div>
+</div>
+<a id="af22e6d11d826dca740c9c0cf0565aabc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af22e6d11d826dca740c9c0cf0565aabc">&#9670;&nbsp;</a></span>make_symbolic() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReturnType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if&lt; std::is_same&lt;ReturnType, Tensor&lt;ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression&gt; &gt;::value, ReturnType&gt;::type WeakForms::Operators::internal::make_symbolic </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ad__sd__functor__internal_8h_source.html#l00640">640</a> of file <a class="el" href="ad__sd__functor__internal_8h_source.html">ad_sd_functor_internal.h</a>.</p>
+
+</div>
+</div>
+<a id="a18be18c5ff53acc94a39708098272283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18be18c5ff53acc94a39708098272283">&#9670;&nbsp;</a></span>make_symbolic() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReturnType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if&lt; std::is_same&lt;ReturnType, SymmetricTensor&lt;ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression&gt; &gt;::value, ReturnType&gt;::type WeakForms::Operators::internal::make_symbolic </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ad__sd__functor__internal_8h_source.html#l00654">654</a> of file <a class="el" href="ad__sd__functor__internal_8h_source.html">ad_sd_functor_internal.h</a>.</p>
+
+</div>
+</div>
+<a id="a6621a54649e3960af8624e83c41abef1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6621a54649e3960af8624e83c41abef1">&#9670;&nbsp;</a></span>make_symbolic() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ExpressionType , typename SymbolicOpField &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">SymbolicOpField::template value_type&lt;ExpressionType&gt; WeakForms::Operators::internal::make_symbolic </td>
+          <td>(</td>
+          <td class="paramtype">const SymbolicOpField &amp;&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
+          <td class="paramname"><em>decorator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ad__sd__functor__internal_8h_source.html#l00664">664</a> of file <a class="el" href="ad__sd__functor__internal_8h_source.html">ad_sd_functor_internal.h</a>.</p>
+
+</div>
+</div>
 <a id="a93f5656456f103c34eb3c0d2c2304836"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a93f5656456f103c34eb3c0d2c2304836">&#9670;&nbsp;</a></span>pow_impl()</h2>
 
