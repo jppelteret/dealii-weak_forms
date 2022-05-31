@@ -342,7 +342,7 @@ IF(BUILD_DOCUMENTATION)
   ADD_SUBDIRECTORY(doc/doxygen)
 
   ADD_CUSTOM_TARGET(documentation
-    COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/doc/doxygen/options.dox
+    COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/doc/doxygen/options.dox
     COMMENT "Build Doxygen documentation"
   )
   FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html")
