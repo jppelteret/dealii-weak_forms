@@ -12,6 +12,10 @@ on:
 jobs:
   make_and_deploy_doxygen:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
     container: 
       image: docker://dealii/dealii:master-focal-root
     steps:
@@ -38,5 +42,5 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/html
