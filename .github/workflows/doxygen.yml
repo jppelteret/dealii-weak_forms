@@ -1,0 +1,42 @@
+# https://gist.github.com/shundhammer/ed359db0d9329d4db551528256060d2a?permalink_comment_id=3987881#gistcomment-3987881
+# https://github.com/peaceiris/actions-gh-pages
+name: Doxygen
+
+on:
+  repository_dispatch:
+  push:
+    branches:
+      - main
+      - gh-pages
+
+jobs:
+  make_and_deploy_doxygen:
+    runs-on: ubuntu-latest
+    container: 
+      image: docker://dealii/dealii:master-focal-root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install doxygen and latex components
+        run: sudo apt-get update; sudo apt-get install -y doxygen graphviz texlive-full
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/opt \
+            -DDEAL_II_SOURCE_DIR=/usr/src/dealii \
+            -DBUILD_BENCHMARKS=ON \
+            -DBUILD_TESTS=OFF \
+            -DSTRICT_BUILD_FLAGS=OFF \
+            -DBUILD_DOCUMENTATION=ON \
+            ../
+          make documentation
+
+      # Deploy to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
