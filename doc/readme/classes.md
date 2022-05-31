@@ -51,12 +51,13 @@ doxygen documentation is in preparation.
   - `LinearForm`: 
     A class that encapsulates a linear form, composed of a test space operator
     and an arbitrary functor.
-    - Convenience function: `linear_form()`
+    - Convenience function to create a linear form: `linear_form()`
   - `BilinearForm`:
     A class that encapsulates a bilinear form, composed of a test space operator,
     an arbitrary functor, and a trial space operator.
-    - Can set a symmetry flag for local contributions
-    - Convenience function: `bilinear_form()`
+    - `symmetrize()`: Set a symmetry flag for local contributions
+    - `delta_IJ()`: Ensure that accumulation is only done when the DoF component of the trial and test functions are equal (a "Kronecker delta" of the shape functions)
+    - Convenience function to create a bilinear form: `bilinear_form()`
   - Feature points
     - Form operators involve slots for per-dof calculations and per-quadrature point calculations
       - Can use the per-quadrature point slot as much as possible to minimise number of operations
@@ -71,33 +72,33 @@ doxygen documentation is in preparation.
     A self-linearising energy functional (as is often defined for variational 
     problems)
     - Feature points
-      - Convenience function: `energy_functional_form()`
       - Consumes an `EnergyFunctor`
       - Parameterisation is defined by the energy functor
       - Variation and linearisation with respect to all field variables
+      - Convenience function to create an energy functional form: `energy_functional_form()`
     - `EnergyFunctor`: Energy functional
       Functors to parameterise and define self-linearisation finite element
       residuals (or a component of the residual)
-      - Convenience function: `energy_functor()`
       - Automatic differentiation stored energy function
       - Symbolic differentiation free/stored energy function
+      - Convenience function to create an energy functor: `energy_functor()`
   - `SelfLinearization::ResidualView`:
     A self-linearising energy functional (as is often defined for variational 
     problems)
     - Feature points
-      - Convenience function: `residual_form()`
       - Consumes an `ResidualFunctor` or a `ResidualViewFunctor`
       - Finite element component selection using the designated test function
       - Test function may be a composite operation (but will **not** be
         linearised)
       - Parameterisation is defined by the residual functor
       - Linearisation with respect to all field variables
+      - Convenience function to create a residual form: `residual_form()`
     - `ResidualFunctor`, `ResidualViewFunctor`:
       Functors to parameterise and define self-linearisation finite element
       residuals (or a component of the residual)
-      - Convenience functions: `residual_functor()`, `residual_view_functor()`
       - Automatic differentiation function for kinetic variable
       - Symbolic differentiation function for kinetic variable
+      - Convenience functions to create residual functors: `residual_functor()`, `residual_view_functor()`
   - `AD_SD_Functor_Cache`:
     A class that provides a caching mechanism for `SD` calculations.
     Using this class, the results of symbolic operations (e.g. symbolic
@@ -261,6 +262,7 @@ doxygen documentation is in preparation.
   Matrix-based assembly (using `MeshWorker::mesh_loop()` for multithreading as
   well as `SIMD`)
   - Symmetry flag for global system
+    - `symmetrize()`: Marks the global system as symmetric 
     - Exclusion of bilinear form contributions based on field index
   - Ignore DoFs that aren't in DoF group
   - Vectorisation if `AVX` extensions are available
