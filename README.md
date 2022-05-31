@@ -1,3 +1,7 @@
+![Linux CI](https://github.com/jppelteret/dealii-weak_forms/actions/workflows/ci.yml/badge.svg)
+![Doxygen documentation](https://github.com/jppelteret/dealii-weak_forms/actions/workflows/doxygen.yml/badge.svg)
+![Source indentation](https://github.com/jppelteret/dealii-weak_forms/actions/workflows/indentation.yml/badge.svg)
+
 # Weak forms for deal.II
 ------------------------
 An implementation of a symbolic weak form interface for `deal.II`, using 
@@ -93,7 +97,9 @@ Details as to exactly what the abstraction level is, and how it differs to the
 
 # Class documentation
 ---------------------
-Some documentation for the user-interactive classes and some details
+The source code documentation for this project can be found at https://jppelteret.github.io/dealii-weak_forms/index.html. 
+
+As the Doxygen documentation is incomplete, some more informative documentation for the user-interactive classes and some details
 of how they can be used are found [here](doc/readme/classes.md).
 
 
