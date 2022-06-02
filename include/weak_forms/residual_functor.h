@@ -60,6 +60,25 @@ namespace WeakForms
   class ResidualViewFunctor;
 
 
+  /**
+   * A class that represents the point-wise decomposition of the residual,
+   * or a component of the residual.
+   *
+   * The parameterization of the residual functor is provided by its template
+   * argument(s). This selection then defines the arguments that must be passed
+   * into the functions that compute the residual at any quadrature point.
+   * Note that no value can be assigned to the residual (component) through this
+   * class; it's primary use is to generate views into the residual that may
+   * then be assigned a definition.
+   *
+   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that represents
+   * the component(s) of the field solutions that parameterize the residual
+   * (component). Each argument captures either a field, or one of its
+   * derivatives. Each are treated as independent variables as they are later
+   * used in the construction of linear and bilinear form(s). Note that one may
+   * not use the global field solution as an argument; instead, this class
+   * requires views to each component of the solution in order to be useful.
+   */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   class ResidualFunctor : public WeakForms::Functor<1>
   {
@@ -128,7 +147,39 @@ namespace WeakForms
   };
 
 
-
+  /**
+   * A class that represents the point-wise decomposition of a component of the
+   * residual.
+   *
+   * This class is intended to be created through the ResidualFunctor class,
+   * although it can also be easily created using the residual_view_functor()
+   * convenience function.
+   *
+   * The parameterization of the residual functor is provided by its template
+   * argument(s) -- specifically those following the first template argument.
+   * This selection then defines the arguments that must be passed
+   * into the functions that compute the residual at any quadrature point.
+   * Depending on which variant of the value() function is called to assign a
+   * definition to the residual component, one of two modes will have been
+   * chosen to evaluate both this function as well as its various derivatives
+   * with respect to the field variables: either automatic differentiation (AD)
+   * or symbolic differentiation (SD) will be utilized for this task. The former
+   * is likely more user-friendly, while the latter offers the possibility of
+   * more performance when the definition of the residual is one is itself
+   * complex, or has complex or lengthy partial derivatives.
+   *
+   * @tparam TestSpaceOp A class that represents the test function that this
+   * residual value is tested against. It is used to generate the linear form
+   * that is then later consistently linearized.
+   *
+   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that represents
+   * the component(s) of the field solutions that parameterize the residual
+   * (component). Each argument captures either a field, or one of its
+   * derivatives. Each are treated as independent variables as they are later
+   * used in the construction of linear and bilinear form(s). Note that one may
+   * not use the global field solution as an argument; instead, this class
+   * requires views to each component of the solution in order to be useful.
+   */
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
   class ResidualViewFunctor : public WeakForms::Functor<1>
   {
@@ -415,7 +466,10 @@ namespace WeakForms
 namespace WeakForms
 {
   /**
-   * Shortcut so that we don't need to do something like this:
+   * A convenience function for create a ResidualFunctor.
+   *
+   * It is, essentially, a shortcut so that we don't need to do something
+   * like this:
    *
    * <code>
    * const FieldSolution<dim> solution;
@@ -443,6 +497,9 @@ namespace WeakForms
   }
 
 
+  /**
+   * A convenience function for create a ResidualViewFunctor.
+   */
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
   ResidualViewFunctor<SymbolicOpsSubSpaceFieldSolution...>
   residual_view_functor(
@@ -1105,7 +1162,7 @@ namespace WeakForms
             }
           batch_optimizer.register_symbols(symbol_map);
 
-          // The next typical few steps that precede function resistration
+          // The next typical few steps that precede function registration
           // have already been performed in the class constructor:
           // - Evaluate the functor to compute the total stored field.
           // - Compute the first derivatives of the field function.
