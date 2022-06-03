@@ -125,8 +125,16 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt;<br />
 class WeakForms::ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</h3>
 
+<p>A class that represents the point-wise decomposition of the residual, or a component of the residual.</p>
+<p>The parameterization of the residual functor is provided by its template argument(s). This selection then defines the arguments that must be passed into the functions that compute the residual at any quadrature point. Note that no value can be assigned to the residual (component) through this class; it's primary use is to generate views into the residual that may then be assigned a definition.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SymbolicOpsSubSpaceFieldSolution</td><td>A variadic template that represents the component(s) of the field solutions that parameterize the residual (component). Each argument captures either a field, or one of its derivatives. Each are treated as independent variables as they are later used in the construction of linear and bilinear form(s). Note that one may not use the global field solution as an argument; instead, this class requires views to each component of the solution in order to be useful. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00064">64</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00083">83</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ac1ec755c790ee9d96b5eb7268f46a984"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac1ec755c790ee9d96b5eb7268f46a984">&#9670;&nbsp;</a></span>Base</h2>
@@ -150,7 +158,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00066">66</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00085">85</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -197,7 +205,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00068">68</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00087">87</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -230,7 +238,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#ade6bab734717940a996d28b50ef9ab16">WeakForms::Functor&lt; 1 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00079">79</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00098">98</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -262,7 +270,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#ac47553c67ebe76dedc6e3dcb94561eb9">WeakForms::Functor&lt; 1 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00086">86</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00105">105</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +302,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#adf82912b3c84928bb170ec20e4c6d708">WeakForms::Functor&lt; 1 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00095">95</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00114">114</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -326,7 +334,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#a36ba6a921dae61ed197c564ddac55ad6">WeakForms::Functor&lt; 1 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00103">103</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00122">122</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -358,7 +366,7 @@ template&lt;typename TestSpaceOp &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00111">111</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00130">130</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -387,7 +395,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00120">120</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00139">139</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -414,7 +422,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00127">127</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00146">146</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>

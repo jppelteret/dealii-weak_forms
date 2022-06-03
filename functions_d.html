@@ -70,13 +70,40 @@ $(function() {
 , <a class="el" href="classWeakForms_1_1Integrator.html#a290304a08c19367c87166c44e8a88362">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a5aa01c6914eab2630c5ce1c9b5a37127">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#ad39a2b15110b7319a980ae30530c411b">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a627d165880a7e3b8d06789f2153c5608">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a8e312e4b0fb4fda547b6e38886321e7a">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</a>
 </li>
 <li>DEAL_II_SUBSPACE_VIEW_COMMON_IMPL()
-: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#a8274efc4db35321e3ae4ddd757923aec">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#a8d22ccda4bc9ac78003c49f866d98d0e">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html#ae1d24b52d18416f7c1ae1a119868a447">WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a504129a52430aa0bde87417178087998">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a9f56dd9dacf52a79ea2f9f225ea28219">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 </li>
-<li>DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL
-: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1curl_00_f523261033d06f5b4ec505d988ef71af.html#aae99f4da743067775b7e7d99eca0d270">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::curl, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+<li>DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL()
+: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_f177f6866257a03500878268e39dba71.html#a513a160c9c9d34ac796e588b9ce2ecef">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::average_of_gradients, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_76c7a7f98f16de03a94bf2d74676e5e9.html#a8403a71d283f0939f9d95cad0dc0e7e6">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::average_of_hessians, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_526ab931552ebbd3a9071f636dc08fc9.html#a42a7d11c765a22256119195b0e321f78">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::average_of_values, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1curl_00_f523261033d06f5b4ec505d988ef71af.html#ac694c64259d56024cb1c42ade9b989b7">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::curl, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1divergenf732cf3059eba4678e05f562a9dfa994.html#a0a5f4ab484f0ddb398c3f932155b490d">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::divergence, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1gradient289e9e6c69f80b539a642f9baecceb56.html#a59fe40987ba99a2c79d02c90d1cf0830">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::gradient, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1hessian_0a1e2964a9a584b53d5f14fcaadf0bfa.html#addea7666bce7d2e92886ff9a2b41dedc">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::hessian, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1jump__in55d0c3fe5b1c8d5dfb12509f78f7ce76.html#a2a860e81366c40e69dbc7b1901dbc8a3">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::jump_in_gradients, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1jump__ina578bc12c26b62f1bdf73e10a8117505.html#af1aaef4900a0ebd6176bf11c5e01b83a">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::jump_in_hessians, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1jump__in06333b3fd3a8ee6f5323567e628809ba.html#adee58e41e3caea2e19a0af2d51e978f7">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::jump_in_third_derivatives, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1jump__in5fad9adb8158c3d74095929e0bf374ca.html#ad6c1f32b665a6984f29bb6ba375017ff">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::jump_in_values, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1laplacia3ee86c47bc2dda2825016b83bb00a916.html#a260a862535ddfde26880ee43a59d81ac">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::laplacian, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1symmetride10efa8ef571e76580035bacb4c4ad8.html#a8d3d26ac7844390e3d0ef7824bac9cb0">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::symmetric_gradient, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1third__df634102093433bca4659be522a5c1e65.html#a69fadc1dd170154aabc4d0b8dbbfd24c">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::third_derivative, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1value_006a0f6e4e62e04e66ae1a65491c4d7052.html#a86fceedadd011ed836f390bb4f45bb17">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::value, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</a>
+</li>
+<li>DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL()
+: <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1curl_00_7f6e501661f91019045b3aa51fc73870.html#aca8127e6e2beed3dc89c91067de47f49">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::curl, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1divergena9992537e59b2e35ab2071d2a13a332f.html#a030c9dbbc8bb2b55081a2876d1d63146">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::divergence, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1gradientd6912c5b41264e061e7c192372092503.html#af76160c0b28fb6feb0790f01c647da53">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::gradient, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1hessian_aaccdd81517615e50a2557dc79a62fd7.html#af8f26bd4dcf28a3e1dbd22a30898fce4">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::hessian, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1laplaciac8d575261d2e6caf5118dd891a2e9c99.html#aa8e7d5d1dc47329b4f0085fda6e27356">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::laplacian, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1symmetri52a8e862e2e3b74a88cea939b5c7281c.html#a6dc2ece5d16b6176b46390ce3998021e">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::symmetric_gradient, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1third__df8972f87cc32bf4702667ed76a5c2a75.html#a9ce816668dd31f8fd7c5ec427a0e63ac">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::third_derivative, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1value_00a33c0a3a5b3a20272b88cc9ef18bbe47.html#ab756c3419064a8dad89de27d309e1a33">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::value, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;</a>
 </li>
 <li>decorate_average()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a09af7de3432bb9a19e9273929bd5ce49">WeakForms::Utilities::LaTeX</a>
@@ -134,7 +161,7 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1BilinearForm.html#a1f15086f78ead8248875159db9fa93f4">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a516896d6ca52a4c391a46880e14558f0">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#a574e6fe89c0e38dc3bdff3e7a4a70e19">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aa179db1cd88cc6c17bd85190674defa2">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a5cdc1669d28de0427d1e332743325201">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</a>
 </li>
 <li>differential_geometry
 : <a class="el" href="structWeakForms_1_1SymbolicNames.html#ab0c1c74f56327a3f49dfd0aa0e4e53e2">WeakForms::SymbolicNames</a>
@@ -178,19 +205,19 @@ $(function() {
 <li>divergence
 : <a class="el" href="structWeakForms_1_1Decorations_1_1DifferentialOperators.html#a15a708f512a2502e4ad247945ef0d4b9">WeakForms::Decorations::DifferentialOperators</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html#a6fb51d356b5f8f2ca890f4d6db144696">WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</a>
-, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#acb053dce83e885000a2c25a3f775c6d2">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#afb655f13906e5dcb956a89356ddce1b1">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#ab41f8b87544b9035f9749e5f09791d05">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 </li>
 <li>divergence_type
-: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html#a1668e34f8a3d46cc661bd43a0c2f3909">WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html#aba4fe889580d3c42e853459030fad986">WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a53b469c13c0aca41902e2fdc026cfb3f">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a1ca758cab35ea2bf71ec45c82c759be2">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 </li>
 <li>do_add_boundary_face_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a7a4e76c7ca1e2a2cdadd3deb30e64fd0">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a6763ecc6b2854a7c94ddde1cd21b873b">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_cell_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a6777551b1d347bf72cd82ec47a20e886">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a40cf562db24628337882fbd1fdeef128">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_interface_face_operation()
 : <a class="el" href="classWeakForms_1_1AssemblerBase.html#a90412fb97dd5adccb54505ec21d260ff">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
@@ -214,12 +241,12 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1SolutionStorage.html#aed307cbdb5a18642f86328fda3f72138">WeakForms::SolutionStorage&lt; VectorType, DoFHandlerType &gt;</a>
 </li>
 <li>dV()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#a1daccd70dcb32efaeb7376860fcdc08d">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
-, <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#aae0f6764abe8abdd8062434d82b5ced2">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
-, <a class="el" href="classWeakForms_1_1Integrator.html#ae94d9d2367d1953c4ab78b38baebc981">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a1bd7e0d6b23f31937240e2445950e205">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a5310ce3149e92fb9a940eafce3ff4025">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
+, <a class="el" href="classWeakForms_1_1Integrator.html#a688a36d29469c2b074559bc613e53e6d">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#a2a97bc0d115354686c9162468e15efb7">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#ad4f0a38e63bf190de0f38aac37ed0bbf">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#afe83af54da84ccd37d0e57e313dee494">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#a27bc86c0119b21a705eacbf9bb7a3ab2">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ab776cf6d7945296be180d7ec2b8faf0c">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</a>
 </li>
 </ul>
 </div><!-- contents -->

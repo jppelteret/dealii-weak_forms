@@ -302,9 +302,9 @@ Functions</h2></td></tr>
 <div class="line">      OpType&gt;::template vectorized_return_type&lt;value_type&lt;ScalarType&gt;, width&gt;;</div>
 </div><!-- fragment --><p>A macro to implement the common parts of a unary op type trait class.</p>
 <p>What remains to be defined are:</p><ul>
-<li>static const enum UnaryOpCodes op_code</li>
-<li>static const int rank</li>
-<li>template &lt;typename ScalarType&gt; using value_type = ...;</li>
+<li><code>static const enum UnaryOpCodes op_code</code></li>
+<li><code>static const int rank</code></li>
+<li><code>template &lt;typename ScalarType&gt; using value_type = ...;</code></li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>This should used at the very end of the class definition, as the <code>return_type</code> relies on the <code>value_type</code> to be defined. </dd></dl>
 

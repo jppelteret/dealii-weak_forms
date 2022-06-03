@@ -69,7 +69,6 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pri-types">Private Types</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classWeakForms_1_1SubSpaceViews_1_1Tensor-members.html">List of all members</a>  </div>
@@ -84,11 +83,35 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:abb10d33c1de5a59f2cf13e05f03206f0"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
+<tr class="memitem:abb10d33c1de5a59f2cf13e05f03206f0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#abb10d33c1de5a59f2cf13e05f03206f0">value_type</a> = typename FEValuesViewsType::template solution_value_type&lt; ScalarType &gt;</td></tr>
+<tr class="separator:abb10d33c1de5a59f2cf13e05f03206f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3af843f452a2107ef54fd161c8ac0b18"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
+<tr class="memitem:a3af843f452a2107ef54fd161c8ac0b18"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a3af843f452a2107ef54fd161c8ac0b18">gradient_type</a> = typename FEValuesViewsType::template solution_gradient_type&lt; ScalarType &gt;</td></tr>
+<tr class="separator:a3af843f452a2107ef54fd161c8ac0b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
+<tr class="memitem:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a53b469c13c0aca41902e2fdc026cfb3f">divergence_type</a> = typename FEValuesViewsType::template solution_divergence_type&lt; ScalarType &gt;</td></tr>
+<tr class="separator:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a780cded65c5807806f746df9a1fbfb1c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#a780cded65c5807806f746df9a1fbfb1c">extractor_type</a> = FEValuesExtractors::Tensor&lt; rank_ &gt;</td></tr>
 <tr class="separator:a780cded65c5807806f746df9a1fbfb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a7c3ebf500bd388002f334cb9b3e3dd37"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a7c3ebf500bd388002f334cb9b3e3dd37">value</a> () const</td></tr>
+<tr class="separator:a7c3ebf500bd388002f334cb9b3e3dd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f9d0c461def677369b3f781fba57125"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a4f9d0c461def677369b3f781fba57125">gradient</a> () const</td></tr>
+<tr class="separator:a4f9d0c461def677369b3f781fba57125"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb053dce83e885000a2c25a3f775c6d2"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#acb053dce83e885000a2c25a3f775c6d2">divergence</a> () const</td></tr>
+<tr class="separator:acb053dce83e885000a2c25a3f775c6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
+<tr class="memitem:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a0eefe679aee436dd5d902f6d8e5f77c6">value</a> () const</td></tr>
+<tr class="separator:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
+<tr class="memitem:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a6bf806cba37501e6f9ecc16407d8eb79">gradient</a> () const</td></tr>
+<tr class="separator:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb655f13906e5dcb956a89356ddce1b1"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
+<tr class="memitem:afb655f13906e5dcb956a89356ddce1b1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#afb655f13906e5dcb956a89356ddce1b1">divergence</a> () const</td></tr>
+<tr class="separator:afb655f13906e5dcb956a89356ddce1b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9a8df425a081ea5aeffc850556bd424"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html">SubSpaceViewBase</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#af9a8df425a081ea5aeffc850556bd424">clone</a> () const=0</td></tr>
 <tr class="separator:af9a8df425a081ea5aeffc850556bd424"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0653a95511f1d9fa7d0e383f4118180d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceWeakForms_1_1types.html#af006ef14802d739da8d38bee98eea946">types::field_index</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#a0653a95511f1d9fa7d0e383f4118180d">get_field_index</a> () const</td></tr>
@@ -113,32 +136,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a792ce0c69d004f4387e21731c041c56c"><td class="memItemLeft" align="right" valign="top">const SpaceType_ &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#a792ce0c69d004f4387e21731c041c56c">get_space</a> () const</td></tr>
 <tr class="separator:a792ce0c69d004f4387e21731c041c56c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:a1c7dffac1f84bd4c53311a00ccb77282"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
-<tr class="memitem:a1c7dffac1f84bd4c53311a00ccb77282"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a1c7dffac1f84bd4c53311a00ccb77282">gradient_type</a> = (<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">Tensor</a>, SpaceType_, FEValuesExtractors::Tensor&lt; rank_ &gt;) public typename FEValuesViewsType::template solution_gradient_type&lt; ScalarType &gt;</td></tr>
-<tr class="separator:a1c7dffac1f84bd4c53311a00ccb77282"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
-<tr class="memitem:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a53b469c13c0aca41902e2fdc026cfb3f">divergence_type</a> = typename FEValuesViewsType::template solution_divergence_type&lt; ScalarType &gt;</td></tr>
-<tr class="separator:a53b469c13c0aca41902e2fdc026cfb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a7c3ebf500bd388002f334cb9b3e3dd37"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a7c3ebf500bd388002f334cb9b3e3dd37">value</a> () const</td></tr>
-<tr class="separator:a7c3ebf500bd388002f334cb9b3e3dd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f9d0c461def677369b3f781fba57125"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a4f9d0c461def677369b3f781fba57125">gradient</a> () const</td></tr>
-<tr class="separator:a4f9d0c461def677369b3f781fba57125"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb053dce83e885000a2c25a3f775c6d2"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#acb053dce83e885000a2c25a3f775c6d2">divergence</a> () const</td></tr>
-<tr class="separator:acb053dce83e885000a2c25a3f775c6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
-<tr class="memitem:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a0eefe679aee436dd5d902f6d8e5f77c6">value</a> () const</td></tr>
-<tr class="separator:a0eefe679aee436dd5d902f6d8e5f77c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
-<tr class="memitem:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a6bf806cba37501e6f9ecc16407d8eb79">gradient</a> () const</td></tr>
-<tr class="separator:a6bf806cba37501e6f9ecc16407d8eb79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb655f13906e5dcb956a89356ddce1b1"><td class="memTemplParams" colspan="2">template&lt;types::solution_index solution_index = numbers::linearizable_solution_index, typename T  = SpaceType_, typename  = typename std::enable_if&lt;is_field_solution&lt;T&gt;::value&gt;::type&gt; </td></tr>
-<tr class="memitem:afb655f13906e5dcb956a89356ddce1b1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#afb655f13906e5dcb956a89356ddce1b1">divergence</a> () const</td></tr>
-<tr class="separator:afb655f13906e5dcb956a89356ddce1b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a504129a52430aa0bde87417178087998"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a504129a52430aa0bde87417178087998">DEAL_II_SUBSPACE_VIEW_COMMON_IMPL</a> (<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">Tensor</a>, SpaceType_, FEValuesExtractors::Tensor&lt; rank_ &gt;)</td></tr>
+<tr class="separator:a504129a52430aa0bde87417178087998"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -154,8 +155,8 @@ class WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</h3>
 
 <p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01244">1244</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a1c7dffac1f84bd4c53311a00ccb77282"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c7dffac1f84bd4c53311a00ccb77282">&#9670;&nbsp;</a></span>gradient_type</h2>
+<a id="abb10d33c1de5a59f2cf13e05f03206f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb10d33c1de5a59f2cf13e05f03206f0">&#9670;&nbsp;</a></span>value_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -163,19 +164,31 @@ class WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</h3>
 template&lt;int rank_, typename SpaceType_ &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">WeakForms::SubSpaceViews::Tensor</a>&lt; rank_, SpaceType_ &gt;::<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a1c7dffac1f84bd4c53311a00ccb77282">gradient_type</a> =  (<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">Tensor</a>, SpaceType_, FEValuesExtractors::Tensor&lt;rank_&gt;) public typename FEValuesViewsType::template solution_gradient_type&lt;ScalarType&gt;</td>
+          <td class="memname">using <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">WeakForms::SubSpaceViews::Tensor</a>&lt; rank_, SpaceType_ &gt;::<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#abb10d33c1de5a59f2cf13e05f03206f0">value_type</a> =  typename FEValuesViewsType::template solution_value_type&lt;ScalarType&gt;</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01254">1254</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+
+</div>
+</div>
+<a id="a3af843f452a2107ef54fd161c8ac0b18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3af843f452a2107ef54fd161c8ac0b18">&#9670;&nbsp;</a></span>gradient_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int rank_, typename SpaceType_ &gt; </div>
+<div class="memtemplate">
+template&lt;typename ScalarType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">WeakForms::SubSpaceViews::Tensor</a>&lt; rank_, SpaceType_ &gt;::<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a3af843f452a2107ef54fd161c8ac0b18">gradient_type</a> =  typename FEValuesViewsType::template solution_gradient_type&lt;ScalarType&gt;</td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01258">1258</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
@@ -191,19 +204,11 @@ template&lt;typename ScalarType &gt; </div>
 template&lt;int rank_, typename SpaceType_ &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">WeakForms::SubSpaceViews::Tensor</a>&lt; rank_, SpaceType_ &gt;::<a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a53b469c13c0aca41902e2fdc026cfb3f">divergence_type</a> =  typename FEValuesViewsType::template solution_divergence_type&lt; ScalarType&gt;</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01263">1263</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
@@ -235,6 +240,50 @@ template&lt;typename ScalarType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a504129a52430aa0bde87417178087998"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a504129a52430aa0bde87417178087998">&#9670;&nbsp;</a></span>DEAL_II_SUBSPACE_VIEW_COMMON_IMPL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int rank_, typename SpaceType_ &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">WeakForms::SubSpaceViews::Tensor</a>&lt; rank_, SpaceType_ &gt;::DEAL_II_SUBSPACE_VIEW_COMMON_IMPL </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">Tensor</a>&lt; rank_, SpaceType_ &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SpaceType_&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FEValuesExtractors::Tensor&lt; rank_ &gt;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a7c3ebf500bd388002f334cb9b3e3dd37"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7c3ebf500bd388002f334cb9b3e3dd37">&#9670;&nbsp;</a></span>value() <span class="overload">[1/2]</span></h2>
 
@@ -255,7 +304,7 @@ template&lt;int rank_, typename SpaceType_ &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -284,7 +333,7 @@ template&lt;int rank_, typename SpaceType_ &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -313,7 +362,7 @@ template&lt;int rank_, typename SpaceType_ &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -344,7 +393,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -375,7 +424,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -406,7 +455,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

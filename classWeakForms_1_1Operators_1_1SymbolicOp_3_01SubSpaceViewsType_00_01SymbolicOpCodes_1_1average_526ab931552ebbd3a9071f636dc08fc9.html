@@ -69,6 +69,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_3c0f04d88a3975bbb8fcf9fca287e5fa.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::average_of_values, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt; Class Template Reference</div>  </div>
@@ -86,6 +87,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a13d42e095b2faa5468b964e038bd84b2"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
+<tr class="memitem:a13d42e095b2faa5468b964e038bd84b2"><td class="memTemplItemLeft" align="right" valign="top">const return_type&lt; ScalarType &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_526ab931552ebbd3a9071f636dc08fc9.html#a13d42e095b2faa5468b964e038bd84b2">operator()</a> (MeshWorker::ScratchData&lt; dimension, space_dimension &gt; &amp;scratch_data, const std::vector&lt; <a class="el" href="structWeakForms_1_1SolutionExtractionData.html">SolutionExtractionData</a>&lt; dimension, space_dimension &gt;&gt; &amp;solution_extraction_data) const</td></tr>
+<tr class="separator:a13d42e095b2faa5468b964e038bd84b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86034617e72eb8fcd6587ace0b577e0b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpAverageValueBase.html#a86034617e72eb8fcd6587ace0b577e0b">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
 <tr class="separator:a86034617e72eb8fcd6587ace0b577e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a518fa9adecbbbc62789843ca3d276c44"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpAverageValueBase.html#a518fa9adecbbbc62789843ca3d276c44">as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
@@ -99,13 +103,18 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a29de8c104974ee43ca35492e63e5eef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fa53c0be21a189183756d9a9a853f94"><td class="memItemLeft" align="right" valign="top">static const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpAverageValueBase.html#a8fa53c0be21a189183756d9a9a853f94">rank</a></td></tr>
 <tr class="separator:a8fa53c0be21a189183756d9a9a853f94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a42a7d11c765a22256119195b0e321f78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1average_526ab931552ebbd3a9071f636dc08fc9.html#a42a7d11c765a22256119195b0e321f78">DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL</a> (<a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpAverageValueBase.html">SymbolicOpAverageValueBase</a>, SubSpaceViewsType, solution_index, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba13d9f551b14a167cb84ea381fc8f2eb9">SymbolicOpCodes::average_of_values</a>)</td></tr>
+<tr class="separator:a42a7d11c765a22256119195b0e321f78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename SubSpaceViewsType, types::solution_index solution_index&gt;<br />
 class WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::average_of_values, typename std::enable_if&lt; is_field_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;</h3>
 
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03162">3162</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03163">3163</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a9d0277ec6df2dcaea0a8cb4eac38f425"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d0277ec6df2dcaea0a8cb4eac38f425">&#9670;&nbsp;</a></span>value_type</h2>
@@ -132,6 +141,98 @@ class WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::a
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a42a7d11c765a22256119195b0e321f78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42a7d11c765a22256119195b0e321f78">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SubSpaceViewsType , types::solution_index solution_index&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba13d9f551b14a167cb84ea381fc8f2eb9">SymbolicOpCodes::average_of_values</a>, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__field__solution.html">is_field_solution</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;::DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpAverageValueBase.html">SymbolicOpAverageValueBase</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SubSpaceViewsType&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">solution_index&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba13d9f551b14a167cb84ea381fc8f2eb9">SymbolicOpCodes::average_of_values</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a13d42e095b2faa5468b964e038bd84b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13d42e095b2faa5468b964e038bd84b2">&#9670;&nbsp;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SubSpaceViewsType , types::solution_index solution_index&gt; </div>
+<div class="memtemplate">
+template&lt;typename ScalarType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const return_type&lt;ScalarType&gt;&amp; <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba13d9f551b14a167cb84ea381fc8f2eb9">SymbolicOpCodes::average_of_values</a>, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__field__solution.html">is_field_solution</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt;::operator() </td>
+          <td>(</td>
+          <td class="paramtype">MeshWorker::ScratchData&lt; dimension, space_dimension &gt; &amp;&#160;</td>
+          <td class="paramname"><em>scratch_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structWeakForms_1_1SolutionExtractionData.html">SolutionExtractionData</a>&lt; dimension, space_dimension &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>solution_extraction_data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03180">3180</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+
+</div>
+</div>
 <a id="a86034617e72eb8fcd6587ace0b577e0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a86034617e72eb8fcd6587ace0b577e0b">&#9670;&nbsp;</a></span>as_ascii()</h2>
 

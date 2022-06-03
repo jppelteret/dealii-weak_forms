@@ -132,8 +132,9 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int spacedim, typename ReturnType&gt;<br />
 class WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</h3>
 
+<p>An integrator for user-defined functions </p>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00051">51</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00053">53</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aff8b7f83362df642cd389f1771bc9f80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff8b7f83362df642cd389f1771bc9f80">&#9670;&nbsp;</a></span>IntegrandPositionIndependent</h2>
@@ -159,7 +160,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <p>Type definition for functions that are independent of position.</p>
 <dl class="section note"><dt>Note</dt><dd>We switch the type definition based on whether or not the function returns some values . </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00061">61</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00063">63</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -185,7 +186,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00065">65</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00067">67</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -229,11 +230,12 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integrand</td><td></td></tr>
+    <tr><td class="paramname">mpi_communicator</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00073">73</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00076">76</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -276,11 +278,12 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integrand</td><td></td></tr>
+    <tr><td class="paramname">mpi_communicator</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00085">85</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00089">89</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -323,11 +326,12 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">function</td><td></td></tr>
+    <tr><td class="paramname">mpi_communicator</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00097">97</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00102">102</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -386,7 +390,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00120">120</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00125">125</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -434,7 +438,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00135">135</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00140">140</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -492,7 +496,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00163">163</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00168">168</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -540,7 +544,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00173">173</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00178">178</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -569,7 +573,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00212">212</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00217">217</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -598,7 +602,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00222">222</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00227">227</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -652,7 +656,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType, typename B
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00236">236</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00241">241</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -712,7 +716,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType, typename B
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00327">327</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00332">332</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -739,7 +743,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00201">201</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00206">206</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -765,7 +769,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00207">207</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00212">212</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -791,7 +795,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00209">209</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00214">214</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>

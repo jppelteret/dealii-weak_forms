@@ -70,6 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1laplaciaaf1f80e7af58e37998d772a6f11e4fb0.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::laplacian, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt; Class Template Reference</div>  </div>
@@ -106,6 +107,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a67498dd82e5ec104a63bcf731d2889ee"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
 <tr class="memitem:a67498dd82e5ec104a63bcf731d2889ee"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpLaplacianBase.html#a45cb94bd0ca21af71398ae4079c8984c">value_type</a>&lt; ScalarType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1laplaciac8d575261d2e6caf5118dd891a2e9c99.html#a67498dd82e5ec104a63bcf731d2889ee">operator()</a> (const FEValuesBase&lt; dimension, space_dimension &gt; &amp;fe_values, const unsigned int dof_index, const unsigned int q_point) const</td></tr>
 <tr class="separator:a67498dd82e5ec104a63bcf731d2889ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aa8e7d5d1dc47329b4f0085fda6e27356"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1laplaciac8d575261d2e6caf5118dd891a2e9c99.html#aa8e7d5d1dc47329b4f0085fda6e27356">DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL</a> (<a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpLaplacianBase.html">SymbolicOpLaplacianBase</a>, SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba919acfcca26e722b84b612fc3e7eb430">SymbolicOpCodes::laplacian</a>)</td></tr>
+<tr class="separator:aa8e7d5d1dc47329b4f0085fda6e27356"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename SubSpaceViewsType&gt;<br />
@@ -120,7 +126,7 @@ class WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::l
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01894">1894</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01895">1895</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a45cb94bd0ca21af71398ae4079c8984c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a45cb94bd0ca21af71398ae4079c8984c">&#9670;&nbsp;</a></span>value_type</h2>
@@ -147,6 +153,50 @@ class WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::l
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa8e7d5d1dc47329b4f0085fda6e27356"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8e7d5d1dc47329b4f0085fda6e27356">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SubSpaceViewsType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba919acfcca26e722b84b612fc3e7eb430">SymbolicOpCodes::laplacian</a>, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__test__function.html">is_test_function</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value||<a class="el" href="structWeakForms_1_1is__trial__solution.html">is_trial_solution</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;::DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpLaplacianBase.html">SymbolicOpLaplacianBase</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SubSpaceViewsType&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba919acfcca26e722b84b612fc3e7eb430">SymbolicOpCodes::laplacian</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a67498dd82e5ec104a63bcf731d2889ee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a67498dd82e5ec104a63bcf731d2889ee">&#9670;&nbsp;</a></span>operator()()</h2>
 
@@ -191,7 +241,7 @@ template&lt;typename ScalarType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01917">1917</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01918">1918</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>

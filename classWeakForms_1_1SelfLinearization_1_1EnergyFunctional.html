@@ -153,11 +153,18 @@ Friends</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename EnergyFunctor&gt;<br />
 class WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</h3>
 
-<p>A special form that consumes an energy functor and produces both the associated linear form and consistently-linearized bilinear form associated with the energy functional.</p>
-<p>The <code><a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html">EnergyFunctional</a></code> form is supplied with the finite element fields upon which the <code><a class="el" href="classWeakForms_1_1Functor.html">Functor</a></code> is parameterized. It then self-linearizes the discrete problem (i.e. at the finite element level) to produce the linear and bilinear forms. However, this class doesn't directly know how the energy functor itself is linearized. So the derivatives of the energy functor with respect to the various field parameters are given by the energy functor itself. We employ automatic or symbolic differentiation to perform that task. The local description of the energy (i.e. at the quadrature point level) is given by the <code><a class="el" href="classWeakForms_1_1Functor.html">Functor</a></code>.</p>
-<p>This is fair trade between the convenience of compile-time expansions for the derivatives of the energy functional, and some run-time derivatives of the (potentially complex) constitutive laws that the <code><a class="el" href="classWeakForms_1_1Functor.html">Functor</a></code> describes. The functor is only evaluated at quadrature points, so the computational cost associated with the calculation of those derivatives is kept to a minimum. It also means that we can take care of most of the bookkeeping and implementational details surrounding AD and SD. The user then needs a "minimal" understanding of how these parts of the framework work in order to use this feature. </p>
+<p>A special form that consumes an energy functor and produces both the associated linear form(s) and consistently linearized bilinear form(s) associated with the energy functional.</p>
+<p>The <code><a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html">EnergyFunctional</a></code> form is supplied with the finite element fields upon which the <code><a class="el" href="classWeakForms_1_1Functor.html">Functor</a></code> is parameterized. It then self-linearizes the discrete problem (i.e. at the finite element level) to produce the linear and bilinear forms. One linear form is generated for each variable upon which the energy functor is parameterized; each of these linear forms is then linearized with respect to all other variables. So, if the energy functor is parameterized by <code>n</code> arguments, then <code>n</code> linear forms and <code>n^2</code> bilinear forms will be generated.</p>
+<p>This class, however, doesn't directly know how the energy functor itself is to be linearized: the derivatives of the energy functor with respect to the various field parameters are computed by the energy functor itself. We employ automatic or symbolic differentiation to perform that task. The local description of the energy (i.e. at the quadrature point level) is given by the <code><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a></code>.</p>
+<p>This is fair trade between the convenience of compile-time expansions for the derivatives of the energy functional, and some run-time derivatives of the (potentially complex) constitutive laws that the <code><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a></code> describes. The functor is only evaluated at quadrature points, so the computational cost associated with the calculation of those derivatives is kept to a minimum. It also means that we can take care of most of the bookkeeping and implementational details surrounding AD and SD. The user then needs a "minimal" understanding of how these parts of the framework work in order to use this feature.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a></td><td>A class that is recognised to be a energy functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00339">339</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00350">350</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af9690fabef35ef6be4fbb2808a94cb9a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af9690fabef35ef6be4fbb2808a94cb9a">&#9670;&nbsp;</a></span>EnergyFunctional()</h2>
@@ -185,7 +192,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00354">354</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00365">365</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -216,7 +223,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00359">359</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00370">370</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -246,7 +253,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00366">366</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00377">377</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -275,7 +282,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00375">375</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00386">386</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -304,7 +311,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00381">381</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00392">392</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +340,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00387">387</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00398">398</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -364,7 +371,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00396">396</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00407">407</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -396,7 +403,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00403">403</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00414">414</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -428,7 +435,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00411">411</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00422">422</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -459,7 +466,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00418">418</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00429">429</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -491,7 +498,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00425">425</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00436">436</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -523,7 +530,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00433">433</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00444">444</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -554,7 +561,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00442">442</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00453">453</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -586,7 +593,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00449">449</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00460">460</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -618,7 +625,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00457">457</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00468">468</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -660,7 +667,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00478">478</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00489">489</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -708,7 +715,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex_1, std::size_t F
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00552">552</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00563">563</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -750,7 +757,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00648">648</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00659">659</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -798,7 +805,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex_1, std::size_t F
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00737">737</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00748">748</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -840,7 +847,7 @@ template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename Assemble
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00849">849</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00860">860</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -869,7 +876,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00843">843</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00854">854</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -896,7 +903,7 @@ template&lt;typename EnergyFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00465">465</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00476">476</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>

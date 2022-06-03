@@ -70,6 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1gradient90b01cac364092a1fac78117e745e962.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::gradient, typename std::enable_if&lt; is_test_function&lt; typename SubSpaceViewsType::SpaceType &gt;::value||is_trial_solution&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt; Class Template Reference</div>  </div>
@@ -106,6 +107,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4a2fa7e17a60a487a67a6ac118fdcd4f"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
 <tr class="memitem:a4a2fa7e17a60a487a67a6ac118fdcd4f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpGradientBase.html#a9e01adabdc7dae07616bff555a688f92">value_type</a>&lt; ScalarType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1gradientd6912c5b41264e061e7c192372092503.html#a4a2fa7e17a60a487a67a6ac118fdcd4f">operator()</a> (const FEValuesBase&lt; dimension, space_dimension &gt; &amp;fe_values, const unsigned int dof_index, const unsigned int q_point) const</td></tr>
 <tr class="separator:a4a2fa7e17a60a487a67a6ac118fdcd4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:af76160c0b28fb6feb0790f01c647da53"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01SubSpaceViewsType_00_01SymbolicOpCodes_1_1gradientd6912c5b41264e061e7c192372092503.html#af76160c0b28fb6feb0790f01c647da53">DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL</a> (<a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpGradientBase.html">SymbolicOpGradientBase</a>, SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48bae2b6dfb8a5c48206992d8310d176c37c">SymbolicOpCodes::gradient</a>)</td></tr>
+<tr class="separator:af76160c0b28fb6feb0790f01c647da53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename SubSpaceViewsType&gt;<br />
@@ -147,6 +153,50 @@ class WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType, SymbolicOpCodes::g
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="af76160c0b28fb6feb0790f01c647da53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af76160c0b28fb6feb0790f01c647da53">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SubSpaceViewsType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType, <a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48bae2b6dfb8a5c48206992d8310d176c37c">SymbolicOpCodes::gradient</a>, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__test__function.html">is_test_function</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value||<a class="el" href="structWeakForms_1_1is__trial__solution.html">is_trial_solution</a>&lt; typename SubSpaceViewsType::SpaceType &gt;::value &gt;::type &gt;::DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOpGradientBase.html">SymbolicOpGradientBase</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SubSpaceViewsType&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48bae2b6dfb8a5c48206992d8310d176c37c">SymbolicOpCodes::gradient</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4a2fa7e17a60a487a67a6ac118fdcd4f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a2fa7e17a60a487a67a6ac118fdcd4f">&#9670;&nbsp;</a></span>operator()()</h2>
 

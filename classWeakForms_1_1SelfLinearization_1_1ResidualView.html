@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Weak forms for deal.II: WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt; Class Template Reference</title>
+<title>Weak forms for deal.II: WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#friends">Friends</a> &#124;
 <a href="classWeakForms_1_1SelfLinearization_1_1ResidualView-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt; Class Template Reference</div>  </div>
+<div class="title">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -80,70 +80,70 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac3ab238b7ddbf63b55f8a53224c0b732"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ac3ab238b7ddbf63b55f8a53224c0b732">ResidualView</a> (const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &amp;<a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ac29cec2c23fe4219f62722a8b7fbf4e8">functor_op</a>)</td></tr>
-<tr class="separator:ac3ab238b7ddbf63b55f8a53224c0b732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a665b2d234602ac8e0b10deb12b37e986"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a665b2d234602ac8e0b10deb12b37e986">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:a665b2d234602ac8e0b10deb12b37e986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a386ac6815673fb8fceb1b39c570f1790"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a386ac6815673fb8fceb1b39c570f1790">as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:a386ac6815673fb8fceb1b39c570f1790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1117562a2765df9407120e3cfb86eedb"><td class="memItemLeft" align="right" valign="top">UpdateFlags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a1117562a2765df9407120e3cfb86eedb">get_update_flags</a> () const</td></tr>
-<tr class="separator:a1117562a2765df9407120e3cfb86eedb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac78c00c10552f3cd2b052c1e9c5bbf09"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ac78c00c10552f3cd2b052c1e9c5bbf09">get_functor</a> () const</td></tr>
-<tr class="separator:ac78c00c10552f3cd2b052c1e9c5bbf09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d5f24166d106584cbbf3e573d0ae8b0"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a3d5f24166d106584cbbf3e573d0ae8b0">get_test_function</a> () const</td></tr>
-<tr class="separator:a3d5f24166d106584cbbf3e573d0ae8b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0beb30b1535fc650e6c2dd4fce16a802"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a0beb30b1535fc650e6c2dd4fce16a802">get_field_args</a> () const</td></tr>
-<tr class="separator:a0beb30b1535fc650e6c2dd4fce16a802"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17fea6b9a01b9d2bec333f67178f4ed2"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:a17fea6b9a01b9d2bec333f67178f4ed2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a17fea6b9a01b9d2bec333f67178f4ed2">dV</a> () const</td></tr>
-<tr class="separator:a17fea6b9a01b9d2bec333f67178f4ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe83af54da84ccd37d0e57e313dee494"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:afe83af54da84ccd37d0e57e313dee494"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#afe83af54da84ccd37d0e57e313dee494">dV</a> (const typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a> subdomain) const</td></tr>
-<tr class="separator:afe83af54da84ccd37d0e57e313dee494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa33d3cb3cb904797d3a4145b0fb884eb"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:aa33d3cb3cb904797d3a4145b0fb884eb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aa33d3cb3cb904797d3a4145b0fb884eb">dV</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a> &gt; &amp;subdomains) const</td></tr>
-<tr class="separator:aa33d3cb3cb904797d3a4145b0fb884eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a627d165880a7e3b8d06789f2153c5608"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:a627d165880a7e3b8d06789f2153c5608"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a627d165880a7e3b8d06789f2153c5608">dA</a> () const</td></tr>
-<tr class="separator:a627d165880a7e3b8d06789f2153c5608"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb73f67bfbd5ce0ff28bf944bacaf72e"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:aeb73f67bfbd5ce0ff28bf944bacaf72e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aeb73f67bfbd5ce0ff28bf944bacaf72e">dA</a> (const typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a> boundary) const</td></tr>
-<tr class="separator:aeb73f67bfbd5ce0ff28bf944bacaf72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ba92a7df2c4e5f6e7f28f25dd967b15"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:a6ba92a7df2c4e5f6e7f28f25dd967b15"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a6ba92a7df2c4e5f6e7f28f25dd967b15">dA</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a> &gt; &amp;boundaries) const</td></tr>
-<tr class="separator:a6ba92a7df2c4e5f6e7f28f25dd967b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa179db1cd88cc6c17bd85190674defa2"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:aa179db1cd88cc6c17bd85190674defa2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aa179db1cd88cc6c17bd85190674defa2">dI</a> () const</td></tr>
-<tr class="separator:aa179db1cd88cc6c17bd85190674defa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b1db1095551c8617375fa1ef82843c9"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:a6b1db1095551c8617375fa1ef82843c9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a6b1db1095551c8617375fa1ef82843c9">dI</a> (const typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a> interface) const</td></tr>
-<tr class="separator:a6b1db1095551c8617375fa1ef82843c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a493e9614dad2fff0a51b756cc025d892"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
-<tr class="memitem:a493e9614dad2fff0a51b756cc025d892"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a493e9614dad2fff0a51b756cc025d892">dI</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a> &gt; &amp;interfaces) const</td></tr>
-<tr class="separator:a493e9614dad2fff0a51b756cc025d892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57fb81f5cea052148bc014e60d1a10cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a57fb81f5cea052148bc014e60d1a10cc">ResidualView</a> (const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &amp;<a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a879b01fde00912a8f46ea61af6ea264d">functor_op</a>)</td></tr>
+<tr class="separator:a57fb81f5cea052148bc014e60d1a10cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69bc2ee8f40c81cc86d7a6a98264ddd5"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a69bc2ee8f40c81cc86d7a6a98264ddd5">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:a69bc2ee8f40c81cc86d7a6a98264ddd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d491273f79e9e3bcacfcae204bcc072"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a4d491273f79e9e3bcacfcae204bcc072">as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:a4d491273f79e9e3bcacfcae204bcc072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae53470121edfae6f1e5e51c48273ad0d"><td class="memItemLeft" align="right" valign="top">UpdateFlags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ae53470121edfae6f1e5e51c48273ad0d">get_update_flags</a> () const</td></tr>
+<tr class="separator:ae53470121edfae6f1e5e51c48273ad0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9a8ca2b05e1d2a7be1741fd2e6c6e36"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ae9a8ca2b05e1d2a7be1741fd2e6c6e36">get_functor</a> () const</td></tr>
+<tr class="separator:ae9a8ca2b05e1d2a7be1741fd2e6c6e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa468a84fd9d0155b86b7a90e84e3ed97"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#aa468a84fd9d0155b86b7a90e84e3ed97">get_test_function</a> () const</td></tr>
+<tr class="separator:aa468a84fd9d0155b86b7a90e84e3ed97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae22051e7d77a0fb9961e710989bcd87b"><td class="memItemLeft" align="right" valign="top">const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ae22051e7d77a0fb9961e710989bcd87b">get_field_args</a> () const</td></tr>
+<tr class="separator:ae22051e7d77a0fb9961e710989bcd87b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dff36aa8b1e43bb9aa8fb295f5c705c"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a9dff36aa8b1e43bb9aa8fb295f5c705c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a9dff36aa8b1e43bb9aa8fb295f5c705c">dV</a> () const</td></tr>
+<tr class="separator:a9dff36aa8b1e43bb9aa8fb295f5c705c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab776cf6d7945296be180d7ec2b8faf0c"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:ab776cf6d7945296be180d7ec2b8faf0c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ab776cf6d7945296be180d7ec2b8faf0c">dV</a> (const typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a> subdomain) const</td></tr>
+<tr class="separator:ab776cf6d7945296be180d7ec2b8faf0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1823ed0f9c82553acb04ef34007cff55"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a1823ed0f9c82553acb04ef34007cff55"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a1823ed0f9c82553acb04ef34007cff55">dV</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a> &gt; &amp;subdomains) const</td></tr>
+<tr class="separator:a1823ed0f9c82553acb04ef34007cff55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e312e4b0fb4fda547b6e38886321e7a"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a8e312e4b0fb4fda547b6e38886321e7a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a8e312e4b0fb4fda547b6e38886321e7a">dA</a> () const</td></tr>
+<tr class="separator:a8e312e4b0fb4fda547b6e38886321e7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1841b47db9e11c4209c59af9b32b0867"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a1841b47db9e11c4209c59af9b32b0867"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a1841b47db9e11c4209c59af9b32b0867">dA</a> (const typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a> boundary) const</td></tr>
+<tr class="separator:a1841b47db9e11c4209c59af9b32b0867"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac78d8a55a935e4a63edc7b3518e9d2f4"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:ac78d8a55a935e4a63edc7b3518e9d2f4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ac78d8a55a935e4a63edc7b3518e9d2f4">dA</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a> &gt; &amp;boundaries) const</td></tr>
+<tr class="separator:ac78d8a55a935e4a63edc7b3518e9d2f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cdc1669d28de0427d1e332743325201"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a5cdc1669d28de0427d1e332743325201"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a5cdc1669d28de0427d1e332743325201">dI</a> () const</td></tr>
+<tr class="separator:a5cdc1669d28de0427d1e332743325201"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a8138ae6f444f307d31cd7ae5167bd8"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a9a8138ae6f444f307d31cd7ae5167bd8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a9a8138ae6f444f307d31cd7ae5167bd8">dI</a> (const typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a> interface) const</td></tr>
+<tr class="separator:a9a8138ae6f444f307d31cd7ae5167bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9656ff78814008c7ecbf5f62ff203446"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double&gt; </td></tr>
+<tr class="memitem:a9656ff78814008c7ecbf5f62ff203446"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a9656ff78814008c7ecbf5f62ff203446">dI</a> (const std::set&lt; typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a> &gt; &amp;interfaces) const</td></tr>
+<tr class="separator:a9656ff78814008c7ecbf5f62ff203446"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a8c5991b58e2fc80263b6bbed3b416453"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </td></tr>
-<tr class="memitem:a8c5991b58e2fc80263b6bbed3b416453"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a8c5991b58e2fc80263b6bbed3b416453">get_functor_value</a> (typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__ad__functor__op.html">is_ad_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
-<tr class="separator:a8c5991b58e2fc80263b6bbed3b416453"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4cc2da067e6cb96ec0c12f8f1980581"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualFunctor&gt; </td></tr>
-<tr class="memitem:af4cc2da067e6cb96ec0c12f8f1980581"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#af4cc2da067e6cb96ec0c12f8f1980581">get_functor_first_derivative</a> (const SymbolicOpField &amp;field, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__ad__functor__op.html">is_ad_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
-<tr class="separator:af4cc2da067e6cb96ec0c12f8f1980581"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6f3c6f9249a9e2749b97f3dfe76798b"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </td></tr>
-<tr class="memitem:ad6f3c6f9249a9e2749b97f3dfe76798b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ad6f3c6f9249a9e2749b97f3dfe76798b">get_functor_value</a> (typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__sd__functor__op.html">is_sd_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
-<tr class="separator:ad6f3c6f9249a9e2749b97f3dfe76798b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6735d456e95401457cacbd110013cd4"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualFunctor&gt; </td></tr>
-<tr class="memitem:af6735d456e95401457cacbd110013cd4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#af6735d456e95401457cacbd110013cd4">get_functor_first_derivative</a> (const SymbolicOpField &amp;field, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__sd__functor__op.html">is_sd_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
-<tr class="separator:af6735d456e95401457cacbd110013cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ff23fee10b9e2cfa9736b63e8795c86"><td class="memTemplParams" colspan="2">template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename AssemblerType , typename IntegralType &gt; </td></tr>
-<tr class="memitem:a3ff23fee10b9e2cfa9736b63e8795c86"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a3ff23fee10b9e2cfa9736b63e8795c86">accumulate_into</a> (AssemblerType &amp;assembler, const IntegralType &amp;integral_operation) const</td></tr>
-<tr class="separator:a3ff23fee10b9e2cfa9736b63e8795c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5c92ccf3ba91dc9bc95b3e411bf1a47"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; </td></tr>
+<tr class="memitem:af5c92ccf3ba91dc9bc95b3e411bf1a47"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#af5c92ccf3ba91dc9bc95b3e411bf1a47">get_functor_value</a> (typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__ad__functor__op.html">is_ad_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
+<tr class="separator:af5c92ccf3ba91dc9bc95b3e411bf1a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a101d80a2ee8e0de3b113d24d48dedd"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualViewFunctor&gt; </td></tr>
+<tr class="memitem:a5a101d80a2ee8e0de3b113d24d48dedd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a5a101d80a2ee8e0de3b113d24d48dedd">get_functor_first_derivative</a> (const SymbolicOpField &amp;field, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__ad__functor__op.html">is_ad_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
+<tr class="separator:a5a101d80a2ee8e0de3b113d24d48dedd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b7992bc84687330f286f6576087c9a7"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; </td></tr>
+<tr class="memitem:a5b7992bc84687330f286f6576087c9a7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a5b7992bc84687330f286f6576087c9a7">get_functor_value</a> (typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__sd__functor__op.html">is_sd_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
+<tr class="separator:a5b7992bc84687330f286f6576087c9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b1f02fa17faec39ee3a6f420d5312dc"><td class="memTemplParams" colspan="2">template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualViewFunctor&gt; </td></tr>
+<tr class="memitem:a6b1f02fa17faec39ee3a6f420d5312dc"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a6b1f02fa17faec39ee3a6f420d5312dc">get_functor_first_derivative</a> (const SymbolicOpField &amp;field, typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__sd__functor__op.html">is_sd_functor_op</a>&lt; T &gt;::value &gt;::type *=nullptr) const</td></tr>
+<tr class="separator:a6b1f02fa17faec39ee3a6f420d5312dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2419257bde04d4c30fe509d2070c59ee"><td class="memTemplParams" colspan="2">template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename AssemblerType , typename IntegralType &gt; </td></tr>
+<tr class="memitem:a2419257bde04d4c30fe509d2070c59ee"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a2419257bde04d4c30fe509d2070c59ee">accumulate_into</a> (AssemblerType &amp;assembler, const IntegralType &amp;integral_operation) const</td></tr>
+<tr class="separator:a2419257bde04d4c30fe509d2070c59ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ac29cec2c23fe4219f62722a8b7fbf4e8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#ac29cec2c23fe4219f62722a8b7fbf4e8">functor_op</a></td></tr>
-<tr class="separator:ac29cec2c23fe4219f62722a8b7fbf4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a879b01fde00912a8f46ea61af6ea264d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a879b01fde00912a8f46ea61af6ea264d">functor_op</a></td></tr>
+<tr class="separator:a879b01fde00912a8f46ea61af6ea264d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -152,237 +152,39 @@ Friends</h2></td></tr>
 <tr class="separator:a7fe5d66b97cbb019c741c8951688f18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename ResidualFunctor&gt;<br />
-class WeakForms::SelfLinearization::ResidualView&lt; ResidualFunctor &gt;</h3>
+<div class="textblock"><h3>template&lt;typename ResidualViewFunctor&gt;<br />
+class WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</h3>
 
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01067">1067</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac3ab238b7ddbf63b55f8a53224c0b732"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3ab238b7ddbf63b55f8a53224c0b732">&#9670;&nbsp;</a></span>ResidualView()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::<a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">ResidualView</a> </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &amp;&#160;</td>
-          <td class="paramname"><em>functor_op</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01082">1082</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a665b2d234602ac8e0b10deb12b37e986"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a665b2d234602ac8e0b10deb12b37e986">&#9670;&nbsp;</a></span>as_ascii()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::as_ascii </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
-          <td class="paramname"><em>decorator</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01087">1087</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="a386ac6815673fb8fceb1b39c570f1790"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a386ac6815673fb8fceb1b39c570f1790">&#9670;&nbsp;</a></span>as_latex()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::as_latex </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
-          <td class="paramname"><em>decorator</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01094">1094</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="a1117562a2765df9407120e3cfb86eedb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1117562a2765df9407120e3cfb86eedb">&#9670;&nbsp;</a></span>get_update_flags()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">UpdateFlags <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_update_flags </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01103">1103</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="ac78c00c10552f3cd2b052c1e9c5bbf09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac78c00c10552f3cd2b052c1e9c5bbf09">&#9670;&nbsp;</a></span>get_functor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_functor </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01109">1109</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="a3d5f24166d106584cbbf3e573d0ae8b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d5f24166d106584cbbf3e573d0ae8b0">&#9670;&nbsp;</a></span>get_test_function()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const auto&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_test_function </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>A special form that consumes a residual view functor and produces both the associated linear form (essentially a duplication of the residual form) and its consistently linearized bilinear form(s).</p>
+<p>The <code><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">ResidualView</a></code> form is supplied with the finite element fields upon which the <code><a class="el" href="classWeakForms_1_1Functor.html">Functor</a></code> is parameterized. It then self-linearizes the discrete residual (i.e. at the finite element level) to produce the bilinear form(s). One linear form is generated for component of the residual that the residual view represents; this linear form is then linearized with respect to all other variables upon which the residual view functor is parameterized. So, if the residual view functor is parameterized by <code>n</code> arguments, then <code>1</code> linear form and <code>n</code> bilinear forms will be generated.</p>
+<p>This class, however, doesn't directly know how the residual view functor itself is to be linearized: the derivatives of the residual functor with respect to the various field parameters are computed by the residual functor itself. We employ automatic or symbolic differentiation to perform that task. The local description of the residual (i.e. at the quadrature point level) is given by the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></code>.</p>
+<p>This is fair trade between the convenience of compile-time expansions for the derivatives of the residual functor, and some run-time derivatives of the (potentially complex) constitutive laws that the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></code> describes. The functor is only evaluated at quadrature points, so the computational cost associated with the calculation of those derivatives is kept to a minimum. It also means that we can take care of most of the bookkeeping and implementational details surrounding AD and SD. The user then needs a "minimal" understanding of how these parts of the framework work in order to use this feature.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></td><td>A class that is recognised to be a residual view functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01115">1115</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="a0beb30b1535fc650e6c2dd4fce16a802"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0beb30b1535fc650e6c2dd4fce16a802">&#9670;&nbsp;</a></span>get_field_args()</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a57fb81f5cea052148bc014e60d1a10cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57fb81f5cea052148bc014e60d1a10cc">&#9670;&nbsp;</a></span>ResidualView()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const auto&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_field_args </td>
+          <td class="memname"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::<a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">ResidualView</a> </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01121">1121</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
-
-</div>
-</div>
-<a id="a17fea6b9a01b9d2bec333f67178f4ed2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17fea6b9a01b9d2bec333f67178f4ed2">&#9670;&nbsp;</a></span>dV() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
-<div class="memtemplate">
-template&lt;typename ScalarType  = double&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dV </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &amp;&#160;</td>
+          <td class="paramname"><em>functor_op</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -396,13 +198,190 @@ template&lt;typename ScalarType  = double&gt; </div>
 
 </div>
 </div>
-<a id="afe83af54da84ccd37d0e57e313dee494"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe83af54da84ccd37d0e57e313dee494">&#9670;&nbsp;</a></span>dV() <span class="overload">[2/3]</span></h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a69bc2ee8f40c81cc86d7a6a98264ddd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69bc2ee8f40c81cc86d7a6a98264ddd5">&#9670;&nbsp;</a></span>as_ascii()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::as_ascii </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
+          <td class="paramname"><em>decorator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01135">1135</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a4d491273f79e9e3bcacfcae204bcc072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d491273f79e9e3bcacfcae204bcc072">&#9670;&nbsp;</a></span>as_latex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::as_latex </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
+          <td class="paramname"><em>decorator</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01142">1142</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ae53470121edfae6f1e5e51c48273ad0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae53470121edfae6f1e5e51c48273ad0d">&#9670;&nbsp;</a></span>get_update_flags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">UpdateFlags <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_update_flags </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01151">1151</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ae9a8ca2b05e1d2a7be1741fd2e6c6e36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9a8ca2b05e1d2a7be1741fd2e6c6e36">&#9670;&nbsp;</a></span>get_functor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a>&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_functor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01157">1157</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="aa468a84fd9d0155b86b7a90e84e3ed97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa468a84fd9d0155b86b7a90e84e3ed97">&#9670;&nbsp;</a></span>get_test_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_test_function </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01163">1163</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ae22051e7d77a0fb9961e710989bcd87b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae22051e7d77a0fb9961e710989bcd87b">&#9670;&nbsp;</a></span>get_field_args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto&amp; <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_field_args </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01169">1169</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a9dff36aa8b1e43bb9aa8fb295f5c705c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dff36aa8b1e43bb9aa8fb295f5c705c">&#9670;&nbsp;</a></span>dV() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -410,7 +389,38 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dV </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dV </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01178">1178</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ab776cf6d7945296be180d7ec2b8faf0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab776cf6d7945296be180d7ec2b8faf0c">&#9670;&nbsp;</a></span>dV() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ResidualViewFunctor &gt; </div>
+<div class="memtemplate">
+template&lt;typename ScalarType  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dV </td>
           <td>(</td>
           <td class="paramtype">const typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a>&#160;</td>
           <td class="paramname"><em>subdomain</em></td><td>)</td>
@@ -424,17 +434,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01137">1137</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01185">1185</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="aa33d3cb3cb904797d3a4145b0fb884eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa33d3cb3cb904797d3a4145b0fb884eb">&#9670;&nbsp;</a></span>dV() <span class="overload">[3/3]</span></h2>
+<a id="a1823ed0f9c82553acb04ef34007cff55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1823ed0f9c82553acb04ef34007cff55">&#9670;&nbsp;</a></span>dV() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -442,7 +452,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dV </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dV </td>
           <td>(</td>
           <td class="paramtype">const std::set&lt; typename <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a924b7e10eda287706df73048113a38f4">VolumeIntegral::subdomain_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>subdomains</em></td><td>)</td>
@@ -456,17 +466,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01145">1145</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01193">1193</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a627d165880a7e3b8d06789f2153c5608"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a627d165880a7e3b8d06789f2153c5608">&#9670;&nbsp;</a></span>dA() <span class="overload">[1/3]</span></h2>
+<a id="a8e312e4b0fb4fda547b6e38886321e7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e312e4b0fb4fda547b6e38886321e7a">&#9670;&nbsp;</a></span>dA() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -474,7 +484,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dA </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dA </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -487,17 +497,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01152">1152</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01200">1200</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="aeb73f67bfbd5ce0ff28bf944bacaf72e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb73f67bfbd5ce0ff28bf944bacaf72e">&#9670;&nbsp;</a></span>dA() <span class="overload">[2/3]</span></h2>
+<a id="a1841b47db9e11c4209c59af9b32b0867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1841b47db9e11c4209c59af9b32b0867">&#9670;&nbsp;</a></span>dA() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -505,7 +515,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dA </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dA </td>
           <td>(</td>
           <td class="paramtype">const typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a>&#160;</td>
           <td class="paramname"><em>boundary</em></td><td>)</td>
@@ -519,17 +529,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01159">1159</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01207">1207</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a6ba92a7df2c4e5f6e7f28f25dd967b15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ba92a7df2c4e5f6e7f28f25dd967b15">&#9670;&nbsp;</a></span>dA() <span class="overload">[3/3]</span></h2>
+<a id="ac78d8a55a935e4a63edc7b3518e9d2f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac78d8a55a935e4a63edc7b3518e9d2f4">&#9670;&nbsp;</a></span>dA() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -537,7 +547,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dA </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dA </td>
           <td>(</td>
           <td class="paramtype">const std::set&lt; typename <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#abbf242237c0b3f08c55ea72400a6d716">BoundaryIntegral::subdomain_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>boundaries</em></td><td>)</td>
@@ -551,17 +561,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01167">1167</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01215">1215</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="aa179db1cd88cc6c17bd85190674defa2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa179db1cd88cc6c17bd85190674defa2">&#9670;&nbsp;</a></span>dI() <span class="overload">[1/3]</span></h2>
+<a id="a5cdc1669d28de0427d1e332743325201"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cdc1669d28de0427d1e332743325201">&#9670;&nbsp;</a></span>dI() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -569,7 +579,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dI </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -582,17 +592,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01176">1176</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01224">1224</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a6b1db1095551c8617375fa1ef82843c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b1db1095551c8617375fa1ef82843c9">&#9670;&nbsp;</a></span>dI() <span class="overload">[2/3]</span></h2>
+<a id="a9a8138ae6f444f307d31cd7ae5167bd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a8138ae6f444f307d31cd7ae5167bd8">&#9670;&nbsp;</a></span>dI() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -600,7 +610,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dI </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dI </td>
           <td>(</td>
           <td class="paramtype">const typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a>&#160;</td>
           <td class="paramname"><em>interface</em></td><td>)</td>
@@ -614,17 +624,17 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01183">1183</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01231">1231</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a493e9614dad2fff0a51b756cc025d892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a493e9614dad2fff0a51b756cc025d892">&#9670;&nbsp;</a></span>dI() <span class="overload">[3/3]</span></h2>
+<a id="a9656ff78814008c7ecbf5f62ff203446"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9656ff78814008c7ecbf5f62ff203446">&#9670;&nbsp;</a></span>dI() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType  = double&gt; </div>
 <table class="mlabels">
@@ -632,7 +642,7 @@ template&lt;typename ScalarType  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::dI </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::dI </td>
           <td>(</td>
           <td class="paramtype">const std::set&lt; typename <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a26bc8b8c0beee0378f81094649e88adf">InterfaceIntegral::subdomain_t</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>interfaces</em></td><td>)</td>
@@ -646,25 +656,25 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01191">1191</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01239">1239</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a8c5991b58e2fc80263b6bbed3b416453"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c5991b58e2fc80263b6bbed3b416453">&#9670;&nbsp;</a></span>get_functor_value() <span class="overload">[1/2]</span></h2>
+<a id="af5c92ccf3ba91dc9bc95b3e411bf1a47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5c92ccf3ba91dc9bc95b3e411bf1a47">&#9670;&nbsp;</a></span>get_functor_value() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
-template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </div>
+template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_functor_value </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_functor_value </td>
           <td>(</td>
           <td class="paramtype">typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__ad__functor__op.html">is_ad_functor_op</a>&lt; T &gt;::value &gt;::type *&#160;</td>
           <td class="paramname"> = <code>nullptr</code></td><td>)</td>
@@ -678,25 +688,25 @@ template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01209">1209</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01257">1257</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="af4cc2da067e6cb96ec0c12f8f1980581"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4cc2da067e6cb96ec0c12f8f1980581">&#9670;&nbsp;</a></span>get_functor_first_derivative() <span class="overload">[1/2]</span></h2>
+<a id="a5a101d80a2ee8e0de3b113d24d48dedd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a101d80a2ee8e0de3b113d24d48dedd">&#9670;&nbsp;</a></span>get_functor_first_derivative() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
-template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualFunctor&gt; </div>
+template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualViewFunctor&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_functor_first_derivative </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_functor_first_derivative </td>
           <td>(</td>
           <td class="paramtype">const SymbolicOpField &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
@@ -720,25 +730,25 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01283">1283</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01332">1332</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="ad6f3c6f9249a9e2749b97f3dfe76798b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6f3c6f9249a9e2749b97f3dfe76798b">&#9670;&nbsp;</a></span>get_functor_value() <span class="overload">[2/2]</span></h2>
+<a id="a5b7992bc84687330f286f6576087c9a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b7992bc84687330f286f6576087c9a7">&#9670;&nbsp;</a></span>get_functor_value() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
-template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </div>
+template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_functor_value </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_functor_value </td>
           <td>(</td>
           <td class="paramtype">typename std::enable_if&lt; <a class="el" href="structWeakForms_1_1is__sd__functor__op.html">is_sd_functor_op</a>&lt; T &gt;::value &gt;::type *&#160;</td>
           <td class="paramname"> = <code>nullptr</code></td><td>)</td>
@@ -752,25 +762,25 @@ template&lt;typename AssemblerScalar_t , typename T  = ResidualFunctor&gt; </div
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01368">1368</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01418">1418</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="af6735d456e95401457cacbd110013cd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6735d456e95401457cacbd110013cd4">&#9670;&nbsp;</a></span>get_functor_first_derivative() <span class="overload">[2/2]</span></h2>
+<a id="a6b1f02fa17faec39ee3a6f420d5312dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b1f02fa17faec39ee3a6f420d5312dc">&#9670;&nbsp;</a></span>get_functor_first_derivative() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
-template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualFunctor&gt; </div>
+template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename SymbolicOpField , typename T  = ResidualViewFunctor&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::get_functor_first_derivative </td>
+          <td class="memname">auto <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::get_functor_first_derivative </td>
           <td>(</td>
           <td class="paramtype">const SymbolicOpField &amp;&#160;</td>
           <td class="paramname"><em>field</em>, </td>
@@ -794,17 +804,17 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01457">1457</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01507">1507</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
-<a id="a3ff23fee10b9e2cfa9736b63e8795c86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ff23fee10b9e2cfa9736b63e8795c86">&#9670;&nbsp;</a></span>accumulate_into()</h2>
+<a id="a2419257bde04d4c30fe509d2070c59ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2419257bde04d4c30fe509d2070c59ee">&#9670;&nbsp;</a></span>accumulate_into()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename AssemblerType , typename IntegralType &gt; </div>
 <table class="mlabels">
@@ -812,7 +822,7 @@ template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename Assemble
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::accumulate_into </td>
+          <td class="memname">void <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::accumulate_into </td>
           <td>(</td>
           <td class="paramtype">AssemblerType &amp;&#160;</td>
           <td class="paramname"><em>assembler</em>, </td>
@@ -836,7 +846,7 @@ template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename Assemble
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01565">1565</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01615">1615</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -847,7 +857,7 @@ template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename Assemble
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <div class="memtemplate">
 template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization, std::size_t width&gt; </div>
 <table class="mlabels">
@@ -865,24 +875,24 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01559">1559</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01609">1609</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ac29cec2c23fe4219f62722a8b7fbf4e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac29cec2c23fe4219f62722a8b7fbf4e8">&#9670;&nbsp;</a></span>functor_op</h2>
+<a id="a879b01fde00912a8f46ea61af6ea264d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a879b01fde00912a8f46ea61af6ea264d">&#9670;&nbsp;</a></span>functor_op</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ResidualFunctor &gt; </div>
+template&lt;typename ResidualViewFunctor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a> &gt;::functor_op</td>
+          <td class="memname">const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">WeakForms::SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;::functor_op</td>
         </tr>
       </table>
   </td>
@@ -892,7 +902,7 @@ template&lt;typename ResidualFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01199">1199</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01247">1247</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
