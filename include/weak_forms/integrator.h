@@ -46,7 +46,9 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
-  // Integrator for user-defined functions
+  /**
+   * An integrator for user-defined functions
+   */
   template <int spacedim, typename ReturnType>
   class FunctionIntegrator
   {
@@ -69,6 +71,7 @@ namespace WeakForms
      * Construct a new Integral object
      *
      * @param integrand
+     * @param mpi_communicator
      */
     FunctionIntegrator(const IntegrandPositionIndependent &integrand,
                        const MPI_Comm *const mpi_communicator = nullptr)
@@ -81,6 +84,7 @@ namespace WeakForms
      * Construct a new Integral object
      *
      * @param integrand
+     * @param mpi_communicator
      */
     FunctionIntegrator(const IntegrandPositionDependent &integrand,
                        const MPI_Comm *const mpi_communicator = nullptr)
@@ -93,6 +97,7 @@ namespace WeakForms
      * Construct a new Integral object
      *
      * @param function
+     * @param mpi_communicator
      */
     FunctionIntegrator(const Function<spacedim, ReturnType> &function,
                        const MPI_Comm *const mpi_communicator = nullptr)
@@ -455,7 +460,9 @@ namespace WeakForms
   };
 
 
-  // Integrator for functors
+  /**
+   * An integrator for functors
+   */
   template <int spacedim,
             typename Functor,
             typename = typename std::enable_if<is_valid_form_functor<
@@ -475,7 +482,8 @@ namespace WeakForms
     /**
      * Construct a new Integral object
      *
-     * @param integrand
+     * @param functor_op
+     * @param mpi_communicator
      */
     Integrator(const Functor &       functor_op,
                const MPI_Comm *const mpi_communicator = nullptr)
@@ -615,8 +623,9 @@ namespace WeakForms
      *
      * @tparam spacedim
      * @tparam DoFHandlerType
-     * @param face_quadrature
      * @param dof_handler
+     * @param cell_quadrature
+     * @param face_quadrature
      * @return ReturnType
      */
     template <typename ScalarType = double,
