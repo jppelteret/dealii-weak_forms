@@ -171,10 +171,13 @@ namespace WeakForms
      * Assemble the linear system matrix, excluding boundary and internal
      * face contributions.
      *
-     * @tparam ScalarType
      * @tparam MatrixType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
      * @param system_matrix
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
@@ -199,7 +202,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -221,7 +226,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -249,10 +256,15 @@ namespace WeakForms
      * Assemble the linear system matrix, including boundary and internal
      * face contributions.
      *
-     * @tparam ScalarType
      * @tparam MatrixType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
+     * @tparam FaceQuadratureType
      * @param system_matrix
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
+     * @param face_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
@@ -279,7 +291,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -303,7 +317,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -332,10 +348,13 @@ namespace WeakForms
     /**
      * Assemble a RHS vector, boundary and internal face contributions.
      *
-     * @tparam ScalarType
-     * @tparam MatrixType
-     * @param system_matrix
+     * @tparam VectorType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
+     * @param system_vector
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
@@ -360,7 +379,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType>
@@ -381,7 +402,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
@@ -409,15 +432,21 @@ namespace WeakForms
      * Assemble a RHS vector, including boundary and internal face
      * contributions.
      *
-     * @tparam ScalarType
-     * @tparam MatrixType
-     * @param system_matrix
+     * @tparam VectorType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
+     * @tparam FaceQuadratureType
+     * @param system_vector
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
+     * @param face_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
      * quadrature rules for different contributions on the same cell.
      */
+
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
@@ -439,7 +468,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
@@ -462,7 +493,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename VectorType,
               typename DoFHandlerType,
               typename CellQuadratureType,
@@ -492,10 +525,15 @@ namespace WeakForms
      * Assemble a system matrix and a RHS vector, excluding boundary and
      * internal face contributions.
      *
-     * @tparam ScalarType
      * @tparam MatrixType
+     * @tparam VectorType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
      * @param system_matrix
+     * @param system_vector
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
@@ -522,7 +560,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -545,7 +585,9 @@ namespace WeakForms
         nullptr /*face_quadrature*/);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -574,10 +616,17 @@ namespace WeakForms
      * Assemble a system matrix and a RHS vector, including boundary and
      * internal face contributions.
      *
-     * @tparam ScalarType
      * @tparam MatrixType
+     * @tparam VectorType
+     * @tparam DoFHandlerType
+     * @tparam CellQuadratureType
+     * @tparam FaceQuadratureType
      * @param system_matrix
+     * @param system_vector
      * @param constraints
+     * @param dof_handler
+     * @param cell_quadrature
+     * @param face_quadrature
      *
      * @note Does not reset the matrix, so one can assemble from multiple
      * Assemblers into one matrix. This is useful if you want different
@@ -606,7 +655,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with a solution vector
+    /**
+     * Same as the previous function, but with a solution vector
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,
@@ -631,7 +682,9 @@ namespace WeakForms
         &face_quadrature);
     }
 
-    // Same as the previous function, but with solution storage
+    /**
+     * Same as the previous function, but with solution storage
+     */
     template <typename MatrixType,
               typename VectorType,
               typename DoFHandlerType,

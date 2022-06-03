@@ -311,29 +311,40 @@ namespace WeakForms
 
     /**
      * A special form that consumes an energy functor and produces
-     * both the associated linear form and consistently-linearized
-     * bilinear form associated with the energy functional.
+     * both the associated linear form(s) and consistently linearized
+     * bilinear form(s) associated with the energy functional.
      *
      * The @p EnergyFunctional form is supplied with the finite element fields upon
      * which the @p Functor is parameterized. It then self-linearizes the discrete
      * problem (i.e. at the finite element level) to produce the linear and
-     * bilinear forms. However, this class doesn't directly know how the energy
-     * functor itself is linearized. So the derivatives of the energy functor
-     * with respect to the various field parameters are given by the energy
+     * bilinear forms. One linear form is generated for each variable upon which
+     * the energy functor is parameterized; each of these linear forms is then
+     * linearized with respect to all other variables. So, if the energy functor
+     * is parameterized by `n` arguments, then `n` linear forms and `n^2`
+     * bilinear forms will be generated.
+     *
+     * This class, however, doesn't directly know how the energy functor
+     * itself is to be linearized: the derivatives of the energy functor
+     * with respect to the various field parameters are computed by the energy
      * functor itself. We employ automatic or symbolic differentiation to
      * perform that task. The local description of the energy (i.e. at the
-     * quadrature point level) is given by the @p Functor.
+     * quadrature point level) is given by the @p EnergyFunctor.
      *
      * This is fair trade between the convenience of compile-time
      * expansions for the derivatives of the energy functional, and some
      * run-time derivatives of the (potentially complex) constitutive
-     * laws that the @p Functor describes. The functor is only evaluated
+     * laws that the @p EnergyFunctor describes. The functor is only evaluated
      * at quadrature points, so the computational cost associated with
      * the calculation of those derivatives is kept to a minimum.
      * It also means that we can take care of most of the bookkeeping and
      * implementational details surrounding AD and SD. The user then needs a
      * "minimal" understanding of how these parts of the framework work in order
      * to use this feature.
+     *
+     * @tparam EnergyFunctor A class that is recognised to be a energy functor
+     *         operation, as well as a functor that is either AD compatible
+     *         SD compatible (i.e. can exploit either automatic or symbolic
+     *         differentiation).
      */
     template <typename EnergyFunctor>
     class EnergyFunctional
@@ -1062,24 +1073,61 @@ namespace WeakForms
     }; // class EnergyFunctional
 
 
-
-    template <typename ResidualFunctor>
+    /**
+     * A special form that consumes a residual view functor and produces
+     * both the associated linear form (essentially a duplication of the
+     * residual form) and its consistently linearized bilinear form(s).
+     *
+     * The @p ResidualView form is supplied with the finite element fields upon
+     * which the @p Functor is parameterized. It then self-linearizes the discrete
+     * residual (i.e. at the finite element level) to produce the
+     * bilinear form(s). One linear form is generated for component of the
+     * residual that the residual view represents; this linear form is then
+     * linearized with respect to all other variables upon which the residual
+     * view functor is parameterized. So, if the residual view functor is
+     * parameterized by `n` arguments, then `1` linear form and `n` bilinear
+     * forms will be generated.
+     *
+     * This class, however, doesn't directly know how the residual view functor
+     * itself is to be linearized: the derivatives of the residual functor
+     * with respect to the various field parameters are computed by the residual
+     * functor itself. We employ automatic or symbolic differentiation to
+     * perform that task. The local description of the residual (i.e. at the
+     * quadrature point level) is given by the @p ResidualViewFunctor.
+     *
+     * This is fair trade between the convenience of compile-time
+     * expansions for the derivatives of the residual functor, and some
+     * run-time derivatives of the (potentially complex) constitutive
+     * laws that the @p ResidualViewFunctor describes. The functor is only evaluated
+     * at quadrature points, so the computational cost associated with
+     * the calculation of those derivatives is kept to a minimum.
+     * It also means that we can take care of most of the bookkeeping and
+     * implementational details surrounding AD and SD. The user then needs a
+     * "minimal" understanding of how these parts of the framework work in order
+     * to use this feature.
+     *
+     * @tparam ResidualViewFunctor A class that is recognised to be a residual
+     *         view functor operation, as well as a functor that is either AD
+     *         compatible SD compatible (i.e. can exploit either automatic or
+     *         symbolic differentiation).
+     */
+    template <typename ResidualViewFunctor>
     class ResidualView
     {
-      static_assert(is_residual_functor_op<ResidualFunctor>::value,
+      static_assert(is_residual_functor_op<ResidualViewFunctor>::value,
                     "Expected a ResidualViewFunctor.");
       static_assert(
-        is_ad_functor_op<ResidualFunctor>::value ||
-          is_sd_functor_op<ResidualFunctor>::value,
+        is_ad_functor_op<ResidualViewFunctor>::value ||
+          is_sd_functor_op<ResidualViewFunctor>::value,
         "The SelfLinearizing::ResidualView class is designed to work with AD or SD functors.");
 
       // static_assert(
-      //   is_symbolic_op<ResidualFunctor>::value,
+      //   is_symbolic_op<ResidualViewFunctor>::value,
       //   "The SelfLinearizing::ResidualView class is designed to work a
       //   unary operation as a functor.");
 
     public:
-      ResidualView(const ResidualFunctor &functor_op)
+      ResidualView(const ResidualViewFunctor &functor_op)
         : functor_op(functor_op)
       {}
 
@@ -1105,7 +1153,7 @@ namespace WeakForms
         return unpack_update_flags(get_field_args());
       }
 
-      const ResidualFunctor &
+      const ResidualViewFunctor &
       get_functor() const
       {
         return functor_op;
@@ -1196,7 +1244,7 @@ namespace WeakForms
       }
 
     private:
-      const ResidualFunctor functor_op;
+      const ResidualViewFunctor functor_op;
 
       // =============
       // AD operations
@@ -1204,25 +1252,26 @@ namespace WeakForms
 
 #  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
-      template <typename AssemblerScalar_t, typename T = ResidualFunctor>
+      template <typename AssemblerScalar_t, typename T = ResidualViewFunctor>
       auto
       get_functor_value(
         typename std::enable_if<is_ad_functor_op<T>::value>::type * =
           nullptr) const
       {
-        constexpr int dim      = ResidualFunctor::dimension;
-        constexpr int spacedim = ResidualFunctor::space_dimension;
+        constexpr int dim      = ResidualViewFunctor::dimension;
+        constexpr int spacedim = ResidualViewFunctor::space_dimension;
 
-        using ResidualFunctorScalar_t = typename ResidualFunctor::scalar_type;
-        using ResidualFunctorValue_t =
-          typename ResidualFunctor::template value_type<
-            ResidualFunctorScalar_t>;
+        using ResidualViewFunctorScalar_t =
+          typename ResidualViewFunctor::scalar_type;
+        using ResidualViewFunctorValue_t =
+          typename ResidualViewFunctor::template value_type<
+            ResidualViewFunctorScalar_t>;
         using FieldValue_t =
-          typename ResidualFunctor::template value_type<AssemblerScalar_t>;
+          typename ResidualViewFunctor::template value_type<AssemblerScalar_t>;
 
         // A little no-op cheat to get us the same interface to the functor
         using ValueOpResult_t = WeakForms::internal::Differentiation::
-          DiffOpResult<ResidualFunctorValue_t, ResidualFunctorScalar_t>;
+          DiffOpResult<ResidualViewFunctorValue_t, ResidualViewFunctorScalar_t>;
 
         using ValueOpValue_t = typename ValueOpResult_t::type;
         using ValueOpFunction_t =
@@ -1234,8 +1283,8 @@ namespace WeakForms
           "Expected same result type.");
 
         // For AD types, the residual_extractor will be a FEValues::Extractor.
-        const ResidualFunctor &functor = this->get_functor();
-        const auto &           residual_extractor =
+        const ResidualViewFunctor &functor = this->get_functor();
+        const auto &               residual_extractor =
           functor.get_residual_extractor(); // Row extractor
 
         // The functor may only be temporary, so pass it in as a copy.
@@ -1257,7 +1306,7 @@ namespace WeakForms
             // The return result from the differentiation is also not shared
             // between threads. But we can reuse the same object many times
             // since its stored in Scratch.
-            const std::vector<Vector<ResidualFunctorScalar_t>> &values =
+            const std::vector<Vector<ResidualViewFunctorScalar_t>> &values =
               functor.get_values(scratch_data);
 
             std::vector<ValueOpValue_t>        out;
@@ -1278,28 +1327,29 @@ namespace WeakForms
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
                 typename SymbolicOpField,
-                typename T = ResidualFunctor>
+                typename T = ResidualViewFunctor>
       auto
       get_functor_first_derivative(
         const SymbolicOpField &field,
         typename std::enable_if<is_ad_functor_op<T>::value>::type * =
           nullptr) const
       {
-        constexpr int dim      = ResidualFunctor::dimension;
-        constexpr int spacedim = ResidualFunctor::space_dimension;
+        constexpr int dim      = ResidualViewFunctor::dimension;
+        constexpr int spacedim = ResidualViewFunctor::space_dimension;
 
         static_assert(SymbolicOpField::dimension == dim, "Dimension mismatch.");
         static_assert(SymbolicOpField::space_dimension == spacedim,
                       "Spatial dimension mismatch.");
 
-        using ResidualFunctorScalar_t = typename ResidualFunctor::scalar_type;
-        using ResidualFunctorValue_t =
-          typename ResidualFunctor::template value_type<
-            ResidualFunctorScalar_t>;
+        using ResidualViewFunctorScalar_t =
+          typename ResidualViewFunctor::scalar_type;
+        using ResidualViewFunctorValue_t =
+          typename ResidualViewFunctor::template value_type<
+            ResidualViewFunctorScalar_t>;
         using FieldValue_t =
           typename SymbolicOpField::template value_type<AssemblerScalar_t>;
         using DiffOpResult_t = WeakForms::internal::Differentiation::
-          DiffOpResult<ResidualFunctorValue_t, FieldValue_t>;
+          DiffOpResult<ResidualViewFunctorValue_t, FieldValue_t>;
 
         using DiffOpValue_t = typename DiffOpResult_t::type;
         using DiffOpFunction_t =
@@ -1311,8 +1361,8 @@ namespace WeakForms
           "Expected same result type.");
 
         // For AD types, the derivative_extractor will be a FEValues::Extractor.
-        const ResidualFunctor &functor = this->get_functor();
-        const auto &           residual_extractor =
+        const ResidualViewFunctor &functor = this->get_functor();
+        const auto &               residual_extractor =
           functor.get_residual_extractor(); // Row extractor
         const auto &derivative_extractor =
           functor.template get_derivative_extractor<FieldIndex>(
@@ -1337,8 +1387,8 @@ namespace WeakForms
             // The return result from the differentiation is also not shared
             // between threads. But we can reuse the same object many times
             // since its stored in Scratch.
-            const std::vector<FullMatrix<ResidualFunctorScalar_t>> &jacobians =
-              functor.get_jacobians(scratch_data);
+            const std::vector<FullMatrix<ResidualViewFunctorScalar_t>>
+              &jacobians = functor.get_jacobians(scratch_data);
 
             std::vector<DiffOpValue_t>         out;
             const FEValuesBase<dim, spacedim> &fe_values =
@@ -1363,28 +1413,28 @@ namespace WeakForms
 
 #  ifdef DEAL_II_WITH_SYMENGINE
 
-      template <typename AssemblerScalar_t, typename T = ResidualFunctor>
+      template <typename AssemblerScalar_t, typename T = ResidualViewFunctor>
       auto
       get_functor_value(
         typename std::enable_if<is_sd_functor_op<T>::value>::type * =
           nullptr) const
       {
-        constexpr int dim      = ResidualFunctor::dimension;
-        constexpr int spacedim = ResidualFunctor::space_dimension;
+        constexpr int dim      = ResidualViewFunctor::dimension;
+        constexpr int spacedim = ResidualViewFunctor::space_dimension;
 
         // SD expressions can represent anything, so it doesn't make sense to
         // ask the functor for this type. We expect the result to be castable
         // into the Assembler's scalar type.
-        using ResidualFunctorScalar_t = AssemblerScalar_t;
-        using ResidualFunctorValue_t =
-          typename ResidualFunctor::template value_type<
-            ResidualFunctorScalar_t>;
+        using ResidualViewFunctorScalar_t = AssemblerScalar_t;
+        using ResidualViewFunctorValue_t =
+          typename ResidualViewFunctor::template value_type<
+            ResidualViewFunctorScalar_t>;
         using FieldValue_t =
-          typename ResidualFunctor::template value_type<AssemblerScalar_t>;
+          typename ResidualViewFunctor::template value_type<AssemblerScalar_t>;
 
         // A little no-op cheat to get us the same interface to the functor
         using ValueOpResult_t = WeakForms::internal::Differentiation::
-          DiffOpResult<ResidualFunctorValue_t, ResidualFunctorScalar_t>;
+          DiffOpResult<ResidualViewFunctorValue_t, ResidualViewFunctorScalar_t>;
 
         using ValueOpValue_t = typename ValueOpResult_t::type;
         using ValueOpFunction_t =
@@ -1398,8 +1448,8 @@ namespace WeakForms
         // For SD types, the derivative_extractor an SD::Expression or tensor of
         // expressions that correspond to the solution field that is being
         // derived with respect to.
-        const ResidualFunctor &functor = this->get_functor();
-        const auto &           value   = functor.get_symbolic_residual();
+        const ResidualViewFunctor &functor = this->get_functor();
+        const auto &               value   = functor.get_symbolic_residual();
 
         // The functor may only be temporary, so pass it in as a copy.
         // The extractor is specific to this operation, so it definitely
@@ -1417,15 +1467,15 @@ namespace WeakForms
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
             const auto &optimizer =
-              functor.template get_batch_optimizer<ResidualFunctorScalar_t>(
+              functor.template get_batch_optimizer<ResidualViewFunctorScalar_t>(
                 scratch_data);
             // The return result from the differentiation is also not shared
             // between threads. But we can reuse the same object many times
             // since its stored in Scratch.
-            const std::vector<std::vector<ResidualFunctorScalar_t>>
+            const std::vector<std::vector<ResidualViewFunctorScalar_t>>
               &evaluated_dependent_functions =
                 functor.template get_evaluated_dependent_functions<
-                  ResidualFunctorScalar_t>(scratch_data);
+                  ResidualViewFunctorScalar_t>(scratch_data);
 
             std::vector<ValueOpValue_t>        out;
             const FEValuesBase<dim, spacedim> &fe_values =
@@ -1452,15 +1502,15 @@ namespace WeakForms
       template <typename AssemblerScalar_t,
                 std::size_t FieldIndex,
                 typename SymbolicOpField,
-                typename T = ResidualFunctor>
+                typename T = ResidualViewFunctor>
       auto
       get_functor_first_derivative(
         const SymbolicOpField &field,
         typename std::enable_if<is_sd_functor_op<T>::value>::type * =
           nullptr) const
       {
-        constexpr int dim      = ResidualFunctor::dimension;
-        constexpr int spacedim = ResidualFunctor::space_dimension;
+        constexpr int dim      = ResidualViewFunctor::dimension;
+        constexpr int spacedim = ResidualViewFunctor::space_dimension;
 
         static_assert(SymbolicOpField::dimension == dim, "Dimension mismatch.");
         static_assert(SymbolicOpField::space_dimension == spacedim,
@@ -1469,14 +1519,14 @@ namespace WeakForms
         // SD expressions can represent anything, so it doesn't make sense to
         // ask the functor for this type. We expect the result to be castable
         // into the Assembler's scalar type.
-        using ResidualFunctorScalar_t = AssemblerScalar_t;
-        using ResidualFunctorValue_t =
-          typename ResidualFunctor::template value_type<
-            ResidualFunctorScalar_t>;
+        using ResidualViewFunctorScalar_t = AssemblerScalar_t;
+        using ResidualViewFunctorValue_t =
+          typename ResidualViewFunctor::template value_type<
+            ResidualViewFunctorScalar_t>;
         using FieldValue_t =
           typename SymbolicOpField::template value_type<AssemblerScalar_t>;
         using DiffOpResult_t = WeakForms::internal::Differentiation::
-          DiffOpResult<ResidualFunctorValue_t, FieldValue_t>;
+          DiffOpResult<ResidualViewFunctorValue_t, FieldValue_t>;
 
         using DiffOpValue_t = typename DiffOpResult_t::type;
         using DiffOpFunction_t =
@@ -1490,8 +1540,8 @@ namespace WeakForms
         // For SD types, the derivative_extractor an SD::Expression or tensor of
         // expressions that correspond to the solution field that is being
         // derived with respect to.
-        const ResidualFunctor &functor = this->get_functor();
-        const auto &           first_derivative =
+        const ResidualViewFunctor &functor = this->get_functor();
+        const auto &               first_derivative =
           functor.template get_symbolic_first_derivative<FieldIndex>();
 
         // The functor may only be temporary, so pass it in as a copy.
@@ -1510,15 +1560,15 @@ namespace WeakForms
             // it into this lambda function) to avoid working with the same copy
             // of this object on multiple threads.
             const auto &optimizer =
-              functor.template get_batch_optimizer<ResidualFunctorScalar_t>(
+              functor.template get_batch_optimizer<ResidualViewFunctorScalar_t>(
                 scratch_data);
             // The return result from the differentiation is also not shared
             // between threads. But we can reuse the same object many times
             // since its stored in Scratch.
-            const std::vector<std::vector<ResidualFunctorScalar_t>>
+            const std::vector<std::vector<ResidualViewFunctorScalar_t>>
               &evaluated_dependent_functions =
                 functor.template get_evaluated_dependent_functions<
-                  ResidualFunctorScalar_t>(scratch_data);
+                  ResidualViewFunctorScalar_t>(scratch_data);
 
             std::vector<DiffOpValue_t>         out;
             const FEValuesBase<dim, spacedim> &fe_values =
@@ -1716,6 +1766,21 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * A convenience function that generates a self-linearizing energy
+   * functional form from an energy functor.
+   *
+   * For more information about the self-linearizing form that is created,
+   * please refer to the documentation of the
+   * SelfLinearization::EnergyFunctional class.
+   *
+   * @tparam EnergyFunctor A class that is recognised to be a energy functor
+   *         operation, as well as a functor that is either AD compatible
+   *         SD compatible (i.e. can exploit either automatic or symbolic
+   *         differentiation).
+   * @param functor_op An energy functor that is to be converted to a form.
+   * @return SelfLinearization::EnergyFunctional<EnergyFunctor>
+   */
   template <typename EnergyFunctor,
             typename = typename std::enable_if<
               is_energy_functor_op<EnergyFunctor>::value &&
@@ -1728,15 +1793,30 @@ namespace WeakForms
   }
 
 
-  template <typename ResidualFunctor,
+  /**
+   * A convenience function that generates a self-linearizing residual
+   * form from a residual view functor.
+   *
+   * For more information about the self-linearizing form that is created,
+   * please refer to the documentation of the SelfLinearization::ResidualView
+   * class.
+   *
+   * @tparam ResidualViewFunctor A class that is recognised to be a residual view
+   *         functor operation, as well as a functor that is either AD
+   *         compatible SD compatible (i.e. can exploit either automatic or
+   *         symbolic differentiation).
+   * @param functor_op An residual functor that is to be converted to a form.
+   * @return SelfLinearization::ResidualView<ResidualViewFunctor>
+   */
+  template <typename ResidualViewFunctor,
             typename = typename std::enable_if<
-              is_residual_functor_op<ResidualFunctor>::value &&
-              (is_ad_functor_op<ResidualFunctor>::value ||
-               is_sd_functor_op<ResidualFunctor>::value)>::type>
-  SelfLinearization::ResidualView<ResidualFunctor>
-  residual_form(const ResidualFunctor &functor_op)
+              is_residual_functor_op<ResidualViewFunctor>::value &&
+              (is_ad_functor_op<ResidualViewFunctor>::value ||
+               is_sd_functor_op<ResidualViewFunctor>::value)>::type>
+  SelfLinearization::ResidualView<ResidualViewFunctor>
+  residual_form(const ResidualViewFunctor &functor_op)
   {
-    return SelfLinearization::ResidualView<ResidualFunctor>(functor_op);
+    return SelfLinearization::ResidualView<ResidualViewFunctor>(functor_op);
   }
 
 } // namespace WeakForms
@@ -1758,9 +1838,9 @@ namespace WeakForms
   {};
 
 
-  template <typename ResidualFunctor>
+  template <typename ResidualViewFunctor>
   struct is_self_linearizing_form<
-    SelfLinearization::ResidualView<ResidualFunctor>> : std::true_type
+    SelfLinearization::ResidualView<ResidualViewFunctor>> : std::true_type
   {};
 
 } // namespace WeakForms

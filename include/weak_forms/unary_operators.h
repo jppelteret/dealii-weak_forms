@@ -379,9 +379,9 @@ namespace WeakForms
  * A macro to implement the common parts of a unary op type trait class.
  *
  * What remains to be defined are:
- * - static const enum UnaryOpCodes op_code
- * - static const int rank
- * - template <typename ScalarType> using value_type = ...;
+ * - `static const enum UnaryOpCodes op_code`
+ * - `static const int rank`
+ * - `template <typename ScalarType> using value_type = ...;`
  *
  * @note This should used at the very end of the class definition, as
  * the @p return_type relies on the @p value_type to be defined.

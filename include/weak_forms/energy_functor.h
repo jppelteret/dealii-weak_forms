@@ -53,6 +53,30 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * A class that represents the point-wise decomposition of an energy
+   * functional.
+   *
+   * The parameterization of the energy functor is provided by its template
+   * argument(s). This selection then defines the arguments that must be passed
+   * into the functions that compute the energy at any quadrature point.
+   * Depending on which variant of the value() function is called to assign a
+   * definition to the energy, one of two modes will have been chosen to
+   * evaluate both this function as well as its various derivatives with respect
+   * to the field variables: either automatic differentiation (AD) or symbolic
+   * differentiation (SD) will be utilized for this task. The former is likely
+   * more user-friendly, while the latter offers the possibility of more
+   * performance when the definition of the energy is itself complex,
+   * or has complex or lengthy derivatives.
+   *
+   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that represents
+   * the component(s) of the field solutions that parameterize the energy
+   * functional. Each argument captures either a field, or one of its
+   * derivatives. Each are treated as independent variables as they are later
+   * used in the construction of linear and bilinear form(s). Note that one may
+   * not use the global field solution as an argument; instead, this class
+   * requires views to each component of the solution in order to be useful.
+   */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   class EnergyFunctor : public WeakForms::Functor<0>
   {
@@ -335,7 +359,7 @@ namespace WeakForms
 #  ifdef DEAL_II_WITH_AUTO_DIFFERENTIATION
 
     /**
-     * Extract the value from a scalar functor.
+     * Extract the value from a energy functor.
      *
      * Variant for auto-differentiable number.
      */
@@ -696,7 +720,7 @@ namespace WeakForms
 
 
     /**
-     * Extract the value from a scalar functor.
+     * Extract the value from a energy functor.
      *
      * Variant for symbolic expressions.
      */
@@ -925,7 +949,7 @@ namespace WeakForms
             }
           batch_optimizer.register_symbols(symbol_map);
 
-          // The next typical few steps that precede function resistration
+          // The next typical few steps that precede function registration
           // have already been performed in the class constructor:
           // - Evaluate the functor to compute the total stored energy.
           // - Compute the first derivatives of the energy function.

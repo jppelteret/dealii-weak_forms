@@ -1976,8 +1976,6 @@ namespace WeakForms
      * Cell operations for bilinear forms
      *
      * @tparam SymbolicOpVolumeIntegral
-     * @tparam std::enable_if<is_bilinear_form<
-     * typename SymbolicOpVolumeIntegral::IntegrandType>::value>::type
      * @param volume_integral
      *
      * Providing the @p solution solution pointer is optional, as we might
@@ -2648,8 +2646,6 @@ namespace WeakForms
      * Cell operations for linear forms
      *
      * @tparam SymbolicOpVolumeIntegral
-     * @tparam std::enable_if<is_linear_form<
-     * typename SymbolicOpVolumeIntegral::IntegrandType>::value>::type
      * @param volume_integral
      */
     template <enum internal::AccumulationSign Sign,

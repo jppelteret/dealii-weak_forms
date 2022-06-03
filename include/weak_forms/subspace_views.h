@@ -648,10 +648,10 @@ namespace WeakForms
 /**
  * A macro to implement the common parts of a subspace view class.
  * It is expected that the unary op derives from a
- * SubSpaceViewBase<SpaceType, FEValuesExtractors::<TYPE>> .
+ * `SubSpaceViewBase<SpaceType, FEValuesExtractors::<TYPE>>` .
  *
  * What remains to be defined are:
- * - static const int rank
+ *   - `static const int rank`
  *
  * @note The @p ClassName should match the type that is used in the
  * FEValuesExtractors and FEValuesViews namespaces.
@@ -716,7 +716,7 @@ public:                                                                     \
     {
       DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Scalar,
                                         SpaceType_,
-                                        FEValuesExtractors::Scalar)
+                                        FEValuesExtractors::Scalar);
       static_assert(rank == SpaceType::rank,
                     "Unexpected rank in parent space.");
 
@@ -967,7 +967,7 @@ public:                                                                     \
     {
       DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Vector,
                                         SpaceType_,
-                                        FEValuesExtractors::Vector)
+                                        FEValuesExtractors::Vector);
 
     public:
       template <typename ScalarType>
@@ -1258,7 +1258,7 @@ public:                                                                     \
     {
       DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(Tensor,
                                         SpaceType_,
-                                        FEValuesExtractors::Tensor<rank_>)
+                                        FEValuesExtractors::Tensor<rank_>);
 
     public:
       template <typename ScalarType>
@@ -1343,7 +1343,7 @@ public:                                                                     \
       DEAL_II_SUBSPACE_VIEW_COMMON_IMPL(
         SymmetricTensor,
         SpaceType_,
-        FEValuesExtractors::SymmetricTensor<rank_>)
+        FEValuesExtractors::SymmetricTensor<rank_>);
 
     public:
       template <typename ScalarType>
@@ -1702,7 +1702,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpValueBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::value)
+        SymbolicOpCodes::value);
 
     protected:
       // Return single entry
@@ -1741,7 +1741,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpGradientBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::gradient)
+        SymbolicOpCodes::gradient);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1790,7 +1790,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpSymmetricGradientBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::symmetric_gradient)
+        SymbolicOpCodes::symmetric_gradient);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1836,7 +1836,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpDivergenceBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::divergence)
+        SymbolicOpCodes::divergence);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1883,9 +1883,10 @@ protected:                                                                   \
         is_trial_solution<typename SubSpaceViewsType::SpaceType>::value>::type>
       : public SymbolicOpCurlBase<SubSpaceViewsType>
     {
-      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(SymbolicOpCurlBase,
-                                                          SubSpaceViewsType,
-                                                          SymbolicOpCodes::curl)
+      DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
+        SymbolicOpCurlBase,
+        SubSpaceViewsType,
+        SymbolicOpCodes::curl);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1930,7 +1931,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpLaplacianBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::laplacian)
+        SymbolicOpCodes::laplacian);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -1975,7 +1976,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpHessianBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::hessian)
+        SymbolicOpCodes::hessian);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2022,7 +2023,7 @@ protected:                                                                   \
       DEAL_II_SYMBOLIC_OP_TEST_TRIAL_SUBSPACE_COMMON_IMPL(
         SymbolicOpThirdDerivativeBase,
         SubSpaceViewsType,
-        SymbolicOpCodes::third_derivative)
+        SymbolicOpCodes::third_derivative);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2632,7 +2633,7 @@ protected:                                                                     \
         SymbolicOpValueBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::value)
+        SymbolicOpCodes::value);
 
     public:
       // Return solution values at all quadrature points
@@ -2691,7 +2692,7 @@ protected:                                                                     \
         SymbolicOpGradientBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::gradient)
+        SymbolicOpCodes::gradient);
 
     public:
       // Return solution gradients at all quadrature points
@@ -2751,7 +2752,7 @@ protected:                                                                     \
         SymbolicOpSymmetricGradientBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::symmetric_gradient)
+        SymbolicOpCodes::symmetric_gradient);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2818,7 +2819,7 @@ protected:                                                                     \
         SymbolicOpDivergenceBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::divergence)
+        SymbolicOpCodes::divergence);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2892,7 +2893,7 @@ protected:                                                                     \
         SymbolicOpCurlBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::curl)
+        SymbolicOpCodes::curl);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -2965,7 +2966,7 @@ protected:                                                                     \
         SymbolicOpLaplacianBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::laplacian)
+        SymbolicOpCodes::laplacian);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -3032,7 +3033,7 @@ protected:                                                                     \
         SymbolicOpHessianBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::hessian)
+        SymbolicOpCodes::hessian);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -3102,7 +3103,7 @@ protected:                                                                     \
         SymbolicOpThirdDerivativeBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::third_derivative)
+        SymbolicOpCodes::third_derivative);
 
       // Let's make any compilation failures due to template mismatches
       // easier to understand.
@@ -3169,7 +3170,7 @@ protected:                                                                     \
         SymbolicOpJumpValueBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::jump_in_values)
+        SymbolicOpCodes::jump_in_values);
 
     public:
       // Return solution values at all quadrature points
@@ -3220,7 +3221,7 @@ protected:                                                                     \
         SymbolicOpAverageValueBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::average_of_values)
+        SymbolicOpCodes::average_of_values);
 
     public:
       // Return solution values at all quadrature points
@@ -3271,7 +3272,7 @@ protected:                                                                     \
         SymbolicOpJumpGradientBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::jump_in_gradients)
+        SymbolicOpCodes::jump_in_gradients);
 
     public:
       // Return solution values at all quadrature points
@@ -3322,7 +3323,7 @@ protected:                                                                     \
         SymbolicOpAverageGradientBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::average_of_gradients)
+        SymbolicOpCodes::average_of_gradients);
 
     public:
       // Return solution values at all quadrature points
@@ -3373,7 +3374,7 @@ protected:                                                                     \
         SymbolicOpJumpHessianBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::jump_in_hessians)
+        SymbolicOpCodes::jump_in_hessians);
 
     public:
       // Return solution values at all quadrature points
@@ -3424,7 +3425,7 @@ protected:                                                                     \
         SymbolicOpAverageHessianBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::average_of_hessians)
+        SymbolicOpCodes::average_of_hessians);
 
     public:
       // Return solution values at all quadrature points
@@ -3476,7 +3477,7 @@ protected:                                                                     \
         SymbolicOpJumpThirdDerivativeBase,
         SubSpaceViewsType,
         solution_index,
-        SymbolicOpCodes::jump_in_third_derivatives)
+        SymbolicOpCodes::jump_in_third_derivatives);
 
     public:
       // Return solution values at all quadrature points
