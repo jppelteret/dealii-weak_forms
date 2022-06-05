@@ -57,17 +57,126 @@ namespace WeakForms
    * A class that represents the point-wise decomposition of an energy
    * functional.
    *
+   * An instance of this class  can also be easily created using the
+   * energy_functor() convenience function.
+   *
    * The parameterization of the energy functor is provided by its template
    * argument(s). This selection then defines the arguments that must be passed
    * into the functions that compute the energy at any quadrature point.
-   * Depending on which variant of the value() function is called to assign a
-   * definition to the energy, one of two modes will have been chosen to
-   * evaluate both this function as well as its various derivatives with respect
-   * to the field variables: either automatic differentiation (AD) or symbolic
-   * differentiation (SD) will be utilized for this task. The former is likely
-   * more user-friendly, while the latter offers the possibility of more
-   * performance when the definition of the energy is itself complex,
-   * or has complex or lengthy derivatives.
+   * Depending on which variant of the EnergyFunctor::value() function is called
+   * to assign a definition to the energy, one of two modes will have been
+   * chosen to evaluate both this function as well as its various derivatives
+   * with respect to the field variables: either automatic differentiation (AD)
+   * or symbolic differentiation (SD) will be utilized for this task. The former
+   * is likely more user-friendly, while the latter offers the possibility of
+   * more performance when the definition of the energy is itself complex, or
+   * has complex or lengthy derivatives.
+   *
+   * An example use of this class (using the AD technique for brevity) is
+   * as follows:
+   * @code {.cpp}
+   * using namespace WeakForms;
+   * constexpr int dim = ...;
+   * constexpr int spacedim = ...;
+   *
+   * // Define the field solution and an extractor to get a view into one
+   * // of its components.
+   * const FieldSolution<dim> solution;
+   * const SubSpaceExtractors::Scalar subspace_extractor(0, "s", "s");
+   *
+   * // Extract subspace of field solution; namely operators that
+   * // represent its value and gradient
+   * const auto soln_s_val  = solution[subspace_extractor].value();
+   * const auto soln_s_grad = solution[subspace_extractor].gradient();
+   *
+   * // Parameterize an energy in terms of all field solution's value and
+   * // gradient. This is used as a factory to define energy functionals with
+   * // the given parameterization and naming convention.
+   * // Using the provided convenience function, the types
+   * // `decltype(soln_s_val)` and `decltype(soln_s_grad)` are collectively
+   * // passed as the EnergyFunctor class template argument
+   * // `SymbolicOpsSubSpaceFieldSolution`.
+   * const auto energy_func
+   *   = energy_functor("e", "\\Psi", soln_s_val, soln_s_grad);
+   *
+   * // Choose an auto-differentiable number as the scalar type for the energy
+   * // that we'll define next.
+   * constexpr auto ad_typecode =
+   *   dealii::Differentiation::AD::NumberTypes::sacado_dfad_dfad;
+   * using ADNumber_t =
+   *   typename decltype(energy)::template ad_type<double, ad_typecode>;
+   *
+   * // Now create a specific instance of an energy functional: this not only
+   * // provides the definition of the point-wise energy to be considered, but
+   * // also a means to differentiate it with respect to its arguments.
+   * // This is achieved with a call to EnergyFunctor::value(), with the
+   * // differentiable number type as the first template argument.
+   * // The definition of the energy can be supplied using a lambda function
+   * // (for auto-differentiable numbers, only one lambda function will need
+   * // to be provided):
+   * // the first three arguments that the lambda function must take in are
+   * // always the same;
+   * // the arguments that follow are exactly the local value types for the
+   * // field solution that were supplied in the call to energy_functor() a
+   * // few lines above. Since we passed in the view to a scalar field value,
+   * // followed by a scalar field gradient, the two arguments to this
+   * // lambda function will be a (scalar) ADNumber_t followed by a rank-1
+   * // tensor of ADNumber_t. These arguments will point to valid data that is
+   * // extracted from the associated field solution and the energy will only
+   * // be made to be sensitive (in a differentiable sense) to them.
+   * // All of the initialization of the AD or SD values is done automatically,
+   * // so one need only concentrate on the definition to be evaluated.
+   * const auto energy = energy_func.template value<ADNumber_t, dim, spacedim>(
+   *   [](const dealii::MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *        &                                       solution_extraction_data,
+   *      const unsigned int                        q_point,
+   *      const ADNumber_t &                        u,
+   *      const dealii::Tensor<1, dim, ADNumber_t> &grad_u)
+   * {
+   *   const ADNumber_t psi = ...;
+   *   return psi;
+   * });
+   *
+   * // Now for assembly...
+   * MatrixBasedAssembler<spacedim> assembler;
+   *
+   * // To make use of this energy, we simply accumulate its integral (thereby
+   * // formally defining an energy functional in terms of the point-wise
+   * // energy) into an assembler using a SelfLinearization::EnergyFunctional
+   * // form. This can be done using the energy_functional_form() convenience
+   * // function. At this point, the energy functional is translated into the
+   * // appropriate linear and bilinear forms at compile time, and where
+   * // run-time differentiation of the point-wise energy contributions with
+   * // respect to its field arguments is also configured.
+   * assembler += energy_functional_form(energy).dV();
+   * @endcode
+   *
+   * In this specific example, the energy functional generates the following
+   * forms (this can be inspected by printing the `assembler`):
+   * @f{align}{
+   * \psi \left( s, \nabla s \right)
+   * \quad \Rightarrow 0
+   * &= \left( \delta s, \dfrac{d \psi \left( s, \nabla s \right)}{d s} \right)
+   *  + \left( \delta \nabla s, \dfrac{d \psi \left( s, \nabla s \right)}{d
+   *    \nabla s} \right) \\
+   * &+ a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s^2}
+   *    . \Delta s \right)
+   *  + a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s . d
+   *    \nabla s} \cdot \Delta \nabla s \right) \\
+   * &+ a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s
+   *    \right)}{d \nabla s . ds} . \Delta s \right)
+   *  + a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s
+   *    \right)}{d \nabla s \otimes d \nabla s} \cdot \Delta \nabla s \right)
+   * @f}
+   * where @f$ \delta \left( \bullet \right) @f$ represents a variation (or test
+   * function, for linear problems) and @f$ \Delta \left( \bullet \right) @f$
+   * represents the solution increment (or trial solution, for linear problems).
+   * The linear forms, which are the first two terms on the right of the
+   * equation, get transferred to the right-hand side of the linear system
+   * @f$ \mathbf{K}\cdot\mathbf{d} = \mathbf{f} @f$, with a sign change. The
+   * bilinear forms are assembled to the system matrix on the left-hand side of
+   * the equation with the same sign.
    *
    * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that represents
    * the component(s) of the field solutions that parameterize the energy
