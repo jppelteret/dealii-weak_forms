@@ -174,6 +174,14 @@ namespace WeakForms
   struct is_integral_op : std::false_type
   {};
 
+} // namespace WeakForms
+
+
+#ifndef DOXYGEN
+
+
+namespace WeakForms
+{
 
 // A trait that declares that one or more leaf operations
 // is a test function operation.
@@ -351,9 +359,6 @@ namespace WeakForms
 #undef DEAL_II_TYPE_TRAIT_OR_COMBINER
 
 } // namespace WeakForms
-
-
-#ifndef DOXYGEN
 
 
 namespace WeakForms
