@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -189,7 +196,7 @@ class WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</h3>
 <div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">SubSpaceExtractors::Scalar</a> subspace_extractor(0, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Extract subspace of field solution; namely operators that</span></div>
-<div class="line"><span class="comment">// represent its value and gradient</span></div>
+<div class="line"><span class="comment">// represent its value and gradient.</span></div>
 <div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_s_val  = solution[subspace_extractor].<a class="code" href="classWeakForms_1_1FieldSolution.html#a342ce13b6eeb3d3d1820eeab5baf38ce">value</a>();</div>
 <div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_s_grad = solution[subspace_extractor].<a class="code" href="classWeakForms_1_1FieldSolution.html#a3122e0897597b3e2ddec64a89c110a28">gradient</a>();</div>
 <div class="line"> </div>
@@ -208,7 +215,7 @@ class WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</h3>
 <div class="line">constexpr <span class="keyword">auto</span> ad_typecode =</div>
 <div class="line">  dealii::Differentiation::AD::NumberTypes::sacado_dfad_dfad;</div>
 <div class="line"><span class="keyword">using</span> ADNumber_t =</div>
-<div class="line">  <span class="keyword">typename</span> decltype(energy)::template <a class="code" href="classWeakForms_1_1EnergyFunctor.html#a03fc24d1dbbf4aacd60ed16f02cfb6bb">ad_type</a>&lt;double, ad_typecode&gt;;</div>
+<div class="line">  <span class="keyword">typename</span> decltype(energy_func)::template <a class="code" href="classWeakForms_1_1EnergyFunctor.html#a03fc24d1dbbf4aacd60ed16f02cfb6bb">ad_type</a>&lt;double, ad_typecode&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Now create a specific instance of an energy functional: this not only</span></div>
 <div class="line"><span class="comment">// provides the definition of the point-wise energy to be considered, but</span></div>
@@ -255,9 +262,9 @@ class WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</h3>
 <div class="line"><span class="comment">// respect to its field arguments is also configured.</span></div>
 <div class="line">assembler += <a class="code" href="namespaceWeakForms.html#a829718a6fa9f0bf9bc149b3d7cc636e5">energy_functional_form</a>(energy).dV();</div>
 </div><!-- fragment --><p>In this specific example, the energy functional generates the following forms (this can be inspected by printing the <code>assembler</code>): </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align} \psi \left( s, \nabla s \right) \quad \Rightarrow 0 &amp;= \left( \delta s, \dfrac{d \psi \left( s, \nabla s \right)}{d s} \right) + \left( \delta \nabla s, \dfrac{d \psi \left( s, \nabla s \right)}{d \nabla s} \right) \\ &amp;+ a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s^2} . \Delta s \right) + a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s . d \nabla s} \cdot \Delta \nabla s \right) \\ &amp;+ a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s . ds} . \Delta s \right) + a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s \otimes d \nabla s} \cdot \Delta \nabla s \right) \end{align}" src="form_0.png"/>
+\begin{align} \psi \left( s, \nabla s \right) \quad \Rightarrow 0 &amp;= \left( \delta s, \dfrac{d \psi \left( s, \nabla s \right)}{d s} \right) + \left( \delta \nabla s, \dfrac{d \psi \left( s, \nabla s \right)}{d \nabla s} \right) \\ &amp;+ a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s^2} . \Delta s \right) + a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s . d \nabla s} \cdot \Delta \nabla s \right) \\ &amp;+ a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s . ds} . \Delta s \right) + a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s \otimes d \nabla s} \cdot \Delta \nabla s \right) \end{align}
 </p>
-<p> where <img class="formulaInl" alt="$ \delta \left( \bullet \right) $" src="form_1.png"/> represents a variation (or test function, for linear problems) and <img class="formulaInl" alt="$ \Delta \left( \bullet \right) $" src="form_2.png"/> represents the solution increment (or trial solution, for linear problems). The linear forms, which are the first two terms on the right of the equation, get transferred to the right-hand side of the linear system <img class="formulaInl" alt="$ \mathbf{K}\cdot\mathbf{d} = \mathbf{f} $" src="form_3.png"/>, with a sign change. The bilinear forms are assembled to the system matrix on the left-hand side of the equation with the same sign.</p>
+<p> where \( \delta \left( \bullet \right) \) represents a variation (or test function, for linear problems) and \( \Delta \left( \bullet \right) \) represents the solution increment (or trial solution, for linear problems). The linear forms, which are the first two terms on the right of the equation, get transferred to the right-hand side of the linear system \( \mathbf{K}\cdot\mathbf{d} = \mathbf{f} \), with a sign change. The bilinear forms are assembled to the system matrix on the left-hand side of the equation with the same sign.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">SymbolicOpsSubSpaceFieldSolution</td><td>A variadic template that represents the component(s) of the field solutions that parameterize the energy functional. Each argument captures either a field, or one of its derivatives. Each are treated as independent variables as they are later used in the construction of linear and bilinear form(s). Note that one may not use the global field solution as an argument; instead, this class requires views to each component of the solution in order to be useful. </td></tr>

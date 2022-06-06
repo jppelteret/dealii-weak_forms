@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -1114,7 +1121,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 <p><code>const auto soln_ss = solution[subspace_extractor]; const auto soln_val = soln_ss.value(); // Solution value const auto soln_grad = soln_ss.gradient(); // Solution gradient ...</code></p>
 <p><code>const ResidualFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt; residual("R", "R", soln_val, soln_grad, ...); </code> </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00490">490</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00631">631</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1159,7 +1166,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </div><div class="memdoc">
 <p>A convenience function for create a <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00505">505</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00646">646</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
