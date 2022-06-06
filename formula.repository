@@ -1,0 +1,4 @@
+\_form#0:\begin{align} \psi \left( s, \nabla s \right) \quad \Rightarrow 0 &= \left( \delta s, \dfrac{d \psi \left( s, \nabla s \right)}{d s} \right) + \left( \delta \nabla s, \dfrac{d \psi \left( s, \nabla s \right)}{d \nabla s} \right) \\ &+ a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s^2} . \Delta s \right) + a \left( \delta s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d s . d \nabla s} \cdot \Delta \nabla s \right) \\ &+ a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s . ds} . \Delta s \right) + a \left( \delta \nabla s, \dfrac{d^{2} \psi \left( s, \nabla s \right)}{d \nabla s \otimes d \nabla s} \cdot \Delta \nabla s \right) \end{align}
+\_form#1:$ \delta \left( \bullet \right) $
+\_form#2:$ \Delta \left( \bullet \right) $
+\_form#3:$ \mathbf{K}\cdot\mathbf{d} = \mathbf{f} $
