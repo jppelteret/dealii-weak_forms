@@ -168,6 +168,147 @@ namespace WeakForms
    * more performance when the definition of the residual is one is itself
    * complex, or has complex or lengthy partial derivatives.
    *
+   * An example use of this class (using the AD technique for brevity) is
+   * as follows:
+   * @code {.cpp}
+   * using namespace WeakForms;
+   * constexpr int dim = ...;
+   * constexpr int spacedim = ...;
+   *
+   * // Define the field solution and an extractor to get a view into some
+   * // of its components.
+   * const FieldSolution<dim> solution;
+   * const SubSpaceExtractors::Vector subspace_extractor_v(0, "v",
+   * "\\mathbf{v}"); const SubSpaceExtractors::Scalar
+   * subspace_extractor_s(spacedim, "s", "s");
+   *
+   * // Extract subspace of field solution; namely operators that
+   * // represent a vector field gradient and a scalar field value.
+   * const auto soln_v_grad = solution[subspace_extractor].gradient();
+   * const auto soln_s_val  = solution[subspace_extractor].value();
+   *
+   * // Define test functions for the various components of the problem.
+   * const TestFunction<dim, spacedim> test;
+   * const auto grad_test_v = test[subspace_extractor_v].gradient();
+   * const auto test_s      = test[subspace_extractor_s].value();
+   *
+   * // Parameterize a residual in terms of a vector field's gradient and
+   * // a scalar field's value. This is used as a factory to define component
+   * // of a residual with the given parameterization and naming convention.
+   * // Using the provided convenience function, the types
+   * // `decltype(soln_v_grad)` and `decltype(soln_s_val)` are collectively
+   * // passed as the ResidualViewFunctor class template argument.
+   * const auto residual_func
+   *   = residual_functor("R", "R", soln_v_grad, soln_s_val);
+   *
+   * // Now get a view (specifically, a ResidualViewFunctor) into two components
+   * // of the residual:
+   * // We achieve this thought the overloaded ResidualFunctor::operator[],
+   * // by passing in the test function that the linear form is to be tested
+   * // against.
+   * const auto residual_ss_v = residual_func[grad_test_v];
+   * const auto residual_ss_s = residual_func[test_s];
+   *
+   * // Choose an auto-differentiable number as the scalar type for the residual
+   * // component that we'll define next.
+   * constexpr auto ad_typecode =
+   *   dealii::Differentiation::AD::NumberTypes::sacado_dfad;
+   * using ADNumber_t =
+   *   typename decltype(residual_ss_v)::template ad_type<double, ad_typecode>;
+   *
+   * // Now create a specific instance of an residual view functor: this not
+   * // only provides the definition of the residual component to be considered,
+   * // but also a means to differentiate it with respect to its arguments.
+   * // This is achieved with a call to ResidualViewFunctor::value(), with the
+   * // differentiable number type as the first template argument.
+   * // The definition of the residual component can be supplied using a lambda
+   * // function (for auto-differentiable numbers, only one lambda function will
+   * // need to be provided):
+   * // the first three arguments that the lambda function must take in are
+   * // always the same;
+   * // the arguments that follow are exactly the local value types for the
+   * // field solution that were supplied in the call to residual_functor() a
+   * // few lines above. Since we passed in the view to a vector field gradient,
+   * // followed by a scalar field value, the two arguments to this
+   * // lambda function will be a rank-1 tensor of ADNumber_t followed by a
+   * // (scalar)  ADNumber_t. These arguments will point to valid data that is
+   * // extracted from the associated field solution and the residual will only
+   * // be made to be sensitive (in a differentiable sense) to them.
+   * // All of the initialization of the AD or SD values is done automatically,
+   * // so one need only concentrate on the definition to be evaluated.
+   * //
+   * // We evaluate the vector (gradient) component and the scalar (value)
+   * // component's contributions separately. Intuitively this makes sense,
+   * // as the rank of the contributions (or the test functions) are different.
+   * const auto residual_v
+   *   = residual_ss_v.template value<ADNumber_t, dim, spacedim>(
+   *   [](const dealii::MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *        &                                       solution_extraction_data,
+   *      const unsigned int                        q_point,
+   *      const dealii::Tensor<2, dim, ADNumber_t> &grad_v,
+   *      const ADNumber_t &                        s)
+   * {
+   *   const Tensor<2, dim, ADNumber_t> res_grad_v = ...;
+   *   return res_grad_v;
+   * });
+   * const auto residual_s
+   *   = residual_ss_s.template value<ADNumber_t, dim, spacedim>(
+   *   [](const dealii::MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *        &                                       solution_extraction_data,
+   *      const unsigned int                        q_point,
+   *      const dealii::Tensor<2, dim, ADNumber_t> &grad_v,
+   *      const ADNumber_t &                        s)
+   * {
+   *   const ADNumber_t res_s = ...;
+   *   return res_s;
+   * });
+   *
+   * // Now for assembly...
+   * MatrixBasedAssembler<spacedim> assembler;
+   *
+   * // To make use of these residual contributions, we simply accumulate their
+   * // integral (thereby formally defining the global residual terms in terms
+   * // of the point contributions) into an assembler using a
+   * // SelfLinearization::ResidualView form. This can be done using the
+   * // residual_form() convenience function. At this point, each residual view
+   * // is translated into the appropriate linear and bilinear forms at compile
+   * // time, and where run-time differentiation of the point-wise residual
+   * // component contributions with respect to their field arguments is also
+   * // configured.
+   * assembler += residual_form(residual_v).dV()
+   *            + residual_form(residual_s).dV();
+   * @endcode
+   *
+   * In this specific example, the residual view expressions generate the
+   * following forms (this can be inspected by printing the `assembler`):
+   * @f{align}{
+   * R \left( \nabla \mathbf{v}, s \right)
+   * \quad \Rightarrow 0
+   * &= \left( \delta \nabla \mathbf{v}, \dfrac{d R \left( \nabla \mathbf{v}, s
+   *   \right)}{d \nabla \mathbf{v}} \right)
+   *  + \left( \delta s, \dfrac{d R \left( \nabla \mathbf{v}, s \right)}{d s}
+   *   \right) \\
+   * &+ a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla
+   *   \mathbf{v} \right)}{d \nabla \mathbf{v} \otimes d \nabla \mathbf{v}}
+   *   \cdot \Delta \nabla \mathbf{v} \right)
+   *  + a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla
+   *   \mathbf{v} \right)}{d \nabla \mathbf{v} . ds} . \Delta s \right) \\
+   * &+ a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d
+   *   s . d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right)
+   *  + a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d
+   *   s^2} . \Delta s \right)
+   * @f}
+   * where @f$ \delta \left( \bullet \right) @f$ represents a variation (or test
+   * function, for linear problems) and @f$ \Delta \left( \bullet \right) @f$
+   * represents the solution increment (or trial solution, for linear problems).
+   * The linear forms, which are the first two terms on the right of the
+   * equation, get transferred to the right-hand side of the linear system
+   * @f$ \mathbf{K}\cdot\mathbf{d} = \mathbf{f} @f$, with a sign change. The
+   * bilinear forms are assembled to the system matrix on the left-hand side of
+   * the equation with the same sign.
+   *
    * @tparam TestSpaceOp A class that represents the test function that this
    * residual value is tested against. It is used to generate the linear form
    * that is then later consistently linearized.

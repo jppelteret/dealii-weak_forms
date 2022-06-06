@@ -85,7 +85,7 @@ namespace WeakForms
    * const SubSpaceExtractors::Scalar subspace_extractor(0, "s", "s");
    *
    * // Extract subspace of field solution; namely operators that
-   * // represent its value and gradient
+   * // represent its value and gradient.
    * const auto soln_s_val  = solution[subspace_extractor].value();
    * const auto soln_s_grad = solution[subspace_extractor].gradient();
    *
@@ -104,7 +104,7 @@ namespace WeakForms
    * constexpr auto ad_typecode =
    *   dealii::Differentiation::AD::NumberTypes::sacado_dfad_dfad;
    * using ADNumber_t =
-   *   typename decltype(energy)::template ad_type<double, ad_typecode>;
+   *   typename decltype(energy_func)::template ad_type<double, ad_typecode>;
    *
    * // Now create a specific instance of an energy functional: this not only
    * // provides the definition of the point-wise energy to be considered, but
