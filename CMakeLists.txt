@@ -336,9 +336,18 @@ INSTALL(
 ##
 OPTION(BUILD_DOCUMENTATION "Build the Doxygen documentation" OFF)
 OPTION(DOXYGEN_EXECUTABLE "Path of the doxygen executable" "doxygen")
+OPTION(DOC_WITH_MATHJAX "Use MathJax instead of LaTeX for formulas" OFF)
 
 IF(BUILD_DOCUMENTATION)
   MESSAGE(STATUS "Configuring with Doxygen documentation")
+  IF(DOC_WITH_MATHJAX)
+    MESSAGE(STATUS "Documentation: Formulas will be rendered with MathJax")
+    SET(_USE_MATHJAX "YES")
+  ELSE()
+    MESSAGE(STATUS "Documentation: Formulas will be rendered with LaTeX")
+    SET(_USE_MATHJAX "NO")
+  ENDIF()
+
   ADD_SUBDIRECTORY(doc/doxygen)
 
   ADD_CUSTOM_TARGET(documentation
