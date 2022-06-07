@@ -117,6 +117,77 @@ namespace WeakForms
 
       std::vector<InterfaceData> interface_data;
     };
+
+
+
+    template <typename T>
+    struct is_hp_q_collection : std::false_type
+    {};
+
+
+    template <int dim>
+    struct is_hp_q_collection<hp::QCollection<dim>> : std::true_type
+    {};
+
+
+    template <typename CellQuadratureType, typename FaceQuadratureType>
+    struct is_hp_cell_or_face_q_collection
+      : std::conditional<
+          std::is_same<typename std::decay<FaceQuadratureType>::type,
+                       std::nullptr_t>::value,
+          is_hp_q_collection<CellQuadratureType>,
+          is_hp_q_collection<FaceQuadratureType>>::type
+    {};
+
+
+    template <bool is_hp_enabled>
+    struct HP_Helper;
+
+
+    template <>
+    struct HP_Helper<false>
+    {
+      template <int dim, int spacedim>
+      static const FiniteElement<dim, spacedim> &
+      get_fe(const DoFHandler<dim, spacedim> &dof_handler,
+             const unsigned int               index = 0)
+      {
+        return dof_handler.get_fe(index);
+      }
+
+      template <int dim, int spacedim>
+      static unsigned int
+      get_dofs_per_cell(const DoFHandler<dim, spacedim> &dof_handler,
+                        const unsigned int               index = 0)
+      {
+        return dof_handler.get_fe(index).dofs_per_cell;
+      }
+    };
+
+
+    template <>
+    struct HP_Helper<true>
+    {
+      template <int dim, int spacedim>
+      static const hp::FECollection<dim, spacedim> &
+      get_fe(const DoFHandler<dim, spacedim> &dof_handler)
+      {
+        return dof_handler.get_fe_collection();
+      }
+
+      template <int dim, int spacedim>
+      static unsigned int
+      get_dofs_per_cell(const DoFHandler<dim, spacedim> &dof_handler)
+      {
+        return dof_handler.get_fe_collection().max_dofs_per_cell();
+      }
+    };
+
+    template <typename CellQuadratureType, typename FaceQuadratureType>
+    using HP_Helper_t =
+      HP_Helper<is_hp_cell_or_face_q_collection<CellQuadratureType,
+                                                FaceQuadratureType>::value>;
+
   } // namespace internal
 
   /**
@@ -1262,22 +1333,27 @@ namespace WeakForms
           }
       };
 
+      // A helper to retrieve either normal or hp-compatible data structures
+      using HP_Helper_t =
+        internal::HP_Helper_t<CellQuadratureType, FaceQuadratureType>;
+
       // Initialize the assistant objects used during assembly.
       const ScratchData sample_scratch_data =
         (face_quadrature ?
            internal::construct_scratch_data<ScratchData, FaceQuadratureType>(
-             dof_handler.get_fe(),
+             HP_Helper_t::get_fe(dof_handler),
              cell_quadrature,
              this->get_cell_update_flags(),
              face_quadrature,
              this->get_face_update_flags(),
              this->ad_sd_functor_cache) :
            internal::construct_scratch_data<ScratchData>(
-             dof_handler.get_fe(),
+             HP_Helper_t::get_fe(dof_handler),
              cell_quadrature,
              this->get_cell_update_flags(),
              this->ad_sd_functor_cache));
-      const CopyData sample_copy_data(dof_handler.get_fe().dofs_per_cell);
+      const CopyData sample_copy_data(
+        HP_Helper_t::get_dofs_per_cell(dof_handler));
 
       // Set the assembly flags, based off of the operations that we intend to
       // do.
