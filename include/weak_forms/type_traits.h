@@ -182,55 +182,55 @@ namespace WeakForms
 
 namespace WeakForms
 {
-
 // A trait that declares that one or more leaf operations
 // is a test function operation.
 // The left itself will not be marked as one.
-#define DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(expression_tree_type_trait,        \
-                                           singular_type_trait)               \
-  template <typename T, typename U = void>                                    \
-  struct expression_tree_type_trait : std::false_type                         \
-  {};                                                                         \
-                                                                              \
-  template <typename T>                                                       \
-  struct expression_tree_type_trait<                                          \
-    T,                                                                        \
-    typename std::enable_if<                                                  \
-      is_unary_op<T>::value &&                                                \
-      singular_type_trait<typename T::OpType>::value>::type> : std::true_type \
-  {};                                                                         \
-                                                                              \
-  template <typename T>                                                       \
-  struct expression_tree_type_trait<                                          \
-    T,                                                                        \
-    typename std::enable_if<                                                  \
-      is_unary_op<T>::value &&                                                \
-      !singular_type_trait<typename T::OpType>::value &&                      \
-      expression_tree_type_trait<typename T::OpType>::value>::type>           \
-    : std::true_type                                                          \
-  {};                                                                         \
-                                                                              \
-  template <typename T>                                                       \
-  struct expression_tree_type_trait<                                          \
-    T,                                                                        \
-    typename std::enable_if<                                                  \
-      is_binary_op<T>::value &&                                               \
-      (singular_type_trait<typename T::LhsOpType>::value ||                   \
-       singular_type_trait<typename T::RhsOpType>::value)>::type>             \
-    : std::true_type                                                          \
-  {};                                                                         \
-                                                                              \
-  template <typename T>                                                       \
-  struct expression_tree_type_trait<                                          \
-    T,                                                                        \
-    typename std::enable_if<                                                  \
-      is_binary_op<T>::value &&                                               \
-      !singular_type_trait<typename T::LhsOpType>::value &&                   \
-      !singular_type_trait<typename T::RhsOpType>::value &&                   \
-      (expression_tree_type_trait<typename T::LhsOpType>::value ||            \
-       expression_tree_type_trait<typename T::RhsOpType>::value)>::type>      \
-    : std::true_type                                                          \
-  {};
+#  define DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(expression_tree_type_trait,   \
+                                             singular_type_trait)          \
+    template <typename T, typename U = void>                               \
+    struct expression_tree_type_trait : std::false_type                    \
+    {};                                                                    \
+                                                                           \
+    template <typename T>                                                  \
+    struct expression_tree_type_trait<                                     \
+      T,                                                                   \
+      typename std::enable_if<                                             \
+        is_unary_op<T>::value &&                                           \
+        singular_type_trait<typename T::OpType>::value>::type>             \
+      : std::true_type                                                     \
+    {};                                                                    \
+                                                                           \
+    template <typename T>                                                  \
+    struct expression_tree_type_trait<                                     \
+      T,                                                                   \
+      typename std::enable_if<                                             \
+        is_unary_op<T>::value &&                                           \
+        !singular_type_trait<typename T::OpType>::value &&                 \
+        expression_tree_type_trait<typename T::OpType>::value>::type>      \
+      : std::true_type                                                     \
+    {};                                                                    \
+                                                                           \
+    template <typename T>                                                  \
+    struct expression_tree_type_trait<                                     \
+      T,                                                                   \
+      typename std::enable_if<                                             \
+        is_binary_op<T>::value &&                                          \
+        (singular_type_trait<typename T::LhsOpType>::value ||              \
+         singular_type_trait<typename T::RhsOpType>::value)>::type>        \
+      : std::true_type                                                     \
+    {};                                                                    \
+                                                                           \
+    template <typename T>                                                  \
+    struct expression_tree_type_trait<                                     \
+      T,                                                                   \
+      typename std::enable_if<                                             \
+        is_binary_op<T>::value &&                                          \
+        !singular_type_trait<typename T::LhsOpType>::value &&              \
+        !singular_type_trait<typename T::RhsOpType>::value &&              \
+        (expression_tree_type_trait<typename T::LhsOpType>::value ||       \
+         expression_tree_type_trait<typename T::RhsOpType>::value)>::type> \
+      : std::true_type                                                     \
+    {};
 
   // A trait that declares that one or more leaf operations
   // is a test function operation.
@@ -288,22 +288,22 @@ namespace WeakForms
   DEAL_II_EXPRESSION_TREE_TYPE_TRAIT(has_binary_integral_op,
                                      is_binary_integral_op)
 
-#undef DEAL_II_EXPRESSION_TREE_TYPE_TRAIT
+#  undef DEAL_II_EXPRESSION_TREE_TYPE_TRAIT
 
 
-#define DEAL_II_TYPE_TRAIT_OR_COMBINER(compound_type_trait,                 \
-                                       type_trait_1,                        \
-                                       type_trait_2)                        \
-  template <typename T, typename U = void>                                  \
-  struct compound_type_trait : std::false_type                              \
-  {};                                                                       \
-                                                                            \
-  template <typename T>                                                     \
-  struct compound_type_trait<                                               \
-    T,                                                                      \
-    typename std::enable_if<type_trait_1<T>::value ||                       \
-                            type_trait_2<T>::value>::type> : std::true_type \
-  {};
+#  define DEAL_II_TYPE_TRAIT_OR_COMBINER(compound_type_trait,                 \
+                                         type_trait_1,                        \
+                                         type_trait_2)                        \
+    template <typename T, typename U = void>                                  \
+    struct compound_type_trait : std::false_type                              \
+    {};                                                                       \
+                                                                              \
+    template <typename T>                                                     \
+    struct compound_type_trait<                                               \
+      T,                                                                      \
+      typename std::enable_if<type_trait_1<T>::value ||                       \
+                              type_trait_2<T>::value>::type> : std::true_type \
+    {};
 
 
   DEAL_II_TYPE_TRAIT_OR_COMBINER(is_or_has_test_function_op,
@@ -356,7 +356,7 @@ namespace WeakForms
                                  is_unary_integral_op)
 
 
-#undef DEAL_II_TYPE_TRAIT_OR_COMBINER
+#  undef DEAL_II_TYPE_TRAIT_OR_COMBINER
 
 } // namespace WeakForms
 
