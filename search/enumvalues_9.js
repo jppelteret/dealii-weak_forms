@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['maximum_2223',['maximum',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda65b0e2883c997f2bea5dd11c923b94cf',1,'WeakForms::Operators']]],
-  ['minimum_2224',['minimum',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becdae383234c8c5c6cf7eb44a3208e26d50f',1,'WeakForms::Operators']]],
-  ['minus_2225',['minus',['../namespaceWeakForms_1_1internal.html#a0a4c755534c73e297cc7e90d633baf45adabe6e597b70e5760826aea1dcc564f7',1,'WeakForms::internal']]],
-  ['multiply_2226',['multiply',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda0fbe41b549bb236aabadebd7924379fd',1,'WeakForms::Operators']]]
+  ['maximum_2212',['maximum',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda65b0e2883c997f2bea5dd11c923b94cf',1,'WeakForms::Operators']]],
+  ['minimum_2213',['minimum',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becdae383234c8c5c6cf7eb44a3208e26d50f',1,'WeakForms::Operators']]],
+  ['minus_2214',['minus',['../namespaceWeakForms_1_1internal.html#a0a4c755534c73e297cc7e90d633baf45adabe6e597b70e5760826aea1dcc564f7',1,'WeakForms::internal']]],
+  ['multiply_2215',['multiply',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda0fbe41b549bb236aabadebd7924379fd',1,'WeakForms::Operators']]]
 ];
