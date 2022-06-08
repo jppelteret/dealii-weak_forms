@@ -1,0 +1,129 @@
+// ---------------------------------------------------------------------
+//
+// Copyright (C) 2022 by Jean-Paul Pelteret
+//
+// This file is part of the Weak forms for deal.II library.
+//
+// The Weak forms for deal.II library is free software; you can use it,
+// redistribute it, and/or modify it under the terms of the GNU Lesser
+// General Public License as published by the Free Software Foundation;
+// either version 3.0 of the License, or (at your option) any later
+// version. The full text of the license can be found in the file LICENSE
+// at the top level of the Weak forms for deal.II distribution.
+//
+// ---------------------------------------------------------------------
+
+// This header replicates a combination of step-6 and step-27.
+// - hp variant
+
+
+#include <weak_forms/weak_forms.h>
+
+#include "../weak_forms_tests.h"
+#include "wf_common_tests/step-6-hp.h"
+
+
+using namespace dealii;
+
+
+template <int dim>
+class Step6 : public Step6_Base<dim>
+{
+public:
+  Step6();
+
+protected:
+  void
+  assemble_system() override;
+};
+
+
+template <int dim>
+Step6<dim>::Step6()
+  : Step6_Base<dim>()
+{}
+
+
+template <int dim>
+void
+Step6<dim>::assemble_system()
+{
+  using namespace WeakForms;
+
+  // Symbolic types for test function, trial solution and a coefficient.
+  const TestFunction<dim>          test;
+  const TrialSolution<dim>         trial;
+  const SubSpaceExtractors::Scalar subspace_extractor(0, "u", "u");
+
+  const ScalarFunctionFunctor<dim> rhs_coeff("s", "s");
+  const RightHandSide<dim>         rhs;
+
+  MatrixBasedAssembler<dim> assembler;
+  assembler +=
+    bilinear_form(test[subspace_extractor].gradient(),
+                  trial[subspace_extractor].gradient())
+      .dV() -
+    linear_form(test[subspace_extractor].value(), rhs_coeff.value(rhs)).dV();
+
+  // Look at what we're going to compute
+  const SymbolicDecorations decorator;
+  std::cout << "Weak form (ascii):\n"
+            << assembler.as_ascii(decorator) << std::endl;
+  std::cout << "Weak form (LaTeX):\n"
+            << assembler.as_latex(decorator) << std::endl;
+
+  // Now we pass in concrete objects to get data from
+  // and assemble into.
+  assembler.assemble_system(this->system_matrix,
+                            this->system_rhs,
+                            this->constraints,
+                            this->dof_handler,
+                            this->qf_collection_cell);
+}
+
+
+int
+main(int argc, char **argv)
+{
+  initlog();
+  deallog << std::setprecision(9);
+
+  Utilities::MPI::MPI_InitFinalize mpi_initialization(
+    argc, argv, testing_max_num_threads());
+
+  try
+    {
+      Step6<2> laplace_problem_2d;
+      laplace_problem_2d.run();
+    }
+  catch (std::exception &exc)
+    {
+      std::cerr << std::endl
+                << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      std::cerr << "Exception on processing: " << std::endl
+                << exc.what() << std::endl
+                << "Aborting!" << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+
+      return 1;
+    }
+  catch (...)
+    {
+      std::cerr << std::endl
+                << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      std::cerr << "Unknown exception!" << std::endl
+                << "Aborting!" << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      return 1;
+    }
+
+  deallog << "OK" << std::endl;
+
+  return 0;
+}
