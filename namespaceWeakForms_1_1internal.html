@@ -75,6 +75,7 @@ $(function() {
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -121,6 +122,18 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1FullContraction_3_01Tensor_3_01rank__1_00_01dim_00_01T1_01_4_00_0c833cdf98303d08607e647d44821b2e5.html">FullContraction&lt; Tensor&lt; rank_1, dim, T1 &gt;, Tensor&lt; rank_2, dim, T2 &gt;, typename std::enable_if&lt;(rank_1==0||rank_2==0)&gt;::type &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper.html">HP_Helper</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper_3_01false_01_4.html">HP_Helper&lt; false &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper_3_01true_01_4.html">HP_Helper&lt; true &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__cell__or__face__q__collection.html">is_hp_cell_or_face_q_collection</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__q__collection.html">is_hp_q_collection</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__q__collection_3_01hp_1_1QCollection_3_01dim_01_4_01_4.html">is_hp_q_collection&lt; hp::QCollection&lt; dim &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1TestTrialSpaceHelper.html">TestTrialSpaceHelper</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A data structure to help extract the underlying test function or trial solution operation from a composite operation.  <a href="structWeakForms_1_1internal_1_1TestTrialSpaceHelper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,6 +145,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1TestTrialSpaceHelper_3_01UnaryOpTestTrial_00_01typename_01std_1_12bc5827bba2ee288f2108f092316d4e4.html">TestTrialSpaceHelper&lt; UnaryOpTestTrial, typename std::enable_if&lt; is_unary_op&lt; UnaryOpTestTrial &gt;::value &amp;&amp;has_test_function_or_trial_solution_op&lt; UnaryOpTestTrial &gt;::value &gt;::type &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a00a6c71de1de5511951afbbfa99d466b"><td class="memTemplParams" colspan="2">template&lt;typename CellQuadratureType , typename FaceQuadratureType &gt; </td></tr>
+<tr class="memitem:a00a6c71de1de5511951afbbfa99d466b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a00a6c71de1de5511951afbbfa99d466b">HP_Helper_t</a> = <a class="el" href="structWeakForms_1_1internal_1_1HP__Helper.html">HP_Helper</a>&lt; <a class="el" href="structWeakForms_1_1internal_1_1is__hp__cell__or__face__q__collection.html">is_hp_cell_or_face_q_collection</a>&lt; CellQuadratureType, FaceQuadratureType &gt;::value &gt;</td></tr>
+<tr class="separator:a00a6c71de1de5511951afbbfa99d466b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -292,6 +311,25 @@ Functions</h2></td></tr>
 <tr class="memitem:a3feb6122ccf40516bd3263f265b2b3d3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a3feb6122ccf40516bd3263f265b2b3d3">DeclExceptionMsg</a> (ExcUnexpectedFunctionCall, &quot;This function should never be called, as it is &quot; &quot;expected to be bypassed though the lack of availability &quot; &quot;of a pointer at the calling site.&quot;)</td></tr>
 <tr class="separator:a3feb6122ccf40516bd3263f265b2b3d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a00a6c71de1de5511951afbbfa99d466b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00a6c71de1de5511951afbbfa99d466b">&#9670;&nbsp;</a></span>HP_Helper_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename CellQuadratureType , typename FaceQuadratureType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceWeakForms_1_1internal.html#a00a6c71de1de5511951afbbfa99d466b">WeakForms::internal::HP_Helper_t</a> = typedef <a class="el" href="structWeakForms_1_1internal_1_1HP__Helper.html">HP_Helper</a>&lt;<a class="el" href="structWeakForms_1_1internal_1_1is__hp__cell__or__face__q__collection.html">is_hp_cell_or_face_q_collection</a>&lt;CellQuadratureType, FaceQuadratureType&gt;::value&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00189">189</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a0a4c755534c73e297cc7e90d633baf45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0a4c755534c73e297cc7e90d633baf45">&#9670;&nbsp;</a></span>AccumulationSign</h2>

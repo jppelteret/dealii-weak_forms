@@ -75,6 +75,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">assembler_matrix_based.h File Reference</div>  </div>
@@ -102,6 +103,18 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1CopyDataWithInterfaceSupport_1_1InterfaceData.html">WeakForms::internal::CopyDataWithInterfaceSupport&lt; ScalarType, n_matrices, n_vectors, n_dof_indices &gt;::InterfaceData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__q__collection.html">WeakForms::internal::is_hp_q_collection&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__q__collection_3_01hp_1_1QCollection_3_01dim_01_4_01_4.html">WeakForms::internal::is_hp_q_collection&lt; hp::QCollection&lt; dim &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1is__hp__cell__or__face__q__collection.html">WeakForms::internal::is_hp_cell_or_face_q_collection&lt; CellQuadratureType, FaceQuadratureType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper.html">WeakForms::internal::HP_Helper&lt; is_hp_enabled &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper_3_01false_01_4.html">WeakForms::internal::HP_Helper&lt; false &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1HP__Helper_3_01true_01_4.html">WeakForms::internal::HP_Helper&lt; true &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1MatrixBasedAssembler.html">WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -111,6 +124,12 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html">WeakForms::internal</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a00a6c71de1de5511951afbbfa99d466b"><td class="memTemplParams" colspan="2">template&lt;typename CellQuadratureType , typename FaceQuadratureType &gt; </td></tr>
+<tr class="memitem:a00a6c71de1de5511951afbbfa99d466b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a00a6c71de1de5511951afbbfa99d466b">WeakForms::internal::HP_Helper_t</a> = HP_Helper&lt; is_hp_cell_or_face_q_collection&lt; CellQuadratureType, FaceQuadratureType &gt;::value &gt;</td></tr>
+<tr class="separator:a00a6c71de1de5511951afbbfa99d466b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
