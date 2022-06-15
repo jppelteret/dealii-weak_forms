@@ -154,6 +154,11 @@ WF_CHECK_CXX_SOURCE_RUNS(
     do_test<double, 2>();
     do_test<float, 4>();
   #endif
+    
+    // All indications are that _mm_sqrt_pd() sporadically segfaults with zero input vector.
+  #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS == 128
+    static_assert(false, 'Problematic vectorization width detected.');
+  #endif
 
     do_test<double, 1>();
     do_test<float, 1>();
