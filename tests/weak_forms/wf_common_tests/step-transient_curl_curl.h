@@ -559,6 +559,7 @@ namespace StepTransientCurlCurl
     struct NonLinearSolver
     {
       double nonlin_slvr_tol;
+      double nonlin_slvr_min_it;
       double nonlin_slvr_max_it;
 
       static void
@@ -578,6 +579,11 @@ namespace StepTransientCurlCurl
                           Patterns::Double(0.0),
                           "Maximum permissable nonlinear solver residual");
 
+        prm.declare_entry("Min iterations",
+                          "3",
+                          Patterns::Double(0.0),
+                          "Minimum permitted nonlinear solver iterations");
+
         prm.declare_entry("Max iterations",
                           "10",
                           Patterns::Double(0.0),
@@ -592,7 +598,10 @@ namespace StepTransientCurlCurl
       prm.enter_subsection("Nonlinear solver");
       {
         nonlin_slvr_tol    = prm.get_double("Residual");
+        nonlin_slvr_min_it = prm.get_double("Min iterations");
         nonlin_slvr_max_it = prm.get_double("Max iterations");
+
+        Assert(nonlin_slvr_max_it > nonlin_slvr_min_it, ExcMessage("The maximum bound for nonlinear solver iterations is less than the minimum bound."));
       }
       prm.leave_subsection();
     }
@@ -1219,6 +1228,7 @@ namespace StepTransientCurlCurl
     // ESP system
     const FE_Q<dim>   fe_esp;
     const QGauss<dim> qf_cell_esp;
+    const QGauss<dim-1> qf_face_esp;
     DoFHandler<dim>   dof_handler_esp;
 
     const unsigned int               esp_group;
@@ -1278,6 +1288,7 @@ namespace StepTransientCurlCurl
     // Electric scalar potential
     , fe_esp(degree + degree_offset)
     , qf_cell_esp(degree + 1 + degree_offset)
+    , qf_face_esp(degree + 1 + degree_offset)
     , dof_handler_esp(triangulation)
     , esp_group(0)
     , first_esp_dof(0)
@@ -1783,10 +1794,12 @@ namespace StepTransientCurlCurl
 
     // The linear problem is still not incremental, due to the linear RHS
     // contribution.
-    solution = distributed_solution_increment;
+    // solution = distributed_solution_increment;
 
     // The nonlinear problem would be an incremental problem in time.
-    // solution += distributed_solution_increment;
+    TrilinosWrappers::MPI::Vector solution_increment (solution);
+    solution_increment = distributed_solution_increment;
+    solution += solution_increment;
 
     pcout << "    -- Solver: " << parameters.lin_slvr_type
           << "  Iterations: " << solver_control.last_step()
@@ -2853,7 +2866,7 @@ namespace StepTransientCurlCurl
                                 constraints_mvp);
 
             const double residual = system_rhs_mvp.l2_norm();
-            if (residual < parameters.nonlin_slvr_tol)
+            if (n >= parameters.nonlin_slvr_min_it && residual < parameters.nonlin_slvr_tol)
               {
                 pcout << "    -- Converged. Norm = " << residual << std::endl;
                 break;

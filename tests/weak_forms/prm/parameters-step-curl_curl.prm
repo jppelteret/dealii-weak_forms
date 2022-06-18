@@ -114,5 +114,7 @@ subsection Nonlinear solver
   # Nonlinear solver residual
   set Residual                   = 1e-9
 
+  set Min iterations             = 3
+
   set Max iterations             = 10
 end
