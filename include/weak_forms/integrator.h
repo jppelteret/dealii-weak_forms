@@ -319,7 +319,7 @@ namespace WeakForms
                             MeshWorker::assemble_own_cells);
 
       if (mpi_communicator)
-        dealii::Utilities::MPI::sum(integral, *mpi_communicator);
+        integral = dealii::Utilities::MPI::sum(integral, *mpi_communicator);
 
       return integral;
     }
@@ -443,7 +443,7 @@ namespace WeakForms
                             boundary_worker);
 
       if (mpi_communicator)
-        dealii::Utilities::MPI::sum(integral, *mpi_communicator);
+        integral = dealii::Utilities::MPI::sum(integral, *mpi_communicator);
 
       return integral;
     }
@@ -869,7 +869,7 @@ namespace WeakForms
                             MeshWorker::assemble_own_cells);
 
       if (mpi_communicator)
-        dealii::Utilities::MPI::sum(integral, *mpi_communicator);
+        integral = dealii::Utilities::MPI::sum(integral, *mpi_communicator);
 
       return integral;
     }
@@ -1015,7 +1015,7 @@ namespace WeakForms
                             boundary_worker);
 
       if (mpi_communicator)
-        dealii::Utilities::MPI::sum(integral, *mpi_communicator);
+        integral = dealii::Utilities::MPI::sum(integral, *mpi_communicator);
 
       return integral;
     }
