@@ -1,3 +1,4 @@
+.vscode
 TODO.md
 doc/benchmarks/**
 docker/dealii-master-focal-root/**
