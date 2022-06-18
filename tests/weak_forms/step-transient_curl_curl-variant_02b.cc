@@ -202,9 +202,9 @@ namespace StepTransientCurlCurl
       WeakForms::Integrator<dim, decltype(J_dot_N)>(J_dot_N, &this->mpi_communicator)
         .template dA<double>(
           solution_storage,
-          this->dof_handler_mvp,
-          this->qf_cell_mvp,
-          this->qf_face_mvp,
+          this->dof_handler_esp,
+          this->qf_cell_esp,
+          this->qf_face_esp,
           {this->parameters.bid_wire_inlet} /*input boundary*/);
    deallog << "I_total: " << I_total << std::endl;
 

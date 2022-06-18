@@ -1794,12 +1794,12 @@ namespace StepTransientCurlCurl
 
     // The linear problem is still not incremental, due to the linear RHS
     // contribution.
-    // solution = distributed_solution_increment;
+    solution = distributed_solution_increment;
 
     // The nonlinear problem would be an incremental problem in time.
-    TrilinosWrappers::MPI::Vector solution_increment (solution);
-    solution_increment = distributed_solution_increment;
-    solution += solution_increment;
+    // TrilinosWrappers::MPI::Vector solution_increment (solution);
+    // solution_increment = distributed_solution_increment;
+    // solution += solution_increment;
 
     pcout << "    -- Solver: " << parameters.lin_slvr_type
           << "  Iterations: " << solver_control.last_step()
@@ -2840,7 +2840,8 @@ namespace StepTransientCurlCurl
 #endif
 
         pcout << "   Assembling and solving... " << std::endl;
-        if (parameters.use_voltage_excitation())
+        // Only compute the background field for the current source once.
+        if (parameters.use_voltage_excitation() && time_step == 0)
           {
             pcout << "    -- Electrostatic potential system... " << std::endl;
             assemble_system_esp(system_matrix_esp,
