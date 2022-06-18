@@ -163,6 +163,45 @@ namespace StepTransientCurlCurl
                                 this->qf_cell_esp,
                                 update_gradients);
 
+    FEFaceValues<dim> fe_face_values_esp(this->mapping,
+                                this->fe_esp,
+                                this->qf_face_esp,
+                                update_gradients | update_normal_vectors | update_JxW_values);
+
+    // Compute total current flowing through inlet boundary
+    double I_total = 0;
+    {
+      typename DoFHandler<dim>::active_cell_iterator
+        cell = this->dof_handler_esp.begin_active(),
+        endc = this->dof_handler_esp.end();
+      for (; cell != endc; ++cell)
+      {
+        if (cell->is_locally_owned() == false)
+          continue;
+        for (const auto &face : cell->face_iterators())
+        {
+          if (face->at_boundary() && face->boundary_id() == this->parameters.bid_wire_inlet)
+          {
+            fe_face_values_esp.reinit(cell, face);
+            const std::vector<Tensor<1, dim>> & normals = fe_face_values_esp.get_normal_vectors();
+            std::vector<Tensor<1, dim>> source_values(fe_face_values_esp.n_quadrature_points);
+            fe_face_values_esp[this->esp_extractor].get_function_gradients(
+              this->solution_esp, source_values);
+     
+            for (const unsigned int q_point : fe_face_values_esp.quadrature_point_indices())
+            {
+              source_values[q_point] *= -1.0;
+              const Tensor<1, dim> &J_f = source_values[q_point];
+              const Tensor<1, dim> &N = normals[q_point];
+              I_total += (J_f*N) * fe_face_values_esp.JxW(q_point);
+            }
+          }
+        }
+      }
+    }
+  I_total = dealii::Utilities::MPI::sum(I_total, this->mpi_communicator);
+   deallog << "I_total: " << I_total << std::endl;
+
     typename DoFHandler<dim>::active_cell_iterator
       cell = this->dof_handler_mvp.begin_active(),
       endc = this->dof_handler_mvp.end();
