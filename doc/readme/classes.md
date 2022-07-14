@@ -171,6 +171,9 @@ doxygen documentation is in preparation.
     `FieldSolution[SubSpaceExtractors::SymmetricTensor]`)
     - `value()`: value
     - `divergence()`: divergence
+  - Convenience functions (for field solution subspace views only)
+    - `test_function()`: Convert a field solution symbolic operation to a test function
+    - `trial_solution()`: Convert a field solution symbolic operation to a trial solution
 - Function operators
   - Unary
     - General
