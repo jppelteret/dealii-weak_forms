@@ -344,7 +344,7 @@ $(function() {
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;                            MeshWorker::assemble_own_cells);</div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>)</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        integral = dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>);</div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      <span class="keywordflow">return</span> integral;</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    }</div>
@@ -468,7 +468,7 @@ $(function() {
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                            boundary_worker);</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>)</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>);</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        integral = dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>);</div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160; </div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <span class="keywordflow">return</span> integral;</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    }</div>
@@ -866,7 +866,7 @@ $(function() {
 <div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;                            MeshWorker::assemble_own_cells);</div>
 <div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160; </div>
 <div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>)</div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;        dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>);</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;        integral = dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>);</div>
 <div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160; </div>
 <div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;      <span class="keywordflow">return</span> integral;</div>
 <div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;    }</div>
@@ -1012,7 +1012,7 @@ $(function() {
 <div class="line"><a name="l01015"></a><span class="lineno"> 1015</span>&#160;                            boundary_worker);</div>
 <div class="line"><a name="l01016"></a><span class="lineno"> 1016</span>&#160; </div>
 <div class="line"><a name="l01017"></a><span class="lineno"> 1017</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>)</div>
-<div class="line"><a name="l01018"></a><span class="lineno"> 1018</span>&#160;        dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>);</div>
+<div class="line"><a name="l01018"></a><span class="lineno"> 1018</span>&#160;        integral = dealii::Utilities::MPI::sum(integral, *<a class="code" href="classWeakForms_1_1Integrator.html#a3f87e3c07f90bc1279ea66c9d1f49f44">mpi_communicator</a>);</div>
 <div class="line"><a name="l01019"></a><span class="lineno"> 1019</span>&#160; </div>
 <div class="line"><a name="l01020"></a><span class="lineno"> 1020</span>&#160;      <span class="keywordflow">return</span> integral;</div>
 <div class="line"><a name="l01021"></a><span class="lineno"> 1021</span>&#160;    }</div>
