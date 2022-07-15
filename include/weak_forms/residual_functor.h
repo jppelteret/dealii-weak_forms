@@ -583,7 +583,7 @@ namespace WeakForms
 
   protected:
     // Allow access to get_space()
-    // friend WeakForms::SelfLinearization::internal::ConvertTo;
+    // friend WeakForms::internal::ConvertTo;
 
     const ResidualFunctorType &
     get_residual_functor() const

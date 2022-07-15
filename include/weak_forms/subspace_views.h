@@ -40,18 +40,10 @@ WEAK_FORMS_NAMESPACE_OPEN
 // Forward declarations
 namespace WeakForms
 {
-  namespace SelfLinearization
-  {
-    namespace internal
-    {
-      struct ConvertTo;
-    } // namespace internal
-  }   // namespace SelfLinearization
-
-
-
   namespace internal
   {
+    struct ConvertTo;
+
     /* ----- Finite element subspaces: Test functions and trial solutions -----
      */
 
@@ -541,7 +533,7 @@ namespace WeakForms
 
     protected:
       // Allow access to get_space()
-      friend WeakForms::SelfLinearization::internal::ConvertTo;
+      friend WeakForms::internal::ConvertTo;
 
       // Only want this to be a base class providing common implementation
       // for concrete views
@@ -3521,6 +3513,252 @@ protected:                                                                     \
 
 
   } // namespace Operators
+
+
+  namespace internal
+  {
+    /**
+     * Convert field solutions to a test function or trial solution.
+     *
+     * This can be useful as a shortcut so that users can express
+     * everything in terms of the field solutions, and then do in-place
+     * conversions to test functions and trial solutions.
+     *
+     * But it is also required because we'll probe the arguments for the
+     * functor supplied to the self-linearizing form, and from these
+     * we'll have to construct the relevant residual (linear) and
+     * linearization (bilinear) forms.
+     */
+    struct ConvertTo
+    {
+      /**
+       * Convert a FieldSolution to a TestFunction.
+       *
+       * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
+       */
+      template <template <class> class SubSpaceViewsType,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index,
+                typename = typename std::enable_if<
+                  is_field_solution<SpaceType>::value>::type>
+      static auto
+      test_function(
+        const WeakForms::Operators::SymbolicOp<
+          SubSpaceViewsType<SpaceType>,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+      {
+        using SubSpaceViewFieldSolution_t = SubSpaceViewsType<SpaceType>;
+        using UnaryFieldOp_t              = WeakForms::Operators::SymbolicOp<
+          SubSpaceViewFieldSolution_t,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>>;
+        constexpr unsigned int dim      = UnaryFieldOp_t::dimension;
+        constexpr unsigned int spacedim = UnaryFieldOp_t::space_dimension;
+
+        using namespace WeakForms;
+
+        using Space_t = TestFunction<dim, spacedim>;
+        using Op      = SubSpaceViewsType<Space_t>;
+        using OpType  = WeakForms::Operators::SymbolicOp<Op, OpCode>;
+        using FEValuesExtractor_t =
+          typename SubSpaceViewFieldSolution_t::extractor_type;
+        using SubSpaceExtractor_t =
+          typename SubSpaceExtractor<FEValuesExtractor_t>::type;
+
+        // Rebuild the subspace extractor from that used to produce the field
+        // solution view
+        const auto &field_solution_ss_op = symbolic_op.get_operand();
+        const SubSpaceExtractor_t extractor(
+          field_solution_ss_op.get_field_index(),
+          field_solution_ss_op.get_extractor(),
+          field_solution_ss_op.get_space().get_field_ascii_raw(),
+          field_solution_ss_op.get_space().get_field_latex_raw());
+        // And now apply it to the (sub)space that we wish convert to
+        const Space_t space;
+        const Op      operand(space[extractor]);
+        return OpType(operand);
+      }
+
+
+      /**
+       * Convert a FieldSolution to a TrialSolution.
+       *
+       * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
+       */
+      template <template <class> class SubSpaceViewsType,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index,
+                typename = typename std::enable_if<
+                  is_field_solution<SpaceType>::value>::type>
+      static auto
+      trial_solution(
+        const WeakForms::Operators::SymbolicOp<
+          SubSpaceViewsType<SpaceType>,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+      {
+        using SubSpaceViewFieldSolution_t = SubSpaceViewsType<SpaceType>;
+        using UnaryFieldOp_t              = WeakForms::Operators::SymbolicOp<
+          SubSpaceViewFieldSolution_t,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>>;
+        constexpr unsigned int dim      = UnaryFieldOp_t::dimension;
+        constexpr unsigned int spacedim = UnaryFieldOp_t::space_dimension;
+
+        using namespace WeakForms;
+
+        using Space_t = TrialSolution<dim, spacedim>;
+        using Op      = SubSpaceViewsType<Space_t>;
+        using OpType  = WeakForms::Operators::SymbolicOp<Op, OpCode>;
+        using FEValuesExtractor_t =
+          typename SubSpaceViewFieldSolution_t::extractor_type;
+        using SubSpaceExtractor_t =
+          typename SubSpaceExtractor<FEValuesExtractor_t>::type;
+
+        // Rebuild the subspace extractor from that used to produce the field
+        // solution view
+        const auto &field_solution_ss_op = symbolic_op.get_operand();
+        const SubSpaceExtractor_t extractor(
+          field_solution_ss_op.get_field_index(),
+          field_solution_ss_op.get_extractor(),
+          field_solution_ss_op.get_space().get_field_ascii_raw(),
+          field_solution_ss_op.get_space().get_field_latex_raw());
+        // And now apply it to the (sub)space that we wish convert to
+        const Space_t space;
+        const Op      operand(space[extractor]);
+        return OpType(operand);
+      }
+
+
+      /**
+       * Convert a FieldSolution to a TestFunction.
+       *
+       * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
+       */
+      template <template <int, class> class SubSpaceViewsType,
+                int rank,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index,
+                typename = typename std::enable_if<
+                  is_field_solution_op<SpaceType>::value>::type>
+      static auto
+      test_function(
+        const WeakForms::Operators::SymbolicOp<
+          SubSpaceViewsType<rank, SpaceType>,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+      {
+        using SubSpaceViewFieldSolution_t = SubSpaceViewsType<rank, SpaceType>;
+        using UnaryFieldOp_t              = WeakForms::Operators::SymbolicOp<
+          SubSpaceViewFieldSolution_t,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>>;
+        constexpr unsigned int dim      = UnaryFieldOp_t::dimension;
+        constexpr unsigned int spacedim = UnaryFieldOp_t::space_dimension;
+
+        using namespace WeakForms;
+
+        using Space_t = TestFunction<dim, spacedim>;
+        using Op      = SubSpaceViewsType<rank, Space_t>;
+        using OpType  = WeakForms::Operators::SymbolicOp<Op, OpCode>;
+        using FEValuesExtractor_t =
+          typename SubSpaceViewFieldSolution_t::extractor_type;
+        using SubSpaceExtractor_t =
+          typename SubSpaceExtractor<FEValuesExtractor_t>::type;
+
+        // Rebuild the subspace extractor from that used to produce the field
+        // solution view
+        const auto &field_solution_ss_op = symbolic_op.get_operand();
+        const SubSpaceExtractor_t extractor(
+          field_solution_ss_op.get_field_index(),
+          field_solution_ss_op.get_extractor(),
+          field_solution_ss_op.get_space().get_field_ascii_raw(),
+          field_solution_ss_op.get_space().get_field_latex_raw());
+        // And now apply it to the (sub)space that we wish convert to
+        const Space_t space;
+        const Op      operand(space[extractor]);
+        return OpType(operand);
+      }
+
+
+      /**
+       * Convert a FieldSolution to a TrialSolution.
+       *
+       * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
+       */
+      template <template <int, class> class SubSpaceViewsType,
+                int rank,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index,
+                typename = typename std::enable_if<
+                  is_field_solution_op<SpaceType>::value>::type>
+      static auto
+      trial_solution(
+        const WeakForms::Operators::SymbolicOp<
+          SubSpaceViewsType<rank, SpaceType>,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+      {
+        using SubSpaceViewFieldSolution_t = SubSpaceViewsType<rank, SpaceType>;
+        using UnaryFieldOp_t              = WeakForms::Operators::SymbolicOp<
+          SubSpaceViewFieldSolution_t,
+          OpCode,
+          void,
+          WeakForms::internal::SolutionIndex<solution_index>>;
+        constexpr unsigned int dim      = UnaryFieldOp_t::dimension;
+        constexpr unsigned int spacedim = UnaryFieldOp_t::space_dimension;
+
+        using namespace WeakForms;
+
+        using Space_t = TrialSolution<dim, spacedim>;
+        using Op      = SubSpaceViewsType<rank, Space_t>;
+        using OpType  = WeakForms::Operators::SymbolicOp<Op, OpCode>;
+        using FEValuesExtractor_t =
+          typename SubSpaceViewFieldSolution_t::extractor_type;
+        using SubSpaceExtractor_t =
+          typename SubSpaceExtractor<FEValuesExtractor_t>::type;
+
+        // Rebuild the subspace extractor from that used to produce the field
+        // solution view
+        const auto &field_solution_ss_op = symbolic_op.get_operand();
+        const SubSpaceExtractor_t extractor(
+          field_solution_ss_op.get_field_index(),
+          field_solution_ss_op.get_extractor(),
+          field_solution_ss_op.get_space().get_field_ascii_raw(),
+          field_solution_ss_op.get_space().get_field_latex_raw());
+        // And now apply it to the (sub)space that we wish convert to
+        const Space_t space;
+        const Op      operand(space[extractor]);
+        return OpType(operand);
+      }
+
+
+      // Each @p SymbolicOpSubSpaceFieldSolution is expected to be a
+      // Operators::SymbolicOp<SubSpaceViews::[Scalar/Vector/Tensor/SymmetricTensor]>>
+      // Since we can't convert the underlying SubSpaceViewsType (its a fixed
+      // FieldSolution) we just ask for what the expected return values of the
+      // above helper functions would be.
+      template <typename SymbolicOpSubSpaceFieldSolution>
+      using test_function_t = decltype(
+        test_function(std::declval<SymbolicOpSubSpaceFieldSolution>()));
+
+      template <typename SymbolicOpSubSpaceFieldSolution>
+      using trial_solution_t = decltype(
+        trial_solution(std::declval<SymbolicOpSubSpaceFieldSolution>()));
+    };
+  } // namespace internal
 } // namespace WeakForms
 
 
@@ -3535,6 +3773,101 @@ protected:                                                                     \
 
 namespace WeakForms
 {
+  /**
+   * Convert a FieldSolution to a TestFunction.
+   *
+   * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
+   */
+  template <template <class> class SubSpaceViewsType,
+            typename SpaceType,
+            enum WeakForms::Operators::SymbolicOpCodes OpCode,
+            types::solution_index                      solution_index,
+            typename = typename std::enable_if<
+              is_field_solution<SpaceType>::value>::type>
+  static auto
+  test_function(
+    const WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      OpCode,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+  {
+    return internal::ConvertTo::test_function(symbolic_op);
+  }
+
+
+  /**
+   * Convert a FieldSolution to a TrialSolution.
+   *
+   * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
+   */
+  template <template <class> class SubSpaceViewsType,
+            typename SpaceType,
+            enum WeakForms::Operators::SymbolicOpCodes OpCode,
+            types::solution_index                      solution_index,
+            typename = typename std::enable_if<
+              is_field_solution<SpaceType>::value>::type>
+  static auto
+  trial_solution(
+    const WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<SpaceType>,
+      OpCode,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+  {
+    return internal::ConvertTo::trial_solution(symbolic_op);
+  }
+
+
+  /**
+   * Convert a FieldSolution to a TestFunction.
+   *
+   * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
+   */
+  template <template <int, class> class SubSpaceViewsType,
+            int rank,
+            typename SpaceType,
+            enum WeakForms::Operators::SymbolicOpCodes OpCode,
+            types::solution_index                      solution_index,
+            typename = typename std::enable_if<
+              is_field_solution_op<SpaceType>::value>::type>
+  static auto
+  test_function(
+    const WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      OpCode,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+  {
+    return internal::ConvertTo::test_function(symbolic_op);
+  }
+
+
+  /**
+   * Convert a FieldSolution to a TrialSolution.
+   *
+   * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
+   */
+  template <template <int, class> class SubSpaceViewsType,
+            int rank,
+            typename SpaceType,
+            enum WeakForms::Operators::SymbolicOpCodes OpCode,
+            types::solution_index                      solution_index,
+            typename = typename std::enable_if<
+              is_field_solution_op<SpaceType>::value>::type>
+  static auto
+  trial_solution(
+    const WeakForms::Operators::SymbolicOp<
+      SubSpaceViewsType<rank, SpaceType>,
+      OpCode,
+      void,
+      WeakForms::internal::SolutionIndex<solution_index>> &symbolic_op)
+  {
+    return internal::ConvertTo::trial_solution(symbolic_op);
+  }
+
+
+
   namespace internal
   {
     /* ----- Finite element subspaces: Test functions and trial solutions -----

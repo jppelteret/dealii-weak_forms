@@ -232,6 +232,42 @@ namespace WeakForms
     };
   } // namespace SubSpaceExtractors
 
+
+  namespace internal
+  {
+    // Make the link between FEValuesExtractors and the weak form
+    // SubSpaceExtractors
+    template <typename FEValuesExtractors_t>
+    struct SubSpaceExtractor;
+
+    template <>
+    struct SubSpaceExtractor<FEValuesExtractors::Scalar>
+    {
+      using type = WeakForms::SubSpaceExtractors::Scalar;
+    };
+
+
+    template <>
+    struct SubSpaceExtractor<FEValuesExtractors::Vector>
+    {
+      using type = WeakForms::SubSpaceExtractors::Vector;
+    };
+
+
+    template <int rank>
+    struct SubSpaceExtractor<FEValuesExtractors::Tensor<rank>>
+    {
+      using type = WeakForms::SubSpaceExtractors::Tensor<rank>;
+    };
+
+
+    template <int rank>
+    struct SubSpaceExtractor<FEValuesExtractors::SymmetricTensor<rank>>
+    {
+      using type = WeakForms::SubSpaceExtractors::SymmetricTensor<rank>;
+    };
+  } // namespace internal
+
 } // namespace WeakForms
 
 

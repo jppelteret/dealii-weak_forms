@@ -65,17 +65,10 @@ namespace WeakForms
     class SymmetricTensor;
   } // namespace SubSpaceViews
 
-
-  namespace SelfLinearization
-  {
-    namespace internal
-    {
-      struct ConvertTo;
-    } // namespace internal
-  }   // namespace SelfLinearization
-
   namespace internal
   {
+    struct ConvertTo;
+
     // Used to work around the restriction that template arguments
     // for template type parameter must be a type
     template <types::solution_index solution_index_>
@@ -183,7 +176,7 @@ namespace WeakForms
 
   protected:
     // Allow access to get_field_ascii_raw() and get_field_latex_raw()
-    friend WeakForms::SelfLinearization::internal::ConvertTo;
+    friend WeakForms::internal::ConvertTo;
 
     // Create a subspace
     Space(const types::field_index field_index,
@@ -719,7 +712,7 @@ protected:                                                                     \
   /**                                                                          \
    * Allow access to get_operand()                                             \
    */                                                                          \
-  friend WeakForms::SelfLinearization::internal::ConvertTo;                    \
+  friend WeakForms::internal::ConvertTo;                                       \
   /**                                                                          \
    * Only want this to be a base class                                         \
    */                                                                          \
