@@ -1094,12 +1094,11 @@ namespace WeakForms
           SymmetricTensor<rank, dim, Differentiation::SD::Expression>
             &tensor_of_expressions)
         {
-          for (Differentiation::SD::Expression *e =
-                 tensor_of_expressions.begin_raw();
-               e != tensor_of_expressions.end_raw();
-               ++e)
+          for (unsigned int i = 0;
+               i < SymmetricTensor<rank, dim>::n_independent_components;
+               ++i)
             {
-              compute_hash_in_place(*e);
+              compute_hash_in_place(tensor_of_expressions.access_raw_entry(i));
             }
         }
 
