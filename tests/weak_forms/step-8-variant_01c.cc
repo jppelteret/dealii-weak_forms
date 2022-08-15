@@ -60,10 +60,10 @@ Step8<dim>::assemble_system()
 
   // Material coefficients
   const double lambda = 1.0;
-  const double mu = 1.0;
+  const double mu     = 1.0;
 
-  const VectorFunctionFunctor<dim>    rhs_coeff("s", "\\mathbf{s}");
-  const RightHandSide<dim>            rhs;
+  const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
+  const RightHandSide<dim>         rhs;
 
   const auto test_ss  = test[subspace_extractor];
   const auto trial_ss = trial[subspace_extractor];
@@ -75,7 +75,12 @@ Step8<dim>::assemble_system()
 
   MatrixBasedAssembler<dim> assembler;
   assembler +=
-    bilinear_form(test_grad, lambda + mu, trial_grad).dV() +
+    bilinear_form(test_grad, lambda, trial_grad)
+      .template component_filter<dof_I_component_i | dof_J_component_j>()
+      .dV() +
+    bilinear_form(test_grad, mu, trial_grad)
+      .template component_filter<dof_I_component_j | dof_J_component_i>()
+      .dV() +
     bilinear_form(test_grad, mu, trial_grad).delta_IJ().dV() -
     linear_form(test_val, rhs_coeff.value(rhs)).dV();
 

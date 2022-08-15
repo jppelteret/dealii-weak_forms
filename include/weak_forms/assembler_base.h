@@ -2037,7 +2037,7 @@ namespace WeakForms
 
       // Contribution shape function Kronecker delta property
       const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
+        has_kronecker_delta_property(form.get_component_filter_flags());
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
@@ -2252,7 +2252,7 @@ namespace WeakForms
 
       // Contribution shape function Kronecker delta property
       const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
+        has_kronecker_delta_property(form.get_component_filter_flags());
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
@@ -2467,7 +2467,7 @@ namespace WeakForms
 
       // Contribution shape function Kronecker delta property
       const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
+        has_kronecker_delta_property(form.get_component_filter_flags());
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
