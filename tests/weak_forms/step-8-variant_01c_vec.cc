@@ -16,7 +16,7 @@
 // Elasticity problem: Assembly using weak forms
 // This variant directly uses the scalar coefficients in the weak form.
 // This test replicates step-8 exactly.
-// - Non-vectorized variant
+// - Vectorized variant
 
 #include <deal.II/base/function.h>
 
@@ -74,13 +74,15 @@ Step8<dim>::assemble_system()
   const auto trial_grad = trial_ss.gradient();
 
 
-  MatrixBasedAssembler<dim, dim, double, false> assembler;
+  MatrixBasedAssembler<dim> assembler;
   assembler +=
     bilinear_form(test_grad, lambda, trial_grad)
-      .template component_filter<dof_I_component_i | dof_J_component_j>()
+      .template component_filter<multiplicity_I | dof_I_component_i |
+                                 multiplicity_J | dof_J_component_j>()
       .dV() +
     bilinear_form(test_grad, mu, trial_grad)
-      .template component_filter<dof_I_component_j | dof_J_component_i>()
+      .template component_filter<multiplicity_I | dof_I_component_j |
+                                 multiplicity_J | dof_J_component_i>()
       .dV() +
     bilinear_form(test_grad, mu, trial_grad).delta_IJ().dV() -
     linear_form(test_val, rhs_coeff.value(rhs)).dV();
