@@ -80,6 +80,12 @@ namespace WeakForms
   }
 
   constexpr inline bool
+  has_no_component_filter(const BilinearFormComponentFilter &flags)
+  {
+    return flags == form_components_default;
+  }
+
+  constexpr inline bool
   has_kronecker_delta_property(const BilinearFormComponentFilter &flags)
   {
     return flags & local_shape_function_kronecker_delta;
@@ -100,19 +106,47 @@ namespace WeakForms
     return false;
   }
 
+  constexpr inline BilinearFormComponentFilter
+  get_test_dof_component_filter_flags(const BilinearFormComponentFilter &flags)
+  {
+    BilinearFormComponentFilter out = form_components_default;
+
+    if (flags & dof_I_component_i)
+      out |= dof_I_component_i;
+    if (flags & dof_I_component_j)
+      out |= dof_I_component_j;
+
+    return out;
+  }
+
+  constexpr inline BilinearFormComponentFilter
+  get_trial_dof_component_filter_flags(const BilinearFormComponentFilter &flags)
+  {
+    BilinearFormComponentFilter out = form_components_default;
+
+    if (flags & dof_J_component_i)
+      out |= dof_J_component_i;
+    if (flags & dof_J_component_j)
+      out |= dof_J_component_j;
+
+    return out;
+  }
+
 
   namespace internal
   {
-    template <BilinearFormComponentFilter Flags>
+    template <BilinearFormComponentFilter ComponentFilterFlags>
     constexpr void
     check_flag_consistency()
     {
-      static_assert(!((Flags & dof_I_component_i) &&
-                      (Flags & dof_I_component_j)),
-                    "Invalid flag combination.");
-      static_assert(!((Flags & dof_J_component_i) &&
-                      (Flags & dof_J_component_j)),
-                    "Invalid flag combination.");
+      static_assert(
+        !((ComponentFilterFlags & dof_I_component_i) &&
+          (ComponentFilterFlags & dof_I_component_j)),
+        "Cannot filter test function shape functions on both the i-th and j-th component.");
+      static_assert(
+        !((ComponentFilterFlags & dof_J_component_i) &&
+          (ComponentFilterFlags & dof_J_component_j)),
+        "Cannot filter trial solution shape functions on both the i-th and j-th component.");
     }
   } // namespace internal
 
