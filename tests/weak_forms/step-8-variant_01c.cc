@@ -77,10 +77,12 @@ Step8<dim>::assemble_system()
   MatrixBasedAssembler<dim, dim, double, false> assembler;
   assembler +=
     bilinear_form(test_grad, lambda, trial_grad)
-      .template component_filter<dof_I_component_i | dof_J_component_j>()
+      .template component_filter<multiplicity_I | dof_I_component_i |
+                                 multiplicity_J | dof_J_component_j>()
       .dV() +
     bilinear_form(test_grad, mu, trial_grad)
-      .template component_filter<dof_I_component_j | dof_J_component_i>()
+      .template component_filter<multiplicity_I | dof_I_component_j |
+                                 multiplicity_J | dof_J_component_i>()
       .dV() +
     bilinear_form(test_grad, mu, trial_grad).delta_IJ().dV() -
     linear_form(test_val, rhs_coeff.value(rhs)).dV();

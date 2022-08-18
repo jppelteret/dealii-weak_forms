@@ -40,11 +40,13 @@ namespace WeakForms
   enum BilinearFormComponentFilter
   {
     form_components_default              = 0,
-    dof_I_component_i                    = 0x0001,
-    dof_I_component_j                    = 0x0002,
-    dof_J_component_i                    = 0x0004,
-    dof_J_component_j                    = 0x0008,
-    local_shape_function_kronecker_delta = 0x0010
+    multiplicity_I                       = 0x0001,
+    multiplicity_J                       = 0x0002,
+    dof_I_component_i                    = 0x0004,
+    dof_I_component_j                    = 0x0008,
+    dof_J_component_i                    = 0x0010,
+    dof_J_component_j                    = 0x0020,
+    local_shape_function_kronecker_delta = 0x0040
   };
 
   constexpr inline BilinearFormComponentFilter
@@ -92,6 +94,17 @@ namespace WeakForms
   }
 
   constexpr inline bool
+  has_multiplicity_filter_flag(const BilinearFormComponentFilter &flags)
+  {
+    if (flags & multiplicity_I)
+      return true;
+    if (flags & multiplicity_J)
+      return true;
+
+    return false;
+  }
+
+  constexpr inline bool
   has_dof_component_filter_flag(const BilinearFormComponentFilter &flags)
   {
     if (flags & dof_I_component_i)
@@ -111,6 +124,8 @@ namespace WeakForms
   {
     BilinearFormComponentFilter out = form_components_default;
 
+    if (flags & multiplicity_I)
+      out |= multiplicity_I;
     if (flags & dof_I_component_i)
       out |= dof_I_component_i;
     if (flags & dof_I_component_j)
@@ -124,6 +139,8 @@ namespace WeakForms
   {
     BilinearFormComponentFilter out = form_components_default;
 
+    if (flags & multiplicity_J)
+      out |= multiplicity_J;
     if (flags & dof_J_component_i)
       out |= dof_J_component_i;
     if (flags & dof_J_component_j)

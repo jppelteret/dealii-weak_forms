@@ -435,6 +435,19 @@ namespace WeakForms
 
     template <int dim, int spacedim>
     std::vector<unsigned int>
+    get_dof_multiplicity(const FEValuesBase<dim, spacedim> &fe_values)
+    {
+      const unsigned int        n_dofs = get_n_dofs(fe_values);
+      std::vector<unsigned int> dof_multiplicity(n_dofs);
+      DEAL_II_OPENMP_SIMD_PRAGMA
+      for (unsigned int k = 0; k < n_dofs; ++k)
+        dof_multiplicity[k] =
+          fe_values.get_fe().system_to_base_index(k).first.second;
+      return dof_multiplicity;
+    }
+
+    template <int dim, int spacedim>
+    std::vector<unsigned int>
     get_dof_component_indices(const FEValuesBase<dim, spacedim> &fe_values)
     {
       const unsigned int        n_dofs = get_n_dofs(fe_values);
@@ -456,6 +469,11 @@ namespace WeakForms
       return std::vector<unsigned int>();
     }
 
+
+
+    // === Extract components of shape functions associated
+    // with the test function ===
+
     template <BilinearFormComponentFilter TestComponentFilterFlags,
               typename ScalarType>
     const ScalarType &
@@ -463,6 +481,7 @@ namespace WeakForms
       const ScalarType &               scalar,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
       typename std::enable_if<is_scalar_type<ScalarType>::value>::type * =
         nullptr)
@@ -477,10 +496,13 @@ namespace WeakForms
       const TensorType &               tensor,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
-      typename std::enable_if<!is_scalar_type<TensorType>::value &&
-                              !has_dof_component_filter_flag(
-                                TestComponentFilterFlags)>::type * = nullptr)
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
     {
       return tensor;
     }
@@ -492,10 +514,34 @@ namespace WeakForms
       const TensorType &               tensor,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
-      typename std::enable_if<!is_scalar_type<TensorType>::value &&
-                              has_dof_component_filter_flag(
-                                TestComponentFilterFlags)>::type * = nullptr)
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TestComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_I,
+                    "Invalid tensor component extraction.");
+      return tensor[dof_multiplicity[dof_I]];
+    }
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
     {
       if (TestComponentFilterFlags &
           BilinearFormComponentFilter::dof_I_component_i)
@@ -509,6 +555,42 @@ namespace WeakForms
       return tensor[0];
     }
 
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TestComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_I,
+                    "Invalid tensor component extraction.");
+
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_i)
+        return tensor[dof_multiplicity[dof_I]][dof_component_indices[dof_I]];
+
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_j)
+        return tensor[dof_multiplicity[dof_I]][dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0][0];
+    }
+
+
+
+    // === Extract components of shape functions associated
+    // with the trial solution ===
+
     template <BilinearFormComponentFilter TrialComponentFilterFlags,
               typename ScalarType>
     const ScalarType &
@@ -516,6 +598,7 @@ namespace WeakForms
       const ScalarType &               scalar,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
       typename std::enable_if<is_scalar_type<ScalarType>::value &&
                               !has_dof_component_filter_flag(
@@ -531,10 +614,13 @@ namespace WeakForms
       const TensorType &               tensor,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
-      typename std::enable_if<!is_scalar_type<TensorType>::value &&
-                              !has_dof_component_filter_flag(
-                                TrialComponentFilterFlags)>::type * = nullptr)
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
     {
       return tensor;
     }
@@ -546,10 +632,34 @@ namespace WeakForms
       const TensorType &               tensor,
       const unsigned int               dof_I,
       const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
       const std::vector<unsigned int> &dof_component_indices,
-      typename std::enable_if<!is_scalar_type<TensorType>::value &&
-                              has_dof_component_filter_flag(
-                                TrialComponentFilterFlags)>::type * = nullptr)
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TrialComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_J,
+                    "Invalid tensor component extraction.");
+      return tensor[dof_multiplicity[dof_J]];
+    }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
     {
       if (TrialComponentFilterFlags &
           BilinearFormComponentFilter::dof_J_component_i)
@@ -562,6 +672,38 @@ namespace WeakForms
       Assert(false, ExcMessage("Invalid tensor component extraction."));
       return tensor[0];
     }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TrialComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_J,
+                    "Invalid tensor component extraction.");
+
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_i)
+        return tensor[dof_multiplicity[dof_J]][dof_component_indices[dof_I]];
+
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_j)
+        return tensor[dof_multiplicity[dof_J]][dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0][0];
+    }
+
 
 
     // Valid for cell and face assembly
@@ -732,6 +874,15 @@ namespace WeakForms
       const auto dof_range_j =
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
+
+      // TODO: Could it be that, since we primarily use SF extractors, we only
+      // ever want to consider the multiplicity? Or do we need to do something
+      // clever to switch approaches when SF extractors are used or the standard
+      // FEValues::shape_grad() etc. are called?
+      // See the table in the intro to
+      // https://www.dealii.org/current/doxygen/deal.II/classFiniteElement.html
+      const std::vector<unsigned int> dof_multiplicity =
+        internal::get_dof_multiplicity(fe_values_dofs);
       const std::vector<unsigned int> dof_component_index =
         internal::get_dof_component_indices(fe_values_dofs);
 
@@ -760,10 +911,13 @@ namespace WeakForms
                       get_test_dof_component_filter_flags(ComponentFilterFlags);
                   const auto shape_test_component =
                     internal::extract_test_shape_component<
-                      TestComponentFilterFlags>(shapes_test[q],
+                      TestComponentFilterFlags>(shapes_test[i][q],
                                                 i,
                                                 j,
+                                                dof_multiplicity,
                                                 dof_component_index);
+                  using ValueTypeTestComponent =
+                    typename std::decay<decltype(shape_test_component)>::type;
 
                   constexpr BilinearFormComponentFilter
                     TrialComponentFilterFlags =
@@ -771,13 +925,16 @@ namespace WeakForms
                         ComponentFilterFlags);
                   const auto shape_trial_component =
                     internal::extract_trial_shape_component<
-                      TrialComponentFilterFlags>(shapes_trial[q],
+                      TrialComponentFilterFlags>(shapes_trial[j][q],
                                                  i,
                                                  j,
+                                                 dof_multiplicity,
                                                  dof_component_index);
+                  using ValueTypeTrialComponent =
+                    typename std::decay<decltype(shape_trial_component)>::type;
 
                   using ContractionType_FS =
-                    FullContraction<ValueTypeFunctor, ValueTypeTrial>;
+                    FullContraction<ValueTypeFunctor, ValueTypeTrialComponent>;
                   const auto functor_x_shape_trial_x_JxW =
                     ContractionType_FS::contract(value_functor_x_JxW,
                                                  shape_trial_component);
@@ -785,7 +942,8 @@ namespace WeakForms
                     functor_x_shape_trial_x_JxW)>::type;
 
                   using ContractionType_SFS_JxW =
-                    FullContraction<ValueTypeTest, ContractionType_FS_t>;
+                    FullContraction<ValueTypeTestComponent,
+                                    ContractionType_FS_t>;
                   const ScalarType integrated_contribution =
                     ContractionType_SFS_JxW::contract(
                       shape_test_component, functor_x_shape_trial_x_JxW);
