@@ -263,25 +263,28 @@ run()
       verify_assembly(system_matrix_std, system_matrix_wf);
     }
 
-    //   system_matrix_wf = 0;
+    system_matrix_wf = 0;
 
-    //   // Vectorized assembler
-    //   {
-    //     constexpr bool use_vectorization = true;
-    //     MatrixBasedAssembler<dim, spacedim, double, use_vectorization>
-    //     assembler;
-    //     assembler += bilinear_form(test_grad, trial_grad).template component_filter<dof_I_component_i | dof_J_component_j>().dV();
+    // Vectorized assembler
+    {
+      constexpr bool use_vectorization = true;
+      MatrixBasedAssembler<dim, spacedim, double, use_vectorization> assembler;
+      assembler +=
+        bilinear_form(test_grad, trial_grad)
+          .template component_filter<multiplicity_I | dof_I_component_j |
+                                     multiplicity_J | dof_J_component_i>()
+          .dV();
 
-    //     // Now we pass in concrete objects to get data from
-    //     // and assemble into.
-    //     assembler.assemble_matrix(system_matrix_wf,
-    //                               constraints,
-    //                               dof_handler,
-    //                               qf_cell);
+      // Now we pass in concrete objects to get data from
+      // and assemble into.
+      assembler.assemble_matrix(system_matrix_wf,
+                                constraints,
+                                dof_handler,
+                                qf_cell);
 
-    //     // system_matrix_wf.print(std::cout);
-    //     verify_assembly(system_matrix_std, system_matrix_wf);
-    //   }
+      // system_matrix_wf.print(std::cout);
+      verify_assembly(system_matrix_std, system_matrix_wf);
+    }
   }
 
   deallog << "OK" << std::endl;

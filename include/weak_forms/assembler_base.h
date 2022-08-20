@@ -981,7 +981,9 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution)
+      const bool                                      symmetric_contribution,
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       (void)symmetric_contribution;
       Assert(shapes_test.size() == fe_values_dofs.n_current_interface_dofs(),
@@ -1349,20 +1351,22 @@ namespace WeakForms
       const auto dof_range_j =
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
+
+      // TODO: Could it be that, since we primarily use SF extractors, we only
+      // ever want to consider the multiplicity? Or do we need to do something
+      // clever to switch approaches when SF extractors are used or the standard
+      // FEValues::shape_grad() etc. are called?
+      // See the table in the intro to
+      // https://www.dealii.org/current/doxygen/deal.II/classFiniteElement.html
+      const std::vector<unsigned int> dof_multiplicity =
+        internal::get_dof_multiplicity(fe_values_dofs);
       const std::vector<unsigned int> dof_component_index =
-        (has_kronecker_delta_property(ComponentFilterFlags) ?
-           internal::get_dof_component_indices(fe_values_dofs) :
-           std::vector<unsigned int>());
+        internal::get_dof_component_indices(fe_values_dofs);
+
+      const auto value_functor_x_JxW = values_functor * JxW;
 
       for (const unsigned int j : dof_range_j)
         {
-          using ContractionType_FS = FullContraction<VectorizedValueTypeFunctor,
-                                                     VectorizedValueTypeTrial>;
-          const auto functor_x_shape_trial_x_JxW =
-            JxW * ContractionType_FS::contract(values_functor, shapes_trial[j]);
-          using ContractionType_FS_t =
-            typename std::decay<decltype(functor_x_shape_trial_x_JxW)>::type;
-
           // Assemble only the diagonal plus upper half of the matrix if
           // the symmetry flag is set.
           const auto dof_range_i =
@@ -1376,12 +1380,48 @@ namespace WeakForms
                   continue;
                 }
 
+              // using ContractionType_SFS_JxW =
+              //   FullContraction<VectorizedValueTypeTest,
+              //   ContractionType_FS_t>;
+              // const VectorizedArray<ScalarType, width>
+              //   vectorized_integrated_contribution =
+              //     ContractionType_SFS_JxW::contract(
+              //       shapes_test[i], functor_x_shape_trial_x_JxW);
+
+              constexpr BilinearFormComponentFilter TestComponentFilterFlags =
+                get_test_dof_component_filter_flags(ComponentFilterFlags);
+              const auto shape_test_component =
+                internal::extract_test_shape_component<
+                  TestComponentFilterFlags>(
+                  shapes_test[i], i, j, dof_multiplicity, dof_component_index);
+              using VectorizedValueTypeTestComponent =
+                typename std::decay<decltype(shape_test_component)>::type;
+
+              constexpr BilinearFormComponentFilter TrialComponentFilterFlags =
+                get_trial_dof_component_filter_flags(ComponentFilterFlags);
+              const auto shape_trial_component =
+                internal::extract_trial_shape_component<
+                  TrialComponentFilterFlags>(
+                  shapes_trial[j], i, j, dof_multiplicity, dof_component_index);
+              using VectorizedValueTypeTrialComponent =
+                typename std::decay<decltype(shape_trial_component)>::type;
+
+              using ContractionType_FS =
+                FullContraction<VectorizedValueTypeFunctor,
+                                VectorizedValueTypeTrialComponent>;
+              const auto functor_x_shape_trial_x_JxW =
+                ContractionType_FS::contract(value_functor_x_JxW,
+                                             shape_trial_component);
+              using ContractionType_FS_t = typename std::decay<decltype(
+                functor_x_shape_trial_x_JxW)>::type;
+
               using ContractionType_SFS_JxW =
-                FullContraction<VectorizedValueTypeTest, ContractionType_FS_t>;
+                FullContraction<VectorizedValueTypeTestComponent,
+                                ContractionType_FS_t>;
               const VectorizedArray<ScalarType, width>
                 vectorized_integrated_contribution =
                   ContractionType_SFS_JxW::contract(
-                    shapes_test[i], functor_x_shape_trial_x_JxW);
+                    shape_test_component, functor_x_shape_trial_x_JxW);
 
               // Reduce all QP contributions
               ScalarType integrated_contribution =
@@ -1423,7 +1463,9 @@ namespace WeakForms
       const VectorizedValueTypeFunctor &             values_functor,
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
       const VectorizedArray<double, width> &         JxW,
-      const bool                                     symmetric_contribution)
+      const bool                                     symmetric_contribution,
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       (void)symmetric_contribution;
       // This is the equivalent of
