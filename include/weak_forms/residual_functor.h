@@ -179,13 +179,13 @@ namespace WeakForms
    * // of its components.
    * const FieldSolution<dim> solution;
    * const SubSpaceExtractors::Vector subspace_extractor_v(0, "v",
-   * "\\mathbf{v}"); const SubSpaceExtractors::Scalar
-   * subspace_extractor_s(spacedim, "s", "s");
+   *   "\\mathbf{v}"); 
+   * const SubSpaceExtractors::Scalar subspace_extractor_s(spacedim, "s", "s");
    *
    * // Extract subspace of field solution; namely operators that
    * // represent a vector field gradient and a scalar field value.
-   * const auto soln_v_grad = solution[subspace_extractor].gradient();
-   * const auto soln_s_val  = solution[subspace_extractor].value();
+   * const auto soln_v_grad = solution[subspace_extractor_v].gradient();
+   * const auto soln_s_val  = solution[subspace_extractor_s].value();
    *
    * // Define test functions for the various components of the problem.
    * const TestFunction<dim, spacedim> test;
@@ -216,7 +216,7 @@ namespace WeakForms
    * using ADNumber_t =
    *   typename decltype(residual_ss_v)::template ad_type<double, ad_typecode>;
    *
-   * // Now create a specific instance of an residual view functor: this not
+   * // Now create a specific instance of a residual view functor: this not
    * // only provides the definition of the residual component to be considered,
    * // but also a means to differentiate it with respect to its arguments.
    * // This is achieved with a call to ResidualViewFunctor::value(), with the
@@ -249,7 +249,7 @@ namespace WeakForms
    *      const dealii::Tensor<2, dim, ADNumber_t> &grad_v,
    *      const ADNumber_t &                        s)
    * {
-   *   const Tensor<2, dim, ADNumber_t> res_grad_v = ...;
+   *   const dealii::Tensor<2, dim, ADNumber_t> res_grad_v = ...;
    *   return res_grad_v;
    * });
    * const auto residual_s
