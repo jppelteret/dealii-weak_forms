@@ -178,9 +178,10 @@ namespace WeakForms
    * // Define the field solution and an extractor to get a view into some
    * // of its components.
    * const FieldSolution<dim> solution;
-   * const SubSpaceExtractors::Vector subspace_extractor_v(0, "v",
-   *   "\\mathbf{v}"); 
-   * const SubSpaceExtractors::Scalar subspace_extractor_s(spacedim, "s", "s");
+   * const SubSpaceExtractors::Vector subspace_extractor_v(
+   *   0, "v",  "\\mathbf{v}");
+   * const SubSpaceExtractors::Scalar  subspace_extractor_s(
+   *   spacedim, "s", "s");
    *
    * // Extract subspace of field solution; namely operators that
    * // represent a vector field gradient and a scalar field value.
@@ -286,19 +287,19 @@ namespace WeakForms
    * @f{align}{
    * R \left( \nabla \mathbf{v}, s \right)
    * \quad \Rightarrow 0
-   * &= \left( \delta \nabla \mathbf{v}, \dfrac{d R \left( \nabla \mathbf{v}, s
-   *   \right)}{d \nabla \mathbf{v}} \right)
-   *  + \left( \delta s, \dfrac{d R \left( \nabla \mathbf{v}, s \right)}{d s}
-   *   \right) \\
-   * &+ a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla
-   *   \mathbf{v} \right)}{d \nabla \mathbf{v} \otimes d \nabla \mathbf{v}}
-   *   \cdot \Delta \nabla \mathbf{v} \right)
-   *  + a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla
-   *   \mathbf{v} \right)}{d \nabla \mathbf{v} . ds} . \Delta s \right) \\
-   * &+ a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d
-   *   s . d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right)
-   *  + a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d
-   *   s^2} . \Delta s \right)
+   * &= \left( \delta \nabla \mathbf{v}, R_{\mathbf{v}} \left( \nabla
+   *   \mathbf{v}, s \right) \right)
+   *  + \left( \delta s, R_{s} \left( \nabla \mathbf{v}, s \right) \right) \\
+   * &+ a \left( \delta \nabla \mathbf{v}, \dfrac{d R_{\mathbf{v}} \left( s,
+   *   \nabla \mathbf{v} \right)}{d \nabla \mathbf{v}} \cdot \Delta \nabla
+   *   \mathbf{v} \right)
+   *  + a \left( \delta \nabla \mathbf{v}, \dfrac{d R_{\mathbf{v}} \left( s,
+   * \nabla
+   *   \mathbf{v} \right)}{d s} . \Delta s \right) \\
+   * &+ a \left( \delta s, \dfrac{d R_{s} \left( \nabla \mathbf{v}, s \right)}{d
+   *   \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right)
+   *  + a \left( \delta s, \dfrac{d R_{s} \left( \nabla \mathbf{v}, s \right)}{d
+   *   s} . \Delta s \right)
    * @f}
    * where @f$ \delta \left( \bullet \right) @f$ represents a variation (or test
    * function, for linear problems) and @f$ \Delta \left( \bullet \right) @f$
