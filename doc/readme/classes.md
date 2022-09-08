@@ -57,6 +57,11 @@ doxygen documentation is in preparation.
     an arbitrary functor, and a trial space operator.
     - `symmetrize()`: Set a symmetry flag for local contributions
     - `delta_IJ()`: Ensure that accumulation is only done when the DoF component of the trial and test functions are equal (a "Kronecker delta" of the shape functions)
+    - The template function `component_filter<...>()` allows one to restrict
+      assembly to certain components of the shape functions. The filters consider 
+      the finite element base function and/or the the component index of the
+      shape functions associated with the test function (index `I`) or trial
+      solution (index `J`).
     - Convenience function to create a bilinear form: `bilinear_form()`
   - Feature points
     - Form operators involve slots for per-dof calculations and per-quadrature point calculations
