@@ -310,6 +310,13 @@ namespace WeakForms
    * bilinear forms are assembled to the system matrix on the left-hand side of
    * the equation with the same sign.
    *
+   * (With respect to the formulae presented above, we follow the notation of
+   * T.J.R. Hughes "The Finite Element Method: Linear  Static and Dynamic Finite
+   * Element Analysis", 2000 to denote symmetric, bilinear forms. Important here
+   * is that the quantity @f$ a \left( \bullet, \bullet \right) @f$ contributes
+   * to the linear system matrix, while @f$ \left( \bullet, \bullet \right) @f$
+   * contribute to the right-hand side vector.)
+   *
    * @tparam TestSpaceOp A class that represents the test function that this
    * residual value is tested against. It is used to generate the linear form
    * that is then later consistently linearized.
