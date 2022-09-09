@@ -178,6 +178,13 @@ namespace WeakForms
    * bilinear forms are assembled to the system matrix on the left-hand side of
    * the equation with the same sign.
    *
+   * (With respect to the formulae presented above, we follow the notation of
+   * T.J.R. Hughes "The Finite Element Method: Linear  Static and Dynamic Finite
+   * Element Analysis", 2000 to denote symmetric, bilinear forms. Important here
+   * is that the quantity @f$ a \left( \bullet, \bullet \right) @f$ contributes
+   * to the linear system matrix, while @f$ \left( \bullet, \bullet \right) @f$
+   * contribute to the right-hand side vector.)
+   *
    * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that represents
    * the component(s) of the field solutions that parameterize the energy
    * functional. Each argument captures either a field, or one of its
