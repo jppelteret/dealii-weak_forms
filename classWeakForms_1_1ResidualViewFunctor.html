@@ -201,9 +201,10 @@ class WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSo
 <div class="line"><span class="comment">// Define the field solution and an extractor to get a view into some</span></div>
 <div class="line"><span class="comment">// of its components.</span></div>
 <div class="line"><span class="keyword">const</span> <a class="code" href="classWeakForms_1_1FieldSolution.html">FieldSolution&lt;dim&gt;</a> solution;</div>
-<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Vector.html">SubSpaceExtractors::Vector</a> subspace_extractor_v(0, <span class="stringliteral">&quot;v&quot;</span>,</div>
-<div class="line">  <span class="stringliteral">&quot;\\mathbf{v}&quot;</span>); </div>
-<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">SubSpaceExtractors::Scalar</a> subspace_extractor_s(spacedim, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Vector.html">SubSpaceExtractors::Vector</a> subspace_extractor_v(</div>
+<div class="line">  0, <span class="stringliteral">&quot;v&quot;</span>,  <span class="stringliteral">&quot;\\mathbf{v}&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">SubSpaceExtractors::Scalar</a>  subspace_extractor_s(</div>
+<div class="line">  spacedim, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Extract subspace of field solution; namely operators that</span></div>
 <div class="line"><span class="comment">// represent a vector field gradient and a scalar field value.</span></div>
@@ -303,9 +304,11 @@ class WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSo
 <div class="line">assembler += <a class="code" href="namespaceWeakForms.html#a6c199a2a4058afb1c4f76e7a03bb6d97">residual_form</a>(residual_v).dV()</div>
 <div class="line">           + <a class="code" href="namespaceWeakForms.html#a6c199a2a4058afb1c4f76e7a03bb6d97">residual_form</a>(residual_s).dV();</div>
 </div><!-- fragment --><p>In this specific example, the residual view expressions generate the following forms (this can be inspected by printing the <code>assembler</code>): </p><p class="formulaDsp">
-\begin{align} R \left( \nabla \mathbf{v}, s \right) \quad \Rightarrow 0 &amp;= \left( \delta \nabla \mathbf{v}, \dfrac{d R \left( \nabla \mathbf{v}, s \right)}{d \nabla \mathbf{v}} \right) + \left( \delta s, \dfrac{d R \left( \nabla \mathbf{v}, s \right)}{d s} \right) \\ &amp;+ a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla \mathbf{v} \right)}{d \nabla \mathbf{v} \otimes d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right) + a \left( \delta \nabla \mathbf{v}, \dfrac{d^{2} \psi \left( s, \nabla \mathbf{v} \right)}{d \nabla \mathbf{v} . ds} . \Delta s \right) \\ &amp;+ a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d s . d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right) + a \left( \delta s, \dfrac{d^{2} R \left( \nabla \mathbf{v}, s \right)}{d s^2} . \Delta s \right) \end{align}
+\begin{align} R \left( \nabla \mathbf{v}, s \right) \quad \Rightarrow 0 &amp;= \left( \delta \nabla \mathbf{v}, R_{\mathbf{v}} \left( \nabla \mathbf{v}, s \right) \right) + \left( \delta s, R_{s} \left( \nabla \mathbf{v}, s \right) \right) \\ &amp;+ a \left( \delta \nabla \mathbf{v}, \dfrac{d R_{\mathbf{v}} \left( s, \nabla \mathbf{v} \right)}{d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right) + a \left( \delta \nabla \mathbf{v}, \dfrac{d R_{\mathbf{v}} \left( s, \nabla \mathbf{v} \right)}{d s} . \Delta s \right) \\ &amp;+ a \left( \delta s, \dfrac{d R_{s} \left( \nabla \mathbf{v}, s \right)}{d \nabla \mathbf{v}} \cdot \Delta \nabla \mathbf{v} \right) + a \left( \delta s, \dfrac{d R_{s} \left( \nabla \mathbf{v}, s \right)}{d s} . \Delta s \right) \end{align}
 </p>
 <p> where \( \delta \left( \bullet \right) \) represents a variation (or test function, for linear problems) and \( \Delta \left( \bullet \right) \) represents the solution increment (or trial solution, for linear problems). The linear forms, which are the first two terms on the right of the equation, get transferred to the right-hand side of the linear system \( \mathbf{K}\cdot\mathbf{d} = \mathbf{f} \), with a sign change. The bilinear forms are assembled to the system matrix on the left-hand side of the equation with the same sign.</p>
+<p>(With respect to the formulae presented above, we follow the notation of T.J.R. Hughes "The Finite Element Method: Linear  Static and Dynamic Finite
+Element Analysis", 2000 to denote symmetric, bilinear forms. Important here is that the quantity \( a \left( \bullet, \bullet \right) \) contributes to the linear system matrix, while \( \left( \bullet, \bullet \right) \) contribute to the right-hand side vector.)</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">TestSpaceOp</td><td>A class that represents the test function that this residual value is tested against. It is used to generate the linear form that is then later consistently linearized.</td></tr>
@@ -338,7 +341,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00329">329</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00337">337</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -356,7 +359,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00343">343</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00351">351</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -376,7 +379,7 @@ template&lt;typename ADorSDNumberType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00349">349</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00357">357</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -396,7 +399,7 @@ template&lt;typename ScalarType , enum Differentiation::AD::NumberTypes ADNumber
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00355">355</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00363">363</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -416,7 +419,7 @@ template&lt;typename ADNumberType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00364">364</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00372">372</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -436,7 +439,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00369">369</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00377">377</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -454,7 +457,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00370">370</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00378">378</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -474,7 +477,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00375">375</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00383">383</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -494,7 +497,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00381">381</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00389">389</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -514,7 +517,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00389">389</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00397">397</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -534,7 +537,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00396">396</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00404">404</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -587,7 +590,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00400">400</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00408">408</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -646,7 +649,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00414">414</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00422">422</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -676,7 +679,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00422">422</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00430">430</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -706,7 +709,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00431">431</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00439">439</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -736,7 +739,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00440">440</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00448">448</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -800,7 +803,7 @@ template&lt;typename ADNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00457">457</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00465">465</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -910,7 +913,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00484">484</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00492">492</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -976,7 +979,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00510">510</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00518">518</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1039,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00536">536</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00544">544</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1065,7 +1068,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00564">564</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00572">572</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1094,7 +1097,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00572">572</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00580">580</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1123,7 +1126,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00579">579</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00587">587</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1152,7 +1155,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00589">589</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00597">597</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1194,7 +1197,7 @@ template&lt;typename ADNumberType , int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l01565">1565</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l01573">1573</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1266,7 +1269,7 @@ template&lt;typename SDNumberType , int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l01598">1598</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l01606">1606</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1294,7 +1297,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </div><div class="memdoc">
 <p>Dimension in which this object operates. </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00335">335</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00343">343</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1321,7 +1324,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </div><div class="memdoc">
 <p>Dimension of the subspace in which this object operates. </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00340">340</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00348">348</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1347,7 +1350,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00595">595</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00603">603</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1373,7 +1376,7 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00596">596</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00604">604</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1384,11 +1387,11 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
 <div class="ttc" id="astructWeakForms_1_1SolutionExtractionData_html"><div class="ttname"><a href="structWeakForms_1_1SolutionExtractionData.html">WeakForms::SolutionExtractionData</a></div><div class="ttdef"><b>Definition:</b> <a href="solution__extraction__data_8h_source.html#l00034">solution_extraction_data.h:34</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1TestFunction_html_a27497bbaf4628f85f398429b722182b6"><div class="ttname"><a href="classWeakForms_1_1TestFunction.html#a27497bbaf4628f85f398429b722182b6">WeakForms::TestFunction::value</a></div><div class="ttdeci">auto value() const</div><div class="ttdef"><b>Definition:</b> <a href="spaces_8h_source.html#l02525">spaces.h:2525</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1TestFunction_html_a5803ca883a53e8349bb4e063b0a3911c"><div class="ttname"><a href="classWeakForms_1_1TestFunction.html#a5803ca883a53e8349bb4e063b0a3911c">WeakForms::TestFunction::gradient</a></div><div class="ttdeci">auto gradient() const</div><div class="ttdef"><b>Definition:</b> <a href="spaces_8h_source.html#l02541">spaces.h:2541</a></div></div>
-<div class="ttc" id="aclassWeakForms_1_1ResidualViewFunctor_html_af47b0ad80ad638dbd30494b31e9763e9"><div class="ttname"><a href="classWeakForms_1_1ResidualViewFunctor.html#af47b0ad80ad638dbd30494b31e9763e9">WeakForms::ResidualViewFunctor::ad_type</a></div><div class="ttdeci">typename Differentiation::AD::NumberTraits&lt; ScalarType, ADNumberTypeCode &gt;::ad_type ad_type</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00355">residual_functor.h:355</a></div></div>
+<div class="ttc" id="aclassWeakForms_1_1ResidualViewFunctor_html_af47b0ad80ad638dbd30494b31e9763e9"><div class="ttname"><a href="classWeakForms_1_1ResidualViewFunctor.html#af47b0ad80ad638dbd30494b31e9763e9">WeakForms::ResidualViewFunctor::ad_type</a></div><div class="ttdeci">typename Differentiation::AD::NumberTraits&lt; ScalarType, ADNumberTypeCode &gt;::ad_type ad_type</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00363">residual_functor.h:363</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1MatrixBasedAssembler_html"><div class="ttname"><a href="classWeakForms_1_1MatrixBasedAssembler.html">WeakForms::MatrixBasedAssembler</a></div><div class="ttdef"><b>Definition:</b> <a href="assembler__matrix__based_8h_source.html#l00203">assembler_matrix_based.h:203</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1SubSpaceExtractors_1_1Vector_html"><div class="ttname"><a href="structWeakForms_1_1SubSpaceExtractors_1_1Vector.html">WeakForms::SubSpaceExtractors::Vector</a></div><div class="ttdef"><b>Definition:</b> <a href="subspace__extractors_8h_source.html#l00086">subspace_extractors.h:86</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html"><div class="ttname"><a href="namespaceWeakForms.html">WeakForms</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__cache_8h_source.html#l00038">ad_sd_functor_cache.h:38</a></div></div>
-<div class="ttc" id="anamespaceWeakForms_html_ad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00631">residual_functor.h:631</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_html_ad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00639">residual_functor.h:639</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1TestFunction_html"><div class="ttname"><a href="classWeakForms_1_1TestFunction.html">WeakForms::TestFunction</a></div><div class="ttdef"><b>Definition:</b> <a href="spaces_8h_source.html#l00213">spaces.h:213</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1SubSpaceExtractors_1_1Scalar_html"><div class="ttname"><a href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a></div><div class="ttdef"><b>Definition:</b> <a href="subspace__extractors_8h_source.html#l00038">subspace_extractors.h:38</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html_a6c199a2a4058afb1c4f76e7a03bb6d97"><div class="ttname"><a href="namespaceWeakForms.html#a6c199a2a4058afb1c4f76e7a03bb6d97">WeakForms::residual_form</a></div><div class="ttdeci">SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt; residual_form(const ResidualViewFunctor &amp;functor_op)</div><div class="ttdef"><b>Definition:</b> <a href="self__linearizing__forms_8h_source.html#l01558">self_linearizing_forms.h:1558</a></div></div>
