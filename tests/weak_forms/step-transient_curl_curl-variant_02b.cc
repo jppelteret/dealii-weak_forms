@@ -171,9 +171,9 @@ namespace StepTransientCurlCurl
     const auto                                 curl_A =
       field_solution[subspace_extractor_A].template curl<solution_mvp_index>();
 
-    constexpr WeakForms::types::solution_index d_solution_mvp_dt_index_t1 = 2;
+    constexpr WeakForms::types::solution_index d_solution_mvp_dt_index = 2;
     const auto dA_dt = field_solution[subspace_extractor_A]
-                         .template value<d_solution_mvp_dt_index_t1>();
+                         .template value<d_solution_mvp_dt_index>();
 
     constexpr WeakForms::types::solution_index solution_phi_index = 3;
     const auto grad_phi = field_solution[subspace_extractor_phi]
@@ -199,14 +199,14 @@ namespace StepTransientCurlCurl
     const auto             N       = normal.value();
     const auto             J_dot_N = J_f * N;
     const double           I_total =
-      WeakForms::Integrator<dim, decltype(J_dot_N)>(J_dot_N)
+      WeakForms::Integrator<dim, decltype(J_dot_N)>(J_dot_N, &this->mpi_communicator)
         .template dA<double>(
           solution_storage,
-          this->dof_handler_mvp,
-          this->qf_cell_mvp,
-          this->qf_face_mvp,
+          this->dof_handler_esp,
+          this->qf_cell_esp,
+          this->qf_face_esp,
           {this->parameters.bid_wire_inlet} /*input boundary*/);
-    // std::cout << "I_total: " << I_total << std::endl;
+   deallog << "I_total: " << I_total << std::endl;
 
     // Assembly
     MatrixBasedAssembler<dim> assembler;
