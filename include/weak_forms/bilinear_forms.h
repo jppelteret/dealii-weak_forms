@@ -37,15 +37,148 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * A set of filters that are applied during the assembly process for bilinear
+   * forms.
+   *
+   * These filters are used to skip some assembly contributions, or to extract
+   * certain components of vectorial or tensorial shape functions. To understand
+   * what these filters are to do, it is helpful to first define some notation:
+   * - `I` and `J` refer to the local degree of freedom indices respectively
+   *   associated with the test and trial shape functions.
+   * - `component_i` and `component_j` are, respectively, the index of the `I`th
+   *   and `J`th shape functions within the finite element (system).
+   *   The component of the `K`th shape function would correspond to
+   *   `finite_element.system_to_component_index(K).first;`
+   * - `multiplicity_I` and `multiplicity_J` are, respectively, the copy of the
+   *   base finite element within the finite element (system) that corresponds
+   *   with the `I`th and `J`th degree of freedom.
+   *   The multiplicity of the `K`th shape function is the equivalent to what is
+   *   returned by `finite_element.system_to_base_index(K).first.second;`.
+   *
+   * Also refer to the introduction of the deal.II
+   * [FiniteElement](https://dealii.org/developer/doxygen/deal.II/classFiniteElement.html)
+   * class for further insights.
+   */
   enum BilinearFormComponentFilter
   {
-    form_components_default              = 0,
-    multiplicity_I                       = 0x0001,
-    multiplicity_J                       = 0x0002,
-    dof_I_component_i                    = 0x0004,
-    dof_I_component_j                    = 0x0008,
-    dof_J_component_i                    = 0x0010,
-    dof_J_component_j                    = 0x0020,
+    /**
+     * Apply no filters.
+     *
+     * @note The use of this filter alone results in optimum performance code
+     * being executed by the assembler.
+     */
+    form_components_default = 0,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. fully evaluated
+     * shape function operator), extract its "multiplicity index" component
+     * that is associated with the `I`th local shape function.
+     *
+     * @note This extraction operation always occurs in preference to others.
+     * So if it is combined with other filters acting on index `I`, then the
+     * extraction of this component of the (tensorial) shape function operation
+     * result will happen first.
+     */
+    multiplicity_I = 0x0001,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. fully evaluated
+     * shape function operator), extract its "multiplicity index" component
+     * that is associated with the `J`th local shape function.
+     *
+     * @note This extraction operation always occurs in preference to others.
+     * So if it is combined with other filters acting on index `J`, then the
+     * extraction of this component of the (tensorial) shape function operation
+     * result will happen first.
+     */
+    multiplicity_J = 0x0002,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. the fully
+     * evaluated test shape function operator), extract its "component index"
+     * component that is associated with the `I`th local shape function.
+     * This is the equivalent of computing the inner product
+     * @f$ \left[ \bullet \right]^{I} \cdot \mathbf{e}_{i} @f$
+     * where @f$ \left[ \bullet \right]^{I} @f$ denotes the qualified test
+     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f i $@f$th
+     * Cartesian coordinate direction.
+     *
+     * @note The use of this filter will result in a slight performance penalty,
+     * as it will inhibit certain optimisations from being performed during the
+     * assembly process.
+     *
+     * @warning This can only be called if all shape functions in the finite
+     * element (system) are primitive.
+     */
+    dof_I_component_i = 0x0004,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. the fully
+     * evaluated test shape function operator), extract its "component index"
+     * component that is associated with the `J`th local shape function.
+     * This is the equivalent of computing the inner product
+     * @f$ \left[ \bullet \right]^{I} \cdot \mathbf{e}_{j} @f$
+     * where @f$ \left[ \bullet \right]^{I} @f$ denotes the qualified test
+     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f j $@f$th
+     * Cartesian coordinate direction.
+     *
+     * Notice that, for this filter, there is a cross-indexing of the shape
+     * function operator and  the component that is to be extracted.
+     *
+     * @note The use of this filter will result in a slight performance penalty,
+     * as it will inhibit certain optimisations from being performed during the
+     * assembly process.
+     *
+     * @warning This can only be called if all shape functions in the finite
+     * element (system) are primitive.
+     */
+    dof_I_component_j = 0x0008,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. the fully
+     * evaluated trial shape function operator), extract its "component index"
+     * component that is associated with the `I`th local shape function.
+     * This is the equivalent of computing the inner product
+     * @f$ \left[ \bullet \right]^{J} \cdot \mathbf{e}_{i} @f$
+     * where @f$ \left[ \bullet \right]^{J} @f$ denotes the qualified trial
+     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f i $@f$th
+     * Cartesian coordinate direction.
+     *
+     * Notice that, for this filter, there is a cross-indexing of the shape
+     * function operator and  the component that is to be extracted.
+     *
+     * @note The use of this filter will result in a slight performance penalty,
+     * as it will inhibit certain optimisations from being performed during the
+     * assembly process.
+     *
+     * @warning This can only be called if all shape functions in the finite
+     * element (system) are primitive.
+     */
+    dof_J_component_i = 0x0010,
+    /**
+     * Of a vectorial or tensorial basis function result (i.e. the fully
+     * evaluated trial shape function operator), extract its "component index"
+     * component that is associated with the `J`th local shape function.
+     * This is the equivalent of computing the inner product
+     * @f$ \left[ \bullet \right]^{J} \cdot \mathbf{e}_{j} @f$
+     * where @f$ \left[ \bullet \right]^{J} @f$ denotes the qualified trial
+     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f j $@f$th
+     * Cartesian coordinate direction.
+     *
+     * @note The use of this filter will result in a slight performance penalty,
+     * as it will inhibit certain optimisations from being performed during the
+     * assembly process.
+     *
+     * @warning This can only be called if all shape functions in the finite
+     * element (system) are primitive.
+     */
+    dof_J_component_j = 0x0020,
+    /**
+     * Skip all contributions for which the shape function component is not
+     * equal for `component_i` and `component_j` of the `I`th and `J`th degrees
+     * of freedom. That is to say, that the associated Cartesian coordinate
+     * directions @f$ \mathbf{e}_{i} @f$ and @f$ \mathbf{e}_{j} @f$ are
+     * identical.
+     *
+     * @note If used in isolation, then use of this filter still results in
+     * optimum performance code being executed by the assembler.
+     */
     local_shape_function_kronecker_delta = 0x0040
   };
 
