@@ -88,6 +88,9 @@ $(function() {
 <li>get_cell_update_flags()
 : <a class="el" href="classWeakForms_1_1AssemblerBase.html#ac74db4daf3e6064f21f30287271381ee">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
+<li>get_component_filter_flags()
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#abc34985f858a91d2d2761a979b4a9179">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
+</li>
 <li>get_data_storage()
 : <a class="el" href="classWeakForms_1_1AD__SD__Functor__Cache.html#a517934f2b6182bdd8f106da635c4b90b">WeakForms::AD_SD_Functor_Cache</a>
 </li>
@@ -156,7 +159,7 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Space.html#a4a28fdfd3250078a858fa669f050a336">WeakForms::Space&lt; dim, spacedim &gt;</a>
 </li>
 <li>get_functor()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#ac8cd4a4895cd34ce591bec18fd6357fe">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a0405f2a699f750c8023acb7e95943f9c">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01SymmetricTensor_3_01rank___008f689c823a3af06a57129d1bd4591623.html#a7c3efa2c717f5d30c1cffdc9b40d73e2">WeakForms::internal::Differentiation::DiffOpResult&lt; SymmetricTensor&lt; rank_, spacedim, T &gt;, U, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01SymmetricTensor_3_01rank__1_0f1c903c31a9a462bf90e0eebe896f7eb.html#a99e66c0da7567ea6b4ccd2d5b1a9cd07">WeakForms::internal::Differentiation::DiffOpResult&lt; SymmetricTensor&lt; rank_1, spacedim, T &gt;, SymmetricTensor&lt; rank_2, spacedim, U &gt;, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
 , <a class="el" href="structWeakForms_1_1internal_1_1Differentiation_1_1DiffOpResult_3_01SymmetricTensor_3_01rank__1_0fcc5805bb705d73772b2fd9cd4a3c6fd.html#af3e251721a37a111ed0ca3a9d0b7689a">WeakForms::internal::Differentiation::DiffOpResult&lt; SymmetricTensor&lt; rank_1, spacedim, T &gt;, Tensor&lt; rank_2, spacedim, U &gt;, typename std::enable_if&lt; WeakForms::are_scalar_types&lt; T, U &gt;::value &gt;::type &gt;</a>
@@ -172,7 +175,7 @@ $(function() {
 </li>
 <li>get_functor_first_derivative()
 : <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#aef2a74ad63251ab2f49d0e7b8df08a61">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a5a101d80a2ee8e0de3b113d24d48dedd">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#a6b1f02fa17faec39ee3a6f420d5312dc">WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</a>
 </li>
 <li>get_functor_second_derivative()
 : <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html#a592c153928db1fd34dd1c34e9dbb4317">WeakForms::SelfLinearization::EnergyFunctional&lt; EnergyFunctor &gt;</a>
@@ -414,14 +417,14 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html#a5a025f37df87fe60af0405a73cf7e4ec">WeakForms::ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution &gt;</a>
 </li>
 <li>get_test_space_operation()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#a35df19627c881c0ae698e71019c5bf70">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a087e2da28498d5adf5107864955b2ce1">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#ab756ed1508d9132f4c04782271049c46">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
 </li>
 <li>get_trial_space_operation()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#a3a25b56461119a42389bfd46771c806b">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#ab394ee02d2eaad7f30bae52022542784">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
 </li>
 <li>get_update_flags()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#a7d2f501e0d4bff20834d9d27be445caf">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a1bc0713ca9dc0d7b41ec008b9170367e">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
 , <a class="el" href="classWeakForms_1_1LinearForm.html#ade8d39812026e89c7bc48cf0e5621ad6">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1BinaryOpBase.html#a4c85764db44bbb5c5fe31c601d11d5db">WeakForms::Operators::BinaryOpBase&lt; Derived &gt;</a>
 , <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01EnergyFunctor_3_01SymbolicOpsSubSpaceFieldSolutiona74e7171e80f75085533e75447e04814.html#a051062f960117b63b23a3f71894cff41">WeakForms::Operators::SymbolicOp&lt; EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
@@ -467,11 +470,11 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO8ead37bfb9500b0000968100c9ed3780.html#acd34cfc593f6c27e119f8143615cfc15">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 </li>
 <li>gradient()
-: <a class="el" href="classWeakForms_1_1FieldSolution.html#a3122e0897597b3e2ddec64a89c110a28">WeakForms::FieldSolution&lt; dim, spacedim &gt;</a>
-, <a class="el" href="classWeakForms_1_1ScalarFunctionFunctor.html#abd6732903419d52c3a7b77fce13e8ed9">WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</a>
-, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#adfc51504285c49eca2d29e3da36a384c">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1FieldSolution.html#abb84c4f48dd828aead3b150b11461753">WeakForms::FieldSolution&lt; dim, spacedim &gt;</a>
+, <a class="el" href="classWeakForms_1_1ScalarFunctionFunctor.html#afa9d2a778e3e8ffdbafc71b9405b3229">WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#a11f67c262f9c8167d3290cfbe0bf4274">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a6bf806cba37501e6f9ecc16407d8eb79">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
-, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a67c65d3f3e4fe0207687d85c5443bb0c">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a27544e84f54737908500afc6461ed263">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1TensorFunctionFunctor.html#aaccaddfb9d387fb8b86d2ea6b189a0d2">WeakForms::TensorFunctionFunctor&lt; rank, spacedim &gt;</a>
 , <a class="el" href="classWeakForms_1_1TestFunction.html#a5803ca883a53e8349bb4e063b0a3911c">WeakForms::TestFunction&lt; dim, spacedim &gt;</a>
 , <a class="el" href="classWeakForms_1_1TrialSolution.html#aa9eaaf8152caf9b0d51dc130b5fece3c">WeakForms::TrialSolution&lt; dim, spacedim &gt;</a>

@@ -75,6 +75,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">bilinear_forms.h File Reference</div>  </div>
@@ -96,16 +97,57 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1BilinearForm.html">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_ &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1BilinearForm.html">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceWeakForms"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html">WeakForms</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceWeakForms_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html">WeakForms::internal</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:acaa0a4172ad5893b342da4aae68fb3a4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">WeakForms::BilinearFormComponentFilter</a> { <br />
+&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96">WeakForms::form_components_default</a> = 0, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d">WeakForms::multiplicity_I</a> = 0x0001, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d">WeakForms::multiplicity_J</a> = 0x0002, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8a40a6051a8a98cff6d5395cef34e94e">WeakForms::dof_I_component_i</a> = 0x0004, 
+<br />
+&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6">WeakForms::dof_I_component_j</a> = 0x0008, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8d56c5d28292ad64b0978eda61d01e73">WeakForms::dof_J_component_i</a> = 0x0010, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce">WeakForms::dof_J_component_j</a> = 0x0020, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b">WeakForms::local_shape_function_kronecker_delta</a> = 0x0040
+<br />
+ }</td></tr>
+<tr class="separator:acaa0a4172ad5893b342da4aae68fb3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a36e97adeeaa7ab0ed216e0587a70080c"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a36e97adeeaa7ab0ed216e0587a70080c">WeakForms::operator|</a> (const BilinearFormComponentFilter f1, const BilinearFormComponentFilter f2)</td></tr>
+<tr class="separator:a36e97adeeaa7ab0ed216e0587a70080c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a320830063be57b317a00c519cb979e04"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a320830063be57b317a00c519cb979e04">WeakForms::operator|=</a> (BilinearFormComponentFilter &amp;f1, const BilinearFormComponentFilter f2)</td></tr>
+<tr class="separator:a320830063be57b317a00c519cb979e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d14de582aceac693625e252b461da59"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a7d14de582aceac693625e252b461da59">WeakForms::operator&amp;</a> (const BilinearFormComponentFilter f1, const BilinearFormComponentFilter f2)</td></tr>
+<tr class="separator:a7d14de582aceac693625e252b461da59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d1086e3a3e67706edcefd70e630050b"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a0d1086e3a3e67706edcefd70e630050b">WeakForms::operator&amp;=</a> (BilinearFormComponentFilter &amp;f1, const BilinearFormComponentFilter f2)</td></tr>
+<tr class="separator:a0d1086e3a3e67706edcefd70e630050b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb49e88f648e77a36e8a02bc6c2bb596"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#afb49e88f648e77a36e8a02bc6c2bb596">WeakForms::has_no_component_filter</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:afb49e88f648e77a36e8a02bc6c2bb596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ecb0172397c07e051561a8a773908d"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a07ecb0172397c07e051561a8a773908d">WeakForms::has_kronecker_delta_property</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:a07ecb0172397c07e051561a8a773908d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa59748ee58d9562582b886e4dc37ce61"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#aa59748ee58d9562582b886e4dc37ce61">WeakForms::has_multiplicity_filter_flag</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:aa59748ee58d9562582b886e4dc37ce61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab07ecac10c856609038edb7fe13cc06b"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#ab07ecac10c856609038edb7fe13cc06b">WeakForms::has_dof_component_filter_flag</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:ab07ecac10c856609038edb7fe13cc06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a895cac7bdc29d3fe5129de69b256079e"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a895cac7bdc29d3fe5129de69b256079e">WeakForms::get_test_dof_component_filter_flags</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:a895cac7bdc29d3fe5129de69b256079e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa9e47ca15a1e952c947cfe86791671b"><td class="memItemLeft" align="right" valign="top">constexpr BilinearFormComponentFilter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#aaa9e47ca15a1e952c947cfe86791671b">WeakForms::get_trial_dof_component_filter_flags</a> (const BilinearFormComponentFilter &amp;flags)</td></tr>
+<tr class="separator:aaa9e47ca15a1e952c947cfe86791671b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5b12b5a7931efb768e043b975de245f"><td class="memTemplParams" colspan="2">template&lt;BilinearFormComponentFilter ComponentFilterFlags&gt; </td></tr>
+<tr class="memitem:ae5b12b5a7931efb768e043b975de245f"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#ae5b12b5a7931efb768e043b975de245f">WeakForms::internal::check_flag_consistency</a> ()</td></tr>
+<tr class="separator:ae5b12b5a7931efb768e043b975de245f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memTemplParams" colspan="2">template&lt;typename TestSpaceOp , typename Functor , typename TrialSpaceOp , typename  = typename std::enable_if&lt;is_valid_form_functor&lt;Functor&gt;::value &amp;&amp;                                       !is_scalar_type&lt;Functor&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memTemplItemLeft" align="right" valign="top">BilinearForm&lt; TestSpaceOp, Functor, TrialSpaceOp &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#afdd7b5677e0e315c3c177d2dbe7cb7f7">WeakForms::bilinear_form</a> (const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</td></tr>
 <tr class="separator:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memSeparator" colspan="2">&#160;</td></tr>

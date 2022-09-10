@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['tangent_2246',['tangent',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a75e7384f08d8f81a380699ce840c1167',1,'WeakForms::Operators']]],
-  ['third_5fderivative_2247',['third_derivative',['../namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba041dc6319d44ea0f98b08814e1793c15',1,'WeakForms::Operators']]],
-  ['trace_2248',['trace',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a04a75036e9d520bb983c5ed03b8d0182',1,'WeakForms::Operators']]],
-  ['transpose_2249',['transpose',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a382eb179a7d78f25d89c085988b37e95',1,'WeakForms::Operators']]]
+  ['scalar_5fproduct_2285',['scalar_product',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda09c9a28ea0afa2a1f2fa24b6d2a57156',1,'WeakForms::Operators']]],
+  ['schur_5fproduct_2286',['schur_product',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda5a0a1b82ad82eee04db0a9c03a9b9075',1,'WeakForms::Operators']]],
+  ['sine_2287',['sine',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a925212d1624625aed9491413b4b7be05',1,'WeakForms::Operators']]],
+  ['square_5froot_2288',['square_root',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2ac557f673a45a21b78fc0f4f3d6daccf1',1,'WeakForms::Operators']]],
+  ['subtract_2289',['subtract',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda97f415c180230ce76bafa74bc058ef5f',1,'WeakForms::Operators']]],
+  ['symmetric_5fgradient_2290',['symmetric_gradient',['../namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48bafb59da2aa954ef0535f0f459b5a233fb',1,'WeakForms::Operators']]],
+  ['symmetrize_2291',['symmetrize',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2ad5a7b2e9f4971b04536799fcf58eceeb',1,'WeakForms::Operators']]]
 ];

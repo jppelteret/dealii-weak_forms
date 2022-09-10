@@ -72,6 +72,7 @@ $(function() {
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">WeakForms Namespace Reference</div>  </div>
@@ -255,10 +256,46 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a76a4e449c6edab12a90df92459fae2d6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a76a4e449c6edab12a90df92459fae2d6">VectorFunctionFunctor</a> = <a class="el" href="classWeakForms_1_1TensorFunctionFunctor.html">TensorFunctionFunctor</a>&lt; 1, dim &gt;</td></tr>
 <tr class="separator:a76a4e449c6edab12a90df92459fae2d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:acaa0a4172ad5893b342da4aae68fb3a4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> { <br />
+&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96">form_components_default</a> = 0, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d">multiplicity_I</a> = 0x0001, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d">multiplicity_J</a> = 0x0002, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8a40a6051a8a98cff6d5395cef34e94e">dof_I_component_i</a> = 0x0004, 
+<br />
+&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6">dof_I_component_j</a> = 0x0008, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8d56c5d28292ad64b0978eda61d01e73">dof_J_component_i</a> = 0x0010, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce">dof_J_component_j</a> = 0x0020, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b">local_shape_function_kronecker_delta</a> = 0x0040
+<br />
+ }</td></tr>
+<tr class="separator:acaa0a4172ad5893b342da4aae68fb3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1374c4faa4fb6c5a928fa9d94256e79c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a1374c4faa4fb6c5a928fa9d94256e79c">assertOptimizerSettings</a> (const enum Differentiation::SD::OptimizerType optimization_method, const enum Differentiation::SD::OptimizationFlags optimization_flags)</td></tr>
 <tr class="separator:a1374c4faa4fb6c5a928fa9d94256e79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36e97adeeaa7ab0ed216e0587a70080c"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a36e97adeeaa7ab0ed216e0587a70080c">operator|</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f1, const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f2)</td></tr>
+<tr class="separator:a36e97adeeaa7ab0ed216e0587a70080c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a320830063be57b317a00c519cb979e04"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a320830063be57b317a00c519cb979e04">operator|=</a> (<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;f1, const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f2)</td></tr>
+<tr class="separator:a320830063be57b317a00c519cb979e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d14de582aceac693625e252b461da59"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a7d14de582aceac693625e252b461da59">operator&amp;</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f1, const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f2)</td></tr>
+<tr class="separator:a7d14de582aceac693625e252b461da59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d1086e3a3e67706edcefd70e630050b"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a0d1086e3a3e67706edcefd70e630050b">operator&amp;=</a> (<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;f1, const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> f2)</td></tr>
+<tr class="separator:a0d1086e3a3e67706edcefd70e630050b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb49e88f648e77a36e8a02bc6c2bb596"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#afb49e88f648e77a36e8a02bc6c2bb596">has_no_component_filter</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:afb49e88f648e77a36e8a02bc6c2bb596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07ecb0172397c07e051561a8a773908d"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a07ecb0172397c07e051561a8a773908d">has_kronecker_delta_property</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:a07ecb0172397c07e051561a8a773908d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa59748ee58d9562582b886e4dc37ce61"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#aa59748ee58d9562582b886e4dc37ce61">has_multiplicity_filter_flag</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:aa59748ee58d9562582b886e4dc37ce61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab07ecac10c856609038edb7fe13cc06b"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#ab07ecac10c856609038edb7fe13cc06b">has_dof_component_filter_flag</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:ab07ecac10c856609038edb7fe13cc06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a895cac7bdc29d3fe5129de69b256079e"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a895cac7bdc29d3fe5129de69b256079e">get_test_dof_component_filter_flags</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:a895cac7bdc29d3fe5129de69b256079e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa9e47ca15a1e952c947cfe86791671b"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#aaa9e47ca15a1e952c947cfe86791671b">get_trial_dof_component_filter_flags</a> (const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;flags)</td></tr>
+<tr class="separator:aaa9e47ca15a1e952c947cfe86791671b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memTemplParams" colspan="2">template&lt;typename TestSpaceOp , typename Functor , typename TrialSpaceOp , typename  = typename std::enable_if&lt;is_valid_form_functor&lt;Functor&gt;::value &amp;&amp;                                       !is_scalar_type&lt;Functor&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1BilinearForm.html">BilinearForm</a>&lt; TestSpaceOp, <a class="el" href="classWeakForms_1_1Functor.html">Functor</a>, TrialSpaceOp &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#afdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a> (const TestSpaceOp &amp;test_space_op, const <a class="el" href="classWeakForms_1_1Functor.html">Functor</a> &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</td></tr>
 <tr class="separator:afdd7b5677e0e315c3c177d2dbe7cb7f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -386,6 +423,33 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="acaa0a4172ad5893b342da4aae68fb3a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acaa0a4172ad5893b342da4aae68fb3a4">&#9670;&nbsp;</a></span>BilinearFormComponentFilter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">WeakForms::BilinearFormComponentFilter</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96"></a>form_components_default&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d"></a>multiplicity_I&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d"></a>multiplicity_J&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a8a40a6051a8a98cff6d5395cef34e94e"></a>dof_I_component_i&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6"></a>dof_I_component_j&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a8d56c5d28292ad64b0978eda61d01e73"></a>dof_J_component_i&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce"></a>dof_J_component_j&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b"></a>local_shape_function_kronecker_delta&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00040">40</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a1374c4faa4fb6c5a928fa9d94256e79c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1374c4faa4fb6c5a928fa9d94256e79c">&#9670;&nbsp;</a></span>assertOptimizerSettings()</h2>
@@ -425,6 +489,326 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
+<a id="a36e97adeeaa7ab0ed216e0587a70080c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36e97adeeaa7ab0ed216e0587a70080c">&#9670;&nbsp;</a></span>operator|()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> WeakForms::operator| </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00053">53</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a320830063be57b317a00c519cb979e04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a320830063be57b317a00c519cb979e04">&#9670;&nbsp;</a></span>operator|=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&amp; WeakForms::operator|= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>f1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00061">61</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a7d14de582aceac693625e252b461da59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d14de582aceac693625e252b461da59">&#9670;&nbsp;</a></span>operator&amp;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> WeakForms::operator&amp; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00069">69</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a0d1086e3a3e67706edcefd70e630050b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d1086e3a3e67706edcefd70e630050b">&#9670;&nbsp;</a></span>operator&amp;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&amp; WeakForms::operator&amp;= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>f1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a>&#160;</td>
+          <td class="paramname"><em>f2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00077">77</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="afb49e88f648e77a36e8a02bc6c2bb596"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb49e88f648e77a36e8a02bc6c2bb596">&#9670;&nbsp;</a></span>has_no_component_filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool WeakForms::has_no_component_filter </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00085">85</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a07ecb0172397c07e051561a8a773908d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07ecb0172397c07e051561a8a773908d">&#9670;&nbsp;</a></span>has_kronecker_delta_property()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool WeakForms::has_kronecker_delta_property </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00091">91</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="aa59748ee58d9562582b886e4dc37ce61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa59748ee58d9562582b886e4dc37ce61">&#9670;&nbsp;</a></span>has_multiplicity_filter_flag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool WeakForms::has_multiplicity_filter_flag </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00097">97</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ab07ecac10c856609038edb7fe13cc06b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab07ecac10c856609038edb7fe13cc06b">&#9670;&nbsp;</a></span>has_dof_component_filter_flag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool WeakForms::has_dof_component_filter_flag </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00108">108</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a895cac7bdc29d3fe5129de69b256079e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a895cac7bdc29d3fe5129de69b256079e">&#9670;&nbsp;</a></span>get_test_dof_component_filter_flags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> WeakForms::get_test_dof_component_filter_flags </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00123">123</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="aaa9e47ca15a1e952c947cfe86791671b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa9e47ca15a1e952c947cfe86791671b">&#9670;&nbsp;</a></span>get_trial_dof_component_filter_flags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> WeakForms::get_trial_dof_component_filter_flags </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> &amp;&#160;</td>
+          <td class="paramname"><em>flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00138">138</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+
+</div>
+</div>
 <a id="afdd7b5677e0e315c3c177d2dbe7cb7f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afdd7b5677e0e315c3c177d2dbe7cb7f7">&#9670;&nbsp;</a></span>bilinear_form() <span class="overload">[1/5]</span></h2>
 
@@ -459,7 +843,7 @@ template&lt;typename TestSpaceOp , typename Functor , typename TrialSpaceOp , ty
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00291">291</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00453">453</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -497,7 +881,7 @@ template&lt;typename TestSpaceOp , typename ScalarType , typename TrialSpaceOp ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00308">308</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00470">470</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -535,7 +919,7 @@ template&lt;typename TestSpaceOp , int rank, int spacedim, typename ScalarType ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00328">328</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00490">490</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -573,7 +957,7 @@ template&lt;typename TestSpaceOp , int rank, int spacedim, typename ScalarType ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00347">347</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00509">509</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -605,7 +989,7 @@ template&lt;typename TestSpaceOp , typename TrialSpaceOp &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00363">363</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00525">525</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
