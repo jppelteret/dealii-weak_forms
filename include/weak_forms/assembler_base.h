@@ -435,6 +435,19 @@ namespace WeakForms
 
     template <int dim, int spacedim>
     std::vector<unsigned int>
+    get_dof_multiplicity(const FEValuesBase<dim, spacedim> &fe_values)
+    {
+      const unsigned int        n_dofs = get_n_dofs(fe_values);
+      std::vector<unsigned int> dof_multiplicity(n_dofs);
+      DEAL_II_OPENMP_SIMD_PRAGMA
+      for (unsigned int k = 0; k < n_dofs; ++k)
+        dof_multiplicity[k] =
+          fe_values.get_fe().system_to_base_index(k).first.second;
+      return dof_multiplicity;
+    }
+
+    template <int dim, int spacedim>
+    std::vector<unsigned int>
     get_dof_component_indices(const FEValuesBase<dim, spacedim> &fe_values)
     {
       const unsigned int        n_dofs = get_n_dofs(fe_values);
@@ -457,8 +470,245 @@ namespace WeakForms
     }
 
 
+
+    // === Extract components of shape functions associated
+    // with the test function ===
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename ScalarType>
+    const ScalarType &
+    extract_test_shape_component(
+      const ScalarType &               scalar,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<is_scalar_type<ScalarType>::value>::type * =
+        nullptr)
+    {
+      return scalar;
+    }
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    const TensorType &
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      return tensor;
+    }
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TestComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_I,
+                    "Invalid tensor component extraction.");
+      return tensor[dof_multiplicity[dof_I]];
+    }
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_i)
+        return tensor[dof_component_indices[dof_I]];
+
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_j)
+        return tensor[dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0];
+    }
+
+    template <BilinearFormComponentFilter TestComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_test_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TestComponentFilterFlags) &&
+        has_dof_component_filter_flag(TestComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TestComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_I,
+                    "Invalid tensor component extraction.");
+
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_i)
+        return tensor[dof_multiplicity[dof_I]][dof_component_indices[dof_I]];
+
+      if (TestComponentFilterFlags &
+          BilinearFormComponentFilter::dof_I_component_j)
+        return tensor[dof_multiplicity[dof_I]][dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0][0];
+    }
+
+
+
+    // === Extract components of shape functions associated
+    // with the trial solution ===
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename ScalarType>
+    const ScalarType &
+    extract_trial_shape_component(
+      const ScalarType &               scalar,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<is_scalar_type<ScalarType>::value &&
+                              !has_dof_component_filter_flag(
+                                TrialComponentFilterFlags)>::type * = nullptr)
+    {
+      return scalar;
+    }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    const TensorType &
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      return tensor;
+    }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        !has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TrialComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_J,
+                    "Invalid tensor component extraction.");
+      return tensor[dof_multiplicity[dof_J]];
+    }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        !has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_i)
+        return tensor[dof_component_indices[dof_I]];
+
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_j)
+        return tensor[dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0];
+    }
+
+    template <BilinearFormComponentFilter TrialComponentFilterFlags,
+              typename TensorType>
+    auto
+    extract_trial_shape_component(
+      const TensorType &               tensor,
+      const unsigned int               dof_I,
+      const unsigned int               dof_J,
+      const std::vector<unsigned int> &dof_multiplicity,
+      const std::vector<unsigned int> &dof_component_indices,
+      typename std::enable_if<
+        !is_scalar_type<TensorType>::value &&
+        has_multiplicity_filter_flag(TrialComponentFilterFlags) &&
+        has_dof_component_filter_flag(TrialComponentFilterFlags)>::type * =
+        nullptr)
+    {
+      static_assert(TrialComponentFilterFlags &
+                      BilinearFormComponentFilter::multiplicity_J,
+                    "Invalid tensor component extraction.");
+
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_i)
+        return tensor[dof_multiplicity[dof_J]][dof_component_indices[dof_I]];
+
+      if (TrialComponentFilterFlags &
+          BilinearFormComponentFilter::dof_J_component_j)
+        return tensor[dof_multiplicity[dof_J]][dof_component_indices[dof_J]];
+
+      Assert(false, ExcMessage("Invalid tensor component extraction."));
+      return tensor[0][0];
+    }
+
+
+
     // Valid for cell and face assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -475,7 +725,8 @@ namespace WeakForms
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
       const bool                                      symmetric_contribution,
-      const bool equal_components_contribution)
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       Assert(shapes_test.size() == fe_values_dofs.dofs_per_cell,
              ExcDimensionMismatch(shapes_test.size(),
@@ -513,7 +764,7 @@ namespace WeakForms
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
       const std::vector<unsigned int> dof_component_index =
-        (equal_components_contribution ?
+        (has_kronecker_delta_property(ComponentFilterFlags) ?
            internal::get_dof_component_indices(fe_values_dofs) :
            std::vector<unsigned int>());
 
@@ -537,7 +788,7 @@ namespace WeakForms
                    fe_values_dofs.dof_indices());
               for (const unsigned int i : dof_range_i)
                 {
-                  if (equal_components_contribution &&
+                  if (has_kronecker_delta_property(ComponentFilterFlags) &&
                       (dof_component_index[i] != dof_component_index[j]))
                     {
                       continue;
@@ -564,8 +815,157 @@ namespace WeakForms
         }
     }
 
+
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
+              typename ScalarType,
+              int dim,
+              int spacedim,
+              typename ValueTypeTest,
+              typename ValueTypeFunctor,
+              typename ValueTypeTrial>
+    void
+    assemble_cell_matrix_contribution(
+      FullMatrix<ScalarType> &                        cell_matrix,
+      const FEValuesBase<dim, spacedim> &             fe_values_dofs,
+      const FEValuesBase<dim, spacedim> &             fe_values_q_points,
+      const std::vector<std::vector<ValueTypeTest>> & shapes_test,
+      const std::vector<ValueTypeFunctor> &           values_functor,
+      const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
+      const std::vector<double> &                     JxW,
+      const bool                                      symmetric_contribution,
+      typename std::enable_if<
+        has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
+    {
+      internal::check_flag_consistency<ComponentFilterFlags>();
+
+      Assert(shapes_test.size() == fe_values_dofs.dofs_per_cell,
+             ExcDimensionMismatch(shapes_test.size(),
+                                  fe_values_dofs.dofs_per_cell));
+      Assert(shapes_trial.size() == fe_values_dofs.dofs_per_cell,
+             ExcDimensionMismatch(shapes_trial.size(),
+                                  fe_values_dofs.dofs_per_cell));
+      Assert(values_functor.size() == fe_values_q_points.n_quadrature_points,
+             ExcDimensionMismatch(values_functor.size(),
+                                  fe_values_q_points.n_quadrature_points));
+      Assert(JxW.size() == fe_values_q_points.n_quadrature_points,
+             ExcDimensionMismatch(JxW.size(),
+                                  fe_values_q_points.n_quadrature_points));
+      for (const unsigned int k : fe_values_dofs.dof_indices())
+        {
+          (void)k;
+          Assert(shapes_test[k].size() ==
+                   fe_values_q_points.n_quadrature_points,
+                 ExcDimensionMismatch(shapes_test[k].size(),
+                                      fe_values_q_points.n_quadrature_points));
+          Assert(shapes_trial[k].size() ==
+                   fe_values_q_points.n_quadrature_points,
+                 ExcDimensionMismatch(shapes_trial[k].size(),
+                                      fe_values_q_points.n_quadrature_points));
+        }
+
+      // This is the equivalent of
+      // for (q : q_points)
+      //   for (i : dof_indices)
+      //     for (j : dof_indices)
+      //       cell_matrix(i,j) += shapes_test[i][q] * values_functor[q] *
+      //       shapes_trial[j][q]) * JxW[q]
+      const auto qp_range = fe_values_q_points.quadrature_point_indices();
+      const auto dof_range_j =
+        (symmetric_contribution ? fe_values_dofs.dof_indices() :
+                                  fe_values_dofs.dof_indices());
+
+      // TODO: Could it be that, since we primarily use SF extractors, we only
+      // ever want to consider the multiplicity? Or do we need to do something
+      // clever to switch approaches when SF extractors are used or the standard
+      // FEValues::shape_grad() etc. are called?
+      // See the table in the intro to
+      // https://www.dealii.org/current/doxygen/deal.II/classFiniteElement.html
+      const std::vector<unsigned int> dof_multiplicity =
+        internal::get_dof_multiplicity(fe_values_dofs);
+      const std::vector<unsigned int> dof_component_index =
+        internal::get_dof_component_indices(fe_values_dofs);
+
+      for (const unsigned int q : qp_range)
+        {
+          const auto value_functor_x_JxW = values_functor[q] * JxW[q];
+
+          for (const unsigned int j : dof_range_j)
+            {
+              // Assemble only the diagonal plus upper half of the matrix if
+              // the symmetry flag is set.
+              const auto dof_range_i =
+                (symmetric_contribution ?
+                   fe_values_dofs.dof_indices_ending_at(j) :
+                   fe_values_dofs.dof_indices());
+              for (const unsigned int i : dof_range_i)
+                {
+                  if (has_kronecker_delta_property(ComponentFilterFlags) &&
+                      (dof_component_index[i] != dof_component_index[j]))
+                    {
+                      continue;
+                    }
+
+                  constexpr BilinearFormComponentFilter
+                    TestComponentFilterFlags =
+                      get_test_dof_component_filter_flags(ComponentFilterFlags);
+                  const auto shape_test_component =
+                    internal::extract_test_shape_component<
+                      TestComponentFilterFlags>(shapes_test[i][q],
+                                                i,
+                                                j,
+                                                dof_multiplicity,
+                                                dof_component_index);
+                  using ValueTypeTestComponent =
+                    typename std::decay<decltype(shape_test_component)>::type;
+
+                  constexpr BilinearFormComponentFilter
+                    TrialComponentFilterFlags =
+                      get_trial_dof_component_filter_flags(
+                        ComponentFilterFlags);
+                  const auto shape_trial_component =
+                    internal::extract_trial_shape_component<
+                      TrialComponentFilterFlags>(shapes_trial[j][q],
+                                                 i,
+                                                 j,
+                                                 dof_multiplicity,
+                                                 dof_component_index);
+                  using ValueTypeTrialComponent =
+                    typename std::decay<decltype(shape_trial_component)>::type;
+
+                  using ContractionType_FS =
+                    FullContraction<ValueTypeFunctor, ValueTypeTrialComponent>;
+                  const auto functor_x_shape_trial_x_JxW =
+                    ContractionType_FS::contract(value_functor_x_JxW,
+                                                 shape_trial_component);
+                  using ContractionType_FS_t = typename std::decay<decltype(
+                    functor_x_shape_trial_x_JxW)>::type;
+
+                  using ContractionType_SFS_JxW =
+                    FullContraction<ValueTypeTestComponent,
+                                    ContractionType_FS_t>;
+                  const ScalarType integrated_contribution =
+                    ContractionType_SFS_JxW::contract(
+                      shape_test_component, functor_x_shape_trial_x_JxW);
+
+                  if (Sign == AccumulationSign::plus)
+                    {
+                      cell_matrix(i, j) += integrated_contribution;
+                    }
+                  else
+                    {
+                      Assert(Sign == AccumulationSign::minus,
+                             ExcInternalError());
+                      cell_matrix(i, j) -= integrated_contribution;
+                    }
+                }
+            }
+        }
+    }
+
     // Valid for interface assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -582,7 +982,8 @@ namespace WeakForms
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
       const bool                                      symmetric_contribution,
-      const bool equal_components_contribution)
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       (void)symmetric_contribution;
       Assert(shapes_test.size() == fe_values_dofs.n_current_interface_dofs(),
@@ -621,7 +1022,7 @@ namespace WeakForms
       const auto dof_range_j = fe_values_dofs.dof_indices();
       const auto dof_range_i = fe_values_dofs.dof_indices();
       const std::vector<unsigned int> dof_component_index =
-        (equal_components_contribution ?
+        (has_kronecker_delta_property(ComponentFilterFlags) ?
            internal::get_dof_component_indices(fe_values_dofs) :
            std::vector<unsigned int>());
 
@@ -639,7 +1040,7 @@ namespace WeakForms
 
               for (const unsigned int i : dof_range_i)
                 {
-                  if (equal_components_contribution &&
+                  if (has_kronecker_delta_property(ComponentFilterFlags) &&
                       (dof_component_index[i] != dof_component_index[j]))
                     {
                       continue;
@@ -668,7 +1069,8 @@ namespace WeakForms
 
 
     // Valid only for cell assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -683,22 +1085,22 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution,
-      const bool equal_components_contribution)
+      const bool                                      symmetric_contribution)
     {
-      assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                              fe_values,
-                                              fe_values,
-                                              shapes_test,
-                                              values_functor,
-                                              shapes_trial,
-                                              JxW,
-                                              symmetric_contribution,
-                                              equal_components_contribution);
+      assemble_cell_matrix_contribution<Sign, ComponentFilterFlags>(
+        cell_matrix,
+        fe_values,
+        fe_values,
+        shapes_test,
+        values_functor,
+        shapes_trial,
+        JxW,
+        symmetric_contribution);
     }
 
     // Valid only for interface assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -713,18 +1115,17 @@ namespace WeakForms
       const std::vector<ValueTypeFunctor> &           values_functor,
       const std::vector<std::vector<ValueTypeTrial>> &shapes_trial,
       const std::vector<double> &                     JxW,
-      const bool                                      symmetric_contribution,
-      const bool equal_components_contribution)
+      const bool                                      symmetric_contribution)
     {
-      assemble_cell_matrix_contribution<Sign>(cell_matrix,
-                                              fe_interface_values,
-                                              fe_interface_values,
-                                              shapes_test,
-                                              values_functor,
-                                              shapes_trial,
-                                              JxW,
-                                              symmetric_contribution,
-                                              equal_components_contribution);
+      assemble_cell_matrix_contribution<Sign, ComponentFilterFlags>(
+        cell_matrix,
+        fe_interface_values,
+        fe_interface_values,
+        shapes_test,
+        values_functor,
+        shapes_trial,
+        JxW,
+        symmetric_contribution);
     }
 
 
@@ -834,7 +1235,8 @@ namespace WeakForms
 
 
     // Valid for cell and face assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -851,7 +1253,8 @@ namespace WeakForms
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
       const VectorizedArray<double, width> &         JxW,
       const bool                                     symmetric_contribution,
-      const bool equal_components_contribution)
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       // This is the equivalent of
       // for (q : q_points) --> vectorized
@@ -863,7 +1266,7 @@ namespace WeakForms
         (symmetric_contribution ? fe_values_dofs.dof_indices() :
                                   fe_values_dofs.dof_indices());
       const std::vector<unsigned int> dof_component_index =
-        (equal_components_contribution ?
+        (has_kronecker_delta_property(ComponentFilterFlags) ?
            internal::get_dof_component_indices(fe_values_dofs) :
            std::vector<unsigned int>());
 
@@ -883,7 +1286,7 @@ namespace WeakForms
                                       fe_values_dofs.dof_indices());
           for (const unsigned int i : dof_range_i)
             {
-              if (equal_components_contribution &&
+              if (has_kronecker_delta_property(ComponentFilterFlags) &&
                   (dof_component_index[i] != dof_component_index[j]))
                 {
                   continue;
@@ -918,8 +1321,133 @@ namespace WeakForms
     }
 
 
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
+              typename ScalarType,
+              int dim,
+              int spacedim,
+              typename VectorizedValueTypeTest,
+              typename VectorizedValueTypeFunctor,
+              typename VectorizedValueTypeTrial,
+              std::size_t width>
+    void
+    assemble_cell_matrix_vectorized_qp_batch_contribution(
+      FullMatrix<ScalarType> &                       cell_matrix,
+      const FEValuesBase<dim, spacedim> &            fe_values_dofs,
+      const AlignedVector<VectorizedValueTypeTest> & shapes_test,
+      const VectorizedValueTypeFunctor &             values_functor,
+      const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
+      const VectorizedArray<double, width> &         JxW,
+      const bool                                     symmetric_contribution,
+      typename std::enable_if<
+        has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
+    {
+      // This is the equivalent of
+      // for (q : q_points) --> vectorized
+      //   for (i : dof_indices)
+      //     for (j : dof_indices)
+      //       cell_matrix(i,j) += shapes_test[i][q] * values_functor[q] *
+      //       shapes_trial[j][q]) * JxW[q]
+      const auto dof_range_j =
+        (symmetric_contribution ? fe_values_dofs.dof_indices() :
+                                  fe_values_dofs.dof_indices());
+
+      // TODO: Could it be that, since we primarily use SF extractors, we only
+      // ever want to consider the multiplicity? Or do we need to do something
+      // clever to switch approaches when SF extractors are used or the standard
+      // FEValues::shape_grad() etc. are called?
+      // See the table in the intro to
+      // https://www.dealii.org/current/doxygen/deal.II/classFiniteElement.html
+      const std::vector<unsigned int> dof_multiplicity =
+        internal::get_dof_multiplicity(fe_values_dofs);
+      const std::vector<unsigned int> dof_component_index =
+        internal::get_dof_component_indices(fe_values_dofs);
+
+      const auto value_functor_x_JxW = values_functor * JxW;
+
+      for (const unsigned int j : dof_range_j)
+        {
+          // Assemble only the diagonal plus upper half of the matrix if
+          // the symmetry flag is set.
+          const auto dof_range_i =
+            (symmetric_contribution ? fe_values_dofs.dof_indices_ending_at(j) :
+                                      fe_values_dofs.dof_indices());
+          for (const unsigned int i : dof_range_i)
+            {
+              if (has_kronecker_delta_property(ComponentFilterFlags) &&
+                  (dof_component_index[i] != dof_component_index[j]))
+                {
+                  continue;
+                }
+
+              // using ContractionType_SFS_JxW =
+              //   FullContraction<VectorizedValueTypeTest,
+              //   ContractionType_FS_t>;
+              // const VectorizedArray<ScalarType, width>
+              //   vectorized_integrated_contribution =
+              //     ContractionType_SFS_JxW::contract(
+              //       shapes_test[i], functor_x_shape_trial_x_JxW);
+
+              constexpr BilinearFormComponentFilter TestComponentFilterFlags =
+                get_test_dof_component_filter_flags(ComponentFilterFlags);
+              const auto shape_test_component =
+                internal::extract_test_shape_component<
+                  TestComponentFilterFlags>(
+                  shapes_test[i], i, j, dof_multiplicity, dof_component_index);
+              using VectorizedValueTypeTestComponent =
+                typename std::decay<decltype(shape_test_component)>::type;
+
+              constexpr BilinearFormComponentFilter TrialComponentFilterFlags =
+                get_trial_dof_component_filter_flags(ComponentFilterFlags);
+              const auto shape_trial_component =
+                internal::extract_trial_shape_component<
+                  TrialComponentFilterFlags>(
+                  shapes_trial[j], i, j, dof_multiplicity, dof_component_index);
+              using VectorizedValueTypeTrialComponent =
+                typename std::decay<decltype(shape_trial_component)>::type;
+
+              using ContractionType_FS =
+                FullContraction<VectorizedValueTypeFunctor,
+                                VectorizedValueTypeTrialComponent>;
+              const auto functor_x_shape_trial_x_JxW =
+                ContractionType_FS::contract(value_functor_x_JxW,
+                                             shape_trial_component);
+              using ContractionType_FS_t = typename std::decay<decltype(
+                functor_x_shape_trial_x_JxW)>::type;
+
+              using ContractionType_SFS_JxW =
+                FullContraction<VectorizedValueTypeTestComponent,
+                                ContractionType_FS_t>;
+              const VectorizedArray<ScalarType, width>
+                vectorized_integrated_contribution =
+                  ContractionType_SFS_JxW::contract(
+                    shape_test_component, functor_x_shape_trial_x_JxW);
+
+              // Reduce all QP contributions
+              ScalarType integrated_contribution =
+                dealii::internal::NumberType<ScalarType>::value(0.0);
+              // DEAL_II_OPENMP_SIMD_PRAGMA
+              for (unsigned int v = 0; v < width; v++)
+                integrated_contribution +=
+                  vectorized_integrated_contribution[v];
+
+              if (Sign == AccumulationSign::plus)
+                {
+                  cell_matrix(i, j) += integrated_contribution;
+                }
+              else
+                {
+                  Assert(Sign == AccumulationSign::minus, ExcInternalError());
+                  cell_matrix(i, j) -= integrated_contribution;
+                }
+            }
+        }
+    }
+
+
     // Valid for interface assembly
-    template <enum AccumulationSign Sign,
+    template <enum AccumulationSign       Sign,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename ScalarType,
               int dim,
               int spacedim,
@@ -936,7 +1464,8 @@ namespace WeakForms
       const AlignedVector<VectorizedValueTypeTrial> &shapes_trial,
       const VectorizedArray<double, width> &         JxW,
       const bool                                     symmetric_contribution,
-      const bool equal_components_contribution)
+      typename std::enable_if<
+        !has_dof_component_filter_flag(ComponentFilterFlags)>::type * = nullptr)
     {
       (void)symmetric_contribution;
       // This is the equivalent of
@@ -948,7 +1477,7 @@ namespace WeakForms
       const auto dof_range_j = fe_values_dofs.dof_indices();
       const auto dof_range_i = fe_values_dofs.dof_indices();
       const std::vector<unsigned int> dof_component_index =
-        (equal_components_contribution ?
+        (has_kronecker_delta_property(ComponentFilterFlags) ?
            internal::get_dof_component_indices(fe_values_dofs) :
            std::vector<unsigned int>());
 
@@ -966,7 +1495,7 @@ namespace WeakForms
           // delineate the symmetry condition for the coupling).
           for (const unsigned int i : dof_range_i)
             {
-              if (equal_components_contribution &&
+              if (has_kronecker_delta_property(ComponentFilterFlags) &&
                   (dof_component_index[i] != dof_component_index[j]))
                 {
                   continue;
@@ -2017,6 +2546,9 @@ namespace WeakForms
         is_bilinear_form<typename std::decay<decltype(form)>::type>::value,
         "Incompatible integrand type.");
 
+      constexpr BilinearFormComponentFilter ComponentFilterFlags =
+        form.get_component_filter_flags();
+
       const auto &test_space_op  = form.get_test_space_operation();
       const auto &functor        = form.get_functor();
       const auto &trial_space_op = form.get_trial_space_operation();
@@ -2034,10 +2566,6 @@ namespace WeakForms
         false; // form.local_contribution_symmetry_flag()
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
-
-      // Contribution shape function Kronecker delta property
-      const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
@@ -2111,7 +2639,6 @@ namespace WeakForms
                       trial_space_op,
                       local_contribution_symmetry_flag,
                       &global_system_symmetry_flag,
-                      local_contribution_delta_IJ_flag,
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2140,12 +2667,6 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
-        // Decide whether or not to only assemble the contribution if the
-        // shape function components for the test and trial spaces are
-        // identical.
-        const bool equal_components_contribution =
-          local_contribution_delta_IJ_flag;
-
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2163,16 +2684,16 @@ namespace WeakForms
 
         // Perform the assembly, taking into account whether or not to
         // utilise vectorisation.
-        do_add_cell_operation<Sign>(assembly_cell_matrix,
-                                    scratch_data,
-                                    solution_extraction_data,
-                                    fe_values,
-                                    test_space_op,
-                                    functor,
-                                    trial_space_op,
-                                    volume_integral,
-                                    symmetric_contribution,
-                                    equal_components_contribution);
+        do_add_cell_operation<Sign, ComponentFilterFlags>(
+          assembly_cell_matrix,
+          scratch_data,
+          solution_extraction_data,
+          fe_values,
+          test_space_op,
+          functor,
+          trial_space_op,
+          volume_integral,
+          symmetric_contribution);
 
         if (use_scratch_cell_matrix)
           {
@@ -2232,6 +2753,9 @@ namespace WeakForms
         is_bilinear_form<typename std::decay<decltype(form)>::type>::value,
         "Incompatible integrand type.");
 
+      constexpr BilinearFormComponentFilter ComponentFilterFlags =
+        form.get_component_filter_flags();
+
       const auto &test_space_op  = form.get_test_space_operation();
       const auto &functor        = form.get_functor();
       const auto &trial_space_op = form.get_trial_space_operation();
@@ -2249,10 +2773,6 @@ namespace WeakForms
         false; // form.local_contribution_symmetry_flag()
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
-
-      // Contribution shape function Kronecker delta property
-      const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
@@ -2326,7 +2846,6 @@ namespace WeakForms
                       trial_space_op,
                       local_contribution_symmetry_flag,
                       &global_system_symmetry_flag,
-                      local_contribution_delta_IJ_flag,
                       skip_contribution_due_to_global_symmetry](
                        FullMatrix<ScalarType> &                cell_matrix,
                        MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2357,12 +2876,6 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
-        // Decide whether or not to only assemble the contribution if the
-        // shape function components for the test and trial spaces are
-        // identical.
-        const bool equal_components_contribution =
-          local_contribution_delta_IJ_flag;
-
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2380,17 +2893,17 @@ namespace WeakForms
 
         // Perform the assembly, taking into account whether or not to
         // utilise vectorisation.
-        do_add_boundary_face_operation<Sign>(assembly_cell_matrix,
-                                             scratch_data,
-                                             solution_extraction_data,
-                                             fe_values,
-                                             fe_face_values,
-                                             test_space_op,
-                                             functor,
-                                             trial_space_op,
-                                             boundary_integral,
-                                             symmetric_contribution,
-                                             equal_components_contribution);
+        do_add_boundary_face_operation<Sign, ComponentFilterFlags>(
+          assembly_cell_matrix,
+          scratch_data,
+          solution_extraction_data,
+          fe_values,
+          fe_face_values,
+          test_space_op,
+          functor,
+          trial_space_op,
+          boundary_integral,
+          symmetric_contribution);
 
         if (use_scratch_cell_matrix)
           {
@@ -2447,6 +2960,9 @@ namespace WeakForms
         is_bilinear_form<typename std::decay<decltype(form)>::type>::value,
         "Incompatible integrand type.");
 
+      constexpr BilinearFormComponentFilter ComponentFilterFlags =
+        form.get_component_filter_flags();
+
       const auto &test_space_op  = form.get_test_space_operation();
       const auto &functor        = form.get_functor();
       const auto &trial_space_op = form.get_trial_space_operation();
@@ -2464,10 +2980,6 @@ namespace WeakForms
         false; // form.local_contribution_symmetry_flag()
       const bool &global_system_symmetry_flag =
         this->global_system_symmetry_flag;
-
-      // Contribution shape function Kronecker delta property
-      const bool local_contribution_delta_IJ_flag =
-        form.has_kronecker_delta_property();
 
       // Skip this contribution if we enforce symmetry at a global level,
       // and we are able to concretely establish that this contribution
@@ -2542,7 +3054,6 @@ namespace WeakForms
          trial_space_op,
          local_contribution_symmetry_flag,
          &global_system_symmetry_flag,
-         local_contribution_delta_IJ_flag,
          skip_contribution_due_to_global_symmetry](
           FullMatrix<ScalarType> &                cell_matrix,
           MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -2575,12 +3086,6 @@ namespace WeakForms
         const bool symmetric_contribution =
           local_contribution_symmetry_flag | global_system_symmetry_flag;
 
-        // Decide whether or not to only assemble the contribution if the
-        // shape function components for the test and trial spaces are
-        // identical.
-        const bool equal_components_contribution =
-          local_contribution_delta_IJ_flag;
-
         // If the local contribution is symmetric, but the global system is not,
         // then we need to write our contributions into an intermediate data
         // structure.
@@ -2598,16 +3103,16 @@ namespace WeakForms
 
         // Perform the assembly, taking into account whether or not to
         // utilise vectorisation.
-        do_add_interface_face_operation<Sign>(assembly_cell_matrix,
-                                              scratch_data,
-                                              solution_extraction_data,
-                                              fe_interface_values,
-                                              test_space_op,
-                                              functor,
-                                              trial_space_op,
-                                              interface_integral,
-                                              symmetric_contribution,
-                                              equal_components_contribution);
+        do_add_interface_face_operation<Sign, ComponentFilterFlags>(
+          assembly_cell_matrix,
+          scratch_data,
+          solution_extraction_data,
+          fe_interface_values,
+          test_space_op,
+          functor,
+          trial_space_op,
+          interface_integral,
+          symmetric_contribution);
 
         // TODO[JPP]: Interfaces -- Uncomment this
         // if (use_scratch_cell_matrix)
@@ -2892,6 +3397,7 @@ namespace WeakForms
      * Vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -2912,8 +3418,7 @@ namespace WeakForms
       const Functor &                    functor,
       const TrialSpaceOp &               trial_space_op,
       const SymbolicOpVolumeIntegral &   volume_integral,
-      const bool                         symmetric_contribution,
-      const bool                         equal_components_contribution)
+      const bool                         symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -2990,15 +3495,15 @@ namespace WeakForms
             }
 
           // Do the assembly for the current batch of quadrature points
-          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<Sign>(
-            cell_matrix,
-            fe_values,
-            shapes_test,
-            values_functor,
-            shapes_trial,
-            JxW,
-            symmetric_contribution,
-            equal_components_contribution);
+          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
+            Sign,
+            ComponentFilterFlags>(cell_matrix,
+                                  fe_values,
+                                  shapes_test,
+                                  values_functor,
+                                  shapes_trial,
+                                  JxW,
+                                  symmetric_contribution);
         }
     }
 
@@ -3008,6 +3513,7 @@ namespace WeakForms
      * Non-vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -3028,8 +3534,7 @@ namespace WeakForms
       const Functor &                    functor,
       const TrialSpaceOp &               trial_space_op,
       const SymbolicOpVolumeIntegral &   volume_integral,
-      const bool                         symmetric_contribution,
-      const bool                         equal_components_contribution)
+      const bool                         symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3071,15 +3576,14 @@ namespace WeakForms
         volume_integral.template operator()<ScalarType>(fe_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(
+      internal::assemble_cell_matrix_contribution<Sign, ComponentFilterFlags>(
         cell_matrix,
         fe_values,
         shapes_test,
         values_functor,
         shapes_trial,
         JxW,
-        symmetric_contribution,
-        equal_components_contribution);
+        symmetric_contribution);
     }
 
 
@@ -3088,6 +3592,7 @@ namespace WeakForms
      * Vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -3109,8 +3614,7 @@ namespace WeakForms
       const Functor &                        functor,
       const TrialSpaceOp &                   trial_space_op,
       const SymbolicOpBoundaryIntegral &     boundary_integral,
-      const bool                             symmetric_contribution,
-      const bool                             equal_components_contribution)
+      const bool                             symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3187,15 +3691,15 @@ namespace WeakForms
             }
 
           // Do the assembly for the current batch of quadrature points
-          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<Sign>(
-            cell_matrix,
-            fe_values,
-            shapes_test,
-            values_functor,
-            shapes_trial,
-            JxW,
-            symmetric_contribution,
-            equal_components_contribution);
+          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
+            Sign,
+            ComponentFilterFlags>(cell_matrix,
+                                  fe_values,
+                                  shapes_test,
+                                  values_functor,
+                                  shapes_trial,
+                                  JxW,
+                                  symmetric_contribution);
         }
     }
 
@@ -3205,6 +3709,7 @@ namespace WeakForms
      * Non-vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -3226,8 +3731,7 @@ namespace WeakForms
       const Functor &                        functor,
       const TrialSpaceOp &                   trial_space_op,
       const SymbolicOpBoundaryIntegral &     boundary_integral,
-      const bool                             symmetric_contribution,
-      const bool                             equal_components_contribution)
+      const bool                             symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3270,7 +3774,7 @@ namespace WeakForms
         boundary_integral.template operator()<ScalarType>(fe_face_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(
+      internal::assemble_cell_matrix_contribution<Sign, ComponentFilterFlags>(
         cell_matrix,
         fe_values,
         fe_face_values,
@@ -3278,8 +3782,7 @@ namespace WeakForms
         values_functor,
         shapes_trial,
         JxW,
-        symmetric_contribution,
-        equal_components_contribution);
+        symmetric_contribution);
     }
 
 
@@ -3288,6 +3791,7 @@ namespace WeakForms
      * Vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -3308,8 +3812,7 @@ namespace WeakForms
       const Functor &                         functor,
       const TrialSpaceOp &                    trial_space_op,
       const SymbolicOpInterfaceIntegral &     interface_integral,
-      const bool                              symmetric_contribution,
-      const bool                              equal_components_contribution)
+      const bool                              symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3386,15 +3889,15 @@ namespace WeakForms
             }
 
           // Do the assembly for the current batch of quadrature points
-          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<Sign>(
-            cell_matrix,
-            fe_interface_values,
-            shapes_test,
-            values_functor,
-            shapes_trial,
-            JxW,
-            symmetric_contribution,
-            equal_components_contribution);
+          internal::assemble_cell_matrix_vectorized_qp_batch_contribution<
+            Sign,
+            ComponentFilterFlags>(cell_matrix,
+                                  fe_interface_values,
+                                  shapes_test,
+                                  values_functor,
+                                  shapes_trial,
+                                  JxW,
+                                  symmetric_contribution);
         }
     }
 
@@ -3404,6 +3907,7 @@ namespace WeakForms
      * Non-vectorized variant
      */
     template <enum internal::AccumulationSign Sign,
+              BilinearFormComponentFilter     ComponentFilterFlags,
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
@@ -3424,8 +3928,7 @@ namespace WeakForms
       const Functor &                         functor,
       const TrialSpaceOp &                    trial_space_op,
       const SymbolicOpInterfaceIntegral &     interface_integral,
-      const bool                              symmetric_contribution,
-      const bool                              equal_components_contribution)
+      const bool                              symmetric_contribution)
     {
       // Shape functions are always real-valued
       using UnderlyingScalarType =
@@ -3468,15 +3971,14 @@ namespace WeakForms
         interface_integral.template operator()<ScalarType>(fe_interface_values);
 
       // Assemble for all DoFs and quadrature points
-      internal::assemble_cell_matrix_contribution<Sign>(
+      internal::assemble_cell_matrix_contribution<Sign, ComponentFilterFlags>(
         cell_matrix,
         fe_interface_values,
         shapes_test,
         values_functor,
         shapes_trial,
         JxW,
-        symmetric_contribution,
-        equal_components_contribution);
+        symmetric_contribution);
     }
 
     // ==============

@@ -14,7 +14,9 @@
 // ---------------------------------------------------------------------
 
 // Elasticity problem: Assembly using weak forms
+// This variant directly uses the scalar coefficients in the weak form.
 // This test replicates step-8 exactly.
+// - Vectorized variant
 
 #include <deal.II/base/function.h>
 
@@ -57,10 +59,12 @@ Step8<dim>::assemble_system()
   const TrialSolution<dim>         trial;
   const SubSpaceExtractors::Vector subspace_extractor(0, "u", "\\mathbf{u}");
 
-  const TensorFunctionFunctor<4, dim> mat_coeff("C", "\\mathcal{C}");
-  const VectorFunctionFunctor<dim>    rhs_coeff("s", "\\mathbf{s}");
-  const Coefficient<dim>              coefficient;
-  const RightHandSide<dim>            rhs;
+  // Material coefficients
+  const double lambda = 1.0;
+  const double mu     = 1.0;
+
+  const VectorFunctionFunctor<dim> rhs_coeff("s", "\\mathbf{s}");
+  const RightHandSide<dim>         rhs;
 
   const auto test_ss  = test[subspace_extractor];
   const auto trial_ss = trial[subspace_extractor];
@@ -72,7 +76,15 @@ Step8<dim>::assemble_system()
 
   MatrixBasedAssembler<dim> assembler;
   assembler +=
-    bilinear_form(test_grad, mat_coeff.value(coefficient), trial_grad).dV() -
+    bilinear_form(test_grad, lambda, trial_grad)
+      .template component_filter<multiplicity_I | dof_I_component_i |
+                                 multiplicity_J | dof_J_component_j>()
+      .dV() +
+    bilinear_form(test_grad, mu, trial_grad)
+      .template component_filter<multiplicity_I | dof_I_component_j |
+                                 multiplicity_J | dof_J_component_i>()
+      .dV() +
+    bilinear_form(test_grad, mu, trial_grad).delta_IJ().dV() -
     linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute

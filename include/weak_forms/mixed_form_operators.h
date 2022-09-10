@@ -79,16 +79,19 @@ namespace WeakForms
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename = typename WeakForms::is_scalar_type<ScalarType>::type>
     auto
-    operator*(const ScalarType &value,
-              const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
-                &bilinear_form)
+    operator*(
+      const ScalarType &value,
+      const WeakForms::
+        BilinearForm<TestSpaceOp, Functor, TrialSpaceOp, ComponentFilterFlags>
+          &bilinear_form)
     {
-      return WeakForms::bilinear_form(
-        bilinear_form.get_test_space_operation(),
-        value * bilinear_form.get_functor(),
-        bilinear_form.get_trial_space_operation());
+      return WeakForms::bilinear_form(bilinear_form.get_test_space_operation(),
+                                      value * bilinear_form.get_functor(),
+                                      bilinear_form.get_trial_space_operation())
+        .template component_filter<ComponentFilterFlags>();
     }
 
 
@@ -97,11 +100,14 @@ namespace WeakForms
               typename TestSpaceOp,
               typename Functor,
               typename TrialSpaceOp,
+              BilinearFormComponentFilter ComponentFilterFlags,
               typename = typename WeakForms::is_scalar_type<ScalarType>::type>
     auto
-    operator*(const WeakForms::BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>
-                &               bilinear_form,
-              const ScalarType &value)
+    operator*(
+      const WeakForms::
+        BilinearForm<TestSpaceOp, Functor, TrialSpaceOp, ComponentFilterFlags>
+          &             bilinear_form,
+      const ScalarType &value)
     {
       // Delegate to the other function
       return value * bilinear_form;

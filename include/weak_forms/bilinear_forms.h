@@ -37,7 +37,143 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
-  template <typename TestSpaceOp_, typename Functor_, typename TrialSpaceOp_>
+  enum BilinearFormComponentFilter
+  {
+    form_components_default              = 0,
+    multiplicity_I                       = 0x0001,
+    multiplicity_J                       = 0x0002,
+    dof_I_component_i                    = 0x0004,
+    dof_I_component_j                    = 0x0008,
+    dof_J_component_i                    = 0x0010,
+    dof_J_component_j                    = 0x0020,
+    local_shape_function_kronecker_delta = 0x0040
+  };
+
+  constexpr inline BilinearFormComponentFilter
+  operator|(const BilinearFormComponentFilter f1,
+            const BilinearFormComponentFilter f2)
+  {
+    return static_cast<BilinearFormComponentFilter>(
+      static_cast<unsigned int>(f1) | static_cast<unsigned int>(f2));
+  }
+
+  constexpr inline BilinearFormComponentFilter &
+  operator|=(BilinearFormComponentFilter &     f1,
+             const BilinearFormComponentFilter f2)
+  {
+    f1 = f1 | f2;
+    return f1;
+  }
+
+  constexpr inline BilinearFormComponentFilter
+  operator&(const BilinearFormComponentFilter f1,
+            const BilinearFormComponentFilter f2)
+  {
+    return static_cast<BilinearFormComponentFilter>(
+      static_cast<unsigned int>(f1) & static_cast<unsigned int>(f2));
+  }
+
+  constexpr inline BilinearFormComponentFilter &
+  operator&=(BilinearFormComponentFilter &     f1,
+             const BilinearFormComponentFilter f2)
+  {
+    f1 = f1 & f2;
+    return f1;
+  }
+
+  constexpr inline bool
+  has_no_component_filter(const BilinearFormComponentFilter &flags)
+  {
+    return flags == form_components_default;
+  }
+
+  constexpr inline bool
+  has_kronecker_delta_property(const BilinearFormComponentFilter &flags)
+  {
+    return flags & local_shape_function_kronecker_delta;
+  }
+
+  constexpr inline bool
+  has_multiplicity_filter_flag(const BilinearFormComponentFilter &flags)
+  {
+    if (flags & multiplicity_I)
+      return true;
+    if (flags & multiplicity_J)
+      return true;
+
+    return false;
+  }
+
+  constexpr inline bool
+  has_dof_component_filter_flag(const BilinearFormComponentFilter &flags)
+  {
+    if (flags & dof_I_component_i)
+      return true;
+    if (flags & dof_I_component_j)
+      return true;
+    if (flags & dof_J_component_i)
+      return true;
+    if (flags & dof_J_component_j)
+      return true;
+
+    return false;
+  }
+
+  constexpr inline BilinearFormComponentFilter
+  get_test_dof_component_filter_flags(const BilinearFormComponentFilter &flags)
+  {
+    BilinearFormComponentFilter out = form_components_default;
+
+    if (flags & multiplicity_I)
+      out |= multiplicity_I;
+    if (flags & dof_I_component_i)
+      out |= dof_I_component_i;
+    if (flags & dof_I_component_j)
+      out |= dof_I_component_j;
+
+    return out;
+  }
+
+  constexpr inline BilinearFormComponentFilter
+  get_trial_dof_component_filter_flags(const BilinearFormComponentFilter &flags)
+  {
+    BilinearFormComponentFilter out = form_components_default;
+
+    if (flags & multiplicity_J)
+      out |= multiplicity_J;
+    if (flags & dof_J_component_i)
+      out |= dof_J_component_i;
+    if (flags & dof_J_component_j)
+      out |= dof_J_component_j;
+
+    return out;
+  }
+
+
+  namespace internal
+  {
+    template <BilinearFormComponentFilter ComponentFilterFlags>
+    constexpr void
+    check_flag_consistency()
+    {
+      static_assert(
+        !((ComponentFilterFlags & dof_I_component_i) &&
+          (ComponentFilterFlags & dof_I_component_j)),
+        "Cannot filter test function shape functions on both the i-th and j-th component.");
+      static_assert(
+        !((ComponentFilterFlags & dof_J_component_i) &&
+          (ComponentFilterFlags & dof_J_component_j)),
+        "Cannot filter trial solution shape functions on both the i-th and j-th component.");
+    }
+  } // namespace internal
+
+
+
+  template <typename TestSpaceOp_,
+            typename Functor_,
+            typename TrialSpaceOp_,
+            BilinearFormComponentFilter ComponentFilterFlags =
+              BilinearFormComponentFilter::form_components_default>
   class BilinearForm
   {
     static_assert(is_or_has_test_function_op<TestSpaceOp_>::value,
@@ -62,7 +198,6 @@ namespace WeakForms
       , functor_op(functor_op)
       , trial_space_op(trial_space_op)
       , local_contribution_symmetry_flag(false)
-      , local_shape_function_kronecker_delta_flag(false)
     {}
 
     std::string
@@ -122,10 +257,18 @@ namespace WeakForms
         }
     }
 
+    // ===== Filters =====
+
     bool
     is_symmetric() const
     {
       return local_contribution_symmetry_flag;
+    }
+
+    static constexpr BilinearFormComponentFilter
+    get_component_filter_flags()
+    {
+      return ComponentFilterFlags;
     }
 
     // Indicate that the contribution that comes from this form is symmetric.
@@ -138,22 +281,42 @@ namespace WeakForms
       return *this;
     }
 
-    bool
-    has_kronecker_delta_property() const
+    // Indicate that the contribution that comes from this form
+    // for specific combinations of shape functions components as
+    // ascertained during the assembly process.
+    //
+    // The return type is equivalent to
+    // BilinearForm<TestSpaceOp, Functor, TrialSpaceOp, ComponentFilterFlags | Flags>
+    //
+    // Note: We return this object to facilitate operation chaining.
+    template <BilinearFormComponentFilter Flags>
+    auto
+    component_filter()
     {
-      return local_shape_function_kronecker_delta_flag;
+      internal::check_flag_consistency<ComponentFilterFlags | Flags>();
+
+      return BilinearForm<TestSpaceOp,
+                          Functor,
+                          TrialSpaceOp,
+                          ComponentFilterFlags | Flags>(
+        this->get_test_space_operation(),
+        this->get_functor(),
+        this->get_trial_space_operation());
     }
 
     // Indicate that the contribution that comes from this form
     // only participates when the shape function components of the
     // test function and trial solution spaces are identical.
     //
+    // The return type is equivalent to
+    // BilinearForm<TestSpaceOp, Functor, TrialSpaceOp, ComponentFilterFlags | BilinearFormComponentFilter::local_shape_function_kronecker_delta>
+    //
     // Note: We return this object to facilitate operation chaining.
-    BilinearForm &
+    auto
     delta_IJ()
     {
-      local_shape_function_kronecker_delta_flag = true;
-      return *this;
+      return this->template component_filter<
+        BilinearFormComponentFilter::local_shape_function_kronecker_delta>();
     }
 
     // ===== Section: Integration =====
@@ -259,7 +422,6 @@ namespace WeakForms
     const TrialSpaceOp trial_space_op;
     bool local_contribution_symmetry_flag; // Indicate whether or not this local
                                            // contribution is a symmetric one
-    bool local_shape_function_kronecker_delta_flag;
   };
 
 } // namespace WeakForms
@@ -380,8 +542,12 @@ namespace WeakForms
 
 namespace WeakForms
 {
-  template <typename TestSpaceOp, typename Functor, typename TrialSpaceOp>
-  struct is_bilinear_form<BilinearForm<TestSpaceOp, Functor, TrialSpaceOp>>
+  template <typename TestSpaceOp,
+            typename Functor,
+            typename TrialSpaceOp,
+            BilinearFormComponentFilter ComponentFilter>
+  struct is_bilinear_form<
+    BilinearForm<TestSpaceOp, Functor, TrialSpaceOp, ComponentFilter>>
     : std::true_type
   {};
 
