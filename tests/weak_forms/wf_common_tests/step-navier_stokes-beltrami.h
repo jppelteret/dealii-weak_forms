@@ -1890,7 +1890,7 @@ namespace StepNavierStokesBeltrami
               << "% |\n|      average time per assembly:     |";
     std::cout.width(10);
     std::cout.precision(3);
-    std::cout << comptimes(1) / compcounter(1)
+    std::cout << comptimes(1) / (compcounter(1) > 0.0 ? compcounter(1) : 1.0)
               << " s  |     --- |\n|    Solving ";
     std::cout.width(7);
     std::cout << compcounter(2) << " linear systems   |";
@@ -1910,7 +1910,7 @@ namespace StepNavierStokesBeltrami
               << "% |\n|      average time per solve:        |";
     std::cout.width(10);
     std::cout.precision(3);
-    std::cout << comptimes(2) / compcounter(2)
+    std::cout << comptimes(2) / (compcounter(2) > 0.0 ? compcounter(2) : 1.0)
               << " s  |     --- |\n|    Manipulations, output, error cal |";
     std::cout.width(10);
     std::cout.precision(3);
