@@ -224,8 +224,7 @@ namespace StepNavierStokesBeltrami
             const unsigned int component_i =
               this->fe.system_to_component_index(i).first;
             if (component_i < dim && this->stabilization < 2)
-              {
-              } /* end case for velocity dofs w/o stabilization */
+              {} /* end case for velocity dofs w/o stabilization */
             else if (component_i < dim)
               {
                 for (unsigned int j = 0; j < dofs_per_cell; ++j)
@@ -316,7 +315,7 @@ namespace StepNavierStokesBeltrami
     const auto grad_test_v = test_ss_v.gradient();
     const auto div_test_v  = test_ss_v.divergence();
     const auto test_p      = test_ss_p.value();
-    const auto grad_test_p      = test_ss_p.gradient();
+    const auto grad_test_p = test_ss_p.gradient();
 
     // Trial solution (subspaced)
     const auto trial_ss_v   = trial[subspace_extractor_v];
@@ -378,7 +377,8 @@ namespace StepNavierStokesBeltrami
     //           fe_values.inverse_jacobian(q_point);
     //         const Tensor<2, dim> g_matrix =
     //           inverse_jacobian * transpose(inverse_jacobian);
-    //         const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones;
+    //         const Tensor<1, dim> g_vector = transpose(inverse_jacobian) *
+    //         ones;
 
     //         double uGu = 0., GG = 0., gg = 0.;
     //         for (unsigned int d = 0; d < dim; d++)
@@ -392,9 +392,10 @@ namespace StepNavierStokesBeltrami
     //           }
 
     //         return 1. / std::sqrt(
-    //                       4. * this->time_step_weight * this->time_step_weight +
-    //                       uGu +
-    //                       constant_inverse_estimate * this->nu * this->nu * GG);
+    //                       4. * this->time_step_weight *
+    //                       this->time_step_weight + uGu +
+    //                       constant_inverse_estimate * this->nu * this->nu *
+    //                       GG);
     //       },
     //       UpdateFlags::update_inverse_jacobians);
 
@@ -423,7 +424,8 @@ namespace StepNavierStokesBeltrami
     //           fe_values.inverse_jacobian(q_point);
     //         const Tensor<2, dim> g_matrix =
     //           inverse_jacobian * transpose(inverse_jacobian);
-    //         const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones;
+    //         const Tensor<1, dim> g_vector = transpose(inverse_jacobian) *
+    //         ones;
 
     //         double uGu = 0., GG = 0., gg = 0.;
     //         for (unsigned int d = 0; d < dim; d++)
@@ -438,9 +440,11 @@ namespace StepNavierStokesBeltrami
 
     //         const double tau_supg =
     //           1. /
-    //           std::sqrt(4. * this->time_step_weight * this->time_step_weight +
+    //           std::sqrt(4. * this->time_step_weight * this->time_step_weight
+    //           +
     //                     uGu +
-    //                     constant_inverse_estimate * this->nu * this->nu * GG);
+    //                     constant_inverse_estimate * this->nu * this->nu *
+    //                     GG);
 
     //         if (tau_supg > 1e-8 && gg > 1e-8)
     //           return 1. / (tau_supg * gg);
@@ -449,91 +453,103 @@ namespace StepNavierStokesBeltrami
     //       },
     //       UpdateFlags::update_inverse_jacobians);
 
-    const std::string element_name  = this->fe.base_element(0).get_name();
-    const unsigned int degree = atoi(&(element_name[8]));
-    const double constant_inverse_estimate =
+    const std::string  element_name = this->fe.base_element(0).get_name();
+    const unsigned int degree       = atoi(&(element_name[8]));
+    const double       constant_inverse_estimate =
       (degree == 1) ? 24. : (244. + std::sqrt(9136.)) / 3.;
-          // Tensor<1, dim> ones;
-          // for (unsigned int d = 0; d < dim; ++d)
-          //   ones[d] = 1.;
+    // Tensor<1, dim> ones;
+    // for (unsigned int d = 0; d < dim; ++d)
+    //   ones[d] = 1.;
 
-    const auto ones = constant_tensor<dim>([](){Tensor<1, spacedim> ones;
-          for (unsigned int d = 0; d < spacedim; ++d)
-            ones[d] = 1.; return ones;}(), "ones", "\\mathbf{e}^{1}");
+    const auto ones = constant_tensor<dim>(
+      []()
+      {
+        Tensor<1, spacedim> ones;
+        for (unsigned int d = 0; d < spacedim; ++d)
+          ones[d] = 1.;
+        return ones;
+      }(),
+      "ones",
+      "\\mathbf{e}^{1}");
 
-    // const auto e_k = TensorFunctor<1,spacedim>("e_k", "\\mathbf{e}^{k}").template value<double, dim>(
+    // const auto e_k = TensorFunctor<1,spacedim>("e_k",
+    // "\\mathbf{e}^{k}").template value<double, dim>(
     //   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
-    //         { 
+    //         {
     //         const unsigned int component_k =
     //           fe_values.get_fe().system_to_component_index(k).first;
     //           return ; }
     // );
-    
-    const auto          tau_supg = ScalarCacheFunctor ("tau_supg",
-    "\\tau^{\\text{supg}}").template value<double, dim, spacedim>(
-      [this, subspace_extractor_v,
-      constant_inverse_estimate](MeshWorker::ScratchData<dim, spacedim>
-      &scratch_data,
-         const std::vector<SolutionExtractionData<dim, spacedim>>
-           &                solution_extraction_data,
-         const unsigned int q_point)
-      {
-    const Tensor<1, dim> velocity =
-    scratch_data.get_values(solution_extraction_data[solution_index_v].solution_name,
-                                   subspace_extractor_v.extractor)[q_point];
 
-          const FEValuesBase<dim> &fe_values =
-          scratch_data.get_current_fe_values(); const Tensor<2, dim>
-          inverse_jacobian = fe_values.inverse_jacobian(q_point); const
-          Tensor<2, dim> g_matrix =
-            inverse_jacobian * transpose(inverse_jacobian);
+    const auto tau_supg =
+      ScalarCacheFunctor("tau_supg", "\\tau^{\\text{supg}}")
+        .template value<double, dim, spacedim>(
+          [this, subspace_extractor_v, constant_inverse_estimate](
+            MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                solution_extraction_data,
+            const unsigned int q_point)
+          {
+            const Tensor<1, dim> velocity = scratch_data.get_values(
+              solution_extraction_data[solution_index_v].solution_name,
+              subspace_extractor_v.extractor)[q_point];
 
-          double uGu = 0., GG = 0.;
-          for (unsigned int d = 0; d < dim; d++)
-            {
-              for (unsigned int e = 0; e < dim; e++)
-                {
-                  uGu += velocity[d] * g_matrix[d][e] * velocity[e];
-                  GG += g_matrix[d][e] * g_matrix[d][e];
-                }
-            }
+            const FEValuesBase<dim> &fe_values =
+              scratch_data.get_current_fe_values();
+            const Tensor<2, dim> inverse_jacobian =
+              fe_values.inverse_jacobian(q_point);
+            const Tensor<2, dim> g_matrix =
+              inverse_jacobian * transpose(inverse_jacobian);
 
-          return
-            1. / std::sqrt(4. * this->time_step_weight *
-            this->time_step_weight + uGu +
-                           constant_inverse_estimate * this->nu * this->nu *
-                           GG);
-      },
-      UpdateFlags::update_inverse_jacobians);
+            double uGu = 0., GG = 0.;
+            for (unsigned int d = 0; d < dim; d++)
+              {
+                for (unsigned int e = 0; e < dim; e++)
+                  {
+                    uGu += velocity[d] * g_matrix[d][e] * velocity[e];
+                    GG += g_matrix[d][e] * g_matrix[d][e];
+                  }
+              }
 
-    const auto          tau_lsic = ScalarCacheFunctor ("tau_lsic",
-    "\\tau^{\\text{lsic}}").template value<double, dim, spacedim>(
-      [tau_supg, ones](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-         const std::vector<SolutionExtractionData<dim, spacedim>>
-           &                solution_extraction_data,
-         const unsigned int q_point)
-      {
-          const FEValuesBase<dim> &fe_values =
-          scratch_data.get_current_fe_values(); const Tensor<2, dim>
-          inverse_jacobian = fe_values.inverse_jacobian(q_point);
-          const Tensor<1, dim> g_vector = transpose(inverse_jacobian) * ones.template operator()<double>(
-                fe_values)[q_point];
+            return 1. / std::sqrt(
+                          4. * this->time_step_weight * this->time_step_weight +
+                          uGu +
+                          constant_inverse_estimate * this->nu * this->nu * GG);
+          },
+          UpdateFlags::update_inverse_jacobians);
 
-          double gg = 0.;
-          for (unsigned int d = 0; d < dim; d++)
-            {
-              gg += g_vector[d] * g_vector[d];
-            }
+    const auto tau_lsic =
+      ScalarCacheFunctor("tau_lsic", "\\tau^{\\text{lsic}}")
+        .template value<double, dim, spacedim>(
+          [tau_supg,
+           ones](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &                solution_extraction_data,
+                 const unsigned int q_point)
+          {
+            const FEValuesBase<dim> &fe_values =
+              scratch_data.get_current_fe_values();
+            const Tensor<2, dim> inverse_jacobian =
+              fe_values.inverse_jacobian(q_point);
+            const Tensor<1, dim> g_vector =
+              transpose(inverse_jacobian) *
+              ones.template operator()<double>(fe_values)[q_point];
 
-          const double val_tau_supg = tau_supg.template operator()<double>(
-                scratch_data, solution_extraction_data)[q_point];
+            double gg = 0.;
+            for (unsigned int d = 0; d < dim; d++)
+              {
+                gg += g_vector[d] * g_vector[d];
+              }
 
-          if (val_tau_supg > 1e-8 && gg > 1e-8)
-            return 1. / (val_tau_supg * gg);
-          else
-            return 1.;
-      },
-      UpdateFlags::update_inverse_jacobians);
+            const double val_tau_supg = tau_supg.template operator()<double>(
+              scratch_data, solution_extraction_data)[q_point];
+
+            if (val_tau_supg > 1e-8 && gg > 1e-8)
+              return 1. / (val_tau_supg * gg);
+            else
+              return 1.;
+          },
+          UpdateFlags::update_inverse_jacobians);
 
 
     // Assembly
@@ -557,25 +573,30 @@ namespace StepNavierStokesBeltrami
       {
         if (this->stabilization > 3)
           {
-            // const double u_grad_phi_k = velocity * fe_values.shape_grad(k, q) * weight_sqrt;
-            // stab_grad_phi[k][q][component_k] += u_grad_phi_k - residual * fe_values.shape_grad(k, q);
-            // for (unsigned int d = 0; d < dim; ++d)
+            // const double u_grad_phi_k = velocity * fe_values.shape_grad(k, q)
+            // * weight_sqrt; stab_grad_phi[k][q][component_k] += u_grad_phi_k -
+            // residual * fe_values.shape_grad(k, q); for (unsigned int d = 0; d
+            // < dim; ++d)
             //   stab_grad_phi[k][q][d] +=
             //     fe_values.shape_grad(k, q) * velocity * weight_sqrt;
             // stab_grad_phi[k][q] *= tau_supg_sqrt;
           }
 
         // const auto stab_grad_test_v = grad_test_v;
-        // assembler -= linear_form(stab_grad_test_v, tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
+        // assembler -= linear_form(stab_grad_test_v,
+        // tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
       }
 
     // Pressure
     if (this->stabilization >= 2 && this->stabilization % 2 != 0)
-    {
-      // stab_grad_phi[k][q] = fe_values.shape_grad(k, q) * weight_sqrt * tau_supg_sqrt;
+      {
+        // stab_grad_phi[k][q] = fe_values.shape_grad(k, q) * weight_sqrt *
+        // tau_supg_sqrt;
 
-      assembler -= linear_form(grad_test_p, tau_supg*(rhs_coeff.value(rhs) + v_t1)).dV();
-    }
+        assembler -=
+          linear_form(grad_test_p, tau_supg * (rhs_coeff.value(rhs) + v_t1))
+            .dV();
+      }
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
