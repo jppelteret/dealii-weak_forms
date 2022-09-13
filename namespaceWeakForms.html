@@ -262,11 +262,9 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96">form_components_default</a> = 0, 
 <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d">multiplicity_I</a> = 0x0001, 
 <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d">multiplicity_J</a> = 0x0002, 
-<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8a40a6051a8a98cff6d5395cef34e94e">dof_I_component_i</a> = 0x0004, 
+<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6">dof_I_component_j</a> = 0x0008, 
 <br />
-&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6">dof_I_component_j</a> = 0x0008, 
-<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a8d56c5d28292ad64b0978eda61d01e73">dof_J_component_i</a> = 0x0010, 
-<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce">dof_J_component_j</a> = 0x0020, 
+&#160;&#160;<a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce">dof_J_component_j</a> = 0x0020, 
 <a class="el" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b">local_shape_function_kronecker_delta</a> = 0x0040
 <br />
  }</td></tr>
@@ -435,18 +433,38 @@ template&lt;int dim&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>A set of filters that are applied during the assembly process for bilinear forms.</p>
+<p>These filters are used to skip some assembly contributions, or to extract certain components of vectorial or tensorial shape functions. To understand what these filters are to do, it is helpful to first define some notation:</p><ul>
+<li><code>I</code> and <code>J</code> refer to the local degree of freedom indices respectively associated with the test and trial shape functions.</li>
+<li><code>component_i</code> and <code>component_j</code> are, respectively, the index of the <code>I</code>th and <code>J</code>th shape functions within the finite element (system). The component of the <code>K</code>th shape function would correspond to <code>finite_element.system_to_component_index(K).first;</code></li>
+<li><code>multiplicity_I</code> and <code>multiplicity_J</code> are, respectively, the copy of the base finite element within the finite element (system) that corresponds with the <code>I</code>th and <code>J</code>th degree of freedom. The multiplicity of the <code>K</code>th shape function is the equivalent to what is returned by <code>finite_element.system_to_base_index(K).first.second;</code>.</li>
+</ul>
+<p>Also refer to the introduction of the deal.II <a href="https://dealii.org/developer/doxygen/deal.II/classFiniteElement.html">FiniteElement</a> class for further insights. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96"></a>form_components_default&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d"></a>multiplicity_I&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d"></a>multiplicity_J&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a8a40a6051a8a98cff6d5395cef34e94e"></a>dof_I_component_i&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6"></a>dof_I_component_j&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a8d56c5d28292ad64b0978eda61d01e73"></a>dof_J_component_i&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce"></a>dof_J_component_j&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b"></a>local_shape_function_kronecker_delta&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96"></a>form_components_default&#160;</td><td class="fielddoc"><p>Apply no filters.</p>
+<dl class="section note"><dt>Note</dt><dd>The use of this filter alone results in optimum performance code being executed by the assembler. </dd></dl>
+</td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a54ecd6b612d5386ff36b545c081c2c1d"></a>multiplicity_I&#160;</td><td class="fielddoc"><p>Of a vectorial or tensorial basis function result (i.e. fully evaluated shape function operator), extract its "multiplicity index" component that is associated with the <code>I</code>th local shape function.</p>
+<dl class="section note"><dt>Note</dt><dd>This extraction operation always occurs in preference to others. So if it is combined with other filters acting on index <code>I</code>, then the extraction of this component of the (tensorial) shape function operation result will happen first. </dd></dl>
+</td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a52eda1df3a1fe00eb1fbc8d4693c8f7d"></a>multiplicity_J&#160;</td><td class="fielddoc"><p>Of a vectorial or tensorial basis function result (i.e. fully evaluated shape function operator), extract its "multiplicity index" component that is associated with the <code>J</code>th local shape function.</p>
+<dl class="section note"><dt>Note</dt><dd>This extraction operation always occurs in preference to others. So if it is combined with other filters acting on index <code>J</code>, then the extraction of this component of the (tensorial) shape function operation result will happen first. </dd></dl>
+</td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4acc3c6969be48c9763f101891745480e6"></a>dof_I_component_j&#160;</td><td class="fielddoc"><p>Of a vectorial or tensorial basis function result (i.e. the fully evaluated test shape function operator), extract its "component index" component that is associated with the <code>I</code>th local shape function. This is the equivalent of computing the inner product \( \left[ \bullet \right]^{I} \cdot \mathbf{e}_{i} \) where \( \left[ \bullet \right]^{I} \) denotes the qualified test shape function operator and \( \mathbf{e}_{i} \) is the @f i $ \(th Cartesian coordinate direction. @note The use of this filter will result in a slight performance penalty, as it will inhibit certain optimisations from being performed during the assembly process. @warning This can only be called if all shape functions in the finite element (system) are primitive. */ dof_I_component_i = 0x0004, /** Of a vectorial or tensorial basis function result (i.e. the fully evaluated test shape function operator), extract its &quot;component index&quot; component that is associated with the `J`th local shape function. This is the equivalent of computing the inner product \) \left[ \bullet \right]^{I} \cdot \mathbf{e}_{j} \( where \) \left[ \bullet \right]^{I} \( denotes the qualified test shape function operator and \) \mathbf{e}_{j} \( is the @f j $\)th Cartesian coordinate direction.</p>
+<p>Notice that, for this filter, there is a cross-indexing of the shape function operator and the component that is to be extracted.</p>
+<dl class="section note"><dt>Note</dt><dd>The use of this filter will result in a slight performance penalty, as it will inhibit certain optimisations from being performed during the assembly process.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This can only be called if all shape functions in the finite element (system) are primitive. </dd></dl>
+</td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4ab22689254b0cc55000ab2509c90efcce"></a>dof_J_component_j&#160;</td><td class="fielddoc"><p>Of a vectorial or tensorial basis function result (i.e. the fully evaluated trial shape function operator), extract its "component index" component that is associated with the <code>I</code>th local shape function. This is the equivalent of computing the inner product \( \left[ \bullet \right]^{J} \cdot \mathbf{e}_{i} \) where \( \left[ \bullet \right]^{J} \) denotes the qualified trial shape function operator and \( \mathbf{e}_{i} \) is the @f i $ \(th Cartesian coordinate direction. Notice that, for this filter, there is a cross-indexing of the shape function operator and the component that is to be extracted. @note The use of this filter will result in a slight performance penalty, as it will inhibit certain optimisations from being performed during the assembly process. @warning This can only be called if all shape functions in the finite element (system) are primitive. */ dof_J_component_i = 0x0010, /** Of a vectorial or tensorial basis function result (i.e. the fully evaluated trial shape function operator), extract its &quot;component index&quot; component that is associated with the `J`th local shape function. This is the equivalent of computing the inner product \) \left[ \bullet \right]^{J} \cdot \mathbf{e}_{j} \( where \) \left[ \bullet \right]^{J} \( denotes the qualified trial shape function operator and \) \mathbf{e}_{j} \( is the @f j $\)th Cartesian coordinate direction.</p>
+<dl class="section note"><dt>Note</dt><dd>The use of this filter will result in a slight performance penalty, as it will inhibit certain optimisations from being performed during the assembly process.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This can only be called if all shape functions in the finite element (system) are primitive. </dd></dl>
+</td></tr>
+<tr><td class="fieldname"><a id="acaa0a4172ad5893b342da4aae68fb3a4a286506621645e37af87ab00331615d9b"></a>local_shape_function_kronecker_delta&#160;</td><td class="fielddoc"><p>Skip all contributions for which the shape function component is not equal for <code>component_i</code> and <code>component_j</code> of the <code>I</code>th and <code>J</code>th degrees of freedom. That is to say, that the associated Cartesian coordinate directions \( \mathbf{e}_{i} \) and \( \mathbf{e}_{j} \) are identical.</p>
+<dl class="section note"><dt>Note</dt><dd>If used in isolation, then use of this filter still results in optimum performance code being executed by the assembler. </dd></dl>
+</td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00040">40</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00063">63</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -523,7 +541,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00053">53</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00186">186</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -561,7 +579,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00061">61</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00194">194</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -599,7 +617,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00069">69</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00202">202</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -637,7 +655,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00077">77</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00210">210</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -665,7 +683,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00085">85</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00218">218</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -693,7 +711,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00091">91</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00224">224</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -721,7 +739,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00097">97</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00230">230</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -749,7 +767,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00108">108</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00241">241</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -777,7 +795,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00123">123</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00256">256</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -805,7 +823,7 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00138">138</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00271">271</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -843,7 +861,7 @@ template&lt;typename TestSpaceOp , typename Functor , typename TrialSpaceOp , ty
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00453">453</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00586">586</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -881,7 +899,7 @@ template&lt;typename TestSpaceOp , typename ScalarType , typename TrialSpaceOp ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00470">470</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00603">603</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -919,7 +937,7 @@ template&lt;typename TestSpaceOp , int rank, int spacedim, typename ScalarType ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00490">490</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00623">623</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -957,7 +975,7 @@ template&lt;typename TestSpaceOp , int rank, int spacedim, typename ScalarType ,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00509">509</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00642">642</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
@@ -989,7 +1007,7 @@ template&lt;typename TestSpaceOp , typename TrialSpaceOp &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00525">525</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bilinear__forms_8h_source.html#l00658">658</a> of file <a class="el" href="bilinear__forms_8h_source.html">bilinear_forms.h</a>.</p>
 
 </div>
 </div>
