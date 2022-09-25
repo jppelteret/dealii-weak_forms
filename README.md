@@ -76,20 +76,19 @@ Details as to exactly what the abstraction level is, and how it differs to the
   to be implemented as a (scalar) energy functional or the expression of
   residuals alone. The AD/SD frameworks permit efficient derivative computations
   derived from provided quantities.
+- The datatype for calculations (`float`, `double`, `std::complex<...>`) is
+  chosen only at assembly time and is, in principle, generic. This permits the
+  implementation of complex-valued forms.
 - Volume, boundary and interface integration
   - Assembly loops, assembling cell or face matrix and/or vector contributions
     into a global linear system
   - Summation of quantities (like the integral of a field value)
+- Supports the hp finite element method
 - Supports MPI and serial computing concepts
 - Automatically implements multi-threading along with `SIMD` vectorisation
   (when available)
 
 ## Wishlist and work in progress
-- Currently only supports non-hp finite element methods, but
-  [hp-FEM support is imminent](https://github.com/dealii/dealii/pull/13181)
-- The datatype for calculations (`float`, `double`, `std::complex<...>`) is,
-  chosen only at assembly time and is in principle, generic. 
-  This feature, however, needs to be tested more thoroughly.
 - Performance improvements for the self-linearising forms is an ongoing area of
   interest and research. 
 - A matrix-free implementation will be investigated in the future.
