@@ -20,7 +20,6 @@ Author: Jean-Paul Pelteret, 2020 - 2022
 - [Benchmarks](#benchmarks)
 - [Building the library](#building-the-library)
 - [Citing the library](#citing-the-library)
-- [Continuous integration status](#continuous-integration-status)
 - [Docker images](#docker-images)
    - [Building the image](#building-the-image) 
    - [Running the image](#running-the-image) 
@@ -128,14 +127,14 @@ the analysis done here and following any guidance given by the author.
 ----------------------
 This library requires `deal.II` version `9.4.0` (at the time of writing, this
 means the developer version), and a `C++14` compliant compiler (the minimum
-requirement to build `deal.II`). At the moment it is required that `deal.II`
-is built with the following dependencies:
+requirement to build `deal.II`). 
+
+In order to use the automatic or symbolic differentiation facilities, it is
+required that `deal.II` is built with the one or more of the following optional
+dependencies:
 -  ADOL-C
 -  Trilinos (with Sacado)
 -  SymEngine
-
-Since interaction with these libraries is actually optional, at some point in 
-the future these requirements will be removed.
 
 This project uses `CMake` as a build generator. The code block below encapsulates
 the various options that can be passed on `CMake` to configure the project before
@@ -156,9 +155,9 @@ cmake \
 <path_to_weak_forms_source>
 ```
 
-To date, this library has only been built and tested on `MacOS` with the `Clang`
-compiler. In the future, the `GCC` compiler and the `Linux` operating system will
-be tested as well.
+This library has only been built and tested on `MacOS` with the `Clang`
+compiler, as well as the `GCC` compiler on a `Linux` operating system.
+`Windows` and/or `MSVC` are not explicitly supported.
 
 ## Dependency recommendations
 -----------------------------
@@ -254,12 +253,6 @@ authors of those specific areas of work.
     Year    = {2018}
   }
   ```
-
-# Continuous integration status
--------------------------------
-| System | Status |
-|--------|--------|
-| Linux  | ![Build Status](https://github.com/jppelteret/dealii-weak_forms/workflows/github-linux/badge.svg) |
 
 # Docker images
 ---------------
