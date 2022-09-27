@@ -1391,6 +1391,8 @@ namespace WeakForms
   }   // namespace Operators
 
 
+#  ifndef DOXYGEN
+
   inline void
   assertOptimizerSettings(
     const enum Differentiation::SD::OptimizerType     optimization_method,
@@ -1410,6 +1412,8 @@ namespace WeakForms
       ExcMessage(
         "The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used."));
   }
+
+#  endif // DOXYGEN
 
 
 #endif // DEAL_II_WITH_SYMENGINE

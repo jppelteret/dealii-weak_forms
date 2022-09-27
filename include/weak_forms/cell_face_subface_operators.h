@@ -37,6 +37,8 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+#ifndef DOXYGEN
+
   /**
    * Exception denoting that a class requires some specialization
    * in order to be used.
@@ -46,6 +48,7 @@ namespace WeakForms
     "The input FEValuesBase object cannot be cast to an  FEFaceValuesBase "
     "object. This is required for attributes on a cell face to be retrieved.");
 
+#endif // DOXYGEN
 
 
   /* --------------- Cell face and cell subface operators --------------- */

@@ -214,6 +214,9 @@ namespace WeakForms
     return f1;
   }
 
+
+#ifndef DOXYGEN
+
   constexpr inline bool
   has_no_component_filter(const BilinearFormComponentFilter &flags)
   {
@@ -281,6 +284,8 @@ namespace WeakForms
 
     return out;
   }
+
+#endif // DOXYGEN
 
 
   namespace internal
