@@ -342,10 +342,14 @@ namespace WeakForms
             typename IntegralType,
             typename = typename std::enable_if<is_valid_integration_domain<
               typename std::decay<IntegralType>::type>::value>::type>
+#ifndef DOXYGEN
   WeakForms::Operators::SymbolicOp<IntegralType,
                                    WeakForms::Operators::SymbolicOpCodes::value,
                                    ScalarType,
                                    Integrand>
+#else
+  auto
+#endif // DOXYGEN
   integrate(const Integrand &integrand, const IntegralType &integral)
   {
     return integral.template integrate<ScalarType>(integrand);
