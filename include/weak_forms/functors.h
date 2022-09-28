@@ -66,6 +66,16 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A base class for other objects that represent functors.
+   *
+   * Functors are classes that act like a function. In this context, these
+   * functors are to be able to return a value of specific rank at any point in
+   * space (be it in a bulk material, on a body's boundary, or on an interface).
+   *
+   * @tparam rank_ The (tensorial) rank of the return type that this
+   * object computes.
+   */
   template <int rank_>
   class Functor
   {
@@ -119,6 +129,15 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A functor that returns scalar values upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at any numerical
+   * quadrature point. The output of these functions are of scalar type.
+   * Since the definition of the evaluation call is provided through a
+   * `std::function`, the computation pipeline can be made dependent on user
+   * data if it is passed in through the capture clause of a lambda function.
+   */
   class ScalarFunctor : public Functor<0>
   {
     using Base = Functor<0>;
@@ -171,6 +190,21 @@ namespace WeakForms
   };
 
 
+
+  /**
+   * @brief A functor that returns a tensor upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at any numerical
+   * quadrature point. The output of these functions are a tensorial type of
+   * the given @p rank.
+   * Since the definition of the evaluation call is provided through a
+   * `std::function`, the computation pipeline can be made dependent on user
+   * data if it is passed in through the capture clause of a lambda function.
+   *
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the tensor that is returned
+   * upon evaluation.
+   */
   template <int rank, int spacedim>
   class TensorFunctor : public Functor<rank>
   {
@@ -228,6 +262,20 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A functor that returns a symmetric tensor upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at any numerical
+   * quadrature point. The output of these functions are a (symmetric) tensorial
+   * type of the given @p rank.
+   * Since the definition of the evaluation call is provided through a
+   * `std::function`, the computation pipeline can be made dependent on user
+   * data if it is passed in through the capture clause of a lambda function.
+   *
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the tensor that is returned
+   * upon evaluation.
+   */
   template <int rank, int spacedim>
   class SymmetricTensorFunctor : public Functor<rank>
   {
@@ -286,7 +334,18 @@ namespace WeakForms
 
 
 
-  // Wrap up a scalar dealii::FunctionBase as a functor
+  /**
+   * @brief A functor that acts as a wrapper for a scalar deal.II function.
+   *
+   * This class wraps deal.II and user functions that are derived from a
+   * <a href="linkURL">`dealii::Function`</a>. As such, they are able to
+   * provide both the value and gradients of functions that implement these
+   * methods.
+   *
+   * @tparam spacedim The spatial dimension in which this function is being
+   * evaluated. (Although its not vital information for the value call itself,
+   * this is required in order to compute the gradient of the function.)
+   */
   template <int spacedim>
   class ScalarFunctionFunctor : public Functor<0>
   {
@@ -331,7 +390,19 @@ namespace WeakForms
   };
 
 
-  // Wrap up a tensor dealii::TensorFunction as a functor
+
+  /**
+   * @brief A functor that acts as a wrapper for a tensor-valued deal.II function.
+   *
+   * This class wraps deal.II and user functions that are derived from a
+   * <a href="linkURL">`dealii::TensorFunction`</a>. As such, they are able to
+   * provide both the value and gradients of functions that implement these
+   * methods.
+   *
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the tensor that is returned
+   * upon evaluation.
+   */
   template <int rank, int spacedim>
   class TensorFunctionFunctor : public Functor<rank>
   {
@@ -382,9 +453,19 @@ namespace WeakForms
   };
 
 
+
+  /**
+   * An alias for a functor that returns vector (i.e. rank-1 tensor) values
+   * upon evaluation.
+   */
   template <int dim>
   using VectorFunctor = TensorFunctor<1, dim>;
 
+
+
+  /**
+   * An alias for a functor that wraps a rank-1 deal.II tensor function.
+   */
   template <int dim>
   using VectorFunctionFunctor = TensorFunctionFunctor<1, dim>;
 
@@ -1216,6 +1297,21 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A convenience function that always returns the same constant scalar
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe the value, as well as the ASCII and
+   * LaTeX representation of the value.
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   * @tparam ScalarType The underlying scalar type.
+   * @param value The value to be returned upon evaluation.
+   * @param symbol_ascii The ASCII representation of the value.
+   * @param symbol_latex  The LaTeX representation of the value.
+   * @return auto Returns a symbolic operator based on a ScalarFunctor.
+   */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
   constant_scalar(const ScalarType & value,
@@ -1233,6 +1329,19 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant scalar
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe only the value; the ASCII and LaTeX
+   * representations exactly match the value itself.
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   * @tparam ScalarType The underlying scalar type.
+   * @param value The value to be returned upon evaluation.
+   * @return auto Returns a symbolic operator based on a ScalarFunctor.
+   */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
   constant_scalar(const ScalarType &value)
@@ -1245,6 +1354,22 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant tensor
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe the value, as well as the ASCII and
+   * LaTeX representation of the tensor.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @param symbol_ascii The ASCII representation of the tensor.
+   * @param symbol_latex  The LaTeX representation of the tensor.
+   * @return auto Returns a symbolic operator based on a TensorFunctor.
+   */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
   constant_tensor(const Tensor<rank, spacedim, ScalarType> &value,
@@ -1262,6 +1387,21 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant tensor
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe only the values of the tensor
+   * components; the ASCII and LaTeX representations are a flattened
+   * representation of the tensor.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @return auto Returns a symbolic operator based on a TensorFunctor.
+   */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
   constant_tensor(const Tensor<rank, spacedim, ScalarType> &value)
@@ -1275,6 +1415,21 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant vector
+   * (rank-1 tensor) value upon evaluation.
+   *
+   * This variation allows one to prescribe the value, as well as the ASCII and
+   * LaTeX representation of the vector.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @param symbol_ascii The ASCII representation of the vector.
+   * @param symbol_latex  The LaTeX representation of the vector.
+   * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
+   */
   template <int dim, int spacedim, typename ScalarType>
   auto
   constant_vector(const Tensor<1, spacedim, ScalarType> &value,
@@ -1286,6 +1441,20 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant vector
+   * (rank-1 tensor) value upon evaluation.
+   *
+   * This variation allows one to prescribe only the values of the vector
+   * components; the ASCII and LaTeX representations are a flattened
+   * representation of the vector.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
+   */
   template <int dim, int spacedim, typename ScalarType>
   auto
   constant_vector(const Tensor<1, spacedim, ScalarType> &value)
@@ -1295,6 +1464,22 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant symmetric tensor
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe the value, as well as the ASCII and
+   * LaTeX representation of the symmetric tensor.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam rank The rank of the symmetric tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @param symbol_ascii The ASCII representation of the tensor.
+   * @param symbol_latex  The LaTeX representation of the tensor.
+   * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
+   */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
   constant_symmetric_tensor(
@@ -1314,6 +1499,21 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A convenience function that always returns the same constant symmetric tensor
+   * value upon evaluation.
+   *
+   * This variation allows one to prescribe only the values of the symmetric
+   * tensor components; the ASCII and LaTeX representations are a flattened
+   * representation of the symmetric tensor.
+   *
+   * @tparam dim The dimension in which the tensor is being evaluated.
+   * @tparam rank The rank of the symmetric tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
+   * @tparam ScalarType The underlying scalar type for each component of the tensor.
+   * @param value The value to be returned upon evaluation.
+   * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
+   */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
   constant_symmetric_tensor(

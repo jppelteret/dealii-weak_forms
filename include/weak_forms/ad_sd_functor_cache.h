@@ -38,11 +38,12 @@ WEAK_FORMS_NAMESPACE_OPEN
 namespace WeakForms
 {
   /**
-   * @brief Persistent data for AD and SD calculations. The idea is that this
-   * cache is initialised and stored in a user class, so that is not created
-   * and destroyed each time the assembly loop is performed. That way we can
-   * perform expensive calculations only once per simulation, rather than
-   * each time the assembly loop occurs.
+   * @brief Persistent data for AD and SD calculations.
+   *
+   * The idea is that this cache is initialised and stored in a user class,
+   * so that is not created  and destroyed each time the assembly loop is
+   * performed. That way we can perform expensive calculations only once per
+   * simulation, rather than each time the assembly loop occurs.
    */
   class AD_SD_Functor_Cache
   {

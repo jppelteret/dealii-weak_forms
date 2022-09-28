@@ -57,6 +57,18 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A functor that returns (field-dependent) scalar values upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at one or more
+   * numerical quadrature point at a time. The output of these functions are of
+   * scalar type, and are permitted to be a function of one or more field
+   * solutions. That the extraction of the field solution is an expensive
+   * operation, its values are cached to prevent repeated computation. Since the
+   * definition of the evaluation call is provided through a `std::function`,
+   * the computation pipeline can be made dependent on user data if it is passed
+   * in through the capture clause of a lambda function.
+   */
   class ScalarCacheFunctor : public Functor<0>
   {
     using Base = Functor<0>;
@@ -98,6 +110,23 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A functor that returns (field-dependent) tensor values upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at one or more
+   * numerical quadrature point at a time. The output of these functions are a
+   * tensorial type of
+   * the given @p rank, and are permitted to be a function of one or more field solutions.
+   * That the extraction of the field solution is an expensive operation, its
+   * values are cached to prevent repeated computation. Since the definition of
+   * the evaluation call is provided through a `std::function`, the computation
+   * pipeline can be made dependent on user data if it is passed in through the
+   * capture clause of a lambda function.
+   *
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the tensor that is returned
+   * upon evaluation.
+   */
   template <int rank, int spacedim>
   class TensorCacheFunctor : public Functor<rank>
   {
@@ -146,6 +175,23 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A functor that returns (field-dependent) symmetric tensor values upon evaluation.
+   *
+   * This class wraps generic functions that can be evaluated at one or more
+   * numerical quadrature point at a time. The output of these functions are a
+   * (symmetric) tensorial type of
+   * the given @p rank, and are permitted to be a function of one or more field solutions.
+   * That the extraction of the field solution is an expensive operation, its
+   * values are cached to prevent repeated computation. Since the definition of
+   * the evaluation call is provided through a `std::function`, the computation
+   * pipeline can be made dependent on user data if it is passed in through the
+   * capture clause of a lambda function.
+   *
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the tensor that is returned
+   * upon evaluation.
+   */
   template <int rank, int spacedim>
   class SymmetricTensorCacheFunctor : public Functor<rank>
   {
@@ -194,6 +240,10 @@ namespace WeakForms
 
 
 
+  /**
+   * An alias for a cached functor that returns vector (i.e. rank-1 tensor)
+   * values upon evaluation.
+   */
   template <int dim>
   using VectorCacheFunctor = TensorCacheFunctor<1, dim>;
 
