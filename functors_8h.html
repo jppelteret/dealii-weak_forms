@@ -102,16 +102,22 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Functor.html">WeakForms::Functor&lt; rank_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A base class for other objects that represent functors.  <a href="classWeakForms_1_1Functor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1ScalarFunctor.html">WeakForms::ScalarFunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that returns scalar values upon evaluation.  <a href="classWeakForms_1_1ScalarFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1TensorFunctor.html">WeakForms::TensorFunctor&lt; rank, spacedim &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that returns a tensor upon evaluation.  <a href="classWeakForms_1_1TensorFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SymmetricTensorFunctor.html">WeakForms::SymmetricTensorFunctor&lt; rank, spacedim &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that returns a symmetric tensor upon evaluation.  <a href="classWeakForms_1_1SymmetricTensorFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1ScalarFunctionFunctor.html">WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that acts as a wrapper for a scalar deal.II function.  <a href="classWeakForms_1_1ScalarFunctionFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1TensorFunctionFunctor.html">WeakForms::TensorFunctionFunctor&lt; rank, spacedim &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that acts as a wrapper for a tensor-valued deal.II function.  <a href="classWeakForms_1_1TensorFunctionFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1DimPack.html">WeakForms::internal::DimPack&lt; dim_, spacedim_ &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -163,27 +169,35 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a4aab0434f0dc6abdc1b1032a976fe272"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a4aab0434f0dc6abdc1b1032a976fe272"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a4aab0434f0dc6abdc1b1032a976fe272">WeakForms::constant_scalar</a> (const ScalarType &amp;value, const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</td></tr>
+<tr class="memdesc:a4aab0434f0dc6abdc1b1032a976fe272"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant scalar value upon evaluation.  <a href="namespaceWeakForms.html#a4aab0434f0dc6abdc1b1032a976fe272">More...</a><br /></td></tr>
 <tr class="separator:a4aab0434f0dc6abdc1b1032a976fe272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a438768963165239d8cb2156f787497a4"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a438768963165239d8cb2156f787497a4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a438768963165239d8cb2156f787497a4">WeakForms::constant_scalar</a> (const ScalarType &amp;value)</td></tr>
+<tr class="memdesc:a438768963165239d8cb2156f787497a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant scalar value upon evaluation.  <a href="namespaceWeakForms.html#a438768963165239d8cb2156f787497a4">More...</a><br /></td></tr>
 <tr class="separator:a438768963165239d8cb2156f787497a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b985f4612cada863c97eff5804f427f"><td class="memTemplParams" colspan="2">template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a9b985f4612cada863c97eff5804f427f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a9b985f4612cada863c97eff5804f427f">WeakForms::constant_tensor</a> (const Tensor&lt; rank, spacedim, ScalarType &gt; &amp;value, const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</td></tr>
+<tr class="memdesc:a9b985f4612cada863c97eff5804f427f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant tensor value upon evaluation.  <a href="namespaceWeakForms.html#a9b985f4612cada863c97eff5804f427f">More...</a><br /></td></tr>
 <tr class="separator:a9b985f4612cada863c97eff5804f427f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b0881a8be1b214a167b49a4086b8d12"><td class="memTemplParams" colspan="2">template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a0b0881a8be1b214a167b49a4086b8d12"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a0b0881a8be1b214a167b49a4086b8d12">WeakForms::constant_tensor</a> (const Tensor&lt; rank, spacedim, ScalarType &gt; &amp;value)</td></tr>
+<tr class="memdesc:a0b0881a8be1b214a167b49a4086b8d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant tensor value upon evaluation.  <a href="namespaceWeakForms.html#a0b0881a8be1b214a167b49a4086b8d12">More...</a><br /></td></tr>
 <tr class="separator:a0b0881a8be1b214a167b49a4086b8d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62b919bc91e1d9204c2c25b5e46abd64"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a62b919bc91e1d9204c2c25b5e46abd64"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a62b919bc91e1d9204c2c25b5e46abd64">WeakForms::constant_vector</a> (const Tensor&lt; 1, spacedim, ScalarType &gt; &amp;value, const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</td></tr>
+<tr class="memdesc:a62b919bc91e1d9204c2c25b5e46abd64"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant vector (rank-1 tensor) value upon evaluation.  <a href="namespaceWeakForms.html#a62b919bc91e1d9204c2c25b5e46abd64">More...</a><br /></td></tr>
 <tr class="separator:a62b919bc91e1d9204c2c25b5e46abd64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cc1a23ded2d0b676dbc7f0771a62603"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a3cc1a23ded2d0b676dbc7f0771a62603"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a3cc1a23ded2d0b676dbc7f0771a62603">WeakForms::constant_vector</a> (const Tensor&lt; 1, spacedim, ScalarType &gt; &amp;value)</td></tr>
+<tr class="memdesc:a3cc1a23ded2d0b676dbc7f0771a62603"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant vector (rank-1 tensor) value upon evaluation.  <a href="namespaceWeakForms.html#a3cc1a23ded2d0b676dbc7f0771a62603">More...</a><br /></td></tr>
 <tr class="separator:a3cc1a23ded2d0b676dbc7f0771a62603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8c9fa89a4ce12793236437a8b314dfb"><td class="memTemplParams" colspan="2">template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:ac8c9fa89a4ce12793236437a8b314dfb"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#ac8c9fa89a4ce12793236437a8b314dfb">WeakForms::constant_symmetric_tensor</a> (const SymmetricTensor&lt; rank, spacedim, ScalarType &gt; &amp;value, const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</td></tr>
+<tr class="memdesc:ac8c9fa89a4ce12793236437a8b314dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant symmetric tensor value upon evaluation.  <a href="namespaceWeakForms.html#ac8c9fa89a4ce12793236437a8b314dfb">More...</a><br /></td></tr>
 <tr class="separator:ac8c9fa89a4ce12793236437a8b314dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5de8c9d6bf9ce8ab1f30f169202855e9"><td class="memTemplParams" colspan="2">template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a5de8c9d6bf9ce8ab1f30f169202855e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a5de8c9d6bf9ce8ab1f30f169202855e9">WeakForms::constant_symmetric_tensor</a> (const SymmetricTensor&lt; rank, spacedim, ScalarType &gt; &amp;value)</td></tr>
+<tr class="memdesc:a5de8c9d6bf9ce8ab1f30f169202855e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that always returns the same constant symmetric tensor value upon evaluation.  <a href="namespaceWeakForms.html#a5de8c9d6bf9ce8ab1f30f169202855e9">More...</a><br /></td></tr>
 <tr class="separator:a5de8c9d6bf9ce8ab1f30f169202855e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -202,7 +216,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00417">417</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00498">498</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +235,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00688">688</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00769">769</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -240,7 +254,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00807">807</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00888">888</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -259,7 +273,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00845">845</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00926">926</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>

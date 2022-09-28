@@ -1469,36 +1469,40 @@ $(function() {
 <div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;  }   <span class="comment">// namespace Operators</span></div>
 <div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160; </div>
 <div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160; </div>
-<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">void</span></div>
-<div class="line"><a name="l01395"></a><span class="lineno"><a class="line" href="namespaceWeakForms.html#a1374c4faa4fb6c5a928fa9d94256e79c"> 1395</a></span>&#160;  <a class="code" href="namespaceWeakForms.html#a1374c4faa4fb6c5a928fa9d94256e79c">assertOptimizerSettings</a>(</div>
-<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;    <span class="keyword">const</span> <span class="keyword">enum</span> Differentiation::SD::OptimizerType     optimization_method,</div>
-<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;    <span class="keyword">const</span> <span class="keyword">enum</span> Differentiation::SD::OptimizationFlags optimization_flags)</div>
-<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;  {</div>
-<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;    <span class="keywordflow">if</span> (optimization_method != Differentiation::SD::OptimizerType::llvm)</div>
-<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;      <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160; </div>
-<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;    <span class="comment">// Adding this flag doesn&#39;t return any benefit (there&#39;s actualy only some</span></div>
-<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;    <span class="comment">// extra overhead in SymEngine) so let&#39;s not allow it.</span></div>
-<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> use_cse_opt =</div>
-<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;      <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(optimization_flags &amp;</div>
-<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;                       Differentiation::SD::OptimizationFlags::optimize_cse);</div>
-<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;    (void)use_cse_opt;</div>
-<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;    Assert(</div>
-<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;      use_cse_opt == <span class="keyword">false</span>,</div>
-<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;      ExcMessage(</div>
-<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;        <span class="stringliteral">&quot;The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used.&quot;</span>));</div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;  }</div>
-<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160; </div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160; </div>
-<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;<span class="preprocessor">#endif // DEAL_II_WITH_SYMENGINE</span></div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160; </div>
-<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;<span class="preprocessor">#  ifndef DOXYGEN</span></div>
+<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160; </div>
+<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">void</span></div>
+<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;  assertOptimizerSettings(</div>
+<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;    <span class="keyword">const</span> <span class="keyword">enum</span> Differentiation::SD::OptimizerType     optimization_method,</div>
+<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;    <span class="keyword">const</span> <span class="keyword">enum</span> Differentiation::SD::OptimizationFlags optimization_flags)</div>
+<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;  {</div>
+<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;    <span class="keywordflow">if</span> (optimization_method != Differentiation::SD::OptimizerType::llvm)</div>
+<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;      <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160; </div>
+<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;    <span class="comment">// Adding this flag doesn&#39;t return any benefit (there&#39;s actualy only some</span></div>
+<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;    <span class="comment">// extra overhead in SymEngine) so let&#39;s not allow it.</span></div>
+<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">bool</span> use_cse_opt =</div>
+<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;      <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(optimization_flags &amp;</div>
+<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;                       Differentiation::SD::OptimizationFlags::optimize_cse);</div>
+<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;    (void)use_cse_opt;</div>
+<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;    Assert(</div>
+<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;      use_cse_opt == <span class="keyword">false</span>,</div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;      ExcMessage(</div>
+<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;        <span class="stringliteral">&quot;The optimization setting should not include OptimizationFlags::optimize_cse when the LLVM optimizer is used.&quot;</span>));</div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;  }</div>
+<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160; </div>
+<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;<span class="preprocessor">#  endif // DOXYGEN</span></div>
+<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160; </div>
 <div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160; </div>
-<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160; </div>
-<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
-<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160; </div>
+<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;<span class="preprocessor">#endif // DEAL_II_WITH_SYMENGINE</span></div>
+<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160; </div>
+<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
 <div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160; </div>
-<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_ad_sd_functor_internal_h</span></div>
+<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160; </div>
+<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
+<div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160; </div>
+<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160; </div>
+<div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_ad_sd_functor_internal_h</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructWeakForms_1_1SolutionExtractionData_html"><div class="ttname"><a href="structWeakForms_1_1SolutionExtractionData.html">WeakForms::SolutionExtractionData</a></div><div class="ttdef"><b>Definition:</b> <a href="solution__extraction__data_8h_source.html#l00034">solution_extraction_data.h:34</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1bool__pack_html"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1bool__pack.html">WeakForms::Operators::internal::TemplateRestrictions::bool_pack</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00133">ad_sd_functor_internal.h:133</a></div></div>
@@ -1553,7 +1557,6 @@ $(function() {
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionADHelper_html_a4f525c22978c44622990d13fc53eea34"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionADHelper.html#a4f525c22978c44622990d13fc53eea34">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionADHelper::ad_register_independent_variables</a></div><div class="ttdeci">static void ad_register_independent_variables(ADHelperType &amp;ad_helper, MeshWorker::ScratchData&lt; dim, spacedim &gt; &amp;scratch_data, const std::vector&lt; SolutionExtractionData&lt; dim, spacedim &gt;&gt; &amp;solution_extraction_data, const unsigned int q_point, const field_args_t &amp;field_args, const field_extractors_t &amp;field_extractors)</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00327">ad_sd_functor_internal.h:327</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper_html_abdba053cdb9c0e0180b526977aeddcf0"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#abdba053cdb9c0e0180b526977aeddcf0">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper::sd_call_substitution_function</a></div><div class="ttdeci">static Differentiation::SD::types::substitution_map sd_call_substitution_function(const SDSubstitutionFunctionType &amp;substitution_function, const field_values_t&lt; SDNumberType &gt; &amp;symbolic_field_values)</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00760">ad_sd_functor_internal.h:760</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper_html_a4a50be3f0d9afa0b1c5def1284e3a3b6"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1SymbolicOpsSubSpaceFieldSolutionSDHelper.html#a4a50be3f0d9afa0b1c5def1284e3a3b6">WeakForms::Operators::internal::SymbolicOpsSubSpaceFieldSolutionSDHelper::n_operators</a></div><div class="ttdeci">static constexpr int n_operators()</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00715">ad_sd_functor_internal.h:715</a></div></div>
-<div class="ttc" id="anamespaceWeakForms_html_a1374c4faa4fb6c5a928fa9d94256e79c"><div class="ttname"><a href="namespaceWeakForms.html#a1374c4faa4fb6c5a928fa9d94256e79c">WeakForms::assertOptimizerSettings</a></div><div class="ttdeci">void assertOptimizerSettings(const enum Differentiation::SD::OptimizerType optimization_method, const enum Differentiation::SD::OptimizationFlags optimization_flags)</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l01395">ad_sd_functor_internal.h:1395</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_html_a0eaf9bdf747521a48c1d97b2a4776825"><div class="ttname"><a href="namespaceWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions.html#a0eaf9bdf747521a48c1d97b2a4776825">WeakForms::Operators::internal::TemplateRestrictions::are_not_tuples</a></div><div class="ttdeci">all_false&lt; is_tuple&lt; Ts &gt;::value... &gt; are_not_tuples</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00143">ad_sd_functor_internal.h:143</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1EnforceNoDuplicates_html_ab66d297da2825139a43375d4eb44f237"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1EnforceNoDuplicates.html#ab66d297da2825139a43375d4eb44f237">WeakForms::Operators::internal::TemplateRestrictions::EnforceNoDuplicates::value</a></div><div class="ttdeci">static constexpr bool value</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00114">ad_sd_functor_internal.h:114</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1SpaceOpComponentInfo_html_a7e5ab0934bee6fd68ee412669992455e"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1SpaceOpComponentInfo.html#a7e5ab0934bee6fd68ee412669992455e">WeakForms::Operators::internal::SpaceOpComponentInfo::value_type</a></div><div class="ttdeci">typename SymbolicSpaceOp::template value_type&lt; ScalarType &gt; value_type</div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00058">ad_sd_functor_internal.h:58</a></div></div>
