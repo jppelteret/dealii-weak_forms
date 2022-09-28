@@ -153,7 +153,12 @@ class WeakForms::SymmetricTensorFunctor&lt; rank, spacedim &gt;</h3>
 
 <p>A functor that returns a symmetric tensor upon evaluation. </p>
 <p>This class wraps generic functions that can be evaluated at any numerical quadrature point. The output of these functions are a (symmetric) tensorial type of the given <code>rank</code>. Since the definition of the evaluation call is provided through a <code>std::function</code>, the computation pipeline can be made dependent on user data if it is passed in through the capture clause of a lambda function.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> SymmetricTensorFunctor&lt;2, spacedim&gt; s1(<span class="stringliteral">&quot;S1&quot;</span>, <span class="stringliteral">&quot;S1&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> sf1 = s1.template value&lt;double, spacedim&gt;(</div>
+<div class="line">  [](<span class="keyword">const</span> FEValuesBase&lt;dim, spacedim&gt; &amp;, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line">  { <span class="keywordflow">return</span> unit_symmetric_tensor&lt;spacedim&gt;(); });</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">rank</td><td>The rank of the tensor that is returned upon evaluation. </td></tr>
     <tr><td class="paramname">spacedim</td><td>The spatial dimension of the tensor that is returned upon evaluation. </td></tr>
@@ -161,7 +166,7 @@ class WeakForms::SymmetricTensorFunctor&lt; rank, spacedim &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00280">280</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00307">307</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a3b7a16e106149f23cac1ff3768b58e0f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3b7a16e106149f23cac1ff3768b58e0f">&#9670;&nbsp;</a></span>Base</h2>
@@ -185,7 +190,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00283">283</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00310">310</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -205,7 +210,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00292">292</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00319">319</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -225,7 +230,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00297">297</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00324">324</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -245,7 +250,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00302">302</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00329">329</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -286,7 +291,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00304">304</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00331">331</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -367,7 +372,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00318">318</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00345">345</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -409,7 +414,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00327">327</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00354">354</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -457,7 +462,7 @@ template&lt;typename ScalarType , int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01119">1119</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01201">1201</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -601,7 +606,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </div><div class="memdoc">
 <p>Dimension in which this object operates. </p>
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00289">289</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00316">316</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>

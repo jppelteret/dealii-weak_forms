@@ -178,7 +178,7 @@ var searchData=
   ['symbolicopvaluebase_3c_20space_3c_20dim_2c_20spacedim_20_3e_20_3e_1498',['SymbolicOpValueBase&lt; Space&lt; dim, spacedim &gt; &gt;',['../classWeakForms_1_1Operators_1_1SymbolicOpValueBase.html',1,'WeakForms::Operators']]],
   ['symbolicopvaluebase_3c_20subspaceviewstype_20_3e_1499',['SymbolicOpValueBase&lt; SubSpaceViewsType &gt;',['../classWeakForms_1_1Operators_1_1SymbolicOpValueBase.html',1,'WeakForms::Operators']]],
   ['symbolicopvaluebase_3c_20subspaceviewstype_2c_20solution_5findex_20_3e_1500',['SymbolicOpValueBase&lt; SubSpaceViewsType, solution_index &gt;',['../classWeakForms_1_1Operators_1_1SymbolicOpValueBase.html',1,'WeakForms::Operators']]],
-  ['symmetrictensor_1501',['SymmetricTensor',['../structWeakForms_1_1SubSpaceExtractors_1_1SymmetricTensor.html',1,'WeakForms::SubSpaceExtractors::SymmetricTensor&lt; rank_ &gt;'],['../classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html',1,'WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;']]],
+  ['symmetrictensor_1501',['SymmetricTensor',['../classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html',1,'WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;'],['../structWeakForms_1_1SubSpaceExtractors_1_1SymmetricTensor.html',1,'WeakForms::SubSpaceExtractors::SymmetricTensor&lt; rank_ &gt;']]],
   ['symmetrictensorcachefunctor_1502',['SymmetricTensorCacheFunctor',['../classWeakForms_1_1SymmetricTensorCacheFunctor.html',1,'WeakForms']]],
   ['symmetrictensorfunctor_1503',['SymmetricTensorFunctor',['../classWeakForms_1_1SymmetricTensorFunctor.html',1,'WeakForms']]]
 ];

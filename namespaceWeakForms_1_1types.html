@@ -82,10 +82,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:af006ef14802d739da8d38bee98eea946"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#af006ef14802d739da8d38bee98eea946">field_index</a> = unsigned int</td></tr>
+<tr class="memdesc:af006ef14802d739da8d38bee98eea946"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that represents the starting index of a finite element field.  <a href="namespaceWeakForms_1_1types.html#af006ef14802d739da8d38bee98eea946">More...</a><br /></td></tr>
 <tr class="separator:af006ef14802d739da8d38bee98eea946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68eb82bbdffec805f93b630bb434bb35"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#a68eb82bbdffec805f93b630bb434bb35">solution_index</a> = unsigned int</td></tr>
+<tr class="memdesc:a68eb82bbdffec805f93b630bb434bb35"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that represents a user-defined index associated with a solution vector.  <a href="namespaceWeakForms_1_1types.html#a68eb82bbdffec805f93b630bb434bb35">More...</a><br /></td></tr>
 <tr class="separator:a68eb82bbdffec805f93b630bb434bb35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">vectorized_qp_range_t</a> = std_cxx20::ranges::iota_view&lt; unsigned int, unsigned int &gt;</td></tr>
+<tr class="memdesc:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that holds the quadrature point indices upon which some vectorized operation must be performed.  <a href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">More...</a><br /></td></tr>
 <tr class="separator:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
@@ -101,7 +104,10 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00030">30</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p>A type that represents the starting index of a finite element field. </p>
+<p>This makes the most sense in the context problems involving multiple solution fields captured within the same finite element system. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00036">36</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>
@@ -117,7 +123,10 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00032">32</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p>A type that represents a user-defined index associated with a solution vector. </p>
+<p>A field solution operation becomes associated with a solution vector through this index. In the context of time-dependent problems, the <code>solution_index</code> could be used to reference multiple solution histories such that the rate of change of the solution can be reconstructed. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00047">47</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>
@@ -133,7 +142,10 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00035">35</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p>A type that holds the quadrature point indices upon which some vectorized operation must be performed. </p>
+<p>It is, effectively, a mask for the indices of interest when an operator or fields is to be evaluated using some mechanism that is compatible with the SIMD parallel processing paradigm. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00058">58</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>

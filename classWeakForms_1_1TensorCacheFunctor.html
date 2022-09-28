@@ -153,7 +153,17 @@ class WeakForms::TensorCacheFunctor&lt; rank, spacedim &gt;</h3>
 
 <p>A functor that returns (field-dependent) tensor values upon evaluation. </p>
 <p>This class wraps generic functions that can be evaluated at one or more numerical quadrature point at a time. The output of these functions are a tensorial type of the given <code>rank</code>, and are permitted to be a function of one or more field solutions. That the extraction of the field solution is an expensive operation, its values are cached to prevent repeated computation. Since the definition of the evaluation call is provided through a <code>std::function</code>, the computation pipeline can be made dependent on user data if it is passed in through the capture clause of a lambda function.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TensorCacheFunctor&lt;2, dim&gt; T(<span class="stringliteral">&quot;T&quot;</span>, <span class="stringliteral">&quot;T&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> UpdateFlags update_flags = UpdateFlags::update_default;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> T_func =</div>
+<div class="line">  [](MeshWorker::ScratchData&lt;dim, spacedim&gt; &amp;scratch_data,</div>
+<div class="line">     <span class="keyword">const</span> std::vector&lt;SolutionExtractionData&lt;dim, spacedim&gt;&gt;</div>
+<div class="line">       &amp;                solution_extraction_data,</div>
+<div class="line">     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> q_point) { <span class="keywordflow">return</span> Tensor&lt;2, dim&gt;(); };</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> Tc = T.template value&lt;double, dim&gt;(T_func, update_flags);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">rank</td><td>The rank of the tensor that is returned upon evaluation. </td></tr>
     <tr><td class="paramname">spacedim</td><td>The spatial dimension of the tensor that is returned upon evaluation. </td></tr>
@@ -161,7 +171,7 @@ class WeakForms::TensorCacheFunctor&lt; rank, spacedim &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00131">131</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00160">160</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aef74fa3b38f35c38449686352421257c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aef74fa3b38f35c38449686352421257c">&#9670;&nbsp;</a></span>Base</h2>
@@ -185,7 +195,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00133">133</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00162">162</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -205,7 +215,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00142">142</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00171">171</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -225,7 +235,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00149">149</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00178">178</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -245,7 +255,7 @@ template&lt;typename ScalarType , int dim = spacedim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00157">157</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00186">186</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -286,7 +296,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00159">159</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00188">188</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -393,7 +403,7 @@ template&lt;typename ScalarType , int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00868">868</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00911">911</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -435,7 +445,7 @@ template&lt;typename ScalarType , int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00890">890</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00933">933</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>
@@ -579,7 +589,7 @@ template&lt;int rank, int spacedim&gt; </div>
 </div><div class="memdoc">
 <p>Dimension in which this object operates. </p>
 
-<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00139">139</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cache__functors_8h_source.html#l00168">168</a> of file <a class="el" href="cache__functors_8h_source.html">cache_functors.h</a>.</p>
 
 </div>
 </div>

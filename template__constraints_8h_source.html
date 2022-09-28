@@ -140,20 +140,24 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  {};</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structWeakForms_1_1are__scalar__types_3_01T_00_01U_00_01typename_01std_1_1enable__if_3_01is__sca999994cff249f59f3be695ae85bbb1b3.html">   66</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="structWeakForms_1_1are__scalar__types.html">are_scalar_types</a>&lt;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    T,</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    U,</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    typename std::enable_if&lt;is_scalar_type&lt;T&gt;::value &amp;&amp;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                            is_scalar_type&lt;U&gt;::value&gt;::type&gt; : std::true_type</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  {};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#ifndef DOXYGEN</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  <span class="keyword">struct </span><a class="code" href="structWeakForms_1_1are__scalar__types.html">are_scalar_types</a>&lt;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    T,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    U,</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    typename std::enable_if&lt;is_scalar_type&lt;T&gt;::value &amp;&amp;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                            is_scalar_type&lt;U&gt;::value&gt;::type&gt; : std::true_type</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  {};</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_template_constraints_h</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif // DOXYGEN</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_template_constraints_h</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassWeakForms_1_1is__scalar__type_html_a7254eb0037b4739aae15b35644b5ea17"><div class="ttname"><a href="classWeakForms_1_1is__scalar__type.html#a7254eb0037b4739aae15b35644b5ea17">WeakForms::is_scalar_type::test</a></div><div class="ttdeci">static constexpr auto test(int) -&gt; decltype(std::declval&lt; typename EnableIfScalar&lt; typename std::decay&lt; A &gt;::type &gt;::type &gt;(), std::true_type())</div><div class="ttdef"><b>Definition:</b> <a href="template__constraints_8h_source.html#l00041">template_constraints.h:41</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1is__scalar__type_html_ab20716a0ccada1ba48b61b0674fa5ef6"><div class="ttname"><a href="classWeakForms_1_1is__scalar__type.html#ab20716a0ccada1ba48b61b0674fa5ef6">WeakForms::is_scalar_type::type</a></div><div class="ttdeci">decltype(test&lt; T &gt;(0)) type</div><div class="ttdef"><b>Definition:</b> <a href="template__constraints_8h_source.html#l00054">template_constraints.h:54</a></div></div>

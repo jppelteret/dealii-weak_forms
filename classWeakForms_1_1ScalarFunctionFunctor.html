@@ -150,15 +150,25 @@ Private Types</h2></td></tr>
 class WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</h3>
 
 <p>A functor that acts as a wrapper for a scalar deal.II function. </p>
-<p>This class wraps deal.II and user functions that are derived from a <a href="linkURL"><code>dealii::Function</code></a>. As such, they are able to provide both the value and gradients of functions that implement these methods.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>This class wraps deal.II and user functions that are derived from a <a href="https://www.dealii.org/current/doxygen/deal.II/classFunction.html"><code>dealii::Function</code></a>. As such, they are able to provide both the value and gradients of functions that implement these methods.</p>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> ScalarFunctionFunctor&lt;spacedim&gt; c1(<span class="stringliteral">&quot;c1&quot;</span>, <span class="stringliteral">&quot;c1&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> Functions::ConstantFunction&lt;spacedim, double&gt;</div>
+<div class="line">  constant_scalar_function_1(1.0);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Function value</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> f1 = c1.template value&lt;double, dim&gt;(constant_scalar_function_1);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Function gradient</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> gf1 = c1.template gradient&lt;double, dim&gt;(</div>
+<div class="line">  constant_scalar_function_1);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">spacedim</td><td>The spatial dimension in which this function is being evaluated. (Although its not vital information for the value call itself, this is required in order to compute the gradient of the function.) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00350">350</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00392">392</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a717246ba1a1133d4cc7ba23de1f25dce"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a717246ba1a1133d4cc7ba23de1f25dce">&#9670;&nbsp;</a></span>Base</h2>
@@ -182,7 +192,7 @@ template&lt;int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00352">352</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00394">394</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -202,7 +212,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00356">356</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00398">398</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -222,7 +232,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00359">359</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00401">401</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -242,7 +252,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00362">362</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00404">404</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -283,7 +293,7 @@ template&lt;int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00364">364</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00406">406</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -316,7 +326,7 @@ template&lt;int spacedim&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#ac47553c67ebe76dedc6e3dcb94561eb9">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00370">370</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00412">412</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -348,7 +358,7 @@ template&lt;int spacedim&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#a36ba6a921dae61ed197c564ddac55ad6">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00376">376</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00418">418</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -454,7 +464,7 @@ template&lt;typename ScalarType , int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01144">1144</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01226">1226</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -496,7 +506,7 @@ template&lt;typename ScalarType , int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01167">1167</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01249">1249</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>

@@ -147,9 +147,14 @@ Private Types</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A functor that returns scalar values upon evaluation. </p>
-<p>This class wraps generic functions that can be evaluated at any numerical quadrature point. The output of these functions are of scalar type. Since the definition of the evaluation call is provided through a <code>std::function</code>, the computation pipeline can be made dependent on user data if it is passed in through the capture clause of a lambda function. </p>
-
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00141">141</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p>This class wraps generic functions that can be evaluated at any numerical quadrature point. The output of these functions are of scalar type. Since the definition of the evaluation call is provided through a <code>std::function</code>, the computation pipeline can be made dependent on user data if it is passed in through the capture clause of a lambda function.</p>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> <a class="code" href="classWeakForms_1_1ScalarFunctor.html#a238f53bd83572958308fb6014d30a9b4">ScalarFunctor</a> c1(<span class="stringliteral">&quot;c1&quot;</span>, <span class="stringliteral">&quot;c1&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> f1 = c1.template value&lt;double, dim, spacedim&gt;(</div>
+<div class="line">  [](<span class="keyword">const</span> FEValuesBase&lt;dim, spacedim&gt; &amp;, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>)</div>
+<div class="line">  { <span class="keywordflow">return</span> 1.0; });</div>
+</div><!-- fragment --> 
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00150">150</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a1386a9520554159e146c80f89997a4ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1386a9520554159e146c80f89997a4ed">&#9670;&nbsp;</a></span>Base</h2>
@@ -171,7 +176,7 @@ Private Types</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00143">143</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00152">152</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -189,7 +194,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00147">147</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00156">156</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -207,7 +212,7 @@ template&lt;typename ScalarType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00152">152</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00161">161</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -225,7 +230,7 @@ template&lt;typename ScalarType , int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00157">157</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00166">166</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -264,7 +269,7 @@ template&lt;typename ScalarType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00159">159</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00168">168</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -341,7 +346,7 @@ template&lt;typename ScalarType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00174">174</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00183">183</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -381,7 +386,7 @@ template&lt;typename ScalarType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00183">183</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l00192">192</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -427,7 +432,7 @@ template&lt;typename ScalarType , int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01068">1068</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functors_8h_source.html#l01150">1150</a> of file <a class="el" href="functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -629,6 +634,7 @@ template&lt;typename ScalarType , int dim, int spacedim&gt; </div>
 <li>include/weak_forms/<a class="el" href="functors_8h_source.html">functors.h</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="aclassWeakForms_1_1ScalarFunctor_html_a238f53bd83572958308fb6014d30a9b4"><div class="ttname"><a href="classWeakForms_1_1ScalarFunctor.html#a238f53bd83572958308fb6014d30a9b4">WeakForms::ScalarFunctor::ScalarFunctor</a></div><div class="ttdeci">ScalarFunctor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</div><div class="ttdef"><b>Definition:</b> <a href="functors_8h_source.html#l00168">functors.h:168</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
