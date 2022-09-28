@@ -53,6 +53,18 @@ namespace WeakForms
 
   /* --------------- Cell face and cell subface operators --------------- */
 
+  /**
+   * @brief A functor that represents the normal of the cell, as evaluated at a boundary or an interface.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const Normal<spacedim> normal{};
+   * const auto N = normal.value();
+   * @endcode
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   */
   template <int dim, int spacedim = dim>
   class Normal
   {
