@@ -98,7 +98,7 @@ namespace WeakForms
      * This is the equivalent of computing the inner product
      * @f$ \left[ \bullet \right]^{I} \cdot \mathbf{e}_{i} @f$
      * where @f$ \left[ \bullet \right]^{I} @f$ denotes the qualified test
-     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f i $@f$th
+     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f$ i @f$th
      * Cartesian coordinate direction.
      *
      * @note The use of this filter will result in a slight performance penalty,
@@ -116,7 +116,7 @@ namespace WeakForms
      * This is the equivalent of computing the inner product
      * @f$ \left[ \bullet \right]^{I} \cdot \mathbf{e}_{j} @f$
      * where @f$ \left[ \bullet \right]^{I} @f$ denotes the qualified test
-     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f j $@f$th
+     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f$ j @f$th
      * Cartesian coordinate direction.
      *
      * Notice that, for this filter, there is a cross-indexing of the shape
@@ -137,7 +137,7 @@ namespace WeakForms
      * This is the equivalent of computing the inner product
      * @f$ \left[ \bullet \right]^{J} \cdot \mathbf{e}_{i} @f$
      * where @f$ \left[ \bullet \right]^{J} @f$ denotes the qualified trial
-     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f i $@f$th
+     * shape function operator and @f$ \mathbf{e}_{i} @f$ is the @f$ i @f$th
      * Cartesian coordinate direction.
      *
      * Notice that, for this filter, there is a cross-indexing of the shape
@@ -158,7 +158,7 @@ namespace WeakForms
      * This is the equivalent of computing the inner product
      * @f$ \left[ \bullet \right]^{J} \cdot \mathbf{e}_{j} @f$
      * where @f$ \left[ \bullet \right]^{J} @f$ denotes the qualified trial
-     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f j $@f$th
+     * shape function operator and @f$ \mathbf{e}_{j} @f$ is the @f$ j @f$th
      * Cartesian coordinate direction.
      *
      * @note The use of this filter will result in a slight performance penalty,
