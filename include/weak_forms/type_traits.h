@@ -28,148 +28,336 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+    @brief A type trait that checks to see if a class is a symbolic operator that represents an operation involving the test function (or a component thereof).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_test_function : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents an operation involving the trial solution (or a component thereof).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_trial_solution : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents an operation involving the field solution (or a component thereof).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_field_solution : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that acts as a view into the global test function, trial solution, or field solution.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_subspace_view : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is an elementary or composite (unary or binary) symbolic operator that involves the test function (or a view into it).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_test_function_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is an elementary or composite (unary or binary) symbolic operator that involves the trial solution (or a view into it).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_trial_solution_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is an elementary or composite (unary or binary) symbolic operator that involves the field solution (or a view into it).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_field_solution_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that involves a geometry operation of a discrete finite element (cell).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_cell_geometry_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents an elementary operation involving a functor.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents an elementary operation involving a cached functor.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_cache_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that is automatically differentiable.
+   *
+   * The scalar type associated with this class must be one that is an
+   * auto-differentiable number, e.g. one provided by the Trilinos Sacado or
+   * ADOL-C libraries.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_ad_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that is symbolically differentiable.
+   *
+   * The scalar type associated with this class must be one that is an
+   * symbolically differentiable number, e.g. one provided by the SymEngine
+   * library.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_sd_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator represents an energy functor.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_energy_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator represents a residual functor.
+   *
+   * Specifically, this type trait will evaluate to `std::true_type` when the
+   * symbolic operator is a ResidualViewFunctor, which extracts a subset of
+   * fields associated with the overall residual.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_residual_functor_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that must be evaluated using deal.II's MeshWorker::ScratchData class.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_evaluated_with_scratch_data : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that can be sensibly used in conjunction with a scalar arithmetic operation.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename = void>
   struct is_compatible_with_scalar_arithmetic : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that can be evaluated on a boundary.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_boundary_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that can be evaluated on an interface.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_interface_op : std::false_type
   {};
 
-  // Ops for functors passed into linear and bilinear forms
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a valid elementary of composite (unary or binary) symbolic operator that can be passed into, and evaluated within, a linear or binary form.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_valid_form_functor : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a binary form.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_bilinear_form : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a linear form.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_linear_form : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a form that has the ability to linearise itself.
+   *
+   * In practice, this means that the form must represent an energy functor or
+   * residual view functor operation.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_self_linearizing_form : std::false_type
   {};
 
-  // TODO: Add this to pre-existing test
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a volume integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_volume_integral_op : std::false_type
   {};
 
-  // TODO: Add this to pre-existing test
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a boundary integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_boundary_integral_op : std::false_type
   {};
 
-  // TODO: Add this to pre-existing test
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents an interface integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_interface_integral_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a domain of integration.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_valid_integration_domain : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a unary operator.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_unary_op : std::false_type
   {};
 
-  // TODO: Add test for this
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a binary operator.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   struct is_binary_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents another elementary operator that has been integrated.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_symbolic_integral_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a unary operator that has been integrated.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_unary_integral_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents a binary operator that has been integrated.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_binary_integral_op : std::false_type
   {};
 
+
+  /**
+   * @brief A type trait that checks to see if a class is a symbolic operator that represents any operator that has been integrated.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T, typename U = void>
   struct is_integral_op : std::false_type
   {};

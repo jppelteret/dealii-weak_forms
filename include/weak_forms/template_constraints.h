@@ -62,6 +62,8 @@ namespace WeakForms
   {};
 
 
+#ifndef DOXYGEN
+
   template <typename T, typename U>
   struct are_scalar_types<
     T,
@@ -69,6 +71,8 @@ namespace WeakForms
     typename std::enable_if<is_scalar_type<T>::value &&
                             is_scalar_type<U>::value>::type> : std::true_type
   {};
+
+#endif // DOXYGEN
 
 } // namespace WeakForms
 
