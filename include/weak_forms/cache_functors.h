@@ -68,6 +68,21 @@ namespace WeakForms
    * definition of the evaluation call is provided through a `std::function`,
    * the computation pipeline can be made dependent on user data if it is passed
    * in through the capture clause of a lambda function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const ScalarCacheFunctor s("s", "s");
+   * const UpdateFlags update_flags = UpdateFlags::update_default;
+   *
+   * const auto s_func =
+   *   [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *      &                solution_extraction_data,
+   *      const unsigned int q_point) { return 0.0; };
+   *
+   * const auto sc =
+   *   s.template value<double, dim, spacedim>(s_func, update_flags);
+   * @endcode
    */
   class ScalarCacheFunctor : public Functor<0>
   {
@@ -122,6 +137,20 @@ namespace WeakForms
    * the evaluation call is provided through a `std::function`, the computation
    * pipeline can be made dependent on user data if it is passed in through the
    * capture clause of a lambda function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TensorCacheFunctor<2, dim> T("T", "T");
+   * const UpdateFlags update_flags = UpdateFlags::update_default;
+   *
+   * const auto T_func =
+   *   [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *        &                solution_extraction_data,
+   *      const unsigned int q_point) { return Tensor<2, dim>(); };
+   *
+   * const auto Tc = T.template value<double, dim>(T_func, update_flags);
+   * @endcode
    *
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
@@ -187,6 +216,20 @@ namespace WeakForms
    * the evaluation call is provided through a `std::function`, the computation
    * pipeline can be made dependent on user data if it is passed in through the
    * capture clause of a lambda function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const SymmetricTensorCacheFunctor<2, dim> S("S", "S");
+   * const UpdateFlags update_flags = UpdateFlags::update_default;
+   *
+   * const auto S_func =
+   *   [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+   *      const std::vector<SolutionExtractionData<dim, spacedim>>
+   *        &                solution_extraction_data,
+   *      const unsigned int q_point) { return SymmetricTensor<2, dim>(); };
+   *
+   * const auto Sc = S.template value<double, dim>(S_func, update_flags);
+   * @endcode
    *
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned

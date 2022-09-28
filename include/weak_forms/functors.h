@@ -137,6 +137,15 @@ namespace WeakForms
    * Since the definition of the evaluation call is provided through a
    * `std::function`, the computation pipeline can be made dependent on user
    * data if it is passed in through the capture clause of a lambda function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const ScalarFunctor c1("c1", "c1");
+   *
+   * const auto f1 = c1.template value<double, dim, spacedim>(
+   *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+   *   { return 1.0; });
+   * @endcode
    */
   class ScalarFunctor : public Functor<0>
   {
@@ -200,6 +209,15 @@ namespace WeakForms
    * Since the definition of the evaluation call is provided through a
    * `std::function`, the computation pipeline can be made dependent on user
    * data if it is passed in through the capture clause of a lambda function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TensorFunctor<2, spacedim> t1("C1", "C1");
+   *
+   * const auto tf1 = t1.template value<double, spacedim>(
+   *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+   *   { return Tensor<2, dim, double>(unit_symmetric_tensor<spacedim>()); });
+   * @endcode
    *
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
@@ -272,6 +290,15 @@ namespace WeakForms
    * `std::function`, the computation pipeline can be made dependent on user
    * data if it is passed in through the capture clause of a lambda function.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const SymmetricTensorFunctor<2, spacedim> s1("S1", "S1");
+   *
+   * const auto sf1 = s1.template value<double, spacedim>(
+   *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+   *   { return unit_symmetric_tensor<spacedim>(); });
+   * @endcode
+   *
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
@@ -338,9 +365,24 @@ namespace WeakForms
    * @brief A functor that acts as a wrapper for a scalar deal.II function.
    *
    * This class wraps deal.II and user functions that are derived from a
-   * <a href="linkURL">`dealii::Function`</a>. As such, they are able to
-   * provide both the value and gradients of functions that implement these
-   * methods.
+   * <a
+   * href="https://www.dealii.org/current/doxygen/deal.II/classFunction.html">`dealii::Function`</a>.
+   * As such, they are able to provide both the value and gradients of functions
+   * that implement these methods.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const ScalarFunctionFunctor<spacedim> c1("c1", "c1");
+   * const Functions::ConstantFunction<spacedim, double>
+   *   constant_scalar_function_1(1.0);
+   *
+   * // Function value
+   * const auto f1 = c1.template value<double, dim>(constant_scalar_function_1);
+   *
+   * // Function gradient
+   * const auto gf1 = c1.template gradient<double, dim>(
+   *   constant_scalar_function_1);
+   * @endcode
    *
    * @tparam spacedim The spatial dimension in which this function is being
    * evaluated. (Although its not vital information for the value call itself,
@@ -395,9 +437,25 @@ namespace WeakForms
    * @brief A functor that acts as a wrapper for a tensor-valued deal.II function.
    *
    * This class wraps deal.II and user functions that are derived from a
-   * <a href="linkURL">`dealii::TensorFunction`</a>. As such, they are able to
-   * provide both the value and gradients of functions that implement these
-   * methods.
+   * <a
+   * href="https://www.dealii.org/current/doxygen/deal.II/classTensorFunction.html">`dealii::TensorFunction`</a>.
+   * As such, they are able to provide both the value and gradients of functions
+   * that implement these methods.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TensorFunctionFunctor<2, spacedim>     t1("C1", "C1");
+   * const ConstantTensorFunction<2, dim, double> constant_tensor_function_1(
+   *   unit_symmetric_tensor<dim>());
+   *
+   * // Function value
+   * const auto tf1 = t1.template value<double,
+   *                                    dim>(constant_tensor_function_1);
+   *
+   * // Function gradient
+   * const auto gtf1 = t1.template gradient<double,
+   *                                        dim>(constant_tensor_function_1);
+   * @endcode
    *
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
@@ -457,6 +515,15 @@ namespace WeakForms
   /**
    * An alias for a functor that returns vector (i.e. rank-1 tensor) values
    * upon evaluation.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const VectorFunctor<spacedim> v1("v1", "v1");
+   *
+   * const auto vf1 = v1.template value<double, spacedim>(
+   *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
+   *   { return Tensor<1, dim, double>{}; });
+   * @endcode
    */
   template <int dim>
   using VectorFunctor = TensorFunctor<1, dim>;
@@ -465,6 +532,21 @@ namespace WeakForms
 
   /**
    * An alias for a functor that wraps a rank-1 deal.II tensor function.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const VectorFunctionFunctor<spacedim> v1("v1", "v1");
+   * const ConstantTensorFunction<1, dim, double> constant_tensor_function_1(
+   *   Tensor<1, dim, double>{});
+   *
+   * // Function value
+   * const auto vf1 = v1.template value<double,
+   *                                    dim>(constant_tensor_function_1);
+   *
+   * // Function gradient
+   * const auto gvf1 = v1.template gradient<double,
+   *                                        dim>(constant_tensor_function_1);
+   * @endcode
    */
   template <int dim>
   using VectorFunctionFunctor = TensorFunctionFunctor<1, dim>;
@@ -812,7 +894,7 @@ public:                                                                        \
   static const enum SymbolicOpCodes op_code = SymbolicOpCodes::value;          \
                                                                                \
   /**                                                                          \
-   * @brief Construct a new Unary Op object                                    \
+   * Construct a new Unary Op object                                           \
    *                                                                           \
    * @param operand                                                            \
    * @param function Non-owning, so the passed in @p function_type must have   \
@@ -1304,6 +1386,12 @@ namespace WeakForms
    * This variation allows one to prescribe the value, as well as the ASCII and
    * LaTeX representation of the value.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto i =
+   *   constant_scalar<dim>(std::complex<double>{0, 1}, "i", "i");
+   * @endcode
+   *
    * @tparam dim The dimension in which the scalar is being evaluated.
    * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
    * @tparam ScalarType The underlying scalar type.
@@ -1336,6 +1424,11 @@ namespace WeakForms
    * This variation allows one to prescribe only the value; the ASCII and LaTeX
    * representations exactly match the value itself.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto s = constant_scalar<dim>(1.0);
+   * @endcode
+   *
    * @tparam dim The dimension in which the scalar is being evaluated.
    * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
    * @tparam ScalarType The underlying scalar type.
@@ -1360,6 +1453,11 @@ namespace WeakForms
    *
    * This variation allows one to prescribe the value, as well as the ASCII and
    * LaTeX representation of the tensor.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto T = constant_tensor<dim>(Tensor<2, dim>{}, "T", "T");
+   * @endcode
    *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam rank The rank of the tensor that is returned upon evaluation.
@@ -1395,6 +1493,11 @@ namespace WeakForms
    * components; the ASCII and LaTeX representations are a flattened
    * representation of the tensor.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto T = constant_tensor<dim>(Tensor<2, dim>{});
+   * @endcode
+   *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
@@ -1421,6 +1524,11 @@ namespace WeakForms
    *
    * This variation allows one to prescribe the value, as well as the ASCII and
    * LaTeX representation of the vector.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto v = constant_vector<dim>(Tensor<1, dim>(), "v", "v");
+   * @endcode
    *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
@@ -1449,6 +1557,11 @@ namespace WeakForms
    * components; the ASCII and LaTeX representations are a flattened
    * representation of the vector.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto v = constant_vector<dim>(Tensor<1, dim>());
+   * @endcode
+   *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam spacedim The spatial dimension in which the tensor is being evaluated.
    * @tparam ScalarType The underlying scalar type for each component of the tensor.
@@ -1470,6 +1583,12 @@ namespace WeakForms
    *
    * This variation allows one to prescribe the value, as well as the ASCII and
    * LaTeX representation of the symmetric tensor.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto S2 = constant_symmetric_tensor<dim>(
+   *   unit_symmetric_tensor<dim>(), "S", "S");
+   * @endcode
    *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam rank The rank of the symmetric tensor that is returned upon evaluation.
@@ -1506,6 +1625,11 @@ namespace WeakForms
    * This variation allows one to prescribe only the values of the symmetric
    * tensor components; the ASCII and LaTeX representations are a flattened
    * representation of the symmetric tensor.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const auto S4 = constant_symmetric_tensor<dim>(identity_tensor<dim>());
+   * @endcode
    *
    * @tparam dim The dimension in which the tensor is being evaluated.
    * @tparam rank The rank of the symmetric tensor that is returned upon evaluation.
