@@ -109,6 +109,24 @@ namespace WeakForms
       , mpi_communicator(mpi_communicator)
     {}
 
+    /**
+     * Construct a new Integral object
+     *
+     * @param function
+     * @param mpi_communicator
+     */
+    template <int rank, typename ScalarType>
+    FunctionIntegrator(
+      const TensorFunction<rank, spacedim, ScalarType> &function,
+      const MPI_Comm *const mpi_communicator = nullptr)
+      : integrand_position_independent(nullptr)
+      , integrand_position_dependent(
+          [&function](const std::vector<Point<spacedim>> &             points,
+                      std::vector<Tensor<rank, spacedim, ScalarType>> &values)
+          { return function.value_list(points, values); })
+      , mpi_communicator(mpi_communicator)
+    {}
+
     // SECTION: Volume integrals
 
     /**

@@ -18,6 +18,7 @@
 
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/quadrature_lib.h>
+#include <deal.II/base/tensor_function.h>
 
 #include <deal.II/fe/fe_q.h>
 
@@ -45,13 +46,18 @@ run()
   DoFHandler<dim, spacedim> dof_handler(triangulation);
   dof_handler.distribute_dofs(fe);
 
-  Functions::ConstantFunction<spacedim, double> unity(1.0);
+  const Functions::ConstantFunction<spacedim, double> unity(1.0);
+  const ConstantTensorFunction<2, dim, double>        identity(
+    unit_symmetric_tensor<dim>());
 
   // Volume integral
   {
     const double volume =
       WeakForms::FunctionIntegrator<dim, double>(unity).dV(cell_quadrature,
                                                            dof_handler);
+    const Tensor<2, spacedim, double> tensor_volume =
+      WeakForms::FunctionIntegrator<dim, Tensor<2, spacedim, double>>(identity)
+        .dV(cell_quadrature, dof_handler);
     deallog << "Volume: " << volume << std::endl;
 
     double reference_volume = 0.0;
@@ -62,6 +68,11 @@ run()
            ExcMessage("Volumes do not match. Reference value: " +
                       Utilities::to_string(reference_volume) +
                       "; Calculated value: " + Utilities::to_string(volume)));
+
+    Assert(std::abs(tensor_volume[0][0] - reference_volume) < 1e-6,
+           ExcMessage("Volumes do not match (tensor eval). Reference value: " +
+                      Utilities::to_string(reference_volume) +
+                      "; Calculated value: " + Utilities::to_string(volume)));
   }
 
   // Boundary integral
@@ -69,6 +80,9 @@ run()
     const double area =
       WeakForms::FunctionIntegrator<dim, double>(unity).dA(face_quadrature,
                                                            dof_handler);
+    const Tensor<2, spacedim, double> tensor_area =
+      WeakForms::FunctionIntegrator<dim, Tensor<2, spacedim, double>>(identity)
+        .dA(face_quadrature, dof_handler);
     deallog << "Area: " << area << std::endl;
 
     double reference_area = 0.0;
@@ -81,6 +95,11 @@ run()
 
     Assert(std::abs(area - reference_area) < 1e-6,
            ExcMessage("Areas do not match. Reference value: " +
+                      Utilities::to_string(reference_area) +
+                      "; Calculated value: " + Utilities::to_string(area)));
+
+    Assert(std::abs(tensor_area[0][0] - reference_area) < 1e-6,
+           ExcMessage("Areas do not match (tensor eval). Reference value: " +
                       Utilities::to_string(reference_area) +
                       "; Calculated value: " + Utilities::to_string(area)));
   }
