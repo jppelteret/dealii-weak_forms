@@ -47,7 +47,40 @@ WEAK_FORMS_NAMESPACE_OPEN
 namespace WeakForms
 {
   /**
-   * An integrator for user-defined functions
+   * @brief An integrator for user-defined functions.
+   *
+   * Invoking this integrator will evaluate some specified integrand over the
+   domain
+   * of interest, and return an output value that is the integral quantity.
+   * The integrand can be position independent or position dependent, and may
+   * also derive from a
+   * <a
+   * href="https://www.dealii.org/current/doxygen/deal.II/classFunction.html">`dealii::Function`</a>
+   * or a
+   * <a
+   * href="https://www.dealii.org/current/doxygen/deal.II/classTensorFunction.html">`dealii::TensorFunction`</a>.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * DoFHandler<dim, spacedim> dof_handler(...);
+   * const QGauss<dim>         cell_quadrature(...);
+   * const QGauss<dim - 1>     face_quadrature(...);
+   *
+   * Functions::ConstantFunction<spacedim, double> unity(1.0);
+   *
+   * const double volume
+   *   = Integrator<dim, double>(unity).template dV(dof_handler,
+   *                                                cell_quadrature);
+   *
+   * const dealii::types::boundary_id b_id_1 = 20;
+   * const double area_1 =
+   *   FunctionIntegrator<dim, double>(unity).dA(face_quadrature,
+                                                 dof_handler,
+                                                 {b_id_1});
+   * @endcode
+   *
+   * @tparam spacedim The spatial dimension in which the integral operation is being evaluated.
+   * @tparam ReturnType The output type (a scalar, tensor, etc.) for the evaluated integral.
    */
   template <int spacedim, typename ReturnType>
   class FunctionIntegrator
@@ -105,6 +138,24 @@ namespace WeakForms
       , integrand_position_dependent(
           [&function](const std::vector<Point<spacedim>> &points,
                       std::vector<ReturnType> &           values)
+          { return function.value_list(points, values); })
+      , mpi_communicator(mpi_communicator)
+    {}
+
+    /**
+     * Construct a new Integral object
+     *
+     * @param function
+     * @param mpi_communicator
+     */
+    template <int rank, typename ScalarType>
+    FunctionIntegrator(
+      const TensorFunction<rank, spacedim, ScalarType> &function,
+      const MPI_Comm *const mpi_communicator = nullptr)
+      : integrand_position_independent(nullptr)
+      , integrand_position_dependent(
+          [&function](const std::vector<Point<spacedim>> &             points,
+                      std::vector<Tensor<rank, spacedim, ScalarType>> &values)
           { return function.value_list(points, values); })
       , mpi_communicator(mpi_communicator)
     {}
@@ -252,8 +303,9 @@ namespace WeakForms
 
         CopyData()
           : Base(0)
-          , cell_integral(0.0)
-        {}
+        {
+          cell_integral = 0.0;
+        }
 
         ReturnType cell_integral;
       };
@@ -344,8 +396,9 @@ namespace WeakForms
 
         CopyData()
           : Base(0)
-          , face_integral(0.0)
-        {}
+        {
+          face_integral = 0.0;
+        }
 
         ReturnType face_integral;
       };
@@ -461,7 +514,27 @@ namespace WeakForms
 
 
   /**
-   * An integrator for functors
+   * @brief An integrator for functors.
+   *
+   * Invoking this integrator will evaluate some (elementary, unary or binary)
+   * functor over the domain of interest, and return an output value that is the
+   * integral quantity.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * DoFHandler<dim, spacedim> dof_handler(...);
+   * const QGauss<dim>         cell_quadrature(...);
+   *
+   * const auto unity = constant_scalar<dim>(1.0);
+   * using T          = decltype(unity);
+   *
+   * const double volume
+   *   = Integrator<dim, T>(unity).template dV<double>(dof_handler,
+   *                                                   cell_quadrature);
+   * @endcode
+   *
+   * @tparam spacedim The spatial dimension in which the integral operation is being evaluated.
+   * @tparam Functor The type (some functor) that defines the integrand that is to be integrated.
    */
   template <int spacedim,
             typename Functor,
