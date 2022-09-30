@@ -84,6 +84,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>An integrator for functors.  
+ <a href="classWeakForms_1_1Integrator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="integrator_8h_source.html">weak_forms/integrator.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -162,9 +165,26 @@ Static Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int spacedim, typename Functor, typename = typename std::enable_if&lt;is_valid_form_functor&lt;              typename std::decay&lt;Functor&gt;::type&gt;::value&gt;::type&gt;<br />
 class WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</h3>
 
-<p>An integrator for functors </p>
+<p>An integrator for functors. </p>
+<p>Invoking this integrator will evaluate some (elementary, unary or binary) functor over the domain of interest, and return an output value that is the integral quantity.</p>
+<p>An example of usage: </p><div class="fragment"><div class="line">DoFHandler&lt;dim, spacedim&gt; dof_handler(...);</div>
+<div class="line"><span class="keyword">const</span> QGauss&lt;dim&gt;         cell_quadrature(...);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> unity = constant_scalar&lt;dim&gt;(1.0);</div>
+<div class="line"><span class="keyword">using</span> T          = decltype(unity);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">double</span> volume</div>
+<div class="line">  = Integrator&lt;dim, T&gt;(unity).template dV&lt;double&gt;(dof_handler,</div>
+<div class="line">                                                  cell_quadrature);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the integral operation is being evaluated. </td></tr>
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1Functor.html" title="A base class for other objects that represent functors.">Functor</a></td><td>The type (some functor) that defines the integrand that is to be integrated. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00470">470</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00543">543</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a3f8e9c78e71cc5e26365b2ac5e5654fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f8e9c78e71cc5e26365b2ac5e5654fb">&#9670;&nbsp;</a></span>ReturnType</h2>
@@ -182,7 +202,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00480">480</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00553">553</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -222,7 +242,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html">Integral</a> object</p>
+<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html" title="A base class for other objects that represent (sub)domains of integration.">Integral</a> object</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">functor_op</td><td></td></tr>
@@ -231,7 +251,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00488">488</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00561">561</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -290,7 +310,7 @@ template&lt;typename ScalarType  = double, int dim, template&lt; int, int &gt; c
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00510">510</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00583">583</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -338,7 +358,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00525">525</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00598">598</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -386,7 +406,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00541">541</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00614">614</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -434,7 +454,7 @@ template&lt;typename ScalarType  = double, int dim, template&lt; int, int &gt; c
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00563">563</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00636">636</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -488,7 +508,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00582">582</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00655">655</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -542,7 +562,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00602">602</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00675">675</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -607,7 +627,7 @@ template&lt;typename ScalarType  = double, int dim, template&lt; int, int &gt; c
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00636">636</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00709">709</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -661,7 +681,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00652">652</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00725">725</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -715,7 +735,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00671">671</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00744">744</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -769,7 +789,7 @@ template&lt;typename ScalarType  = double, int dim, template&lt; int, int &gt; c
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00690">690</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00763">763</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -829,7 +849,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00713">713</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00786">786</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -889,7 +909,7 @@ template&lt;typename ScalarType  = double, typename VectorType , int dim, templa
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00735">735</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00808">808</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -918,7 +938,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00759">759</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00832">832</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -947,7 +967,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00765">765</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00838">838</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1027,7 @@ template&lt;typename ScalarType , int dim, template&lt; int, int &gt; class DoFH
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00778">778</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00851">851</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1099,7 @@ template&lt;typename ScalarType , int dim, template&lt; int, int &gt; class DoFH
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00885">885</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00958">958</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -1106,7 +1126,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00472">472</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00545">545</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -1132,7 +1152,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00755">755</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00828">828</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -1158,7 +1178,7 @@ template&lt;int spacedim, typename Functor , typename  = typename std::enable_if
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00756">756</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00829">829</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>

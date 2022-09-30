@@ -83,6 +83,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>An integrator for user-defined functions.  
+ <a href="classWeakForms_1_1FunctionIntegrator.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="integrator_8h_source.html">weak_forms/integrator.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -93,6 +96,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a052bbe21476173fee9d87b5528fb4c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51a069a3c24b9f840d0f5e081a806b60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a51a069a3c24b9f840d0f5e081a806b60">FunctionIntegrator</a> (const Function&lt; spacedim, ReturnType &gt; &amp;function, const MPI_Comm *const <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>=nullptr)</td></tr>
 <tr class="separator:a51a069a3c24b9f840d0f5e081a806b60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e364d94cb2f023302511219b0584d46"><td class="memTemplParams" colspan="2">template&lt;int rank, typename ScalarType &gt; </td></tr>
+<tr class="memitem:a8e364d94cb2f023302511219b0584d46"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a8e364d94cb2f023302511219b0584d46">FunctionIntegrator</a> (const TensorFunction&lt; rank, spacedim, ScalarType &gt; &amp;function, const MPI_Comm *const <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a814ff71cf75307dfea7a142f135f54f2">mpi_communicator</a>=nullptr)</td></tr>
+<tr class="separator:a8e364d94cb2f023302511219b0584d46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5310ce3149e92fb9a940eafce3ff4025"><td class="memTemplParams" colspan="2">template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </td></tr>
 <tr class="memitem:a5310ce3149e92fb9a940eafce3ff4025"><td class="memTemplItemLeft" align="right" valign="top">ReturnType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a5310ce3149e92fb9a940eafce3ff4025">dV</a> (const Quadrature&lt; dim &gt; &amp;cell_quadrature, const DoFHandlerType&lt; dim, spacedim &gt; &amp;dof_handler)</td></tr>
 <tr class="separator:a5310ce3149e92fb9a940eafce3ff4025"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,9 +145,32 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int spacedim, typename ReturnType&gt;<br />
 class WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</h3>
 
-<p>An integrator for user-defined functions </p>
+<p>An integrator for user-defined functions. </p>
+<p>Invoking this integrator will evaluate some specified integrand over the domain of interest, and return an output value that is the integral quantity. The integrand can be position independent or position dependent, and may also derive from a <a href="https://www.dealii.org/current/doxygen/deal.II/classFunction.html"><code>dealii::Function</code></a> or a <a href="https://www.dealii.org/current/doxygen/deal.II/classTensorFunction.html"><code>dealii::TensorFunction</code></a>.</p>
+<p>An example of usage: </p><div class="fragment"><div class="line">DoFHandler&lt;dim, spacedim&gt; dof_handler(...);</div>
+<div class="line"><span class="keyword">const</span> QGauss&lt;dim&gt;         cell_quadrature(...);</div>
+<div class="line"><span class="keyword">const</span> QGauss&lt;dim - 1&gt;     face_quadrature(...);</div>
+<div class="line"> </div>
+<div class="line">Functions::ConstantFunction&lt;spacedim, double&gt; unity(1.0);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">double</span> volume</div>
+<div class="line">  = Integrator&lt;dim, double&gt;(unity).template <a class="code" href="classWeakForms_1_1FunctionIntegrator.html#a5310ce3149e92fb9a940eafce3ff4025">dV</a>(dof_handler,</div>
+<div class="line">                                               cell_quadrature);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> dealii::types::boundary_id b_id_1 = 20;</div>
+<div class="line"><span class="keyword">const</span> <span class="keywordtype">double</span> area_1 =</div>
+<div class="line">  FunctionIntegrator&lt;dim, double&gt;(unity).dA(face_quadrature,</div>
+<div class="line">                                            dof_handler,</div>
+<div class="line">                                            {b_id_1});</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the integral operation is being evaluated. </td></tr>
+    <tr><td class="paramname">ReturnType</td><td>The output type (a scalar, tensor, etc.) for the evaluated integral. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00053">53</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00086">86</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aff8b7f83362df642cd389f1771bc9f80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aff8b7f83362df642cd389f1771bc9f80">&#9670;&nbsp;</a></span>IntegrandPositionIndependent</h2>
@@ -167,7 +196,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <p>Type definition for functions that are independent of position.</p>
 <dl class="section note"><dt>Note</dt><dd>We switch the type definition based on whether or not the function returns some values . </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00063">63</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00096">96</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -193,13 +222,13 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00067">67</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00100">100</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae85d0f077aede7fbd71ed9be69230015"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae85d0f077aede7fbd71ed9be69230015">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae85d0f077aede7fbd71ed9be69230015">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,7 +262,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html">Integral</a> object</p>
+<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html" title="A base class for other objects that represent (sub)domains of integration.">Integral</a> object</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integrand</td><td></td></tr>
@@ -242,12 +271,12 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00076">76</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00109">109</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
 <a id="a052bbe21476173fee9d87b5528fb4c05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a052bbe21476173fee9d87b5528fb4c05">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a052bbe21476173fee9d87b5528fb4c05">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -281,7 +310,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html">Integral</a> object</p>
+<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html" title="A base class for other objects that represent (sub)domains of integration.">Integral</a> object</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integrand</td><td></td></tr>
@@ -290,12 +319,12 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00089">89</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00122">122</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
 <a id="a51a069a3c24b9f840d0f5e081a806b60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51a069a3c24b9f840d0f5e081a806b60">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a51a069a3c24b9f840d0f5e081a806b60">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -329,7 +358,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html">Integral</a> object</p>
+<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html" title="A base class for other objects that represent (sub)domains of integration.">Integral</a> object</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">function</td><td></td></tr>
@@ -338,7 +367,57 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00102">102</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00135">135</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+
+</div>
+</div>
+<a id="a8e364d94cb2f023302511219b0584d46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e364d94cb2f023302511219b0584d46">&#9670;&nbsp;</a></span>FunctionIntegrator() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int spacedim, typename ReturnType &gt; </div>
+<div class="memtemplate">
+template&lt;int rank, typename ScalarType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1FunctionIntegrator.html">WeakForms::FunctionIntegrator</a>&lt; spacedim, ReturnType &gt;::<a class="el" href="classWeakForms_1_1FunctionIntegrator.html">FunctionIntegrator</a> </td>
+          <td>(</td>
+          <td class="paramtype">const TensorFunction&lt; rank, spacedim, ScalarType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>function</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const MPI_Comm *const&#160;</td>
+          <td class="paramname"><em>mpi_communicator</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Construct a new <a class="el" href="classWeakForms_1_1Integral.html" title="A base class for other objects that represent (sub)domains of integration.">Integral</a> object</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">function</td><td></td></tr>
+    <tr><td class="paramname">mpi_communicator</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00152">152</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -397,7 +476,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00125">125</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00176">176</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -445,7 +524,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00140">140</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00191">191</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -503,7 +582,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ReturnType </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00168">168</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00219">219</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -551,7 +630,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00178">178</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00229">229</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -580,7 +659,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00217">217</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00268">268</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -609,7 +688,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00227">227</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00278">278</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -663,7 +742,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType, typename B
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00241">241</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00292">292</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -723,7 +802,7 @@ template&lt;int dim, template&lt; int, int &gt; class DoFHandlerType, typename B
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00332">332</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00384">384</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -750,7 +829,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00206">206</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00257">257</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -776,7 +855,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00212">212</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00263">263</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -802,7 +881,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00214">214</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="integrator_8h_source.html#l00265">265</a> of file <a class="el" href="integrator_8h_source.html">integrator.h</a>.</p>
 
 </div>
 </div>
@@ -810,6 +889,7 @@ template&lt;int spacedim, typename ReturnType &gt; </div>
 <li>include/weak_forms/<a class="el" href="integrator_8h_source.html">integrator.h</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="aclassWeakForms_1_1FunctionIntegrator_html_a5310ce3149e92fb9a940eafce3ff4025"><div class="ttname"><a href="classWeakForms_1_1FunctionIntegrator.html#a5310ce3149e92fb9a940eafce3ff4025">WeakForms::FunctionIntegrator::dV</a></div><div class="ttdeci">ReturnType dV(const Quadrature&lt; dim &gt; &amp;cell_quadrature, const DoFHandlerType&lt; dim, spacedim &gt; &amp;dof_handler)</div><div class="ttdef"><b>Definition:</b> <a href="integrator_8h_source.html#l00176">integrator.h:176</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
