@@ -90,9 +90,12 @@ namespace WeakForms
    *
    * Underlying this global space might be a single finite element (scalar-,
    * vector-, or tensor-valued), or grouping of finite element spaces. The
-   * abstraction space (<em>L(2)</em>, <em>H(1)</em>, <em>H(curl)</em>,
-   * <em>H(div)</em>) or collection of spaces this represents is somewhat
-   * arbitrary.
+   * abstract space (
+   * @f$ \mathcal{L}\left(2\right) @f$,
+   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
+   * @f$ \mathcal{H}\left(\text{div}\right) @f$
+   * ) or composition of spaces that this represents is somewhat arbitrary.
    *
    * @tparam dim The dimension in which the scalar is being evaluated.
    * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
@@ -226,9 +229,12 @@ namespace WeakForms
    *
    * Underlying this global space of test functions might be a single finite
    * element (scalar-, vector-, or tensor-valued), or grouping of finite element
-   * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
-   * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this represents
-   * is somewhat arbitrary.
+   * spaces. The abstract space (
+   * @f$ \mathcal{L}\left(2\right) @f$,
+   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
+   * @f$ \mathcal{H}\left(\text{div}\right) @f$
+   * ) or composition of spaces that this represents is somewhat arbitrary.
    *
    * It is possible to retrieve a "view" into a component (or selection of
    * components) of the global space. The purpose of this is to provide some
@@ -393,9 +399,12 @@ namespace WeakForms
    *
    * Underlying this global space of trial solutions might be a single finite
    * element (scalar-, vector-, or tensor-valued), or grouping of finite element
-   * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
-   * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this represents
-   * is somewhat arbitrary.
+   * spaces. The abstract space (
+   * @f$ \mathcal{L}\left(2\right) @f$,
+   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
+   * @f$ \mathcal{H}\left(\text{div}\right) @f$
+   * ) or composition of spaces that this represents is somewhat arbitrary.
    *
    * It is possible to retrieve a "view" into a component (or selection of
    * components) of the global space. The purpose of this is to provide some
@@ -569,9 +578,12 @@ namespace WeakForms
    *
    * Underlying the global field solution might be a single finite element
    * (scalar-, vector-, or tensor-valued), or grouping of finite element spaces.
-   * The abstraction space (<em>L(2)</em>, <em>H(1)</em>, <em>H(curl)</em>,
-   * <em>H(div)</em>) or collection of spaces this represents is somewhat
-   * arbitrary.
+   * The abstract space (
+   * @f$ \mathcal{L}\left(2\right) @f$,
+   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
+   * @f$ \mathcal{H}\left(\text{div}\right) @f$
+   * ) or composition of spaces that this represents is somewhat arbitrary.
    *
    * It is possible to retrieve a "view" into a component (or selection of
    * components) of the field solution. The purpose of this is to provide some
@@ -751,9 +763,12 @@ namespace WeakForms
      *
      * Underlying the global field solution might be a single finite element
      * (scalar-, vector-, or tensor-valued), or grouping of finite element
-     * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
-     * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this
-     * represents is somewhat arbitrary.
+     * spaces. The abstract space (
+     * @f$ \mathcal{L}\left(2\right) @f$,
+     * @f$ \mathcal{H}\left(1\right) @f$,
+     * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
+     * @f$ \mathcal{H}\left(\text{div}\right) @f$
+     * ) or composition of spaces that this represents is somewhat arbitrary.
      *
      * It is possible to retrieve a "view" into a component (or selection of
      * components) of the field solution. The purpose of this is to provide some
