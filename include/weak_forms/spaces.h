@@ -85,6 +85,18 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A base class for objects that encapsulate the notion of a (discrete) global finite element space.
+   *
+   * Underlying this global space might be a single finite element (scalar-,
+   * vector-, or tensor-valued), or grouping of finite element spaces. The
+   * abstraction space (<em>L(2)</em>, <em>H(1)</em>, <em>H(curl)</em>,
+   * <em>H(div)</em>) or collection of spaces this represents is somewhat
+   * arbitrary.
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   */
   template <int dim, int spacedim>
   class Space
   {
@@ -209,6 +221,25 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A class that represents a (discrete) global finite element test function.
+   *
+   * Underlying this global space of test functions might be a single finite
+   * element (scalar-, vector-, or tensor-valued), or grouping of finite element
+   * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
+   * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this represents
+   * is somewhat arbitrary.
+   *
+   * It is possible to retrieve a "view" into a component (or selection of
+   * components) of the global space. The purpose of this is to provide some
+   * further context as to what that component (or collection thereof)
+   * represents, which then permits certain additional operations to be
+   * performed. For instance, the `curl` of an arbitrary quantity is
+   * ill-defined, but for vector-valued components this is well defined.
+   *
+   * @tparam dim The dimension in which the test function is being evaluated.
+   * @tparam spacedim The spatial dimension in which the test function is being evaluated.
+   */
   template <int dim, int spacedim>
   class TestFunction : public Space<dim, spacedim>
   {
@@ -357,6 +388,25 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A class that represents a (discrete) global finite element trial solution.
+   *
+   * Underlying this global space of trial solutions might be a single finite
+   * element (scalar-, vector-, or tensor-valued), or grouping of finite element
+   * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
+   * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this represents
+   * is somewhat arbitrary.
+   *
+   * It is possible to retrieve a "view" into a component (or selection of
+   * components) of the global space. The purpose of this is to provide some
+   * further context as to what that component (or collection thereof)
+   * represents, which then permits certain additional operations to be
+   * performed. For instance, the `curl` of an arbitrary quantity is
+   * ill-defined, but for vector-valued components this is well defined.
+   *
+   * @tparam dim The dimension in which the trial solution is being evaluated.
+   * @tparam spacedim The spatial dimension in which the trial solution is being evaluated.
+   */
   template <int dim, int spacedim>
   class TrialSolution : public Space<dim, spacedim>
   {
@@ -507,6 +557,32 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A class that represents a (discrete) global finite element field solution.
+   *
+   * Specifically, the class represents the field solution that has been solved
+   * for some previous state. The exact state of the evaluated field is fully
+   * controlled by the user: it could represent the solution at the previous
+   * time step, the time step before that, etc. Or, in the context of a
+   * non-linear problem, it could represent the increments update of the
+   * solution.
+   *
+   * Underlying the global field solution might be a single finite element
+   * (scalar-, vector-, or tensor-valued), or grouping of finite element spaces.
+   * The abstraction space (<em>L(2)</em>, <em>H(1)</em>, <em>H(curl)</em>,
+   * <em>H(div)</em>) or collection of spaces this represents is somewhat
+   * arbitrary.
+   *
+   * It is possible to retrieve a "view" into a component (or selection of
+   * components) of the field solution. The purpose of this is to provide some
+   * further context as to what that component (or collection thereof)
+   * represents, which then permits certain additional operations to be
+   * performed. For instance, the `curl` of an arbitrary quantity is
+   * ill-defined, but for vector-valued components this is well defined.
+   *
+   * @tparam dim The dimension in which the field solution is being evaluated.
+   * @tparam spacedim The spatial dimension in which the field solution is being evaluated.
+   */
   template <int dim, int spacedim>
   class FieldSolution : public Space<dim, spacedim>
   {
@@ -634,14 +710,61 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A namespace that encapsulates aliases that are relevant for non-linear problems.
+   */
   namespace NonLinear
   {
+    /**
+     * @brief An alias to a class that represents the variation of a solution.
+     *
+     * This corresponds to the test function for linear problems.
+     *
+     * @tparam dim The dimension in which the solution variation is being evaluated.
+     * @tparam spacedim The spatial dimension in which the solution variation is being evaluated.
+     */
     template <int dim, int spacedim = dim>
     using Variation = WeakForms::TestFunction<dim, spacedim>;
 
+
+    /**
+     * @brief An alias to a class that represents the linearisation of a solution.
+     *
+     * This corresponds to the trial solution for linear problems.
+     *
+     * @tparam dim The dimension in which the solution linearisation is being evaluated.
+     * @tparam spacedim The spatial dimension in which the solution linearisation is being evaluated.
+     */
     template <int dim, int spacedim = dim>
     using Linearization = WeakForms::TrialSolution<dim, spacedim>;
 
+
+    /**
+     * @brief A class that represents a (discrete) global finite element field solution.
+     *
+     * Specifically, the class represents the field solution that has been
+     * solved for some previous state. The exact state of the evaluated field is
+     * fully controlled by the user: it could represent the solution at the
+     * previous time step, the time step before that, etc. Or, in the context of
+     * a non-linear problem, it could represent the increments update of the
+     * solution.
+     *
+     * Underlying the global field solution might be a single finite element
+     * (scalar-, vector-, or tensor-valued), or grouping of finite element
+     * spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>,
+     * <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this
+     * represents is somewhat arbitrary.
+     *
+     * It is possible to retrieve a "view" into a component (or selection of
+     * components) of the field solution. The purpose of this is to provide some
+     * further context as to what that component (or collection thereof)
+     * represents, which then permits certain additional operations to be
+     * performed. For instance, the `curl` of an arbitrary quantity is
+     * ill-defined, but for vector-valued components this is well defined.
+     *
+     * @tparam dim The dimension in which the field solution is being evaluated.
+     * @tparam spacedim The spatial dimension in which the field solution is being evaluated.
+     */
     template <int dim, int spacedim = dim>
     using FieldSolution = WeakForms::FieldSolution<dim, spacedim>;
   } // namespace NonLinear
