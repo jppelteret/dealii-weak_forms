@@ -82,6 +82,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A type trait that checks to see if a class is a scalar type.  
+ <a href="classWeakForms_1_1is__scalar__type.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="template__constraints_8h_source.html">weak_forms/template_constraints.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -107,8 +110,16 @@ Static Private Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename T&gt;<br />
 class WeakForms::is_scalar_type&lt; T &gt;</h3>
 
+<p>A type trait that checks to see if a class is a scalar type. </p>
+<p>It is, essentially, a check to see if type <code>T</code> is a floating point or integer type, a complex number, or a vectorised number. This corresponds closely with the check performed by <a href="https://www.dealii.org/current/doxygen/deal.II/structEnableIfScalar.html"><code>dealii::EnableIfScalar</code></a>.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The class type to be tested for the trait. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00034">34</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00045">45</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ab20716a0ccada1ba48b61b0674fa5ef6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab20716a0ccada1ba48b61b0674fa5ef6">&#9670;&nbsp;</a></span>type</h2>
@@ -124,7 +135,7 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00054">54</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00065">65</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
 
 </div>
 </div>
@@ -161,7 +172,7 @@ template&lt;typename A &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00041">41</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00052">52</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
 
 </div>
 </div>
@@ -218,7 +229,7 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00056">56</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="template__constraints_8h_source.html#l00067">67</a> of file <a class="el" href="template__constraints_8h_source.html">template_constraints.h</a>.</p>
 
 </div>
 </div>

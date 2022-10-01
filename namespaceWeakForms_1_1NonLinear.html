@@ -78,20 +78,28 @@ $(function() {
 <div class="title">WeakForms::NonLinear Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A namespace that encapsulates aliases that are relevant for non-linear problems.  
+<a href="namespaceWeakForms_1_1NonLinear.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a3d5dedead927469ea08f8a0f4f60b70a"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim&gt; </td></tr>
 <tr class="memitem:a3d5dedead927469ea08f8a0f4f60b70a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1NonLinear.html#a3d5dedead927469ea08f8a0f4f60b70a">Variation</a> = <a class="el" href="classWeakForms_1_1TestFunction.html">WeakForms::TestFunction</a>&lt; dim, spacedim &gt;</td></tr>
+<tr class="memdesc:a3d5dedead927469ea08f8a0f4f60b70a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias to a class that represents the variation of a solution.  <a href="namespaceWeakForms_1_1NonLinear.html#a3d5dedead927469ea08f8a0f4f60b70a">More...</a><br /></td></tr>
 <tr class="separator:a3d5dedead927469ea08f8a0f4f60b70a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85ace8e0ff49055cdc3ee9b527cac597"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim&gt; </td></tr>
 <tr class="memitem:a85ace8e0ff49055cdc3ee9b527cac597"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1NonLinear.html#a85ace8e0ff49055cdc3ee9b527cac597">Linearization</a> = <a class="el" href="classWeakForms_1_1TrialSolution.html">WeakForms::TrialSolution</a>&lt; dim, spacedim &gt;</td></tr>
+<tr class="memdesc:a85ace8e0ff49055cdc3ee9b527cac597"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alias to a class that represents the linearisation of a solution.  <a href="namespaceWeakForms_1_1NonLinear.html#a85ace8e0ff49055cdc3ee9b527cac597">More...</a><br /></td></tr>
 <tr class="separator:a85ace8e0ff49055cdc3ee9b527cac597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef0bdc19126ed5b41adeea1e1d244874"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim&gt; </td></tr>
 <tr class="memitem:aef0bdc19126ed5b41adeea1e1d244874"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1NonLinear.html#aef0bdc19126ed5b41adeea1e1d244874">FieldSolution</a> = <a class="el" href="classWeakForms_1_1FieldSolution.html">WeakForms::FieldSolution</a>&lt; dim, spacedim &gt;</td></tr>
+<tr class="memdesc:aef0bdc19126ed5b41adeea1e1d244874"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents a (discrete) global finite element field solution.  <a href="namespaceWeakForms_1_1NonLinear.html#aef0bdc19126ed5b41adeea1e1d244874">More...</a><br /></td></tr>
 <tr class="separator:aef0bdc19126ed5b41adeea1e1d244874"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A namespace that encapsulates aliases that are relevant for non-linear problems. </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="a3d5dedead927469ea08f8a0f4f60b70a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3d5dedead927469ea08f8a0f4f60b70a">&#9670;&nbsp;</a></span>Variation</h2>
 
@@ -106,7 +114,17 @@ template&lt;int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00640">640</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p>An alias to a class that represents the variation of a solution. </p>
+<p>This corresponds to the test function for linear problems.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the solution variation is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the solution variation is being evaluated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00727">727</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -124,7 +142,17 @@ template&lt;int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00643">643</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p>An alias to a class that represents the linearisation of a solution. </p>
+<p>This corresponds to the trial solution for linear problems.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the solution linearisation is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the solution linearisation is being evaluated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00739">739</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -142,7 +170,19 @@ template&lt;int dim, int spacedim = dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00646">646</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p>A class that represents a (discrete) global finite element field solution. </p>
+<p>Specifically, the class represents the field solution that has been solved for some previous state. The exact state of the evaluated field is fully controlled by the user: it could represent the solution at the previous time step, the time step before that, etc. Or, in the context of a non-linear problem, it could represent the increments update of the solution.</p>
+<p>Underlying the global field solution might be a single finite element (scalar-, vector-, or tensor-valued), or grouping of finite element spaces. The abstraction space (<em>L(2)</em>, <em>H(1)</em>, <em>H(curl)</em>, <em>H(div)</em>) or collection of spaces this represents is somewhat arbitrary.</p>
+<p>It is possible to retrieve a "view" into a component (or selection of components) of the field solution. The purpose of this is to provide some further context as to what that component (or collection thereof) represents, which then permits certain additional operations to be performed. For instance, the <code>curl</code> of an arbitrary quantity is ill-defined, but for vector-valued components this is well defined.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the field solution is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the field solution is being evaluated. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00769">769</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
