@@ -95,8 +95,10 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespaceWeakForms_1_1SelfLinearization"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1SelfLinearization.html">SelfLinearization</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1SubSpaceExtractors"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1SubSpaceExtractors.html">SubSpaceExtractors</a></td></tr>
+<tr class="memdesc:namespaceWeakForms_1_1SubSpaceExtractors"><td class="mdescLeft">&#160;</td><td class="mdescRight">A namespace dedicated to objects that help to identify subspaces within a global finite element space. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1SubSpaceViews"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1SubSpaceViews.html">SubSpaceViews</a></td></tr>
+<tr class="memdesc:namespaceWeakForms_1_1SubSpaceViews"><td class="mdescLeft">&#160;</td><td class="mdescRight">A namespace dedicated to objects that represent a subspace within a global finite element space. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1types"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html">types</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -917,7 +919,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Shortcut so that we don't need to do something like this:</p>
-<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
+<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html" title="An object that can be used to extract a scalar subspace from a global finite element space.">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
 <p><code>const auto soln_ss = solution[subspace_extractor]; const auto soln_val = soln_ss.value(); // Solution value const auto soln_grad = soln_ss.gradient(); // Solution gradient ...</code></p>
 <p><code>const EnergyFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt; energy("e", "\\Psi", soln_val, soln_grad, ...); </code> </p>
 
@@ -1494,7 +1496,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </div><div class="memdoc">
 <p>A convenience function for create a <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>.</p>
 <p>It is, essentially, a shortcut so that we don't need to do something like this:</p>
-<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
+<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html" title="An object that can be used to extract a scalar subspace from a global finite element space.">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
 <p><code>const auto soln_ss = solution[subspace_extractor]; const auto soln_val = soln_ss.value(); // Solution value const auto soln_grad = soln_ss.gradient(); // Solution gradient ...</code></p>
 <p><code>const ResidualFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt; residual("R", "R", soln_val, soln_grad, ...); </code> </p>
 

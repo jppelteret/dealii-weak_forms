@@ -81,6 +81,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Convert field solutions to a test function or trial solution.  
+ <a href="structWeakForms_1_1internal_1_1ConvertTo.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="subspace__views_8h_source.html">weak_forms/subspace_views.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -96,23 +99,27 @@ Public Types</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a6a0badddd419856f30db25d47addbc03"><td class="memTemplParams" colspan="2">template&lt;template&lt; class &gt; class SubSpaceViewsType, typename SpaceType , enum WeakForms::Operators::SymbolicOpCodes OpCode, types::solution_index solution_index, typename  = typename std::enable_if&lt;                  is_field_solution&lt;SpaceType&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:a6a0badddd419856f30db25d47addbc03"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1ConvertTo.html#a6a0badddd419856f30db25d47addbc03">test_function</a> (const <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType&lt; SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt;&gt; &amp;symbolic_op)</td></tr>
+<tr class="memdesc:a6a0badddd419856f30db25d47addbc03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>.  <a href="structWeakForms_1_1internal_1_1ConvertTo.html#a6a0badddd419856f30db25d47addbc03">More...</a><br /></td></tr>
 <tr class="separator:a6a0badddd419856f30db25d47addbc03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c6abfaf2032725f940f4a476354fe3"><td class="memTemplParams" colspan="2">template&lt;template&lt; class &gt; class SubSpaceViewsType, typename SpaceType , enum WeakForms::Operators::SymbolicOpCodes OpCode, types::solution_index solution_index, typename  = typename std::enable_if&lt;                  is_field_solution&lt;SpaceType&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:a88c6abfaf2032725f940f4a476354fe3"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1ConvertTo.html#a88c6abfaf2032725f940f4a476354fe3">trial_solution</a> (const <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType&lt; SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt;&gt; &amp;symbolic_op)</td></tr>
+<tr class="memdesc:a88c6abfaf2032725f940f4a476354fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>.  <a href="structWeakForms_1_1internal_1_1ConvertTo.html#a88c6abfaf2032725f940f4a476354fe3">More...</a><br /></td></tr>
 <tr class="separator:a88c6abfaf2032725f940f4a476354fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a322b9693efedf183369085dd2be63cbc"><td class="memTemplParams" colspan="2">template&lt;template&lt; int, class &gt; class SubSpaceViewsType, int rank, typename SpaceType , enum WeakForms::Operators::SymbolicOpCodes OpCode, types::solution_index solution_index, typename  = typename std::enable_if&lt;                  is_field_solution_op&lt;SpaceType&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:a322b9693efedf183369085dd2be63cbc"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1ConvertTo.html#a322b9693efedf183369085dd2be63cbc">test_function</a> (const <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType&lt; rank, SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt;&gt; &amp;symbolic_op)</td></tr>
+<tr class="memdesc:a322b9693efedf183369085dd2be63cbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>.  <a href="structWeakForms_1_1internal_1_1ConvertTo.html#a322b9693efedf183369085dd2be63cbc">More...</a><br /></td></tr>
 <tr class="separator:a322b9693efedf183369085dd2be63cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41e9bc2f4134d36a74716bb7983d626f"><td class="memTemplParams" colspan="2">template&lt;template&lt; int, class &gt; class SubSpaceViewsType, int rank, typename SpaceType , enum WeakForms::Operators::SymbolicOpCodes OpCode, types::solution_index solution_index, typename  = typename std::enable_if&lt;                  is_field_solution_op&lt;SpaceType&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:a41e9bc2f4134d36a74716bb7983d626f"><td class="memTemplItemLeft" align="right" valign="top">static auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1ConvertTo.html#a41e9bc2f4134d36a74716bb7983d626f">trial_solution</a> (const <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a>&lt; SubSpaceViewsType&lt; rank, SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt;&gt; &amp;symbolic_op)</td></tr>
+<tr class="memdesc:a41e9bc2f4134d36a74716bb7983d626f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>.  <a href="structWeakForms_1_1internal_1_1ConvertTo.html#a41e9bc2f4134d36a74716bb7983d626f">More...</a><br /></td></tr>
 <tr class="separator:a41e9bc2f4134d36a74716bb7983d626f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Convert field solutions to a test function or trial solution.</p>
+<div class="textblock"><p>Convert field solutions to a test function or trial solution. </p>
 <p>This can be useful as a shortcut so that users can express everything in terms of the field solutions, and then do in-place conversions to test functions and trial solutions.</p>
 <p>But it is also required because we'll probe the arguments for the functor supplied to the self-linearizing form, and from these we'll have to construct the relevant residual (linear) and linearization (bilinear) forms. </p>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03482">3482</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03550">3550</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aee7f450ca989dcbe4982f7d9be883c6b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee7f450ca989dcbe4982f7d9be883c6b">&#9670;&nbsp;</a></span>test_function_t</h2>
@@ -128,7 +135,7 @@ template&lt;typename SymbolicOpSubSpaceFieldSolution &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03705">3705</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03773">3773</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -146,7 +153,7 @@ template&lt;typename SymbolicOpSubSpaceFieldSolution &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03709">3709</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03777">3777</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -176,10 +183,11 @@ template&lt;template&lt; class &gt; class SubSpaceViewsType, typename SpaceType 
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>.</p>
-<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html">SubSpaceViews::Scalar</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html">SubSpaceViews::Vector</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03496">3496</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>. </p>
+<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html" title="A view into a scalar subspace of a global finite element space.">SubSpaceViews::Scalar</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html" title="A view into a vector subspace of a global finite element space.">SubSpaceViews::Vector</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03564">3564</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -208,10 +216,11 @@ template&lt;template&lt; class &gt; class SubSpaceViewsType, typename SpaceType 
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>.</p>
-<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html">SubSpaceViews::Scalar</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html">SubSpaceViews::Vector</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03549">3549</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>. </p>
+<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html" title="A view into a scalar subspace of a global finite element space.">SubSpaceViews::Scalar</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html" title="A view into a vector subspace of a global finite element space.">SubSpaceViews::Vector</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03617">3617</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -240,10 +249,11 @@ template&lt;template&lt; int, class &gt; class SubSpaceViewsType, int rank, type
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>.</p>
-<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">SubSpaceViews::Tensor</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html">SubSpaceViews::SymmetricTensor</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03603">3603</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TestFunction.html" title="A class that represents a (discrete) global finite element test function.">TestFunction</a>. </p>
+<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html" title="A view into a tensor subspace of a global finite element space.">SubSpaceViews::Tensor</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html" title="A view into a symmetric tensor subspace of a global finite element space.">SubSpaceViews::SymmetricTensor</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03671">3671</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -272,10 +282,11 @@ template&lt;template&lt; int, class &gt; class SubSpaceViewsType, int rank, type
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>.</p>
-<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html">SubSpaceViews::Tensor</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html">SubSpaceViews::SymmetricTensor</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03657">3657</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p>Convert a <a class="el" href="classWeakForms_1_1FieldSolution.html" title="A class that represents a (discrete) global finite element field solution.">FieldSolution</a> to a <a class="el" href="classWeakForms_1_1TrialSolution.html" title="A class that represents a (discrete) global finite element trial solution.">TrialSolution</a>. </p>
+<p>Variant for <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html" title="A view into a tensor subspace of a global finite element space.">SubSpaceViews::Tensor</a> and <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1SymmetricTensor.html" title="A view into a symmetric tensor subspace of a global finite element space.">SubSpaceViews::SymmetricTensor</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l03725">3725</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>

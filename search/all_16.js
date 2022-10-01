@@ -4,5 +4,5 @@ var searchData=
   ['_7efunctor_1104',['~Functor',['../classWeakForms_1_1Functor.html#a0b865e6a05915ffbd8879049bc2fb9e7',1,'WeakForms::Functor']]],
   ['_7esolutionstorage_1105',['~SolutionStorage',['../classWeakForms_1_1SolutionStorage.html#a149baaee8a3a5674f1b0ea04fe096d44',1,'WeakForms::SolutionStorage']]],
   ['_7espace_1106',['~Space',['../classWeakForms_1_1Space.html#a9ed10c2faed16345f5524d6e3707c151',1,'WeakForms::Space']]],
-  ['_7esubspaceviewbase_1107',['~SubSpaceViewBase',['../classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#aad355ef1415e0e35b125bfefb8c37c7f',1,'WeakForms::SubSpaceViews::SubSpaceViewBase']]]
+  ['_7esubspaceviewbase_1107',['~SubSpaceViewBase',['../classWeakForms_1_1SubSpaceViews_1_1SubSpaceViewBase.html#ae3f9cf001bf32aa7c186eb6082a47067',1,'WeakForms::SubSpaceViews::SubSpaceViewBase']]]
 ];
