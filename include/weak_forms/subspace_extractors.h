@@ -33,8 +33,14 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * @brief A namespace dedicated to objects that help to identify subspaces within a global finite element space.
+   */
   namespace SubSpaceExtractors
   {
+    /**
+     * @brief An object that can be used to extract a scalar subspace from a global finite element space.
+     */
     struct Scalar
     {
       static const int rank = 0;
@@ -83,6 +89,14 @@ namespace WeakForms
       const std::string                field_latex;
     };
 
+
+
+    /**
+     * @brief An object that can be used to extract a vector subspace from a global finite element space.
+     *
+     * The number of vector components is determined on the basis of the space
+     * from which the extraction is to be performed.
+     */
     struct Vector
     {
       static const int rank = 1;
@@ -131,6 +145,16 @@ namespace WeakForms
       const std::string                field_latex;
     };
 
+
+
+    /**
+     * @brief An object that can be used to extract a tensor subspace from a global finite element space.
+     *
+     * The number of tensor components is determined on the basis of the space
+     * from which the extraction is to be performed.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     */
     template <int rank_>
     struct Tensor
     {
@@ -180,6 +204,15 @@ namespace WeakForms
       const std::string                      field_latex;
     };
 
+
+    /**
+     * @brief An object that can be used to extract a symmetric tensor subspace from a global finite element space.
+     *
+     * The number of tensor components is determined on the basis of the space
+     * from which the extraction is to be performed.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     */
     template <int rank_>
     struct SymmetricTensor
     {
@@ -235,11 +268,19 @@ namespace WeakForms
 
   namespace internal
   {
-    // Make the link between FEValuesExtractors and the weak form
-    // SubSpaceExtractors
+    /**
+     * @brief A helper class that identifies the association between a WeakForm subspace extractor and a deal.II extractor.
+     *
+     * @tparam FEValuesExtractors_t One of the extractors from the deal.II FEValuesExtractors namespace.
+     */
     template <typename FEValuesExtractors_t>
     struct SubSpaceExtractor;
 
+
+
+    /**
+     * @brief A specialisation of the SubSpaceExtractor class for the extraction of scalar subspaces.
+     */
     template <>
     struct SubSpaceExtractor<FEValuesExtractors::Scalar>
     {
@@ -247,6 +288,10 @@ namespace WeakForms
     };
 
 
+
+    /**
+     * @brief A specialisation of the SubSpaceExtractor class for the extraction of vector subspaces.
+     */
     template <>
     struct SubSpaceExtractor<FEValuesExtractors::Vector>
     {
@@ -254,6 +299,12 @@ namespace WeakForms
     };
 
 
+
+    /**
+     * @brief A specialisation of the SubSpaceExtractor class for the extraction of tensor subspaces.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     */
     template <int rank>
     struct SubSpaceExtractor<FEValuesExtractors::Tensor<rank>>
     {
@@ -261,6 +312,12 @@ namespace WeakForms
     };
 
 
+
+    /**
+     * @brief A specialisation of the SubSpaceExtractor class for the extraction of symmetric tensor subspaces.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     */
     template <int rank>
     struct SubSpaceExtractor<FEValuesExtractors::SymmetricTensor<rank>>
     {
