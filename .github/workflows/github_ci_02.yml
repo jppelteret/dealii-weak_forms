@@ -1,0 +1,44 @@
+name: github-linux-02
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: 
+      image: docker://dealii/dealii:master-focal-root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_INSTALL_PREFIX=/opt \
+            -DDEAL_II_SOURCE_DIR=/usr/src/dealii \
+            -DBUILD_BENCHMARKS=OFF \
+            -DBUILD_TESTS=ON \
+            -DSTRICT_BUILD_FLAGS=ON \
+            ../
+      - name: Compile
+        run: |
+          cd build
+          make install
+      - name: Dynamic environment variables
+        run: |
+          cd build
+          echo "N_TESTS=`ctest -N | grep "Total Tests:" | awk '{print $3}'`" >> $GITHUB_ENV
+      - name: Testing
+        run: |
+          cd build
+          echo "Test start index: ${TEST_START}, Number of tests: ${N_TESTS}, Stride between tests: ${TEST_STRIDE}"
+          ctest -I [${TEST_START},${N_TESTS},${TEST_STRIDE}] --output-on-failure
+        env:
+           TEST_START:  2
+           TEST_STRIDE: 3
