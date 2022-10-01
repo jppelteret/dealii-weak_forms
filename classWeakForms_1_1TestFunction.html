@@ -202,7 +202,16 @@ class WeakForms::TestFunction&lt; dim, spacedim &gt;</h3>
 <p>A class that represents a (discrete) global finite element test function. </p>
 <p>Underlying this global space of test functions might be a single finite element (scalar-, vector-, or tensor-valued), or grouping of finite element spaces. The abstract space ( \( \mathcal{L}\left(2\right) \), \( \mathcal{H}\left(1\right) \), \( \mathcal{H}\left(\text{curl}\right) \), \( \mathcal{H}\left(\text{div}\right) \) ) or composition of spaces that this represents is somewhat arbitrary.</p>
 <p>It is possible to retrieve a "view" into a component (or selection of components) of the global space. The purpose of this is to provide some further context as to what that component (or collection thereof) represents, which then permits certain additional operations to be performed. For instance, the <code>curl</code> of an arbitrary quantity is ill-defined, but for vector-valued components this is well defined.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt; test;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Get some objects that represent the (differential) operators</span></div>
+<div class="line"><span class="comment">// acting on the space.</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_val      = test.<a class="code" href="classWeakForms_1_1TestFunction.html#a27497bbaf4628f85f398429b722182b6">value</a>();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_grad     = test.gradient();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_ave_hess = test.average_of_hessians();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_jump_d3  = test.jump_in_third_derivatives();</div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">dim</td><td>The dimension in which the test function is being evaluated. </td></tr>
     <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the test function is being evaluated. </td></tr>
@@ -210,7 +219,7 @@ class WeakForms::TestFunction&lt; dim, spacedim &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00250">250</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00263">263</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a49a87a8afbd58b4d79a7afdacd0c9af3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49a87a8afbd58b4d79a7afdacd0c9af3">&#9670;&nbsp;</a></span>FEValuesViewsType</h2>
@@ -404,7 +413,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00254">254</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00267">267</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -478,7 +487,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00388">388</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00401">401</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -510,7 +519,7 @@ template&lt;int dim, int spacedim&gt; </div>
 
 <p>Implements <a class="el" href="classWeakForms_1_1Space.html#a3c6c36ae5abe091d0a388b3889f7de79">WeakForms::Space&lt; dim, spacedim &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00261">261</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00274">274</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -542,7 +551,7 @@ template&lt;int dim, int spacedim&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Space.html#a54f278ba786f335434243ea9dde1b389">WeakForms::Space&lt; dim, spacedim &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00267">267</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00280">280</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -574,7 +583,7 @@ template&lt;int dim, int spacedim&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Space.html#a20df03ef41c4d65bc610c4750bb22837">WeakForms::Space&lt; dim, spacedim &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00279">279</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00292">292</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -606,7 +615,7 @@ template&lt;int dim, int spacedim&gt; </div>
 
 <p>Implements <a class="el" href="classWeakForms_1_1Space.html#ad28b8e1ce406cce0876372e0256074df">WeakForms::Space&lt; dim, spacedim &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00291">291</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00304">304</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -638,7 +647,7 @@ template&lt;int dim, int spacedim&gt; </div>
 
 <p>Implements <a class="el" href="classWeakForms_1_1Space.html#a7435b874ecf715b2b7d67585c819c71a">WeakForms::Space&lt; dim, spacedim &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00298">298</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00311">311</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -668,7 +677,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00307">307</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00320">320</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -698,7 +707,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00316">316</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00329">329</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -730,7 +739,7 @@ template&lt;int rank&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00326">326</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00339">339</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -762,7 +771,7 @@ template&lt;int rank&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00337">337</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l00350">350</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -788,7 +797,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02663">2663</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02702">2702</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -814,7 +823,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02679">2679</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02718">2718</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -840,7 +849,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02695">2695</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02734">2734</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -866,7 +875,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02711">2711</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02750">2750</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -892,7 +901,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02727">2727</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02766">2766</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -918,7 +927,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02746">2746</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02785">2785</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -944,7 +953,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02761">2761</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02800">2800</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -970,7 +979,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02776">2776</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02815">2815</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -996,7 +1005,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02791">2791</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02830">2830</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -1022,7 +1031,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02806">2806</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02845">2845</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -1048,7 +1057,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02821">2821</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02860">2860</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -1074,7 +1083,7 @@ template&lt;int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02836">2836</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spaces_8h_source.html#l02875">2875</a> of file <a class="el" href="spaces_8h_source.html">spaces.h</a>.</p>
 
 </div>
 </div>
@@ -1389,6 +1398,7 @@ template&lt;int dim, int spacedim&gt; </div>
 <li>include/weak_forms/<a class="el" href="spaces_8h_source.html">spaces.h</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="aclassWeakForms_1_1TestFunction_html_a27497bbaf4628f85f398429b722182b6"><div class="ttname"><a href="classWeakForms_1_1TestFunction.html#a27497bbaf4628f85f398429b722182b6">WeakForms::TestFunction::value</a></div><div class="ttdeci">auto value() const</div><div class="ttdef"><b>Definition:</b> <a href="spaces_8h_source.html#l02702">spaces.h:2702</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

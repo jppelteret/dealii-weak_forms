@@ -155,7 +155,18 @@ Private Attributes</h2></td></tr>
 class WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</h3>
 
 <p>A view into a symmetric tensor subspace of a global finite element space. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> SubSpaceExtractors::SymmetricTensor&lt;2&gt; subspace_extractor(</div>
+<div class="line">  0, <span class="stringliteral">&quot;S&quot;</span>, <span class="stringliteral">&quot;\\mathbf{S}&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt; test;</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span>                        test_S = test[subspace_extractor];</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Get some objects that represent the (differential) operators</span></div>
+<div class="line"><span class="comment">// acting on the subspace.</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_S_val  = test_S.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_S_grad = test_S.gradient();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_S_div  = test_S.divergence();</div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">rank_</td><td>The rank of the tensor that this subspace is associated with. </td></tr>
     <tr><td class="paramname">SpaceType_</td><td>A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution. </td></tr>
@@ -163,7 +174,7 @@ class WeakForms::SubSpaceViews::SymmetricTensor&lt; rank_, SpaceType_ &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01387">1387</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01449">1449</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ad87d9d97e18c3d704a94757f8c4bdceb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad87d9d97e18c3d704a94757f8c4bdceb">&#9670;&nbsp;</a></span>value_type</h2>
@@ -181,7 +192,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01399">1399</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01461">1461</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -201,7 +212,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01404">1404</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01466">1466</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -299,7 +310,7 @@ template&lt;int rank_, typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01410">1410</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01472">1472</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -328,7 +339,7 @@ template&lt;int rank_, typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01416">1416</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01478">1478</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -359,7 +370,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01429">1429</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01491">1491</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -390,7 +401,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01440">1440</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01502">1502</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>

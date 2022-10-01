@@ -214,14 +214,25 @@ Private Attributes</h2></td></tr>
 class WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</h3>
 
 <p>A view into a scalar subspace of a global finite element space. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> SubSpaceExtractors::Scalar  subspace_extractor(0, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt; test;</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span>                        test_s = test[subspace_extractor];</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Get some objects that represent the (differential) operators</span></div>
+<div class="line"><span class="comment">// acting on the subspace.</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_s_val      = test_s.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_s_lap      = test_s.laplacian();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_s_ave_hess = test_s.average_of_hessians();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_s_jump_d3  = test_s.jump_in_third_derivatives();</div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">SpaceType_</td><td>A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00742">742</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00757">757</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a945fcf4529d1d54a1d91f370e5f46a0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a945fcf4529d1d54a1d91f370e5f46a0e">&#9670;&nbsp;</a></span>value_type</h2>
@@ -239,7 +250,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00754">754</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00769">769</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -259,7 +270,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00758">758</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00773">773</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -279,7 +290,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00762">762</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00777">777</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -299,7 +310,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00767">767</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00782">782</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -319,7 +330,7 @@ template&lt;typename ScalarType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00772">772</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00787">787</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -417,7 +428,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00779">779</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00794">794</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -446,7 +457,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00785">785</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00800">800</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -475,7 +486,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00791">791</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00806">806</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +515,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00797">797</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00812">812</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -533,7 +544,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00803">803</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00818">818</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -564,7 +575,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00816">816</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00831">831</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -595,7 +606,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00827">827</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00842">842</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -626,7 +637,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00838">838</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00853">853</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -657,7 +668,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00849">849</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00864">864</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -688,7 +699,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00860">860</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00875">875</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -717,7 +728,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00869">869</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00884">884</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -746,7 +757,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00875">875</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00890">890</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -775,7 +786,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00881">881</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00896">896</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -804,7 +815,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00887">887</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00902">902</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -833,7 +844,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00893">893</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00908">908</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -862,7 +873,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00899">899</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00914">914</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -891,7 +902,7 @@ template&lt;typename SpaceType_ &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00905">905</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00920">920</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -922,7 +933,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00918">918</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00933">933</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -953,7 +964,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00929">929</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00944">944</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -984,7 +995,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00940">940</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00955">955</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1026,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00951">951</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00966">966</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -1046,7 +1057,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00963">963</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00978">978</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -1077,7 +1088,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00974">974</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00989">989</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1119,7 @@ template&lt;types::solution_index solution_index = numbers::linearizable_solutio
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00985">985</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01000">1000</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
