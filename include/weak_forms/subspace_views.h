@@ -470,13 +470,22 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A namespace dedicated to objects that represent a subspace within a global finite element space.
+   */
   namespace SubSpaceViews
   {
-    template <typename SpaceType, typename ExtractorType>
+    /**
+     * @brief A base class for  objects that represent a subspace within a global finite element space.
+     *
+     * @tparam SpaceType A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+     * @tparam FEValuesExtractors_t One of the extractors from the deal.II FEValuesExtractors namespace.
+     */
+    template <typename SpaceType, typename FEValuesExtractors_t>
     class SubSpaceViewBase
     {
     public:
-      using extractor_type = ExtractorType;
+      using extractor_type = FEValuesExtractors_t;
 
       virtual ~SubSpaceViewBase() = default;
 
@@ -525,7 +534,7 @@ namespace WeakForms
         return space.get_symbol_latex(decorator);
       }
 
-      const ExtractorType &
+      const FEValuesExtractors_t &
       get_extractor() const
       {
         return extractor;
@@ -537,8 +546,8 @@ namespace WeakForms
 
       // Only want this to be a base class providing common implementation
       // for concrete views
-      explicit SubSpaceViewBase(const SpaceType &    space,
-                                const ExtractorType &extractor)
+      explicit SubSpaceViewBase(const SpaceType &           space,
+                                const FEValuesExtractors_t &extractor)
         : space(space)
         , extractor(extractor)
       {}
@@ -552,16 +561,26 @@ namespace WeakForms
       }
 
     private:
-      const SpaceType     space;
-      const ExtractorType extractor;
+      const SpaceType            space;
+      const FEValuesExtractors_t extractor;
     };
 
 
     namespace internal
     {
-      template <typename ExtractorType>
+      /**
+       * @brief A helper class that provides more context to, and surrounding, a deal.II extractor and links the other deal.II structures that would typically be used in conjunction with the extractor.
+       *
+       * @tparam FEValuesExtractors_t One of the extractors from the deal.II FEValuesExtractors namespace.
+       */
+      template <typename FEValuesExtractors_t>
       struct FEValuesExtractorHelper;
 
+
+
+      /**
+       * @brief A FEValuesExtractorHelper of the SubSpaceExtractor class for the extraction of scalar subspaces.
+       */
       template <>
       struct FEValuesExtractorHelper<FEValuesExtractors::Scalar>
       {
@@ -580,6 +599,11 @@ namespace WeakForms
         }
       };
 
+
+
+      /**
+       * @brief A FEValuesExtractorHelper of the SubSpaceExtractor class for the extraction of vector subspaces.
+       */
       template <>
       struct FEValuesExtractorHelper<FEValuesExtractors::Vector>
       {
@@ -598,6 +622,13 @@ namespace WeakForms
         }
       };
 
+
+
+      /**
+       * @brief A FEValuesExtractorHelper of the SubSpaceExtractor class for the extraction of tensor subspaces.
+       *
+       * @tparam rank_ The rank of the tensor that this subspace is associated with.
+       */
       template <int rank_>
       struct FEValuesExtractorHelper<FEValuesExtractors::Tensor<rank_>>
       {
@@ -616,6 +647,12 @@ namespace WeakForms
         }
       };
 
+
+      /**
+       * @brief A FEValuesExtractorHelper of the SubSpaceExtractor class for the extraction of symmetric tensor subspaces.
+       *
+       * @tparam rank_ The rank of the tensor that this subspace is associated with.
+       */
       template <int rank_>
       struct FEValuesExtractorHelper<FEValuesExtractors::SymmetricTensor<rank_>>
       {
@@ -638,12 +675,17 @@ namespace WeakForms
 
 
 /**
- * A macro to implement the common parts of a subspace view class.
- * It is expected that the unary op derives from a
+ * @brief A macro to implement the common parts of a subspace view class.
+ *
+ *  It is expected that the unary op derives from a
  * `SubSpaceViewBase<SpaceType, FEValuesExtractors::<TYPE>>` .
  *
  * What remains to be defined are:
  *   - `static const int rank`
+ *
+ * @param ClassName The name of the class to be generated.
+ * @param SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+ * @param FEValuesExtractorType One of the extractors from the deal.II FEValuesExtractors namespace.
  *
  * @note The @p ClassName should match the type that is used in the
  * FEValuesExtractors and FEValuesViews namespaces.
@@ -702,6 +744,12 @@ public:                                                                     \
   }
 
 
+
+    /**
+     * @brief A view into a scalar subspace of a global finite element space.
+     *
+     * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+     */
     template <typename SpaceType_>
     class Scalar final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Scalar>
@@ -953,6 +1001,12 @@ public:                                                                     \
     };
 
 
+
+    /**
+     * @brief A view into a vector subspace of a global finite element space.
+     *
+     * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+     */
     template <typename SpaceType_>
     class Vector final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Vector>
@@ -1244,6 +1298,13 @@ public:                                                                     \
     };
 
 
+
+    /**
+     * @brief A view into a tensor subspace of a global finite element space.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+     */
     template <int rank_, typename SpaceType_>
     class Tensor final
       : public SubSpaceViewBase<SpaceType_, FEValuesExtractors::Tensor<rank_>>
@@ -1327,6 +1388,13 @@ public:                                                                     \
     };
 
 
+
+    /**
+     * @brief A view into a symmetric tensor subspace of a global finite element space.
+     *
+     * @tparam rank_ The rank of the tensor that this subspace is associated with.
+     * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
+     */
     template <int rank_, typename SpaceType_>
     class SymmetricTensor final
       : public SubSpaceViewBase<SpaceType_,
@@ -1551,8 +1619,8 @@ namespace WeakForms
 
 
 /**
- * A macro to implement the common parts of a symbolic op class
- * for test functions and trial solution subspaces.
+ * @brief A macro to implement the common parts of a symbolic op class for test functions and trial solution subspaces.
+ *
  * It is expected that the unary op derives from a
  * SymbolicOp[TYPE]Base<SubSpaceViewsType> .
  *
@@ -3518,7 +3586,7 @@ protected:                                                                     \
   namespace internal
   {
     /**
-     * Convert field solutions to a test function or trial solution.
+     * @brief Convert field solutions to a test function or trial solution.
      *
      * This can be useful as a shortcut so that users can express
      * everything in terms of the field solutions, and then do in-place
@@ -3532,7 +3600,7 @@ protected:                                                                     \
     struct ConvertTo
     {
       /**
-       * Convert a FieldSolution to a TestFunction.
+       * @brief Convert a FieldSolution to a TestFunction.
        *
        * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
        */
@@ -3585,7 +3653,7 @@ protected:                                                                     \
 
 
       /**
-       * Convert a FieldSolution to a TrialSolution.
+       * @brief Convert a FieldSolution to a TrialSolution.
        *
        * Variant for SubSpaceViews::Scalar and SubSpaceViews::Vector.
        */
@@ -3638,7 +3706,7 @@ protected:                                                                     \
 
 
       /**
-       * Convert a FieldSolution to a TestFunction.
+       * @brief Convert a FieldSolution to a TestFunction.
        *
        * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
        */
@@ -3692,7 +3760,7 @@ protected:                                                                     \
 
 
       /**
-       * Convert a FieldSolution to a TrialSolution.
+       * @brief Convert a FieldSolution to a TrialSolution.
        *
        * Variant for SubSpaceViews::Tensor and SubSpaceViews::SymmetricTensor.
        */
