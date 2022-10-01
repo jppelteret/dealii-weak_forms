@@ -30,6 +30,12 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * @brief A class that facilitates the extraction of data from the field solution.
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   */
   template <int dim, int spacedim = dim>
   struct SolutionExtractionData
   {

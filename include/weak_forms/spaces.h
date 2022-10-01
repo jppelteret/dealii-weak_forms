@@ -91,8 +91,8 @@ namespace WeakForms
    * Underlying this global space might be a single finite element (scalar-,
    * vector-, or tensor-valued), or grouping of finite element spaces. The
    * abstract space (
-   * @f$ \mathcal{L}\left(2\right) @f$,
-   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{L}^{2}@f$,
+   * @f$ \mathcal{H}^{1}@f$,
    * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
    * @f$ \mathcal{H}\left(\text{div}\right) @f$
    * ) or composition of spaces that this represents is somewhat arbitrary.
@@ -230,8 +230,8 @@ namespace WeakForms
    * Underlying this global space of test functions might be a single finite
    * element (scalar-, vector-, or tensor-valued), or grouping of finite element
    * spaces. The abstract space (
-   * @f$ \mathcal{L}\left(2\right) @f$,
-   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{L}^{2}@f$,
+   * @f$ \mathcal{H}^{1}@f$,
    * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
    * @f$ \mathcal{H}\left(\text{div}\right) @f$
    * ) or composition of spaces that this represents is somewhat arbitrary.
@@ -413,8 +413,8 @@ namespace WeakForms
    * Underlying this global space of trial solutions might be a single finite
    * element (scalar-, vector-, or tensor-valued), or grouping of finite element
    * spaces. The abstract space (
-   * @f$ \mathcal{L}\left(2\right) @f$,
-   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{L}^{2}@f$,
+   * @f$ \mathcal{H}^{1}@f$,
    * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
    * @f$ \mathcal{H}\left(\text{div}\right) @f$
    * ) or composition of spaces that this represents is somewhat arbitrary.
@@ -605,8 +605,8 @@ namespace WeakForms
    * Underlying the global field solution might be a single finite element
    * (scalar-, vector-, or tensor-valued), or grouping of finite element spaces.
    * The abstract space (
-   * @f$ \mathcal{L}\left(2\right) @f$,
-   * @f$ \mathcal{H}\left(1\right) @f$,
+   * @f$ \mathcal{L}^{2}@f$,
+   * @f$ \mathcal{H}^{1}@f$,
    * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
    * @f$ \mathcal{H}\left(\text{div}\right) @f$
    * ) or composition of spaces that this represents is somewhat arbitrary.
@@ -803,8 +803,8 @@ namespace WeakForms
      * Underlying the global field solution might be a single finite element
      * (scalar-, vector-, or tensor-valued), or grouping of finite element
      * spaces. The abstract space (
-     * @f$ \mathcal{L}\left(2\right) @f$,
-     * @f$ \mathcal{H}\left(1\right) @f$,
+     * @f$ \mathcal{L}^{2}@f$,
+     * @f$ \mathcal{H}^{1}@f$,
      * @f$ \mathcal{H}\left(\text{curl}\right) @f$,
      * @f$ \mathcal{H}\left(\text{div}\right) @f$
      * ) or composition of spaces that this represents is somewhat arbitrary.
