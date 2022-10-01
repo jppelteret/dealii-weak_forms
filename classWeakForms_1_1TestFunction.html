@@ -200,7 +200,7 @@ Private Attributes</h2></td></tr>
 class WeakForms::TestFunction&lt; dim, spacedim &gt;</h3>
 
 <p>A class that represents a (discrete) global finite element test function. </p>
-<p>Underlying this global space of test functions might be a single finite element (scalar-, vector-, or tensor-valued), or grouping of finite element spaces. The abstract space ( \( \mathcal{L}\left(2\right) \), \( \mathcal{H}\left(1\right) \), \( \mathcal{H}\left(\text{curl}\right) \), \( \mathcal{H}\left(\text{div}\right) \) ) or composition of spaces that this represents is somewhat arbitrary.</p>
+<p>Underlying this global space of test functions might be a single finite element (scalar-, vector-, or tensor-valued), or grouping of finite element spaces. The abstract space ( \( \mathcal{L}^{2}\), \( \mathcal{H}^{1}\), \( \mathcal{H}\left(\text{curl}\right) \), \( \mathcal{H}\left(\text{div}\right) \) ) or composition of spaces that this represents is somewhat arbitrary.</p>
 <p>It is possible to retrieve a "view" into a component (or selection of components) of the global space. The purpose of this is to provide some further context as to what that component (or collection thereof) represents, which then permits certain additional operations to be performed. For instance, the <code>curl</code> of an arbitrary quantity is ill-defined, but for vector-valued components this is well defined.</p>
 <p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt; test;</div>
 <div class="line"> </div>
