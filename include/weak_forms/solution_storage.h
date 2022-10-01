@@ -37,6 +37,73 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * @brief An class that allows one to store solution vectors that may be referenced by the weak forms during assembly.
+   *
+   * The use of this class becomes necessary when the finite element solution,
+   * (or its history), forms a components of the linear or bilinear forms that
+   * are to be assembled. The solution field(s) can come from either the primary
+   * DoFHandler that is to be used for the assembly process, or another
+   * DoFHandler that would have been used to govern another finite element
+   * simulation.
+   *
+   * An example of typical usage:
+   * @code {.cpp}
+   * const FEValuesExtractors::Scalar extractor(0);
+   * const SubSpaceExtractors::Scalar subspace_extractor_u(0, extractor,
+   *                                                       "u", "u");
+   *
+   * // Assign solution vectors to the storage object.
+   * const SolutionStorage<Vector<double>> solution_storage(
+   *   {&this->solution_u,       // Solution at current timestep  -- index 0
+   *    &this->old_solution_u}); // Solution at previous timestep -- index 1
+   *
+   * // Indexing:
+   * // - Index 0 is to represent a  the
+   * constexpr WeakForms::types::solution_index solution_index_u    = 0;
+   * constexpr WeakForms::types::solution_index solution_index_u_t1 = 1;
+   *
+   * // Global field solution
+   * const FieldSolution<dim, spacedim> field_solution;
+   *
+   * // Field solution subspaces:
+   * // - Gradient of solution at current timestep
+   * const auto grad_u = field_solution[subspace_extractor_u]
+   *                       .template gradient<solution_index_u>();
+   * // - Solution value at previous timestep
+   * const auto u_t1   = field_solution[subspace_extractor_u]
+   *                       .template value<solution_index_u_t1>();
+   *
+   * // ... pass solution_storage to assembler.
+   * @endcode
+   *
+   * An example of usage when more than one DoFHandler is involved in the
+   * assembly of a linear system:
+   * @code {.cpp}
+   * using VectorType     = TrilinosWrappers::MPI::Vector;
+   * using DoFHandlerType = DoFHandler<spacedim>;
+   *
+   * // Data structures referencing the first finite element problem...
+   * DoFHandlerType dof_handler_fe_problem_1;
+   * VectorType     solution_fe_problem_1;
+   * // ...
+   *
+   * // ... and those referencing the second finite element problem.
+   * DoFHandlerType dof_handler_fe_problem_2;
+   * VectorType     solution_fe_problem_2;
+   * // ...
+   *
+   * // Assign solution vectors to the storage object.
+   * const SolutionStorage<VectorType, DoFHandlerType> solution_storage(
+   *   {&this->solution_fe_problem_1,  // Solution for FE problem 1 -- index 0
+   *    &this->solution_fe_problem_2}, // Solution for FE problem 2 -- index 1
+   *   {&this->dof_handler_fe_problem_1,
+   *    &this->dof_handler_fe_problem_2});
+   * @endcode
+   *
+   * @tparam VectorType The linear algebra type for the solution vector.
+   * @tparam DoFHandlerType The class type of the DoFHandler used for assembly.
+   */
   template <typename VectorType, typename DoFHandlerType = std::nullptr_t>
   class SolutionStorage
   {
