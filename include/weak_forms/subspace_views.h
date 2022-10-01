@@ -748,6 +748,21 @@ public:                                                                     \
     /**
      * @brief A view into a scalar subspace of a global finite element space.
      *
+     * An example of usage:
+     * @code {.cpp}
+     * const SubSpaceExtractors::Scalar  subspace_extractor(0, "s", "s");
+     * const TestFunction<dim, spacedim> test;
+     * const auto                        test_s = test[subspace_extractor];
+     *
+     * // Get some objects that represent the (differential) operators
+     * // acting on the subspace.
+     * const auto test_s_val      = test_s.value();
+     * const auto test_s_lap      = test_s.laplacian();
+     * const auto test_s_ave_hess = test_s.average_of_hessians();
+     * const auto test_s_jump_d3  = test_s.jump_in_third_derivatives();
+     * // ... etc.
+     * @endcode
+     *
      * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
      */
     template <typename SpaceType_>
@@ -1004,6 +1019,23 @@ public:                                                                     \
 
     /**
      * @brief A view into a vector subspace of a global finite element space.
+     *
+     * An example of usage:
+     * @code {.cpp}
+     * const SubSpaceExtractors::Vector   subspace_extractor(
+     *   0, "u", "\\mathbf{u}");
+     * const TrialSolution<dim, spacedim> trial;
+     * const auto                         trial_v = trial[subspace_extractor];
+     *
+     * // Get some objects that represent the (differential) operators
+     * // acting on the subspace.
+     * const auto trial_v_val      = trial_v.value();
+     * const auto trial_v_curl     = trial_v.curl();
+     * const auto trial_v_div      = trial_v.divergence();
+     * const auto trial_v_ave_hess = trial_v.average_of_hessians();
+     * const auto trial_v_jump_d3  = trial_v.jump_in_third_derivatives();
+     * // ... etc.
+     * @endcode
      *
      * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
      */
@@ -1302,6 +1334,21 @@ public:                                                                     \
     /**
      * @brief A view into a tensor subspace of a global finite element space.
      *
+     * An example of usage:
+     * @code {.cpp}
+     * const SubSpaceExtractors::Tensor<2> subspace_extractor(
+     *   0, "T", "\\mathbf{T}");
+     * const FieldSolution<dim, spacedim> solution;
+     * const auto                         soln_T = solution[subspace_extractor];
+     *
+     * // Get some objects that represent the (differential) operators
+     * // acting on the subspace.
+     * const auto soln_T_val  = soln_T.value();
+     * const auto soln_T_grad = soln_T.gradient();
+     * const auto soln_T_div  = soln_T.divergence();
+     * // ... etc.
+     * @endcode
+     *
      * @tparam rank_ The rank of the tensor that this subspace is associated with.
      * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.
      */
@@ -1391,6 +1438,21 @@ public:                                                                     \
 
     /**
      * @brief A view into a symmetric tensor subspace of a global finite element space.
+     *
+     * An example of usage:
+     * @code {.cpp}
+     * const SubSpaceExtractors::SymmetricTensor<2> subspace_extractor(
+     *   0, "S", "\\mathbf{S}");
+     * const TestFunction<dim, spacedim> test;
+     * const auto                        test_S = test[subspace_extractor];
+     *
+     * // Get some objects that represent the (differential) operators
+     * // acting on the subspace.
+     * const auto test_S_val  = test_S.value();
+     * const auto test_S_grad = test_S.gradient();
+     * const auto test_S_div  = test_S.divergence();
+     * // ... etc.
+     * @endcode
      *
      * @tparam rank_ The rank of the tensor that this subspace is associated with.
      * @tparam SpaceType_ A weak forms object that represents a space. This could be either a test function, trial solution, or a field solution.

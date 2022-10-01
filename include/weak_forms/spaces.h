@@ -243,6 +243,19 @@ namespace WeakForms
    * performed. For instance, the `curl` of an arbitrary quantity is
    * ill-defined, but for vector-valued components this is well defined.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const TestFunction<dim, spacedim> test;
+   *
+   * // Get some objects that represent the (differential) operators
+   * // acting on the space.
+   * const auto test_val      = test.value();
+   * const auto test_grad     = test.gradient();
+   * const auto test_ave_hess = test.average_of_hessians();
+   * const auto test_jump_d3  = test.jump_in_third_derivatives();
+   * // ... etc.
+   * @endcode
+   *
    * @tparam dim The dimension in which the test function is being evaluated.
    * @tparam spacedim The spatial dimension in which the test function is being evaluated.
    */
@@ -412,6 +425,19 @@ namespace WeakForms
    * represents, which then permits certain additional operations to be
    * performed. For instance, the `curl` of an arbitrary quantity is
    * ill-defined, but for vector-valued components this is well defined.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TrialSolution<dim, spacedim> trial;
+   *
+   * // Get some objects that represent the (differential) operators
+   * // acting on the space.
+   * const auto trial_val      = trial.value();
+   * const auto trial_grad     = trial.gradient();
+   * const auto trial_ave_hess = trial.average_of_hessians();
+   * const auto trial_jump_d3  = trial.jump_in_third_derivatives();
+   * // ... etc.
+   * @endcode
    *
    * @tparam dim The dimension in which the trial solution is being evaluated.
    * @tparam spacedim The spatial dimension in which the trial solution is being evaluated.
@@ -591,6 +617,19 @@ namespace WeakForms
    * represents, which then permits certain additional operations to be
    * performed. For instance, the `curl` of an arbitrary quantity is
    * ill-defined, but for vector-valued components this is well defined.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const FieldSolution<dim, spacedim> solution;
+   *
+   * // Get some objects that represent the (differential) operators
+   * // acting on the space.
+   * const auto soln_val      = solution.value();
+   * const auto soln_grad     = solution.gradient();
+   * const auto soln_ave_hess = solution.average_of_hessians();
+   * const auto soln_jump_d3  = solution.jump_in_third_derivatives();
+   * // ... etc.
+   * @endcode
    *
    * @tparam dim The dimension in which the field solution is being evaluated.
    * @tparam spacedim The spatial dimension in which the field solution is being evaluated.
