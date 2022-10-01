@@ -30,6 +30,17 @@ WEAK_FORMS_NAMESPACE_OPEN
 
 namespace WeakForms
 {
+  /**
+   * @brief A type trait that checks to see if a class is a scalar type.
+   *
+   * It is, essentially, a check to see if type @p T is a floating point or
+   * integer type,  a complex number, or a vectorised number. This corresponds
+   * closely with the check performed by
+   * <a
+   * href="https://www.dealii.org/current/doxygen/deal.II/structEnableIfScalar.html">`dealii::EnableIfScalar`</a>.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
   template <typename T>
   class is_scalar_type
   {
@@ -57,9 +68,17 @@ namespace WeakForms
   };
 
 
+
+  /**
+   * @brief A type trait that checks to see two classes are both scalar types.
+   *
+   * @tparam T A class type to be tested for the trait.
+   * @tparam U A class type to be tested for the trait.
+   */
   template <typename T, typename U, typename = void>
   struct are_scalar_types : std::false_type
   {};
+
 
 
 #ifndef DOXYGEN
