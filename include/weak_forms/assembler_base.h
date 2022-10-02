@@ -1792,8 +1792,13 @@ namespace WeakForms
 
 
   /**
+   * @brief A base class for assemblers of the discrete integral forms.
    *
-   * @param width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   * @tparam ScalarType The underlying scalar type.
+   * @tparam use_vectorization A flag that can be used to disable assembly using SIMD intrinsics (vectorization).
+   * @tparam width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
    */
   template <int dim,
             int spacedim,
