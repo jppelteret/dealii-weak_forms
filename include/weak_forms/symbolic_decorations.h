@@ -218,13 +218,14 @@ namespace WeakForms
 
 
   /**
-   * A data structure that defines the labels to be used
-   * to construct symbolic variables identifiers.
+   * @brief A data structure that defines the labels to be used to construct symbolic variables identifiers.
    *
-   * @note It is critical to ensure that the labels are
-   * unique. If not then there is the possibility that one
-   * can generate conflicting symbolic expressions that
-   * will not be detected during their use.
+   * The classes that are stored and referenced by this class can be customised,
+   * so the naming scheme can be amended (partially) to suit a user's needs.
+   *
+   * @warning It is critical to ensure that the labels are unique. If not, then
+   * there is the possibility that one can generate conflicting symbolic
+   * expressions that will not be detected during their use.
    */
   struct SymbolicNames
   {
@@ -247,6 +248,13 @@ namespace WeakForms
 
 
 
+  /**
+   * @brief A data structure that defines the labels to be used to construct ASCII-formatted symbolic variables identifiers.
+   *
+   * @warning It is critical to ensure that the labels are unique. If not, then
+   * there is the possibility that one can generate conflicting symbolic
+   * expressions that will not be detected during their use.
+   */
   struct SymbolicNamesAscii : public SymbolicNames
   {
     /**
@@ -270,6 +278,15 @@ namespace WeakForms
           Decorations::SymbolicNameType::ascii));
   }; // struct SymbolicNamesAscii
 
+
+
+  /**
+   * @brief A data structure that defines the labels to be used to construct LaTeX-formatted symbolic variables identifiers.
+   *
+   * @warning It is critical to ensure that the labels are unique. If not, then
+   * there is the possibility that one can generate conflicting symbolic
+   * expressions that will not be detected during their use.
+   */
   struct SymbolicNamesLaTeX : public SymbolicNames
   {
     /**
@@ -294,9 +311,9 @@ namespace WeakForms
   }; // struct SymbolicNamesLaTeX
 
 
+
   /**
-   * A class to do all decorations
-   *
+   * @brief A class whose purpose is to construct all decorations for symbols required for ASCII and LaTeX output.
    */
   struct SymbolicDecorations
   {
