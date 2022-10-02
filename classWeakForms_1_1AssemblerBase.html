@@ -84,6 +84,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A base class for assemblers of the discrete integral forms.  
+ <a href="classWeakForms_1_1AssemblerBase.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="assembler__base_8h_source.html">weak_forms/assembler_base.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -274,14 +277,19 @@ Static Private Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;int dim, int spacedim, typename ScalarType, bool use_vectorization, std::size_t width&gt;<br />
 class WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</h3>
 
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
+<p>A base class for assemblers of the discrete integral forms. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the scalar is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the scalar is being evaluated. </td></tr>
+    <tr><td class="paramname">ScalarType</td><td>The underlying scalar type. </td></tr>
+    <tr><td class="paramname">use_vectorization</td><td>A flag that can be used to disable assembly using SIMD intrinsics (vectorization). </td></tr>
     <tr><td class="paramname">width</td><td>Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01804">1804</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01809">1809</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a1b3cc71e6e64faee00bd6f37cef5f73b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b3cc71e6e64faee00bd6f37cef5f73b">&#9670;&nbsp;</a></span>scalar_type</h2>
@@ -297,7 +305,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01807">1807</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01812">1812</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -315,7 +323,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01810">1810</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01815">1815</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +341,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01812">1812</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01817">1817</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -351,7 +359,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01817">1817</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01822">1822</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -369,7 +377,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01822">1822</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01827">1827</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -387,7 +395,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01827">1827</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01832">1832</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -405,7 +413,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01834">1834</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01839">1839</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -423,7 +431,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01840">1840</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01845">1845</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -441,7 +449,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01849">1849</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01854">1854</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -459,7 +467,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01857">1857</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01862">1862</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -477,7 +485,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01866">1866</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01871">1871</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -495,7 +503,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01874">1874</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01879">1879</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -552,7 +560,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02457">2457</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02462">2462</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -582,7 +590,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02466">2466</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02471">2471</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -615,7 +623,7 @@ template&lt;typename BinaryOpType , typename std::enable_if&lt; is_binary_integr
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01898">1898</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01903">1903</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -647,7 +655,7 @@ template&lt;typename BinaryOpType , typename std::enable_if&lt; is_binary_integr
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01940">1940</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01945">1945</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -679,7 +687,7 @@ template&lt;typename UnaryOpType , typename std::enable_if&lt; is_unary_integral
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01975">1975</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01980">1980</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -711,7 +719,7 @@ template&lt;typename UnaryOpType , typename std::enable_if&lt; is_unary_integral
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02003">2003</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02008">2008</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -743,7 +751,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02025">2025</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02030">2030</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -775,7 +783,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02082">2082</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02087">2087</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -807,7 +815,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02114">2114</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02119">2119</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -839,7 +847,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02146">2146</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02151">2151</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -871,7 +879,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02177">2177</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02182">2182</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -903,7 +911,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02234">2234</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02239">2239</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -935,7 +943,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02266">2266</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02271">2271</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -967,7 +975,7 @@ template&lt;typename SymbolicOpType , typename std::enable_if&lt; is_symbolic_in
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02298">2298</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02303">2303</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -997,7 +1005,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02324">2324</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02329">2329</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1027,7 +1035,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02364">2364</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02369">2369</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1064,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02404">2404</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02409">2409</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1094,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02410">2410</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02415">2415</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1123,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02416">2416</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02421">2421</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1155,7 @@ template&lt;enum internal::AccumulationSign Sign, typename IntegralType &gt; </d
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02477">2477</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02482">2482</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1193,7 +1201,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpVolumeInteg
 </dl>
 <p>typename VectorType = void const VectorType *const solution = nullptr </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02525">2525</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02530">2530</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1225,7 +1233,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpBoundaryInt
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02733">2733</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02738">2738</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1257,7 +1265,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpInterfaceIn
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02943">2943</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02948">2948</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1302,7 +1310,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpVolumeInteg
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03162">3162</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03167">3167</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1334,7 +1342,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpBoundaryInt
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03230">3230</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03235">3235</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1366,7 +1374,7 @@ template&lt;enum internal::AccumulationSign Sign, typename SymbolicOpInterfaceIn
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03306">3306</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03311">3311</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1395,7 +1403,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03379">3379</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03384">3384</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1424,7 +1432,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03385">3385</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03390">3390</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1509,7 +1517,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03411">3411</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03416">3416</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1594,7 +1602,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03527">3527</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03532">3532</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1685,7 +1693,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03606">3606</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03611">3611</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1776,7 +1784,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03723">3723</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03728">3728</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1861,7 +1869,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03805">3805</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03810">3810</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -1946,7 +1954,7 @@ template&lt;enum internal::AccumulationSign Sign, BilinearFormComponentFilter Co
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03921">3921</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03926">3926</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2019,7 +2027,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04002">4002</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04007">4007</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2092,7 +2100,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04096">4096</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04101">4101</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2171,7 +2179,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04156">4156</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04161">4161</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2250,7 +2258,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04251">4251</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04256">4256</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2323,7 +2331,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04316">4316</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04321">4321</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2396,7 +2404,7 @@ template&lt;enum internal::AccumulationSign Sign, typename TestSpaceOp , typenam
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04410">4410</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04415">4415</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2423,7 +2431,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02422">2422</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02427">2427</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2449,7 +2457,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02423">2423</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02428">2428</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2475,7 +2483,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02426">2426</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02431">2431</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2501,7 +2509,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02427">2427</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02432">2432</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2527,7 +2535,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02428">2428</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02433">2433</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2553,7 +2561,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02429">2429</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02434">2434</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2579,7 +2587,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02432">2432</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02437">2437</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2605,7 +2613,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02433">2433</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02438">2438</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2631,7 +2639,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02434">2434</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02439">2439</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2657,7 +2665,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02437">2437</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02442">2442</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2683,7 +2691,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02438">2438</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02443">2443</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2709,7 +2717,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02439">2439</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02444">2444</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2735,7 +2743,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02442">2442</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02447">2447</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2761,7 +2769,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02443">2443</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02448">2448</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2787,7 +2795,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02444">2444</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02449">2449</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2815,7 +2823,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 <p>A flag to indicate whether or not the global system is to be assembled in symmetric form, or not.</p>
 <p>If so, then we only ever assemble the upper half plus diagonal contributions from any form, and then mirror the upper half contribution into the lower half of the local matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02454">2454</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02459">2459</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>

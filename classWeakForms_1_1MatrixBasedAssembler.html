@@ -86,6 +86,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A matrix-based assembler of the discrete integral forms.  
+ <a href="classWeakForms_1_1MatrixBasedAssembler.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="assembler__matrix__based_8h_source.html">weak_forms/assembler_matrix_based.h</a>&gt;</code></p>
 
 <p>Inherits <a class="el" href="classWeakForms_1_1AssemblerBase.html">WeakForms::AssemblerBase&lt; dim, dim, double, numbers::UseVectorization::value, numbers::VectorizationDefaults&lt; double &gt;::width &gt;</a>.</p>
@@ -320,14 +323,52 @@ Static Private Member Functions</h2></td></tr>
 <div class="textblock"><h3>template&lt;int dim, int spacedim = dim, typename ScalarType = double, bool use_vectorization = numbers::UseVectorization::value, std::size_t width = numbers::VectorizationDefaults&lt;ScalarType&gt;::width&gt;<br />
 class WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</h3>
 
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
+<p>A matrix-based assembler of the discrete integral forms. </p>
+<p>Assemble linear algebra of integrated linear and bilinear forms (or differentiable/self-linearising forms) using an automatically parallelised using multithreading and distributed assembly techniques (the latter if the datatypes are configured for is), as well as vectorisation of local operations.</p>
+<p>This class supports assembly using linear algebra of any type (native deal.II linear algebra, Trilinos or PETSc), as well as standard and hp-adaptive DoFHandlers. Numerous methods have been implemented to allow for the assembly of the full linear system, or just the matrix or vector component of it.</p>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt;  test;</div>
+<div class="line"><span class="keyword">const</span> TrialSolution&lt;dim, spacedim&gt; trial;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Symbolic types for test function, trial solution and a coefficient.</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_val  = test.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> trial_val = trial.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> coeff     = constant_scalar&lt;dim&gt;(1.0);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Assembly operation is defined, but not yet evaluated.</span></div>
+<div class="line">MatrixBasedAssembler&lt;dim, spacedim&gt; assembler;</div>
+<div class="line">assembler += <a class="code" href="namespaceWeakForms.html#afdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_val, coeff, trial_val).dV();</div>
+<div class="line">           - <a class="code" href="namespaceWeakForms.html#a7b7da85d217255f157eddcd2a40ee570">linear_form</a>(test_val, coeff).dV();</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Use the following to force the assembler to run without SIMD intrinsics:</span></div>
+<div class="line"><span class="comment">// constexpr bool use_vectorization = false;</span></div>
+<div class="line"><span class="comment">// MatrixBasedAssembler&lt;dim, spacedim, double,</span></div>
+<div class="line">                        use_vectorization&gt;  assembler;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Setup deal.II objects (would likely be done elsewhere in the code)</span></div>
+<div class="line"><span class="keyword">const</span> QGauss&lt;spacedim&gt;    qf_cell(...);</div>
+<div class="line">DoFHandler&lt;dim, spacedim&gt; dof_handler(...);</div>
+<div class="line">AffineConstraints&lt;double&gt; constraints (...);</div>
+<div class="line">SparseMatrix&lt;double&gt;      system_matrix (...);</div>
+<div class="line">Vector&lt;double&gt;            system_rhs (...);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Now we pass in concrete objects to get data from and assemble into.</span></div>
+<div class="line">assembler.assemble_matrix(system_matrix,</div>
+<div class="line">                          system_rhs,</div>
+<div class="line">                          constraints,</div>
+<div class="line">                          dof_handler,</div>
+<div class="line">                          qf_cell);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the scalar is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the scalar is being evaluated. </td></tr>
+    <tr><td class="paramname">ScalarType</td><td>The underlying scalar type. </td></tr>
+    <tr><td class="paramname">use_vectorization</td><td>A flag that can be used to disable assembly using SIMD intrinsics (vectorization). </td></tr>
     <tr><td class="paramname">width</td><td>Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00203">203</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00257">257</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="ae8c7d240d1f00b0990b8e3c38b8145c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae8c7d240d1f00b0990b8e3c38b8145c9">&#9670;&nbsp;</a></span>CellWorkerType</h2>
@@ -353,7 +394,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00210">210</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00264">264</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -381,7 +422,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00218">218</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00272">272</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -409,7 +450,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00230">230</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00284">284</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -433,7 +474,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01807">1807</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01812">1812</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -457,7 +498,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01810">1810</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01815">1815</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -481,7 +522,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01812">1812</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01817">1817</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -505,7 +546,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01817">1817</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01822">1822</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -529,7 +570,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01822">1822</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01827">1827</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -553,7 +594,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01827">1827</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01832">1832</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -577,7 +618,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01834">1834</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01839">1839</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -601,7 +642,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01840">1840</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01845">1845</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -625,7 +666,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01849">1849</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01854">1854</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -649,7 +690,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01857">1857</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01862">1862</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -673,7 +714,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01866">1866</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01871">1871</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -697,7 +738,7 @@ template&lt;typename CellIteratorType , typename ScratchData , typename CopyData
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01874">1874</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01879">1879</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -727,7 +768,7 @@ template&lt;int dim, int spacedim = dim, typename ScalarType  = double, bool use
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00233">233</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00287">287</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -757,7 +798,7 @@ template&lt;int dim, int spacedim = dim, typename ScalarType  = double, bool use
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00236">236</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00290">290</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -831,7 +872,7 @@ template&lt;typename MatrixType , typename DoFHandlerType , typename CellQuadrat
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00261">261</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00315">315</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -892,7 +933,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00284">284</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00338">338</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -953,7 +994,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00309">309</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00363">363</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1034,7 +1075,7 @@ template&lt;typename MatrixType , typename DoFHandlerType , typename CellQuadrat
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00349">349</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00403">403</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1142,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00374">374</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00428">428</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1168,7 +1209,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00401">401</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00455">455</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1241,7 +1282,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00438">438</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00492">492</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1302,7 +1343,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00460">460</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00514">514</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1363,7 +1404,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00484">484</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00538">538</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1444,7 +1485,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00526">526</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00580">580</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1511,7 +1552,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00550">550</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00604">604</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1578,7 +1619,7 @@ template&lt;typename VectorType , typename DoFHandlerType , typename CellQuadrat
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00576">576</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00630">630</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1659,7 +1700,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00618">618</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00672">672</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1726,7 +1767,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00642">642</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00696">696</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1793,7 +1834,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00668">668</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00722">722</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1882,7 +1923,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </dl>
 <dl class="section note"><dt>Note</dt><dd>Does not reset the matrix, so one can assemble from multiple Assemblers into one matrix. This is useful if you want different quadrature rules for different contributions on the same cell. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00712">712</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00766">766</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -1955,7 +1996,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with a solution vector </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00738">738</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00792">792</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -2028,7 +2069,7 @@ template&lt;typename MatrixType , typename VectorType , typename DoFHandlerType 
 </div><div class="memdoc">
 <p>Same as the previous function, but with solution storage </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00766">766</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00820">820</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -2100,7 +2141,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00795">795</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00849">849</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -2172,7 +2213,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00834">834</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__matrix__based_8h_source.html#l00888">888</a> of file <a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a>.</p>
 
 </div>
 </div>
@@ -2200,7 +2241,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01898">1898</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01903">1903</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2228,7 +2269,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01975">1975</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01980">1980</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2256,7 +2297,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02025">2025</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02030">2030</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2284,7 +2325,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02082">2082</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02087">2087</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2312,7 +2353,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02114">2114</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02119">2119</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2340,7 +2381,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02146">2146</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02151">2151</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2368,7 +2409,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01940">1940</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l01945">1945</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2396,7 +2437,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02003">2003</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02008">2008</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2424,7 +2465,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02177">2177</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02182">2182</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2452,7 +2493,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02234">2234</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02239">2239</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2480,7 +2521,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02266">2266</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02271">2271</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2508,7 +2549,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02298">2298</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02303">2303</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2536,7 +2577,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02324">2324</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02329">2329</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2564,7 +2605,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02364">2364</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02369">2369</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2588,7 +2629,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02404">2404</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02409">2409</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2616,7 +2657,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02410">2410</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02415">2415</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2640,7 +2681,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02416">2416</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02421">2421</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2668,7 +2709,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02477">2477</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02482">2482</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2710,7 +2751,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </dl>
 <p>typename VectorType = void const VectorType *const solution = nullptr </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02525">2525</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02530">2530</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2751,7 +2792,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03162">3162</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03167">3167</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2779,7 +2820,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02733">2733</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02738">2738</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2807,7 +2848,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03230">3230</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03235">3235</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2835,7 +2876,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02943">2943</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02948">2948</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2863,7 +2904,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03306">3306</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03311">3311</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2887,7 +2928,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03379">3379</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03384">3384</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2911,7 +2952,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03385">3385</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03390">3390</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -2992,7 +3033,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03411">3411</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03416">3416</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3073,7 +3114,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03527">3527</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03532">3532</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3142,7 +3183,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04002">4002</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04007">4007</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3211,7 +3252,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add cell volume assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04096">4096</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04101">4101</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3298,7 +3339,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03606">3606</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03611">3611</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3385,7 +3426,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03723">3723</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03728">3728</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3460,7 +3501,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04156">4156</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04161">4161</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3535,7 +3576,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add boundary face assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04251">4251</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04256">4256</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3616,7 +3657,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for bilinear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03805">3805</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03810">3810</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3697,7 +3738,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for bilinear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03921">3921</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l03926">3926</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3766,7 +3807,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for linear forms: Vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04316">4316</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04321">4321</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3835,7 +3876,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </div><div class="memdoc">
 <p>Method to add interface face assembly operations for linear forms: Non-vectorized variant </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04410">4410</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l04415">4415</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3860,7 +3901,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02422">2422</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02427">2427</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3884,7 +3925,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02423">2423</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02428">2428</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3908,7 +3949,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02426">2426</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02431">2431</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3932,7 +3973,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02427">2427</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02432">2432</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3956,7 +3997,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02428">2428</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02433">2433</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -3980,7 +4021,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02429">2429</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02434">2434</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4004,7 +4045,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02432">2432</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02437">2437</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4028,7 +4069,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02433">2433</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02438">2438</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4052,7 +4093,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02434">2434</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02439">2439</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4076,7 +4117,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02437">2437</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02442">2442</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4100,7 +4141,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02438">2438</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02443">2443</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4124,7 +4165,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02439">2439</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02444">2444</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4148,7 +4189,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02442">2442</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02447">2447</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4172,7 +4213,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02443">2443</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02448">2448</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4196,7 +4237,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02444">2444</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02449">2449</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4222,7 +4263,7 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 <p>A flag to indicate whether or not the global system is to be assembled in symmetric form, or not.</p>
 <p>If so, then we only ever assemble the upper half plus diagonal contributions from any form, and then mirror the upper half contribution into the lower half of the local matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02454">2454</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assembler__base_8h_source.html#l02459">2459</a> of file <a class="el" href="assembler__base_8h_source.html">assembler_base.h</a>.</p>
 
 </div>
 </div>
@@ -4230,6 +4271,8 @@ template&lt;typename MatrixType , typename VectorType , typename FaceQuadratureT
 <li>include/weak_forms/<a class="el" href="assembler__matrix__based_8h_source.html">assembler_matrix_based.h</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="anamespaceWeakForms_html_afdd7b5677e0e315c3c177d2dbe7cb7f7"><div class="ttname"><a href="namespaceWeakForms.html#afdd7b5677e0e315c3c177d2dbe7cb7f7">WeakForms::bilinear_form</a></div><div class="ttdeci">BilinearForm&lt; TestSpaceOp, Functor, TrialSpaceOp &gt; bilinear_form(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00638">bilinear_forms.h:638</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_html_a7b7da85d217255f157eddcd2a40ee570"><div class="ttname"><a href="namespaceWeakForms.html#a7b7da85d217255f157eddcd2a40ee570">WeakForms::linear_form</a></div><div class="ttdeci">LinearForm&lt; TestSpaceOp, Functor &gt; linear_form(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op)</div><div class="ttdef"><b>Definition:</b> <a href="linear__forms_8h_source.html#l00226">linear_forms.h:226</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
