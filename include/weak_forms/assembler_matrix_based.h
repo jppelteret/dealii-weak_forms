@@ -190,9 +190,63 @@ namespace WeakForms
 
   } // namespace internal
 
+
+
   /**
+   * @brief A matrix-based assembler of the discrete integral forms.
    *
-   * @param width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
+   * Assemble linear algebra of integrated linear and bilinear forms (or
+   * differentiable/self-linearising forms) using an automatically parallelised
+   * using multithreading and distributed assembly techniques (the latter if the
+   * datatypes are configured for is), as well as vectorisation of local
+   * operations.
+   *
+   * This class supports assembly using linear algebra of any type (native
+   * deal.II linear algebra, Trilinos or PETSc), as well as standard and
+   * hp-adaptive DoFHandlers. Numerous methods have been implemented to allow
+   * for the assembly of the full linear system, or just the matrix or vector
+   * component of it.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TestFunction<dim, spacedim>  test;
+   * const TrialSolution<dim, spacedim> trial;
+   *
+   * // Symbolic types for test function, trial solution and a coefficient.
+   * const auto test_val  = test.value();
+   * const auto trial_val = trial.value();
+   * const auto coeff     = constant_scalar<dim>(1.0);
+   *
+   * // Assembly operation is defined, but not yet evaluated.
+   * MatrixBasedAssembler<dim, spacedim> assembler;
+   * assembler += bilinear_form(test_val, coeff, trial_val).dV();
+   *            - linear_form(test_val, coeff).dV();
+   *
+   * // Use the following to force the assembler to run without SIMD intrinsics:
+   * // constexpr bool use_vectorization = false;
+   * // MatrixBasedAssembler<dim, spacedim, double,
+   *                         use_vectorization>  assembler;
+   *
+   * // Setup deal.II objects (would likely be done elsewhere in the code)
+   * const QGauss<spacedim>    qf_cell(...);
+   * DoFHandler<dim, spacedim> dof_handler(...);
+   * AffineConstraints<double> constraints (...);
+   * SparseMatrix<double>      system_matrix (...);
+   * Vector<double>            system_rhs (...);
+   *
+   * // Now we pass in concrete objects to get data from and assemble into.
+   * assembler.assemble_matrix(system_matrix,
+   *                           system_rhs,
+   *                           constraints,
+   *                           dof_handler,
+   *                           qf_cell);
+   * @endcode
+   *
+   * @tparam dim The dimension in which the scalar is being evaluated.
+   * @tparam spacedim The spatial dimension in which the scalar is being evaluated.
+   * @tparam ScalarType The underlying scalar type.
+   * @tparam use_vectorization A flag that can be used to disable assembly using SIMD intrinsics (vectorization).
+   * @tparam width Vectorization width: we wish to vectorize the quadrature point data / indices. This value determines the quadrature point batch size for all vectorized operations.
    */
   template <int dim,
             int spacedim                  = dim,
