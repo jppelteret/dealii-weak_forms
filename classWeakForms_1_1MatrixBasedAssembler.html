@@ -342,7 +342,7 @@ class WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectori
 <div class="line"><span class="comment">// Use the following to force the assembler to run without SIMD intrinsics:</span></div>
 <div class="line"><span class="comment">// constexpr bool use_vectorization = false;</span></div>
 <div class="line"><span class="comment">// MatrixBasedAssembler&lt;dim, spacedim, double,</span></div>
-<div class="line">                        use_vectorization&gt;  assembler;</div>
+<div class="line"><span class="comment">//                      use_vectorization&gt;  assembler;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Setup deal.II objects (would likely be done elsewhere in the code)</span></div>
 <div class="line"><span class="keyword">const</span> QGauss&lt;spacedim&gt;    qf_cell(...);</div>
@@ -352,7 +352,7 @@ class WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectori
 <div class="line">Vector&lt;double&gt;            system_rhs (...);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Now we pass in concrete objects to get data from and assemble into.</span></div>
-<div class="line">assembler.assemble_matrix(system_matrix,</div>
+<div class="line">assembler.assemble_system(system_matrix,</div>
 <div class="line">                          system_rhs,</div>
 <div class="line">                          constraints,</div>
 <div class="line">                          dof_handler,</div>

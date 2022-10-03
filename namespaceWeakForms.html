@@ -123,6 +123,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that encapsulates the subset of elements that are to be considered as part of a boundary integral.  <a href="classWeakForms_1_1BoundaryIntegral.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents the point-wise decomposition of an energy functional.  <a href="classWeakForms_1_1EnergyFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1FieldSolution.html">FieldSolution</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents a (discrete) global finite element field solution.  <a href="classWeakForms_1_1FieldSolution.html#details">More...</a><br /></td></tr>
@@ -251,8 +252,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that represents the normal of the cell, as evaluated at a boundary or an interface.  <a href="classWeakForms_1_1Normal.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents the point-wise decomposition of the residual, or a component of the residual.  <a href="classWeakForms_1_1ResidualFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents the point-wise decomposition of a component of the residual.  <a href="classWeakForms_1_1ResidualViewFunctor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1ScalarCacheFunctor.html">ScalarCacheFunctor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A functor that returns (field-dependent) scalar values upon evaluation.  <a href="classWeakForms_1_1ScalarCacheFunctor.html#details">More...</a><br /></td></tr>
@@ -364,6 +367,7 @@ Functions</h2></td></tr>
 <tr class="separator:a1def7786361fdb4f678d2aefda297d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7972c9f91c2f78a33eb88106b5eab156"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
 <tr class="memitem:a7972c9f91c2f78a33eb88106b5eab156"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a7972c9f91c2f78a33eb88106b5eab156">energy_functor</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</td></tr>
+<tr class="memdesc:a7972c9f91c2f78a33eb88106b5eab156"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function for creating an <a class="el" href="classWeakForms_1_1EnergyFunctor.html" title="A class that represents the point-wise decomposition of an energy functional.">EnergyFunctor</a>.  <a href="namespaceWeakForms.html#a7972c9f91c2f78a33eb88106b5eab156">More...</a><br /></td></tr>
 <tr class="separator:a7972c9f91c2f78a33eb88106b5eab156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aab0434f0dc6abdc1b1032a976fe272"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename ScalarType &gt; </td></tr>
 <tr class="memitem:a4aab0434f0dc6abdc1b1032a976fe272"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a4aab0434f0dc6abdc1b1032a976fe272">constant_scalar</a> (const ScalarType &amp;value, const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex)</td></tr>
@@ -411,15 +415,19 @@ Functions</h2></td></tr>
 <tr class="separator:a4497dc77582f8f26dcd908b333a8aae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1b1f385584348c61cedf4a1092de1fc"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
 <tr class="memitem:ad1b1f385584348c61cedf4a1092de1fc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">residual_functor</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</td></tr>
+<tr class="memdesc:ad1b1f385584348c61cedf4a1092de1fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function for creating a <a class="el" href="classWeakForms_1_1ResidualFunctor.html" title="A class that represents the point-wise decomposition of the residual, or a component of the residual.">ResidualFunctor</a>.  <a href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">More...</a><br /></td></tr>
 <tr class="separator:ad1b1f385584348c61cedf4a1092de1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1d11b9bc21b0f17dac3f1b2595e135b"><td class="memTemplParams" colspan="2">template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
 <tr class="memitem:af1d11b9bc21b0f17dac3f1b2595e135b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#af1d11b9bc21b0f17dac3f1b2595e135b">residual_view_functor</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</td></tr>
+<tr class="memdesc:af1d11b9bc21b0f17dac3f1b2595e135b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function for creating a <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a>.  <a href="namespaceWeakForms.html#af1d11b9bc21b0f17dac3f1b2595e135b">More...</a><br /></td></tr>
 <tr class="separator:af1d11b9bc21b0f17dac3f1b2595e135b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a829718a6fa9f0bf9bc149b3d7cc636e5"><td class="memTemplParams" colspan="2">template&lt;typename EnergyFunctor , typename  = typename std::enable_if&lt;              is_energy_functor_op&lt;EnergyFunctor&gt;::value &amp;&amp;              (is_ad_functor_op&lt;EnergyFunctor&gt;::value ||               is_sd_functor_op&lt;EnergyFunctor&gt;::value)&gt;::type&gt; </td></tr>
 <tr class="memitem:a829718a6fa9f0bf9bc149b3d7cc636e5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html">SelfLinearization::EnergyFunctional</a>&lt; <a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a829718a6fa9f0bf9bc149b3d7cc636e5">energy_functional_form</a> (const <a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a> &amp;functor_op)</td></tr>
+<tr class="memdesc:a829718a6fa9f0bf9bc149b3d7cc636e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing energy functional form from an energy functor.  <a href="namespaceWeakForms.html#a829718a6fa9f0bf9bc149b3d7cc636e5">More...</a><br /></td></tr>
 <tr class="separator:a829718a6fa9f0bf9bc149b3d7cc636e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c199a2a4058afb1c4f76e7a03bb6d97"><td class="memTemplParams" colspan="2">template&lt;typename ResidualViewFunctor , typename  = typename std::enable_if&lt;              is_residual_functor_op&lt;ResidualViewFunctor&gt;::value &amp;&amp;              (is_ad_functor_op&lt;ResidualViewFunctor&gt;::value ||               is_sd_functor_op&lt;ResidualViewFunctor&gt;::value)&gt;::type&gt; </td></tr>
 <tr class="memitem:a6c199a2a4058afb1c4f76e7a03bb6d97"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">SelfLinearization::ResidualView</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a6c199a2a4058afb1c4f76e7a03bb6d97">residual_form</a> (const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &amp;functor_op)</td></tr>
+<tr class="memdesc:a6c199a2a4058afb1c4f76e7a03bb6d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing residual form from a residual view functor.  <a href="namespaceWeakForms.html#a6c199a2a4058afb1c4f76e7a03bb6d97">More...</a><br /></td></tr>
 <tr class="separator:a6c199a2a4058afb1c4f76e7a03bb6d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a892dd380ef93823647570cdfb03d98db"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double, typename Integrand , typename IntegralType , typename  = typename std::enable_if&lt;is_valid_integration_domain&lt;              typename std::decay&lt;IntegralType&gt;::type&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:a892dd380ef93823647570cdfb03d98db"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html#a892dd380ef93823647570cdfb03d98db">integrate</a> (const Integrand &amp;integrand, const IntegralType &amp;integral)</td></tr>
@@ -926,12 +934,37 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Shortcut so that we don't need to do something like this:</p>
-<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html" title="An object that can be used to extract a scalar subspace from a global finite element space.">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
-<p><code>const auto soln_ss = solution[subspace_extractor]; const auto soln_val = soln_ss.value(); // Solution value const auto soln_grad = soln_ss.gradient(); // Solution gradient ...</code></p>
-<p><code>const EnergyFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt; energy("e", "\\Psi", soln_val, soln_grad, ...); </code> </p>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00453">453</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p>A convenience function for creating an <a class="el" href="classWeakForms_1_1EnergyFunctor.html" title="A class that represents the point-wise decomposition of an energy functional.">EnergyFunctor</a>. </p>
+<p>It is, essentially, a shortcut so that we can do this: </p><div class="fragment"><div class="line"><span class="keyword">const</span> FieldSolution&lt;dim&gt;                    solution;</div>
+<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(</div>
+<div class="line">  0, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_ss   = solution[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_val  = soln_ss.value();    <span class="comment">// Solution value</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_grad = soln_ss.gradient(); <span class="comment">// Solution gradient</span></div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Parameterise energy in terms of all possible operations with the space</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> energy = <a class="code" href="namespaceWeakForms.html#a7972c9f91c2f78a33eb88106b5eab156">energy_functor</a>(<span class="stringliteral">&quot;e&quot;</span>, <span class="stringliteral">&quot;\\Psi&quot;</span>, soln_val, soln_grad, ...);</div>
+</div><!-- fragment --><p> instead of the last call being this more complicated expression: </p><div class="fragment"><div class="line"><span class="keyword">const</span> EnergyFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt;</div>
+<div class="line">  energy(<span class="stringliteral">&quot;e&quot;</span>, <span class="stringliteral">&quot;\\Psi&quot;</span>, soln_val, soln_grad, ...);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SymbolicOpsSubSpaceFieldSolution</td><td>A variadic template that lists the types of field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">symbol_ascii</td><td>The ASCII representation of the value. </td></tr>
+    <tr><td class="paramname">symbol_latex</td><td>The LaTeX representation of the value. </td></tr>
+    <tr><td class="paramname">symbolic_op_field_solutions</td><td>The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00463">463</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1502,13 +1535,37 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A convenience function for create a <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>.</p>
-<p>It is, essentially, a shortcut so that we don't need to do something like this:</p>
-<p><code> const FieldSolution&lt;dim&gt; solution; const <a class="el" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html" title="An object that can be used to extract a scalar subspace from a global finite element space.">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(0, "s", "s");</code></p>
-<p><code>const auto soln_ss = solution[subspace_extractor]; const auto soln_val = soln_ss.value(); // Solution value const auto soln_grad = soln_ss.gradient(); // Solution gradient ...</code></p>
-<p><code>const ResidualFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt; residual("R", "R", soln_val, soln_grad, ...); </code> </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00639">639</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p>A convenience function for creating a <a class="el" href="classWeakForms_1_1ResidualFunctor.html" title="A class that represents the point-wise decomposition of the residual, or a component of the residual.">ResidualFunctor</a>. </p>
+<p>It is, essentially, a shortcut so that we can do this: </p><div class="fragment"><div class="line"><span class="keyword">const</span> FieldSolution&lt;dim&gt;                    solution;</div>
+<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(</div>
+<div class="line">  0, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_ss   = solution[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_val  = soln_ss.value();    <span class="comment">// Solution value</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_grad = soln_ss.gradient(); <span class="comment">// Solution gradient</span></div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Parameterise residual in terms of all possible operations with the space</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> residual = <a class="code" href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">residual_functor</a>(<span class="stringliteral">&quot;R&quot;</span>, <span class="stringliteral">&quot;R&quot;</span>, soln_val, soln_grad, ...);</div>
+</div><!-- fragment --><p> instead of the last call being this more complicated expression: </p><div class="fragment"><div class="line"><span class="keyword">const</span> ResidualFunctor&lt;decltype(soln_val), decltype(soln_grad), ...&gt;</div>
+<div class="line">  residual(<span class="stringliteral">&quot;R&quot;</span>, <span class="stringliteral">&quot;R&quot;</span>, soln_val, soln_grad, ...);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SymbolicOpsSubSpaceFieldSolution</td><td>A variadic template that lists the types of field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">symbol_ascii</td><td>The ASCII representation of the value. </td></tr>
+    <tr><td class="paramname">symbol_latex</td><td>The LaTeX representation of the value. </td></tr>
+    <tr><td class="paramname">symbolic_op_field_solutions</td><td>The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00645">645</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1551,9 +1608,42 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A convenience function for create a <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00654">654</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p>A convenience function for creating a <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a>. </p>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim, spacedim&gt;           test;</div>
+<div class="line"><span class="keyword">const</span> FieldSolution&lt;dim, spacedim&gt;          solution;</div>
+<div class="line"><span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a> subspace_extractor(</div>
+<div class="line">  0, <span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_ss   = test[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_grad = test_ss.value();    <span class="comment">// Test function gradient</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_ss   = solution[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_val  = soln_ss.value();    <span class="comment">// Solution value</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_grad = soln_ss.gradient(); <span class="comment">// Solution gradient</span></div>
+<div class="line"><span class="comment">// ... etc.</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Parameterise residual view in terms of all possible operations with</span></div>
+<div class="line"><span class="comment">// the space</span></div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> residual_s</div>
+<div class="line">  = <a class="code" href="namespaceWeakForms.html#af1d11b9bc21b0f17dac3f1b2595e135b">residual_view_functor</a>(<span class="stringliteral">&quot;R&quot;</span>, <span class="stringliteral">&quot;R&quot;</span>, test_grad, soln_val, soln_grad, ...);</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">SymbolicOpsSubSpaceFieldSolution</td><td>A variadic template that lists the types of field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">symbol_ascii</td><td>The ASCII representation of the value. </td></tr>
+    <tr><td class="paramname">symbol_latex</td><td>The LaTeX representation of the value. </td></tr>
+    <tr><td class="paramname">test_space_op</td><td>The functor to test this residual contribution with. </td></tr>
+    <tr><td class="paramname">symbolic_op_field_solutions</td><td>The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00687">687</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1574,11 +1664,12 @@ template&lt;typename EnergyFunctor , typename  = typename std::enable_if&lt;    
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A convenience function that generates a self-linearizing energy functional form from an energy functor.</p>
-<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html">SelfLinearization::EnergyFunctional</a> class.</p>
+
+<p>A convenience function that generates a self-linearizing energy functional form from an energy functor. </p>
+<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctional.html" title="A class that represents a self-linearizing energy functional form.">SelfLinearization::EnergyFunctional</a> class.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a></td><td>A class that is recognised to be a energy functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1EnergyFunctor.html" title="A class that represents the point-wise decomposition of an energy functional.">EnergyFunctor</a></td><td>A class that is recognised to be a energy functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
   </table>
   </dd>
 </dl>
@@ -1590,7 +1681,7 @@ template&lt;typename EnergyFunctor , typename  = typename std::enable_if&lt;    
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::EnergyFunctional&lt;EnergyFunctor&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01531">1531</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01535">1535</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1611,11 +1702,12 @@ template&lt;typename ResidualViewFunctor , typename  = typename std::enable_if&l
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A convenience function that generates a self-linearizing residual form from a residual view functor.</p>
-<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">SelfLinearization::ResidualView</a> class.</p>
+
+<p>A convenience function that generates a self-linearizing residual form from a residual view functor. </p>
+<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html" title="A class that represents a self-linearizing residual (view) form.">SelfLinearization::ResidualView</a> class.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></td><td>A class that is recognised to be a residual view functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a></td><td>A class that is recognised to be a residual view functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
   </table>
   </dd>
 </dl>
@@ -1627,7 +1719,7 @@ template&lt;typename ResidualViewFunctor , typename  = typename std::enable_if&l
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::ResidualView&lt;ResidualViewFunctor&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01558">1558</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01562">1562</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1674,7 +1766,11 @@ template&lt;typename ScalarType  = double, typename Integrand , typename Integra
 </div>
 </div>
 </div><!-- contents -->
+<div class="ttc" id="anamespaceWeakForms_html_af1d11b9bc21b0f17dac3f1b2595e135b"><div class="ttname"><a href="namespaceWeakForms.html#af1d11b9bc21b0f17dac3f1b2595e135b">WeakForms::residual_view_functor</a></div><div class="ttdeci">ResidualViewFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_view_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualViewFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00687">residual_functor.h:687</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_html_aec4fa4a0321d7d1b75b1dd94ae07a48bae2b6dfb8a5c48206992d8310d176c37c"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48bae2b6dfb8a5c48206992d8310d176c37c">WeakForms::Operators::SymbolicOpCodes::gradient</a></div><div class="ttdeci">@ gradient</div></div>
+<div class="ttc" id="anamespaceWeakForms_html_ad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="namespaceWeakForms.html#ad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00645">residual_functor.h:645</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_html_a7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="namespaceWeakForms.html#a7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00463">energy_functor.h:463</a></div></div>
+<div class="ttc" id="astructWeakForms_1_1SubSpaceExtractors_1_1Scalar_html"><div class="ttname"><a href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a></div><div class="ttdoc">An object that can be used to extract a scalar subspace from a global finite element space.</div><div class="ttdef"><b>Definition:</b> <a href="subspace__extractors_8h_source.html#l00044">subspace_extractors.h:44</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_html_aec4fa4a0321d7d1b75b1dd94ae07a48ba2063c1608d6e0baf80249c42e2be5804"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48ba2063c1608d6e0baf80249c42e2be5804">WeakForms::Operators::SymbolicOpCodes::value</a></div><div class="ttdeci">@ value</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

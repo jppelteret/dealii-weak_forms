@@ -83,6 +83,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A class that represents a self-linearizing residual (view) form.  
+ <a href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="self__linearizing__forms_8h_source.html">weak_forms/self_linearizing_forms.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -162,18 +165,19 @@ Friends</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename ResidualViewFunctor&gt;<br />
 class WeakForms::SelfLinearization::ResidualView&lt; ResidualViewFunctor &gt;</h3>
 
-<p>A special form that consumes a residual view functor and produces both the associated linear form (essentially a duplication of the residual form) and its consistently linearized bilinear form(s).</p>
-<p>The <code><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html">ResidualView</a></code> form is supplied with the finite element fields upon which the <code><a class="el" href="classWeakForms_1_1Functor.html" title="A base class for other objects that represent functors.">Functor</a></code> is parameterized. It then self-linearizes the discrete residual (i.e. at the finite element level) to produce the bilinear form(s). One linear form is generated for component of the residual that the residual view represents; this linear form is then linearized with respect to all other variables upon which the residual view functor is parameterized. So, if the residual view functor is parameterized by <code>n</code> arguments, then <code>1</code> linear form and <code>n</code> bilinear forms will be generated.</p>
-<p>This class, however, doesn't directly know how the residual view functor itself is to be linearized: the derivatives of the residual functor with respect to the various field parameters are computed by the residual functor itself. We employ automatic or symbolic differentiation to perform that task. The local description of the residual (i.e. at the quadrature point level) is given by the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></code>.</p>
-<p>This is fair trade between the convenience of compile-time expansions for the derivatives of the residual functor, and some run-time derivatives of the (potentially complex) constitutive laws that the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></code> describes. The functor is only evaluated at quadrature points, so the computational cost associated with the calculation of those derivatives is kept to a minimum. It also means that we can take care of most of the bookkeeping and implementational details surrounding AD and SD. The user then needs a "minimal" understanding of how these parts of the framework work in order to use this feature.</p>
+<p>A class that represents a self-linearizing residual (view) form. </p>
+<p>This is a special form that consumes a residual view functor and produces both the associated linear form (essentially a duplication of the residual form) and its consistently linearized bilinear form(s).</p>
+<p>The <code><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualView.html" title="A class that represents a self-linearizing residual (view) form.">ResidualView</a></code> form is supplied with the finite element fields upon which the <code><a class="el" href="classWeakForms_1_1Functor.html" title="A base class for other objects that represent functors.">Functor</a></code> is parameterized. It then self-linearizes the discrete residual (i.e. at the finite element level) to produce the bilinear form(s). One linear form is generated for component of the residual that the residual view represents; this linear form is then linearized with respect to all other variables upon which the residual view functor is parameterized. So, if the residual view functor is parameterized by <code>n</code> arguments, then <code>1</code> linear form and <code>n</code> bilinear forms will be generated.</p>
+<p>This class, however, doesn't directly know how the residual view functor itself is to be linearized: the derivatives of the residual functor with respect to the various field parameters are computed by the residual functor itself. We employ automatic or symbolic differentiation to perform that task. The local description of the residual (i.e. at the quadrature point level) is given by the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a></code>.</p>
+<p>This is fair trade between the convenience of compile-time expansions for the derivatives of the residual functor, and some run-time derivatives of the (potentially complex) constitutive laws that the <code><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a></code> describes. The functor is only evaluated at quadrature points, so the computational cost associated with the calculation of those derivatives is kept to a minimum. It also means that we can take care of most of the bookkeeping and implementational details surrounding AD and SD. The user then needs a "minimal" understanding of how these parts of the framework work in order to use this feature.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a></td><td>A class that is recognised to be a residual view functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
+    <tr><td class="paramname"><a class="el" href="classWeakForms_1_1ResidualViewFunctor.html" title="A class that represents the point-wise decomposition of a component of the residual.">ResidualViewFunctor</a></td><td>A class that is recognised to be a residual view functor operation, as well as a functor that is either AD compatible SD compatible (i.e. can exploit either automatic or symbolic differentiation). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00856">856</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00860">860</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a57fb81f5cea052148bc014e60d1a10cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a57fb81f5cea052148bc014e60d1a10cc">&#9670;&nbsp;</a></span>ResidualView()</h2>
@@ -201,7 +205,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00871">871</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00875">875</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -232,7 +236,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00876">876</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00880">880</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -262,7 +266,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00883">883</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00887">887</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -291,7 +295,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00892">892</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00896">896</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -320,7 +324,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00898">898</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00902">902</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -349,7 +353,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00904">904</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00908">908</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -378,7 +382,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00910">910</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00914">914</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -409,7 +413,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00919">919</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00923">923</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -441,7 +445,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00926">926</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00930">930</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -473,7 +477,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00934">934</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00938">938</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +508,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00941">941</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00945">945</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +540,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00948">948</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00952">952</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -568,7 +572,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00956">956</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00960">960</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -599,7 +603,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00965">965</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00969">969</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -631,7 +635,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00972">972</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00976">976</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -663,7 +667,7 @@ template&lt;typename ScalarType  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00980">980</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00984">984</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -695,7 +699,7 @@ template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; <
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00998">998</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01002">1002</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -737,7 +741,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01073">1073</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01077">1077</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -769,7 +773,7 @@ template&lt;typename AssemblerScalar_t , typename T  = ResidualViewFunctor&gt; <
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01159">1159</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01163">1163</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -811,7 +815,7 @@ template&lt;typename AssemblerScalar_t , std::size_t FieldIndex, typename Symbol
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01248">1248</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01252">1252</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -853,7 +857,7 @@ template&lt;enum WeakForms::internal::AccumulationSign OpSign, typename Assemble
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01356">1356</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01360">1360</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -882,7 +886,7 @@ template&lt;int dim, int spacedim, typename ScalarType , bool use_vectorization,
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01350">1350</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01354">1354</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -909,7 +913,7 @@ template&lt;typename ResidualViewFunctor &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00988">988</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l00992">992</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
