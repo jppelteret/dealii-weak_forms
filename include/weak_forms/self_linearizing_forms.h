@@ -51,7 +51,9 @@ namespace WeakForms
   namespace SelfLinearization
   {
     /**
-     * A special form that consumes an energy functor and produces
+     * @brief A class that represents a self-linearizing energy functional form.
+     *
+     * This is a special form that consumes an energy functor and produces
      * both the associated linear form(s) and consistently linearized
      * bilinear form(s) associated with the energy functional.
      *
@@ -815,7 +817,9 @@ namespace WeakForms
 
 
     /**
-     * A special form that consumes a residual view functor and produces
+     * @brief A class that represents a self-linearizing residual (view) form.
+     *
+     * This is a special form that consumes a residual view functor and produces
      * both the associated linear form (essentially a duplication of the
      * residual form) and its consistently linearized bilinear form(s).
      *
@@ -1508,7 +1512,7 @@ namespace WeakForms
 namespace WeakForms
 {
   /**
-   * A convenience function that generates a self-linearizing energy
+   * @brief A convenience function that generates a self-linearizing energy
    * functional form from an energy functor.
    *
    * For more information about the self-linearizing form that is created,
@@ -1535,7 +1539,7 @@ namespace WeakForms
 
 
   /**
-   * A convenience function that generates a self-linearizing residual
+   * @brief A convenience function that generates a self-linearizing residual
    * form from a residual view functor.
    *
    * For more information about the self-linearizing form that is created,
