@@ -639,6 +639,8 @@ namespace WeakForms
    * @param symbol_ascii The ASCII representation of the value.
    * @param symbol_latex  The LaTeX representation of the value.
    * @param symbolic_op_field_solutions The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
+   *
+   * \ingroup convenience_functions
    */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   ResidualFunctor<SymbolicOpsSubSpaceFieldSolution...>
@@ -687,6 +689,8 @@ namespace WeakForms
    * @param symbolic_op_field_solutions The field solution operations that this
    * functor is sensitive to (i.e. the association to the input arguments for
    * differentiation).
+   *
+   * \ingroup convenience_functions
    */
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
   ResidualViewFunctor<SymbolicOpsSubSpaceFieldSolution...>

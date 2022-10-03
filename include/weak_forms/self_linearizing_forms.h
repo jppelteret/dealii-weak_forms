@@ -1531,6 +1531,7 @@ namespace WeakForms
    * @return SelfLinearization::EnergyFunctional<EnergyFunctor>
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename EnergyFunctor,
             typename = typename std::enable_if<
@@ -1560,6 +1561,7 @@ namespace WeakForms
    * @return SelfLinearization::ResidualView<ResidualViewFunctor>
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename ResidualViewFunctor,
             typename = typename std::enable_if<

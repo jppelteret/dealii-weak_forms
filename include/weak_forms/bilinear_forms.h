@@ -646,6 +646,7 @@ namespace WeakForms
    * solution (or a derivative thereof).
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <
     typename TestSpaceOp,
@@ -688,6 +689,7 @@ namespace WeakForms
    * solution (or a derivative thereof).
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename TestSpaceOp,
             typename ScalarType,
@@ -736,6 +738,7 @@ namespace WeakForms
    * solution (or a derivative thereof).
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,
@@ -783,6 +786,7 @@ namespace WeakForms
    * solution (or a derivative thereof).
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,
@@ -826,6 +830,7 @@ namespace WeakForms
    * solution (or a derivative thereof).
    *
    * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename TestSpaceOp, typename TrialSpaceOp>
   auto
