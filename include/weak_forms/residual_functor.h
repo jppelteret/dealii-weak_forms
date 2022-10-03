@@ -270,7 +270,7 @@ namespace WeakForms
    * // To make use of these residual contributions, we simply accumulate their
    * // integral (thereby formally defining the global residual terms in terms
    * // of the point contributions) into an assembler using a
-   * // SelfLinearization::ResidualView form. This can be done using the
+   * // SelfLinearization::ResidualViewForm. This can be done using the
    * // residual_form() convenience function. At this point, each residual view
    * // is translated into the appropriate linear and bilinear forms at compile
    * // time, and where run-time differentiation of the point-wise residual
