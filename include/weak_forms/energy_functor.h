@@ -142,8 +142,9 @@ namespace WeakForms
    *
    * // To make use of this energy, we simply accumulate its integral (thereby
    * // formally defining an energy functional in terms of the point-wise
-   * // energy) into an assembler using a SelfLinearization::EnergyFunctional
-   * // form. This can be done using the energy_functional_form() convenience
+   * // energy) into an assembler using a
+   * // SelfLinearization::EnergyFunctionalForm.
+   * // This can be done using the energy_functional_form() convenience
    * // function. At this point, the energy functional is translated into the
    * // appropriate linear and bilinear forms at compile time, and where
    * // run-time differentiation of the point-wise energy contributions with
