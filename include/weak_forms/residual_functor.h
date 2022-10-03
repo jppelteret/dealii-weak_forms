@@ -640,6 +640,7 @@ namespace WeakForms
    * @param symbol_latex  The LaTeX representation of the value.
    * @param symbolic_op_field_solutions The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
    *
+   * \ingroup functors
    * \ingroup convenience_functions
    */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
@@ -690,6 +691,7 @@ namespace WeakForms
    * functor is sensitive to (i.e. the association to the input arguments for
    * differentiation).
    *
+   * \ingroup functors
    * \ingroup convenience_functions
    */
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
