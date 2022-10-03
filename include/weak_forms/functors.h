@@ -75,6 +75,8 @@ namespace WeakForms
    *
    * @tparam rank_ The (tensorial) rank of the return type that this
    * object computes.
+   *
+   * \ingroup functors
    */
   template <int rank_>
   class Functor
@@ -146,6 +148,8 @@ namespace WeakForms
    *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
    *   { return 1.0; });
    * @endcode
+   *
+   * \ingroup functors
    */
   class ScalarFunctor : public Functor<0>
   {
@@ -222,6 +226,8 @@ namespace WeakForms
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int rank, int spacedim>
   class TensorFunctor : public Functor<rank>
@@ -302,6 +308,8 @@ namespace WeakForms
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int rank, int spacedim>
   class SymmetricTensorFunctor : public Functor<rank>
@@ -387,6 +395,8 @@ namespace WeakForms
    * @tparam spacedim The spatial dimension in which this function is being
    * evaluated. (Although its not vital information for the value call itself,
    * this is required in order to compute the gradient of the function.)
+   *
+   * \ingroup functors
    */
   template <int spacedim>
   class ScalarFunctionFunctor : public Functor<0>
@@ -460,6 +470,8 @@ namespace WeakForms
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int rank, int spacedim>
   class TensorFunctionFunctor : public Functor<rank>
@@ -524,6 +536,8 @@ namespace WeakForms
    *   [](const FEValuesBase<dim, spacedim> &, const unsigned int)
    *   { return Tensor<1, dim, double>{}; });
    * @endcode
+   *
+   * \ingroup functors
    */
   template <int dim>
   using VectorFunctor = TensorFunctor<1, dim>;
@@ -547,6 +561,8 @@ namespace WeakForms
    * const auto gvf1 = v1.template gradient<double,
    *                                        dim>(constant_tensor_function_1);
    * @endcode
+   *
+   * \ingroup functors
    */
   template <int dim>
   using VectorFunctionFunctor = TensorFunctionFunctor<1, dim>;
@@ -1399,6 +1415,9 @@ namespace WeakForms
    * @param symbol_ascii The ASCII representation of the value.
    * @param symbol_latex  The LaTeX representation of the value.
    * @return auto Returns a symbolic operator based on a ScalarFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
@@ -1434,6 +1453,9 @@ namespace WeakForms
    * @tparam ScalarType The underlying scalar type.
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a ScalarFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
@@ -1467,6 +1489,9 @@ namespace WeakForms
    * @param symbol_ascii The ASCII representation of the tensor.
    * @param symbol_latex  The LaTeX representation of the tensor.
    * @return auto Returns a symbolic operator based on a TensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1504,6 +1529,9 @@ namespace WeakForms
    * @tparam ScalarType The underlying scalar type for each component of the tensor.
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a TensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1537,6 +1565,9 @@ namespace WeakForms
    * @param symbol_ascii The ASCII representation of the vector.
    * @param symbol_latex  The LaTeX representation of the vector.
    * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int spacedim, typename ScalarType>
   auto
@@ -1567,6 +1598,9 @@ namespace WeakForms
    * @tparam ScalarType The underlying scalar type for each component of the tensor.
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int spacedim, typename ScalarType>
   auto
@@ -1598,6 +1632,9 @@ namespace WeakForms
    * @param symbol_ascii The ASCII representation of the tensor.
    * @param symbol_latex  The LaTeX representation of the tensor.
    * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1637,6 +1674,9 @@ namespace WeakForms
    * @tparam ScalarType The underlying scalar type for each component of the tensor.
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
+   *
+   * \ingroup functors
+   * \ingroup convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto

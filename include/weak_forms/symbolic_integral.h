@@ -369,6 +369,8 @@ namespace WeakForms
    *
    * @param integrand The quantity or set of operations that are to be integrated.
    * @param integral The domain over which the @p integrand is to be integrated.
+   *
+   * \ingroup convenience_functions
    */
   template <typename ScalarType = double,
             typename Integrand,

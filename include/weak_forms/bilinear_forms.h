@@ -352,7 +352,11 @@ namespace WeakForms
    * view into a multi-component trial solution (or some differential operation
    * involving either of these), or some more complex operation (e.g. a unary,
    * binary or composite operation) that involves a trial solution.
-   * @tparam ComponentFilterFlags A set of flags that describe some special set of operations that are to be performed when assembling a local element matrix from the bilinear form.
+   * @tparam ComponentFilterFlags A set of flags that describe some special set
+   * of operations that are to be performed when assembling a local element
+   * matrix from the bilinear form.
+   *
+   * \ingroup forms
    */
   template <typename TestSpaceOp_,
             typename Functor_,
@@ -619,15 +623,31 @@ namespace WeakForms
 
 namespace WeakForms
 {
-  // template <typename TestSpaceOp, typename TrialSpaceOp>
-  // BilinearForm<TestSpaceOp, NoOp, TrialSpaceOp>
-  // bilinear_form(const TestSpaceOp & test_space_op,
-  //               const TrialSpaceOp &trial_space_op)
-  // {
-  //   return BilinearForm<TestSpaceOp, NoOp, TrialSpaceOp>(test_space_op,
-  //                                                        trial_space_op);
-  // }
-
+  /**
+   * @brief A convenience function that is used to create bilinear forms.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam Functor A functor that represents a function with which the inner
+   * product is to be taken with respect to both the test function and trial
+   * solution.
+   * @tparam TrialSpaceOp A symbolic operator that represents a trial solution
+   * (trial space) operation. It may exactly represent the trial solution or a
+   * view into a multi-component trial solution (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a trial solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param functor_op A symbolic operation that represents some general functor.
+   * @param trial_space_op A symbolic operation that represents some trial
+   * solution (or a derivative thereof).
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
+   */
   template <
     typename TestSpaceOp,
     typename Functor,
@@ -645,6 +665,32 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create bilinear forms.
+   *
+   * This variant takes in a scalar value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam ScalarType A scalar type (e.g. a float, double, complex number).
+   * @tparam TrialSpaceOp A symbolic operator that represents a trial solution
+   * (trial space) operation. It may exactly represent the trial solution or a
+   * view into a multi-component trial solution (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a trial solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) scalar value.
+   * @param trial_space_op A symbolic operation that represents some trial
+   * solution (or a derivative thereof).
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
+   */
   template <typename TestSpaceOp,
             typename ScalarType,
             typename TrialSpaceOp,
@@ -665,6 +711,35 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create bilinear forms.
+   *
+   * This variant takes in a tensor value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the input tensor.
+   * @tparam ScalarType The underlying scalar type for each component of the
+   * tensor.
+   * @tparam TrialSpaceOp A symbolic operator that represents a trial solution
+   * (trial space) operation. It may exactly represent the trial solution or a
+   * view into a multi-component trial solution (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a trial solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) tensor.
+   * @param trial_space_op A symbolic operation that represents some trial
+   * solution (or a derivative thereof).
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
+   */
   template <typename TestSpaceOp,
             int rank,
             int spacedim,
@@ -684,6 +759,35 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create bilinear forms.
+   *
+   * This variant takes in a symmetric tensor value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the input tensor.
+   * @tparam ScalarType The underlying scalar type for each component of the
+   * tensor.
+   * @tparam TrialSpaceOp A symbolic operator that represents a trial solution
+   * (trial space) operation. It may exactly represent the trial solution or a
+   * view into a multi-component trial solution (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a trial solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) symmetric tensor.
+   * @param trial_space_op A symbolic operation that represents some trial
+   * solution (or a derivative thereof).
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
+   */
   template <typename TestSpaceOp,
             int rank,
             int spacedim,
@@ -703,8 +807,31 @@ namespace WeakForms
   }
 
 
-  // A specialised variant with no functor specified. We assume a unity
-  // scalar functor is the equivalent operation.
+
+  /**
+   * @brief A convenience function that is used to create bilinear forms.
+   *
+   * This specialised variant with no functor specified. We assume a unity
+   * scalar functor is the equivalent operation.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam TrialSpaceOp A symbolic operator that represents a trial solution
+   * (trial space) operation. It may exactly represent the trial solution or a
+   * view into a multi-component trial solution (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a trial solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param trial_space_op A symbolic operation that represents some trial
+   * solution (or a derivative thereof).
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
+   */
   template <typename TestSpaceOp, typename TrialSpaceOp>
   auto
   bilinear_form(const TestSpaceOp & test_space_op,

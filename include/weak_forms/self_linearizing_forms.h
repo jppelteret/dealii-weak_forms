@@ -88,6 +88,8 @@ namespace WeakForms
      *         operation, as well as a functor that is either AD compatible
      *         SD compatible (i.e. can exploit either automatic or symbolic
      *         differentiation).
+     *
+     * \ingroup forms
      */
     template <typename EnergyFunctor>
     class EnergyFunctional
@@ -855,6 +857,8 @@ namespace WeakForms
      *         view functor operation, as well as a functor that is either AD
      *         compatible SD compatible (i.e. can exploit either automatic or
      *         symbolic differentiation).
+     *
+     * \ingroup forms
      */
     template <typename ResidualViewFunctor>
     class ResidualView
@@ -1525,6 +1529,9 @@ namespace WeakForms
    *         differentiation).
    * @param functor_op An energy functor that is to be converted to a form.
    * @return SelfLinearization::EnergyFunctional<EnergyFunctor>
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename EnergyFunctor,
             typename = typename std::enable_if<
@@ -1552,6 +1559,9 @@ namespace WeakForms
    *         symbolic differentiation).
    * @param functor_op An residual functor that is to be converted to a form.
    * @return SelfLinearization::ResidualView<ResidualViewFunctor>
+   *
+   * \ingroup forms
+   * \ingroup convenience_functions
    */
   template <typename ResidualViewFunctor,
             typename = typename std::enable_if<

@@ -83,6 +83,8 @@ namespace WeakForms
    * const auto sc =
    *   s.template value<double, dim, spacedim>(s_func, update_flags);
    * @endcode
+   *
+   * \ingroup functors
    */
   class ScalarCacheFunctor : public Functor<0>
   {
@@ -155,6 +157,8 @@ namespace WeakForms
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int rank, int spacedim>
   class TensorCacheFunctor : public Functor<rank>
@@ -234,6 +238,8 @@ namespace WeakForms
    * @tparam rank The rank of the tensor that is returned upon evaluation.
    * @tparam spacedim The spatial dimension of the tensor that is returned
    * upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int rank, int spacedim>
   class SymmetricTensorCacheFunctor : public Functor<rank>
@@ -286,6 +292,8 @@ namespace WeakForms
   /**
    * An alias for a cached functor that returns vector (i.e. rank-1 tensor)
    * values upon evaluation.
+   *
+   * \ingroup functors
    */
   template <int dim>
   using VectorCacheFunctor = TensorCacheFunctor<1, dim>;
