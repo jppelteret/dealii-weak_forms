@@ -1530,8 +1530,7 @@ namespace WeakForms
    * @param functor_op An energy functor that is to be converted to a form.
    * @return SelfLinearization::EnergyFunctional<EnergyFunctor>
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename EnergyFunctor,
             typename = typename std::enable_if<
@@ -1560,8 +1559,7 @@ namespace WeakForms
    * @param functor_op An residual functor that is to be converted to a form.
    * @return SelfLinearization::ResidualView<ResidualViewFunctor>
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename ResidualViewFunctor,
             typename = typename std::enable_if<

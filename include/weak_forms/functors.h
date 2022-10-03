@@ -1416,8 +1416,7 @@ namespace WeakForms
    * @param symbol_latex  The LaTeX representation of the value.
    * @return auto Returns a symbolic operator based on a ScalarFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
@@ -1454,8 +1453,7 @@ namespace WeakForms
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a ScalarFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int spacedim = dim, typename ScalarType>
   auto
@@ -1490,8 +1488,7 @@ namespace WeakForms
    * @param symbol_latex  The LaTeX representation of the tensor.
    * @return auto Returns a symbolic operator based on a TensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1530,8 +1527,7 @@ namespace WeakForms
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a TensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1566,8 +1562,7 @@ namespace WeakForms
    * @param symbol_latex  The LaTeX representation of the vector.
    * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int spacedim, typename ScalarType>
   auto
@@ -1599,8 +1594,7 @@ namespace WeakForms
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a rank-1 TensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int spacedim, typename ScalarType>
   auto
@@ -1633,8 +1627,7 @@ namespace WeakForms
    * @param symbol_latex  The LaTeX representation of the tensor.
    * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
@@ -1675,8 +1668,7 @@ namespace WeakForms
    * @param value The value to be returned upon evaluation.
    * @return auto Returns a symbolic operator based on a SymmetricTensorFunctor.
    *
-   * \ingroup functors
-   * \ingroup convenience_functions
+   * \ingroup functors convenience_functions
    */
   template <int dim, int rank, int spacedim, typename ScalarType>
   auto
