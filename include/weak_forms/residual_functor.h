@@ -676,11 +676,17 @@ namespace WeakForms
    *   = residual_view_functor("R", "R", test_grad, soln_val, soln_grad, ...);
    * @endcode
    *
-   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that lists the types of field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
+   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that lists the
+   * types of field solution operations that this functor is sensitive to
+   * (i.e. the association to the input arguments for differentiation).
    * @param symbol_ascii The ASCII representation of the value.
    * @param symbol_latex  The LaTeX representation of the value.
-   * @param test_space_op The functor to test this residual contribution with.
-   * @param symbolic_op_field_solutions The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof). It is the functor to test this
+   * residual contribution with.
+   * @param symbolic_op_field_solutions The field solution operations that this
+   * functor is sensitive to (i.e. the association to the input arguments for
+   * differentiation).
    */
   template <typename TestSpaceOp, typename... SymbolicOpsSubSpaceFieldSolution>
   ResidualViewFunctor<SymbolicOpsSubSpaceFieldSolution...>

@@ -68,6 +68,8 @@ namespace WeakForms
    * @tparam Functor_ A functor that represents a function with which the inner
    * product is to be taken with respect to the test function. (In some texts,
    * it might be said that this function is "tested" with the test function.)
+   *
+   * \ingroup forms
    */
   template <typename TestSpaceOp_, typename Functor_>
   class LinearForm
@@ -217,6 +219,23 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  /**
+   * @brief A convenience function that is used to create linear forms.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam Functor A functor that represents a function with which the inner
+   * product is to be taken with respect to both the test function and trial
+   * solution.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param functor_op A symbolic operation that represents some general functor.
+   *
+   * \ingroup forms
+   */
   template <
     typename TestSpaceOp,
     typename Functor,
@@ -229,6 +248,24 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create linear forms.
+   *
+   * This variant takes in a scalar value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam ScalarType A scalar type (e.g. a float, double, complex number).
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) scalar value.
+   *
+   * \ingroup forms
+   */
   template <typename TestSpaceOp,
             typename ScalarType,
             typename = typename std::enable_if<
@@ -244,6 +281,27 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create linear forms.
+   *
+   * This variant takes in a tensor value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the input tensor.
+   * @tparam ScalarType The underlying scalar type for each component of the
+   * tensor.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) tensor.
+   *
+   * \ingroup forms
+   */
   template <typename TestSpaceOp,
             int rank,
             int spacedim,
@@ -259,6 +317,27 @@ namespace WeakForms
   }
 
 
+
+  /**
+   * @brief A convenience function that is used to create linear forms.
+   *
+   * This variant takes in a symmetric tensor value for the functor.
+   *
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @tparam rank The rank of the tensor that is returned upon evaluation.
+   * @tparam spacedim The spatial dimension of the input tensor.
+   * @tparam ScalarType The underlying scalar type for each component of the
+   * tensor.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param value A (spatially constant) symmetric tensor.
+   *
+   * \ingroup forms
+   */
   template <typename TestSpaceOp,
             int rank,
             int spacedim,
