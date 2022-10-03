@@ -54,8 +54,7 @@ WEAK_FORMS_NAMESPACE_OPEN
 namespace WeakForms
 {
   /**
-   * A class that represents the point-wise decomposition of an energy
-   * functional.
+   * @brief A class that represents the point-wise decomposition of an energy functional.
    *
    * An instance of this class  can also be easily created using the
    * energy_functor() convenience function.
@@ -432,21 +431,32 @@ namespace WeakForms
 namespace WeakForms
 {
   /**
-   * Shortcut so that we don't need to do something like this:
+   * @brief A convenience function for creating an EnergyFunctor.
    *
-   * <code>
-   * const FieldSolution<dim> solution;
-   * const WeakForms::SubSpaceExtractors::Scalar subspace_extractor(0, "s",
-   * "s");
+   * It is, essentially, a shortcut so that we can do this:
+   * @code
+   * const FieldSolution<dim>                    solution;
+   * const WeakForms::SubSpaceExtractors::Scalar subspace_extractor(
+   *   0, "s", "s");
    *
    * const auto soln_ss   = solution[subspace_extractor];
    * const auto soln_val  = soln_ss.value();    // Solution value
    * const auto soln_grad = soln_ss.gradient(); // Solution gradient
-   * ...
+   * // ... etc.
    *
+   * // Parameterise energy in terms of all possible operations with the space
+   * const auto energy = energy_functor("e", "\\Psi", soln_val, soln_grad, ...);
+   * @endcode
+   * instead of the last call being this more complicated expression:
+   * @code
    * const EnergyFunctor<decltype(soln_val), decltype(soln_grad), ...>
-   * energy("e", "\\Psi", soln_val, soln_grad, ...);
-   * </code>
+   *   energy("e", "\\Psi", soln_val, soln_grad, ...);
+   * @endcode
+   *
+   * @tparam SymbolicOpsSubSpaceFieldSolution A variadic template that lists the types of field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
+   * @param symbol_ascii The ASCII representation of the value.
+   * @param symbol_latex  The LaTeX representation of the value.
+   * @param symbolic_op_field_solutions The field solution operations that this functor is sensitive to (i.e. the association to the input arguments for differentiation).
    */
   template <typename... SymbolicOpsSubSpaceFieldSolution>
   EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
