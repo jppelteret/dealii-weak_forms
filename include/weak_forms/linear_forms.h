@@ -234,8 +234,7 @@ namespace WeakForms
    * function (or a derivative thereof).
    * @param functor_op A symbolic operation that represents some general functor.
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <
     typename TestSpaceOp,
@@ -265,8 +264,7 @@ namespace WeakForms
    * function (or a derivative thereof).
    * @param value A (spatially constant) scalar value.
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             typename ScalarType,
@@ -302,8 +300,7 @@ namespace WeakForms
    * function (or a derivative thereof).
    * @param value A (spatially constant) tensor.
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,
@@ -339,8 +336,7 @@ namespace WeakForms
    * function (or a derivative thereof).
    * @param value A (spatially constant) symmetric tensor.
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,

@@ -645,8 +645,7 @@ namespace WeakForms
    * @param trial_space_op A symbolic operation that represents some trial
    * solution (or a derivative thereof).
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <
     typename TestSpaceOp,
@@ -688,8 +687,7 @@ namespace WeakForms
    * @param trial_space_op A symbolic operation that represents some trial
    * solution (or a derivative thereof).
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             typename ScalarType,
@@ -737,8 +735,7 @@ namespace WeakForms
    * @param trial_space_op A symbolic operation that represents some trial
    * solution (or a derivative thereof).
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,
@@ -785,8 +782,7 @@ namespace WeakForms
    * @param trial_space_op A symbolic operation that represents some trial
    * solution (or a derivative thereof).
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp,
             int rank,
@@ -829,8 +825,7 @@ namespace WeakForms
    * @param trial_space_op A symbolic operation that represents some trial
    * solution (or a derivative thereof).
    *
-   * \ingroup forms
-   * \ingroup convenience_functions
+   * \ingroup forms convenience_functions
    */
   template <typename TestSpaceOp, typename TrialSpaceOp>
   auto
