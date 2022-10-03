@@ -517,125 +517,125 @@ $(function() {
 <div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160; </div>
 <div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceWeakForms.html">WeakForms</a></div>
 <div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;{</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;  <span class="keyword">template</span> &lt;</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    <span class="keyword">typename</span> TestSpaceOp,</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    <span class="keyword">typename</span> Functor,</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keyword">typename</span> TrialSpaceOp,</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;    <span class="keyword">typename</span> = <span class="keyword">typename</span> std::enable_if&lt;is_valid_form_functor&lt;Functor&gt;::value &amp;&amp;</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;                                       !<a class="code" href="classWeakForms_1_1is__scalar__type.html#afef57ee0554ba56fba1065fdb60c159d">is_scalar_type&lt;Functor&gt;::value</a>&gt;::type&gt;</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;  BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp&gt;</div>
-<div class="line"><a name="l00658"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">  658</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;                <span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Functor.html">Functor</a> &amp;     functor_op,</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;  {</div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classWeakForms_1_1BilinearForm.html">BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp&gt;</a>(test_space_op,</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                                                            functor_op,</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;                                                            trial_space_op);</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;  }</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;  <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;    <span class="keyword">typename</span> TestSpaceOp,</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    <span class="keyword">typename</span> Functor,</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    <span class="keyword">typename</span> TrialSpaceOp,</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keyword">typename</span> = <span class="keyword">typename</span> std::enable_if&lt;is_valid_form_functor&lt;Functor&gt;::value &amp;&amp;</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;                                       !<a class="code" href="classWeakForms_1_1is__scalar__type.html#afef57ee0554ba56fba1065fdb60c159d">is_scalar_type&lt;Functor&gt;::value</a>&gt;::type&gt;</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;  BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp&gt;</div>
+<div class="line"><a name="l00657"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">  657</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;                <span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Functor.html">Functor</a> &amp;     functor_op,</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;  {</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classWeakForms_1_1BilinearForm.html">BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp&gt;</a>(test_space_op,</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;                                                            functor_op,</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                                                            trial_space_op);</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;  }</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160; </div>
 <div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160; </div>
 <div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160; </div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160; </div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> std::enable_if&lt;</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;              !is_valid_form_functor&lt;ScalarType&gt;::value &amp;&amp;</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;              <a class="code" href="classWeakForms_1_1is__scalar__type.html#afef57ee0554ba56fba1065fdb60c159d">is_scalar_type&lt;ScalarType&gt;::value</a>&gt;::type&gt;</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;  <span class="keyword">auto</span></div>
-<div class="line"><a name="l00701"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gaf30312909935a89c48022b69c1f309de">  701</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;                <span class="keyword">const</span> ScalarType &amp;  value,</div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;  {</div>
-<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;    constexpr <span class="keywordtype">int</span> dim      = TestSpaceOp::dimension;</div>
-<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;    constexpr <span class="keywordtype">int</span> spacedim = TestSpaceOp::space_dimension;</div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
-<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;                         constant_scalar&lt;dim, spacedim&gt;(value),</div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;                         trial_space_op);</div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;  }</div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> std::enable_if&lt;</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;              !is_valid_form_functor&lt;ScalarType&gt;::value &amp;&amp;</div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;              <a class="code" href="classWeakForms_1_1is__scalar__type.html#afef57ee0554ba56fba1065fdb60c159d">is_scalar_type&lt;ScalarType&gt;::value</a>&gt;::type&gt;</div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;  <span class="keyword">auto</span></div>
+<div class="line"><a name="l00699"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gaf30312909935a89c48022b69c1f309de">  699</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;                <span class="keyword">const</span> ScalarType &amp;  value,</div>
+<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
+<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;  {</div>
+<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    constexpr <span class="keywordtype">int</span> dim      = TestSpaceOp::dimension;</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    constexpr <span class="keywordtype">int</span> spacedim = TestSpaceOp::space_dimension;</div>
+<div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
+<div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;                         constant_scalar&lt;dim, spacedim&gt;(value),</div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;                         trial_space_op);</div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;  }</div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160; </div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160; </div>
 <div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160; </div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160; </div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160; </div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;            <span class="keywordtype">int</span> rank,</div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;            <span class="keywordtype">int</span> spacedim,</div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> <a class="code" href="classWeakForms_1_1is__scalar__type.html#ab20716a0ccada1ba48b61b0674fa5ef6">is_scalar_type&lt;ScalarType&gt;::type</a>&gt;</div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;  <span class="keyword">auto</span></div>
-<div class="line"><a name="l00750"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#ga78136c6b281da64a8fa2a485261bfbec">  750</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp;                       test_space_op,</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;                <span class="keyword">const</span> Tensor&lt;rank, spacedim, ScalarType&gt; &amp;value,</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;                      trial_space_op)</div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;  {</div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;    constexpr <span class="keywordtype">int</span> dim = TestSpaceOp::dimension;</div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;                         constant_tensor&lt;dim&gt;(value),</div>
-<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;                         trial_space_op);</div>
-<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;  }</div>
-<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160; </div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160; </div>
-<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160; </div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
-<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;            <span class="keywordtype">int</span> rank,</div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;            <span class="keywordtype">int</span> spacedim,</div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> <a class="code" href="classWeakForms_1_1is__scalar__type.html#ab20716a0ccada1ba48b61b0674fa5ef6">is_scalar_type&lt;ScalarType&gt;::type</a>&gt;</div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;  <span class="keyword">auto</span></div>
-<div class="line"><a name="l00798"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gaaa87ca80088ec1a1bcacf0a0e9bd7cce">  798</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp;test_space_op,</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;                <span class="keyword">const</span> SymmetricTensor&lt;rank, spacedim, ScalarType&gt; &amp;value,</div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;  {</div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;    constexpr <span class="keywordtype">int</span> dim = TestSpaceOp::dimension;</div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;                         constant_symmetric_tensor&lt;dim&gt;(value),</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;                         trial_space_op);</div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;  }</div>
-<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160; </div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160; </div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160; </div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp, <span class="keyword">typename</span> TrialSpaceOp&gt;</div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;  <span class="keyword">auto</span></div>
-<div class="line"><a name="l00837"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#ga1def7786361fdb4f678d2aefda297d83">  837</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;  {</div>
-<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op, 1.0, trial_space_op);</div>
-<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;  }</div>
-<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160; </div>
-<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;            <span class="keywordtype">int</span> rank,</div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;            <span class="keywordtype">int</span> spacedim,</div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> <a class="code" href="classWeakForms_1_1is__scalar__type.html#ab20716a0ccada1ba48b61b0674fa5ef6">is_scalar_type&lt;ScalarType&gt;::type</a>&gt;</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;  <span class="keyword">auto</span></div>
+<div class="line"><a name="l00747"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#ga78136c6b281da64a8fa2a485261bfbec">  747</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp;                       test_space_op,</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;                <span class="keyword">const</span> Tensor&lt;rank, spacedim, ScalarType&gt; &amp;value,</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;                      trial_space_op)</div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;  {</div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;    constexpr <span class="keywordtype">int</span> dim = TestSpaceOp::dimension;</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;                         constant_tensor&lt;dim&gt;(value),</div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;                         trial_space_op);</div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;  }</div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160; </div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160; </div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160; </div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;            <span class="keywordtype">int</span> rank,</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;            <span class="keywordtype">int</span> spacedim,</div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;            <span class="keyword">typename</span> ScalarType,</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;            <span class="keyword">typename</span> = <span class="keyword">typename</span> <a class="code" href="classWeakForms_1_1is__scalar__type.html#ab20716a0ccada1ba48b61b0674fa5ef6">is_scalar_type&lt;ScalarType&gt;::type</a>&gt;</div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;  <span class="keyword">auto</span></div>
+<div class="line"><a name="l00794"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#gaaa87ca80088ec1a1bcacf0a0e9bd7cce">  794</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp;test_space_op,</div>
+<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;                <span class="keyword">const</span> SymmetricTensor&lt;rank, spacedim, ScalarType&gt; &amp;value,</div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;  {</div>
+<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;    constexpr <span class="keywordtype">int</span> dim = TestSpaceOp::dimension;</div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op,</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;                         constant_symmetric_tensor&lt;dim&gt;(value),</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;                         trial_space_op);</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;  }</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160; </div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160; </div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160; </div>
+<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp, <span class="keyword">typename</span> TrialSpaceOp&gt;</div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;  <span class="keyword">auto</span></div>
+<div class="line"><a name="l00832"></a><span class="lineno"><a class="line" href="group__convenience__functions.html#ga1def7786361fdb4f678d2aefda297d83">  832</a></span>&#160;  <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(<span class="keyword">const</span> TestSpaceOp &amp; test_space_op,</div>
+<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;                <span class="keyword">const</span> TrialSpaceOp &amp;trial_space_op)</div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;  {</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;    <span class="comment">// Delegate to the other function</span></div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">bilinear_form</a>(test_space_op, 1.0, trial_space_op);</div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;  }</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160; </div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160; </div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160; </div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160; </div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;<span class="comment">/* ==================== Specialization of type traits ==================== */</span></div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160; </div>
 <div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160; </div>
 <div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160; </div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160; </div>
-<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;<span class="comment">/* ==================== Specialization of type traits ==================== */</span></div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;<span class="preprocessor">#ifndef DOXYGEN</span></div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160; </div>
 <div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160; </div>
-<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160; </div>
-<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160; </div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="preprocessor">#ifndef DOXYGEN</span></div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160; </div>
-<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160; </div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceWeakForms.html">WeakForms</a></div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;{</div>
-<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;            <span class="keyword">typename</span> Functor,</div>
-<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
-<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;            <a class="code" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> ComponentFilter&gt;</div>
-<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;  <span class="keyword">struct </span>is_bilinear_form&lt;</div>
-<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;    BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp, ComponentFilter&gt;&gt;</div>
-<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;    : std::true_type</div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;  {};</div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceWeakForms.html">WeakForms</a></div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;{</div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TestSpaceOp,</div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;            <span class="keyword">typename</span> Functor,</div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;            <span class="keyword">typename</span> TrialSpaceOp,</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;            <a class="code" href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">BilinearFormComponentFilter</a> ComponentFilter&gt;</div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;  <span class="keyword">struct </span>is_bilinear_form&lt;</div>
+<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;    BilinearForm&lt;TestSpaceOp, Functor, TrialSpaceOp, ComponentFilter&gt;&gt;</div>
+<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;    : std::true_type</div>
+<div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;  {};</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160; </div>
+<div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
+<div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160; </div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160; </div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;<span class="preprocessor">#endif // DOXYGEN</span></div>
 <div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160; </div>
-<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;} <span class="comment">// namespace WeakForms</span></div>
-<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160; </div>
+<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160; </div>
+<div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
 <div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160; </div>
-<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;<span class="preprocessor">#endif // DOXYGEN</span></div>
-<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160; </div>
-<div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160; </div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;WEAK_FORMS_NAMESPACE_CLOSE</div>
-<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160; </div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_bilinear_forms_h</span></div>
+<div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;<span class="preprocessor">#endif // dealii_weakforms_bilinear_forms_h</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassWeakForms_1_1BilinearForm_html_aad893eaa3cfbdd246ae0c57a58a16bec"><div class="ttname"><a href="classWeakForms_1_1BilinearForm.html#aad893eaa3cfbdd246ae0c57a58a16bec">WeakForms::BilinearForm::BilinearForm</a></div><div class="ttdeci">BilinearForm(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00383">bilinear_forms.h:383</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1Functor_html"><div class="ttname"><a href="classWeakForms_1_1Functor.html">WeakForms::Functor</a></div><div class="ttdoc">A base class for other objects that represent functors.</div><div class="ttdef"><b>Definition:</b> <a href="include_2weak__forms_2functors_8h_source.html#l00082">functors.h:82</a></div></div>
@@ -693,7 +693,7 @@ $(function() {
 <div class="ttc" id="aclassWeakForms_1_1BilinearForm_html_aeebe15d51c2c57e3b063bf5e8384c333"><div class="ttname"><a href="classWeakForms_1_1BilinearForm.html#aeebe15d51c2c57e3b063bf5e8384c333">WeakForms::BilinearForm::dI</a></div><div class="ttdeci">auto dI(const std::set&lt; typename InterfaceIntegral::subdomain_t &gt; &amp;interfaces) const</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00574">bilinear_forms.h:574</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html_acaa0a4172ad5893b342da4aae68fb3a4"><div class="ttname"><a href="namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4">WeakForms::BilinearFormComponentFilter</a></div><div class="ttdeci">BilinearFormComponentFilter</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00063">bilinear_forms.h:63</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1BilinearForm_html_a3eb4fae719191e52769a0867373644af"><div class="ttname"><a href="classWeakForms_1_1BilinearForm.html#a3eb4fae719191e52769a0867373644af">WeakForms::BilinearForm::symmetrize</a></div><div class="ttdeci">BilinearForm &amp; symmetrize()</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00467">bilinear_forms.h:467</a></div></div>
-<div class="ttc" id="agroup__convenience__functions_html_gafdd7b5677e0e315c3c177d2dbe7cb7f7"><div class="ttname"><a href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">WeakForms::bilinear_form</a></div><div class="ttdeci">BilinearForm&lt; TestSpaceOp, Functor, TrialSpaceOp &gt; bilinear_form(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</div><div class="ttdoc">A convenience function that is used to create bilinear forms.</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00658">bilinear_forms.h:658</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_gafdd7b5677e0e315c3c177d2dbe7cb7f7"><div class="ttname"><a href="group__convenience__functions.html#gafdd7b5677e0e315c3c177d2dbe7cb7f7">WeakForms::bilinear_form</a></div><div class="ttdeci">BilinearForm&lt; TestSpaceOp, Functor, TrialSpaceOp &gt; bilinear_form(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op, const TrialSpaceOp &amp;trial_space_op)</div><div class="ttdoc">A convenience function that is used to create bilinear forms.</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00657">bilinear_forms.h:657</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1BilinearForm_html_af8a0f79d319259842c40ada8ad798dd0"><div class="ttname"><a href="classWeakForms_1_1BilinearForm.html#af8a0f79d319259842c40ada8ad798dd0">WeakForms::BilinearForm::TestSpaceOp</a></div><div class="ttdeci">TestSpaceOp_ TestSpaceOp</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00379">bilinear_forms.h:379</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1BilinearForm_html_a5633b704a3d8b93959358bdd4bafbc19"><div class="ttname"><a href="classWeakForms_1_1BilinearForm.html#a5633b704a3d8b93959358bdd4bafbc19">WeakForms::BilinearForm::dV</a></div><div class="ttdeci">auto dV() const</div><div class="ttdef"><b>Definition:</b> <a href="bilinear__forms_8h_source.html#l00515">bilinear_forms.h:515</a></div></div>
 <div class="ttc" id="asymbolic__integral_8h_html"><div class="ttname"><a href="symbolic__integral_8h.html">symbolic_integral.h</a></div></div>
