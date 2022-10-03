@@ -225,7 +225,7 @@ namespace WeakForms
    * // Use the following to force the assembler to run without SIMD intrinsics:
    * // constexpr bool use_vectorization = false;
    * // MatrixBasedAssembler<dim, spacedim, double,
-   *                         use_vectorization>  assembler;
+   * //                      use_vectorization>  assembler;
    *
    * // Setup deal.II objects (would likely be done elsewhere in the code)
    * const QGauss<spacedim>    qf_cell(...);
@@ -235,7 +235,7 @@ namespace WeakForms
    * Vector<double>            system_rhs (...);
    *
    * // Now we pass in concrete objects to get data from and assemble into.
-   * assembler.assemble_matrix(system_matrix,
+   * assembler.assemble_system(system_matrix,
    *                           system_rhs,
    *                           constraints,
    *                           dof_handler,
