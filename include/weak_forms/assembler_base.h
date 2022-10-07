@@ -68,13 +68,13 @@ namespace WeakForms
   //   template <int                                   dim,
   //             enum Differentiation::NumberTypes ADScalarTypeCode,
   //             typename ScalarType>
-  //   class EnergyFunctional;
+  //   class EnergyFunctionalForm;
   // } // namespace AutoDifferentiation
 
   // namespace SelfLinearization
   // {
   //   template <typename... SymbolicOpsSubSpaceFieldSolution>
-  //   class EnergyFunctional;
+  //   class EnergyFunctionalForm;
   // }
 } // namespace WeakForms
 

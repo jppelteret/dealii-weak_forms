@@ -57,7 +57,7 @@ namespace WeakForms
      * both the associated linear form(s) and consistently linearized
      * bilinear form(s) associated with the energy functional.
      *
-     * The @p EnergyFunctional form is supplied with the finite element fields upon
+     * The @p EnergyFunctionalForm form is supplied with the finite element fields upon
      * which the @p Functor is parameterized. It then self-linearizes the discrete
      * problem (i.e. at the finite element level) to produce the linear and
      * bilinear forms. One linear form is generated for each variable upon which
@@ -92,36 +92,36 @@ namespace WeakForms
      * \ingroup forms
      */
     template <typename EnergyFunctor>
-    class EnergyFunctional
+    class EnergyFunctionalForm
     {
       static_assert(is_energy_functor_op<EnergyFunctor>::value,
                     "Expected an EnergyFunctor.");
       static_assert(
         is_ad_functor_op<EnergyFunctor>::value ||
           is_sd_functor_op<EnergyFunctor>::value,
-        "The SelfLinearizing::EnergyFunctional class is designed to work with AD or SD functors.");
+        "The SelfLinearizing::EnergyFunctionalForm class is designed to work with AD or SD functors.");
 
       // static_assert(
       //   is_symbolic_op<Functor>::value,
-      //   "The SelfLinearizing::EnergyFunctional class is designed to work a
-      //   unary operation as a functor.");
+      //   "The SelfLinearizing::EnergyFunctionalForm class is designed to work
+      //   a unary operation as a functor.");
 
     public:
-      EnergyFunctional(const EnergyFunctor &functor_op)
+      EnergyFunctionalForm(const EnergyFunctor &functor_op)
         : functor_op(functor_op)
       {}
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "SelfLinearizingEnergyFunctional(" +
+        return "SelfLinearizingEnergyFunctionalForm(" +
                functor_op.as_ascii(decorator) + ")";
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return "SelfLinearizingEnergyFunctional(" +
+        return "SelfLinearizingEnergyFunctionalForm(" +
                functor_op.as_latex(decorator) + ")";
       }
 
@@ -815,7 +815,7 @@ namespace WeakForms
         (void)symbolic_op_field_solutions_1;
         (void)symbolic_op_field_solutions_2;
       }
-    }; // class EnergyFunctional
+    }; // class EnergyFunctionalForm
 
 
     /**
@@ -825,7 +825,7 @@ namespace WeakForms
      * both the associated linear form (essentially a duplication of the
      * residual form) and its consistently linearized bilinear form(s).
      *
-     * The @p ResidualView form is supplied with the finite element fields upon
+     * The @p ResidualViewForm is supplied with the finite element fields upon
      * which the @p Functor is parameterized. It then self-linearizes the discrete
      * residual (i.e. at the finite element level) to produce the
      * bilinear form(s). One linear form is generated for component of the
@@ -861,37 +861,37 @@ namespace WeakForms
      * \ingroup forms
      */
     template <typename ResidualViewFunctor>
-    class ResidualView
+    class ResidualViewForm
     {
       static_assert(is_residual_functor_op<ResidualViewFunctor>::value,
                     "Expected a ResidualViewFunctor.");
       static_assert(
         is_ad_functor_op<ResidualViewFunctor>::value ||
           is_sd_functor_op<ResidualViewFunctor>::value,
-        "The SelfLinearizing::ResidualView class is designed to work with AD or SD functors.");
+        "The SelfLinearizing::ResidualViewForm class is designed to work with AD or SD functors.");
 
       // static_assert(
       //   is_symbolic_op<ResidualViewFunctor>::value,
-      //   "The SelfLinearizing::ResidualView class is designed to work a
+      //   "The SelfLinearizing::ResidualViewForm class is designed to work a
       //   unary operation as a functor.");
 
     public:
-      ResidualView(const ResidualViewFunctor &functor_op)
+      ResidualViewForm(const ResidualViewFunctor &functor_op)
         : functor_op(functor_op)
       {}
 
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "SelfLinearizingResidualView(" + functor_op.as_ascii(decorator) +
-               ")";
+        return "SelfLinearizingResidualViewForm(" +
+               functor_op.as_ascii(decorator) + ")";
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return "SelfLinearizingResidualView(" + functor_op.as_latex(decorator) +
-               ")";
+        return "SelfLinearizingResidualViewForm(" +
+               functor_op.as_latex(decorator) + ")";
       }
 
       // ===== Section: Construct assembly operation =====
@@ -1503,7 +1503,7 @@ namespace WeakForms
         (void)integral_operation;
         (void)symbolic_op_field_solutions;
       }
-    }; // class ResidualView
+    }; // class ResidualViewForm
   }    // namespace SelfLinearization
 
 } // namespace WeakForms
@@ -1521,14 +1521,14 @@ namespace WeakForms
    *
    * For more information about the self-linearizing form that is created,
    * please refer to the documentation of the
-   * SelfLinearization::EnergyFunctional class.
+   * SelfLinearization::EnergyFunctionalForm class.
    *
    * @tparam EnergyFunctor A class that is recognised to be a energy functor
    *         operation, as well as a functor that is either AD compatible
    *         SD compatible (i.e. can exploit either automatic or symbolic
    *         differentiation).
    * @param functor_op An energy functor that is to be converted to a form.
-   * @return SelfLinearization::EnergyFunctional<EnergyFunctor>
+   * @return SelfLinearization::EnergyFunctionalForm<EnergyFunctor>
    *
    * \ingroup forms convenience_functions
    */
@@ -1537,10 +1537,10 @@ namespace WeakForms
               is_energy_functor_op<EnergyFunctor>::value &&
               (is_ad_functor_op<EnergyFunctor>::value ||
                is_sd_functor_op<EnergyFunctor>::value)>::type>
-  SelfLinearization::EnergyFunctional<EnergyFunctor>
+  SelfLinearization::EnergyFunctionalForm<EnergyFunctor>
   energy_functional_form(const EnergyFunctor &functor_op)
   {
-    return SelfLinearization::EnergyFunctional<EnergyFunctor>(functor_op);
+    return SelfLinearization::EnergyFunctionalForm<EnergyFunctor>(functor_op);
   }
 
 
@@ -1549,15 +1549,15 @@ namespace WeakForms
    * form from a residual view functor.
    *
    * For more information about the self-linearizing form that is created,
-   * please refer to the documentation of the SelfLinearization::ResidualView
-   * class.
+   * please refer to the documentation of the
+   * SelfLinearization::ResidualViewForm class.
    *
    * @tparam ResidualViewFunctor A class that is recognised to be a residual view
    *         functor operation, as well as a functor that is either AD
    *         compatible SD compatible (i.e. can exploit either automatic or
    *         symbolic differentiation).
    * @param functor_op An residual functor that is to be converted to a form.
-   * @return SelfLinearization::ResidualView<ResidualViewFunctor>
+   * @return SelfLinearization::ResidualViewForm<ResidualViewFunctor>
    *
    * \ingroup forms convenience_functions
    */
@@ -1566,10 +1566,10 @@ namespace WeakForms
               is_residual_functor_op<ResidualViewFunctor>::value &&
               (is_ad_functor_op<ResidualViewFunctor>::value ||
                is_sd_functor_op<ResidualViewFunctor>::value)>::type>
-  SelfLinearization::ResidualView<ResidualViewFunctor>
+  SelfLinearization::ResidualViewForm<ResidualViewFunctor>
   residual_form(const ResidualViewFunctor &functor_op)
   {
-    return SelfLinearization::ResidualView<ResidualViewFunctor>(functor_op);
+    return SelfLinearization::ResidualViewForm<ResidualViewFunctor>(functor_op);
   }
 
 } // namespace WeakForms
@@ -1587,13 +1587,13 @@ namespace WeakForms
 {
   template <typename EnergyFunctor>
   struct is_self_linearizing_form<
-    SelfLinearization::EnergyFunctional<EnergyFunctor>> : std::true_type
+    SelfLinearization::EnergyFunctionalForm<EnergyFunctor>> : std::true_type
   {};
 
 
   template <typename ResidualViewFunctor>
   struct is_self_linearizing_form<
-    SelfLinearization::ResidualView<ResidualViewFunctor>> : std::true_type
+    SelfLinearization::ResidualViewForm<ResidualViewFunctor>> : std::true_type
   {};
 
 } // namespace WeakForms
