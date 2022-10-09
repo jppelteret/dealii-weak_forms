@@ -59,7 +59,7 @@ namespace WeakForms
 
 
   /**
-   * @brief A type trait that checks to see if a class is a symbolic operator that acts as a view into the global test function, trial solution, or field solution.
+   * @brief A type trait that checks to see if a class is a view into the global test function, trial solution, or field solution.
    *
    * @tparam T The class type to be tested for the trait.
    */
