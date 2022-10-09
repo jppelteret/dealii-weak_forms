@@ -28,6 +28,7 @@
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/operator_utilities.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -298,11 +299,16 @@ namespace WeakForms
       normalize(const ScalarType &value)
       {
         using namespace std;
-        ScalarType norm = std::abs(value);
-        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
-          return norm;
+        ScalarType norm = abs(value);
 
-        switch_zero_for_unit_value_in_denominator(norm);
+        if (!Differentiation::SD::is_sd_number<ScalarType>::value)
+          {
+            if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+              return norm;
+
+            switch_zero_for_unit_value_in_denominator(norm);
+          }
+
         return value / norm;
       }
 
@@ -312,11 +318,17 @@ namespace WeakForms
       std::complex<ScalarType>
       normalize(const std::complex<ScalarType> &value)
       {
-        std::complex<ScalarType> norm = std::abs(value);
-        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
-          return norm;
+        using namespace std;
+        std::complex<ScalarType> norm = abs(value);
 
-        switch_zero_for_unit_value_in_denominator(norm);
+        if (!Differentiation::SD::is_sd_number<ScalarType>::value)
+          {
+            if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+              return norm;
+
+            switch_zero_for_unit_value_in_denominator(norm);
+          }
+
         return value / norm;
       }
 
@@ -329,10 +341,15 @@ namespace WeakForms
       normalize(const Tensor<rank, dim, ScalarType> &value)
       {
         ScalarType norm = value.norm();
-        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
-          return Tensor<rank, dim, ScalarType>();
 
-        switch_zero_for_unit_value_in_denominator(norm);
+        if (!Differentiation::SD::is_sd_number<ScalarType>::value)
+          {
+            if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+              return Tensor<rank, dim, ScalarType>();
+
+            switch_zero_for_unit_value_in_denominator(norm);
+          }
+
         return value / norm;
       }
 
@@ -345,10 +362,15 @@ namespace WeakForms
       normalize(const SymmetricTensor<rank, dim, ScalarType> &value)
       {
         ScalarType norm = value.norm();
-        if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
-          return SymmetricTensor<rank, dim, ScalarType>();
 
-        switch_zero_for_unit_value_in_denominator(norm);
+        if (!Differentiation::SD::is_sd_number<ScalarType>::value)
+          {
+            if (norm == dealii::internal::NumberType<ScalarType>::value(0.0))
+              return SymmetricTensor<rank, dim, ScalarType>();
+
+            switch_zero_for_unit_value_in_denominator(norm);
+          }
+
         return value / norm;
       }
 
@@ -782,6 +804,31 @@ namespace WeakForms
 #undef DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL
 
 
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()            \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(    \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const \
+    {                                                                     \
+      return derived                                                      \
+        .template operator()<dealii::Differentiation::SD::Expression>(    \
+          derived.get_operand().as_expression(decorator));                \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     template <typename Derived>
     class UnaryOpBase
     {
@@ -837,6 +884,8 @@ namespace WeakForms
       {
         return derived.template operator()<ScalarType, width>(value);
       }
+
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
 
 
       // ---- Operators NOT for test functions / trial solutions ---
@@ -2173,6 +2222,7 @@ private:                                                                 \
 
 
 #undef DEAL_II_UNARY_OP_COMMON_IMPL
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
