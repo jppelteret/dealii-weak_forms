@@ -34,6 +34,7 @@
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/operator_utilities.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -971,6 +972,32 @@ namespace WeakForms
 #undef DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL
 
 
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()         \
+    auto as_expression(const SymbolicDecorations &decorator =          \
+                         SymbolicDecorations()) const                  \
+    {                                                                  \
+      return derived                                                   \
+        .template operator()<dealii::Differentiation::SD::Expression>( \
+          derived.get_lhs_operand().as_expression(decorator),          \
+          derived.get_rhs_operand().as_expression(decorator));         \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     template <typename Derived>
     class BinaryOpBase
     {
@@ -1457,6 +1484,8 @@ namespace WeakForms
                                             solution_extraction_data,
                                             q_point_range);
       }
+
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
 
     private:
       const Derived &derived;
@@ -2579,6 +2608,7 @@ private:                                                                   \
 
 #undef DEAL_II_BINARY_OP_COMMON_IMPL
 #undef DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
