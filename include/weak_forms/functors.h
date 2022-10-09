@@ -30,6 +30,7 @@
 
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/types.h>
@@ -591,7 +592,33 @@ namespace WeakForms
 
   namespace Operators
   {
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()            \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(    \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const \
+    {                                                                     \
+      return WeakForms::Operators::internal::make_symbolic<               \
+        value_type<dealii::Differentiation::SD::Expression>>(             \
+        this->as_ascii(decorator));                                       \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     /* ------------------------ Functors: Custom ------------------------ */
+
 
 #define DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()                             \
 public:                                                                       \
@@ -744,6 +771,8 @@ public:                                                                       \
                                                                               \
     return out;                                                               \
   }                                                                           \
+                                                                              \
+  DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                        \
                                                                               \
 private:                                                                      \
   const Op                                  operand;                          \
@@ -1008,6 +1037,8 @@ public:                                                                        \
     return out;                                                                \
   }                                                                            \
                                                                                \
+  DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                         \
+                                                                               \
 private:                                                                       \
   const Op                                            operand;                 \
   const SmartPointer<const function_type<ScalarType>> function;                \
@@ -1209,6 +1240,7 @@ private:                                                                       \
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
