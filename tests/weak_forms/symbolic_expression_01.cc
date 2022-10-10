@@ -15,6 +15,7 @@
 
 // Test symbolic expression output
 // - Functors
+// - Cache functors
 
 #include <deal.II/differentiation/sd.h>
 
@@ -77,6 +78,41 @@ run()
     deallog << "T4: " << T4.as_expression() << std::endl;
     deallog << "S2: " << S2.as_expression() << std::endl;
     deallog << "S4: " << S4.as_expression() << std::endl;
+  }
+
+  // Cache functors
+  {
+    const ScalarCacheFunctor                  s("s", "s");
+    const TensorCacheFunctor<2, dim>          T("T", "T");
+    const SymmetricTensorCacheFunctor<2, dim> S("S", "S");
+    const UpdateFlags update_flags = UpdateFlags::update_default;
+
+    const auto s_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return 0.0; };
+    const auto sc =
+      s.template value<double, dim, spacedim>(s_func, update_flags);
+
+    const auto T_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return Tensor<2, dim>(); };
+    const auto Tc = T.template value<double, dim>(T_func, update_flags);
+
+    const auto S_func =
+      [](MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+         const std::vector<SolutionExtractionData<dim, spacedim>>
+           &                solution_extraction_data,
+         const unsigned int q_point) { return SymmetricTensor<2, dim>(); };
+    const auto Sc = S.template value<double, dim>(S_func, update_flags);
+
+
+    deallog << "sc: " << sc.as_expression() << std::endl;
+    deallog << "Tc: " << Tc.as_expression() << std::endl;
+    deallog << "Sc: " << Sc.as_expression() << std::endl;
   }
 
   deallog << "OK" << std::endl;
