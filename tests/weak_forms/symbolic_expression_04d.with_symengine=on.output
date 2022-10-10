@@ -1,0 +1,7 @@
+
+DEAL::Dim: 3
+DEAL::T_val: __DEAL_II__Field__S__00 __DEAL_II__Field__S__01 __DEAL_II__Field__S__02 __DEAL_II__Field__S__01 __DEAL_II__Field__S__11 __DEAL_II__Field__S__12 __DEAL_II__Field__S__02 __DEAL_II__Field__S__12 __DEAL_II__Field__S__22
+DEAL::T_div: __DEAL_II__Field_Div__S___0 __DEAL_II__Field_Div__S___1 __DEAL_II__Field_Div__S___2
+DEAL::res: -(__DEAL_II__Field__S__00**2 + 2*__DEAL_II__Field__S__01**2 + 2*__DEAL_II__Field__S__02**2 + __DEAL_II__Field__S__11**2 + 2*__DEAL_II__Field__S__12**2 + __DEAL_II__Field__S__22**2) + __DEAL_II__Field_Div__S___0**2 + __DEAL_II__Field_Div__S___1**2 + __DEAL_II__Field_Div__S___2**2
+DEAL::OK
+DEAL::OK
