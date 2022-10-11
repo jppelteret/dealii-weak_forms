@@ -1,0 +1,12 @@
+
+DEAL::Dim: 2
+DEAL::functor_op: 2*__DEAL_II__Field_Grad__s___0**2 + 2*__DEAL_II__Field_Grad__s___1**2 + 2*s + s*__DEAL_II__Field__s_**2
+DEAL::energy_func: e({s}, {s}, Grad({s}), Grad({s}))
+DEAL::energy_form: SelfLinearizingEnergyFunctionalForm(e({s}, {s}, Grad({s}), Grad({s})))
+DEAL::OK
+DEAL::Dim: 3
+DEAL::functor_op: 2*__DEAL_II__Field_Grad__s___0**2 + 2*__DEAL_II__Field_Grad__s___1**2 + 2*__DEAL_II__Field_Grad__s___2**2 + 2*s + s*__DEAL_II__Field__s_**2
+DEAL::energy_func: e({s}, {s}, Grad({s}), Grad({s}))
+DEAL::energy_form: SelfLinearizingEnergyFunctionalForm(e({s}, {s}, Grad({s}), Grad({s})))
+DEAL::OK
+DEAL::OK

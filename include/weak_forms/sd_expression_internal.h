@@ -27,6 +27,9 @@
 #  include <deal.II/differentiation/sd.h>
 
 #  include <weak_forms/config.h>
+#  include <weak_forms/spaces.h>
+#  include <weak_forms/symbolic_decorations.h>
+#  include <weak_forms/symbolic_operators.h>
 #  include <weak_forms/utilities.h>
 
 
@@ -125,6 +128,52 @@ namespace WeakForms
         // return make_symbolic<ReturnType>(name);
         return make_symbolic<ReturnType>(replace_protected_characters(name));
       }
+
+
+      template <typename T, typename... Us>
+      struct is_subspace_field_solution_op
+      {
+        static constexpr bool value =
+          is_subspace_field_solution_op<T>::value &&
+          is_subspace_field_solution_op<Us...>::value;
+      };
+
+      // Scalar and Vector subspaces
+      template <template <class> class SubSpaceViewsType,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index>
+      struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
+        SubSpaceViewsType<SpaceType>,
+        OpCode,
+        void,
+        WeakForms::internal::SolutionIndex<solution_index>>>
+      {
+        static constexpr bool value =
+          is_field_solution<SubSpaceViewsType<SpaceType>>::value &&
+          is_subspace_view<SubSpaceViewsType<SpaceType>>::value;
+      };
+
+      // Tensor and SymmetricTensor subspaces
+      template <template <int, class> class SubSpaceViewsType,
+                int rank,
+                typename SpaceType,
+                enum WeakForms::Operators::SymbolicOpCodes OpCode,
+                types::solution_index                      solution_index>
+      struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
+        SubSpaceViewsType<rank, SpaceType>,
+        OpCode,
+        void,
+        WeakForms::internal::SolutionIndex<solution_index>>>
+      {
+        static constexpr bool value =
+          is_field_solution<SubSpaceViewsType<rank, SpaceType>>::value &&
+          is_subspace_view<SubSpaceViewsType<rank, SpaceType>>::value;
+      };
+
+      template <typename T>
+      struct is_subspace_field_solution_op<T> : std::false_type
+      {};
 
     } // namespace internal
   }   // namespace Operators

@@ -28,7 +28,6 @@
 #include <weak_forms/differentiation.h>
 #include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
-#include <weak_forms/spaces.h>
 #include <weak_forms/types.h>
 #include <weak_forms/utilities.h>
 
@@ -142,51 +141,6 @@ namespace WeakForms
         using are_tuples = all_true<is_tuple<Ts>::value...>;
         template <typename... Ts>
         using are_not_tuples = all_false<is_tuple<Ts>::value...>;
-
-        template <typename T, typename... Us>
-        struct is_subspace_field_solution_op
-        {
-          static constexpr bool value =
-            is_subspace_field_solution_op<T>::value &&
-            is_subspace_field_solution_op<Us...>::value;
-        };
-
-        // Scalar and Vector subspaces
-        template <template <class> class SubSpaceViewsType,
-                  typename SpaceType,
-                  enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  types::solution_index                      solution_index>
-        struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
-          SubSpaceViewsType<SpaceType>,
-          OpCode,
-          void,
-          WeakForms::internal::SolutionIndex<solution_index>>>
-        {
-          static constexpr bool value =
-            is_field_solution<SubSpaceViewsType<SpaceType>>::value &&
-            is_subspace_view<SubSpaceViewsType<SpaceType>>::value;
-        };
-
-        // Tensor and SymmetricTensor subspaces
-        template <template <int, class> class SubSpaceViewsType,
-                  int rank,
-                  typename SpaceType,
-                  enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  types::solution_index                      solution_index>
-        struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
-          SubSpaceViewsType<rank, SpaceType>,
-          OpCode,
-          void,
-          WeakForms::internal::SolutionIndex<solution_index>>>
-        {
-          static constexpr bool value =
-            is_field_solution<SubSpaceViewsType<rank, SpaceType>>::value &&
-            is_subspace_view<SubSpaceViewsType<rank, SpaceType>>::value;
-        };
-
-        template <typename T>
-        struct is_subspace_field_solution_op<T> : std::false_type
-        {};
 
         template <typename... FieldArgs>
         struct EnforceIsSymbolicOpSubspaceFieldSolution

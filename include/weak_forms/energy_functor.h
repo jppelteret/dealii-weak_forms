@@ -260,6 +260,14 @@ namespace WeakForms
       , symbolic_op_field_solutions(symbolic_op_field_solutions...)
     {}
 
+    EnergyFunctor(const std::string &symbol_ascii,
+                  const std::string &symbol_latex,
+                  const std::tuple<SymbolicOpsSubSpaceFieldSolution...>
+                    &symbolic_op_field_solutions)
+      : Base(symbol_ascii, symbol_latex)
+      , symbolic_op_field_solutions(symbolic_op_field_solutions)
+    {}
+
     // ----  Ascii ----
 
     virtual std::string
