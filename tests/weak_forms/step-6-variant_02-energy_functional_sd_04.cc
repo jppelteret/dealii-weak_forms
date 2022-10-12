@@ -199,12 +199,8 @@ create_energy_functional_form_from_energy(
         const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
           SDNumberType> &...field_solutions)
       {
-        // Extract from functor_op...
-        // We really only expect user-defined symbolic variables to be
-        // able to return an intermediate substitution value.
-
-        // return {Differentiation::SD::make_symbol_map(coefficient)};
-        return functor_op.get_intermediate_substitution_map();
+        // Get the symbols that are expected to be found in the expression.
+        return functor_op.get_symbol_registration_map();
       },
       [functor_op](
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -223,9 +219,19 @@ create_energy_functional_form_from_energy(
                                                solution_extraction_data,
                                                q_point);
       },
+      [functor_op](
+        const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
+          SDNumberType> &...field_solutions)
+      {
+        // We really only expect user-defined symbolic variables to be
+        // able to return an intermediate substitution value.
+
+        // return {Differentiation::SD::make_symbol_map(coefficient)};
+        return functor_op.get_intermediate_substitution_map();
+      },
       Differentiation::SD::OptimizerType::llvm,
       Differentiation::SD::OptimizationFlags::optimize_default,
-      functor_op.get_update_flags());
+      functor_op.get_update_flags()| UpdateFlags::update_quadrature_points);
 
   return dealiiWF::energy_functional_form(energy);
 }
