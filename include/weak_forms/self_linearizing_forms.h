@@ -644,6 +644,41 @@ namespace WeakForms
         return UpdateFlags::update_default;
       }
 
+      // Check for duplicate field solution in the tuple
+      template <std::size_t J,
+                std::size_t I = 0,
+                typename FieldSolutionOp,
+                typename... SymbolicOpType>
+        inline typename std::enable_if <
+        I<J, bool>::type
+        has_duplicate_previous_field_solution_op(
+          const FieldSolutionOp &              field_solution,
+          const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
+          const
+      {
+        if (field_solution.as_expression() ==
+            std::get<I>(symbolic_op_field_solutions).as_expression())
+          {
+            return true;
+          }
+
+        return has_duplicate_previous_field_solution_op<J, I + 1>(
+          field_solution, symbolic_op_field_solutions);
+      }
+
+      // Get update flags from a unary op: End point
+      template <std::size_t J,
+                std::size_t I = 0,
+                typename FieldSolutionOp,
+                typename... SymbolicOpType>
+      inline typename std::enable_if<I == J, bool>::type
+      has_duplicate_previous_field_solution_op(
+        const FieldSolutionOp &              field_solution,
+        const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
+      {
+        return false;
+      }
+
       // Create linear forms
       template <enum WeakForms::internal::AccumulationSign OpSign,
                 std::size_t                                I = 0,
@@ -662,6 +697,17 @@ namespace WeakForms
 
         const auto &field_solution_test =
           std::get<I>(symbolic_op_field_solutions);
+
+        // Support energies described by fully symbolic expressions:
+        // Need to check that we're not duplicating an operation that
+        // has already been performed due to the presence of an earlier,
+        // identical field-solution argument.
+        if (has_duplicate_previous_field_solution_op<I>(
+              field_solution_test, symbolic_op_field_solutions))
+          {
+            return;
+          }
+
         const auto test_function =
           internal::ConvertTo::test_function(field_solution_test);
 
@@ -732,6 +778,18 @@ namespace WeakForms
           std::get<I>(symbolic_op_field_solutions_1);
         const auto &field_solution_trial =
           std::get<J>(symbolic_op_field_solutions_2);
+
+        // Support energies described by fully symbolic expressions:
+        // Need to check that we're not duplicating an operation that
+        // has already been performed due to the presence of an earlier,
+        // identical field-solution argument.
+        if (has_duplicate_previous_field_solution_op<I>(
+              field_solution_test, symbolic_op_field_solutions_1) ||
+            has_duplicate_previous_field_solution_op<J>(
+              field_solution_trial, symbolic_op_field_solutions_2))
+          {
+            return;
+          }
 
         // We only allow one solution index, namely that pertaining to
         // the current timestep / Newton iterate and active DoFHandler
