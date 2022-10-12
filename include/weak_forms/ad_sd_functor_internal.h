@@ -830,8 +830,17 @@ namespace WeakForms
           const field_values_t<SDNumberType> &symbolic_field_values,
           const std::index_sequence<I...>)
         {
-          return Differentiation::SD::make_symbol_map(
-            std::get<I>(symbolic_field_values)...);
+          // return Differentiation::SD::make_symbol_map(
+          //   std::get<I>(symbolic_field_values)...);
+          //
+          // In order to support automatic conversion of fully symbolic
+          // expressions, we can no longer assume that a field will be used only
+          // once during the definition of the expression. We must therefore
+          // make use of the merge tool, which allows for the presence of
+          // duplicate symbols in the maps that are to be concatenated.
+          return Differentiation::SD::merge_substitution_maps(
+            Differentiation::SD::make_symbol_map(
+              std::get<I>(symbolic_field_values))...);
         }
 
         template <typename SDNumberType,
@@ -1213,9 +1222,20 @@ namespace WeakForms
             std::get<I>(symbolic_field_values);
 
           // Append these to the substitution map, and recurse.
-          Differentiation::SD::add_to_substitution_map(substitution_map,
-                                                       symbolic_field_solution,
-                                                       field_solution);
+          // Differentiation::SD::add_to_substitution_map(substitution_map,
+          //                                              symbolic_field_solution,
+          //                                              field_solution);
+          //
+          // In order to support automatic conversion of fully symbolic
+          // expressions, we can no longer assume that a field will be used only
+          // once during the definition of the expression. We must therefore
+          // make use of the merge tool, which allows for the presence of
+          // duplicate symbols in the maps that are to be concatenated.
+          Differentiation::SD::merge_substitution_maps(
+            substitution_map,
+            Differentiation::SD::make_substitution_map(symbolic_field_solution,
+                                                       field_solution));
+
           unpack_sd_add_to_substitution_map<SDNumberType, ScalarType, I + 1>(
             substitution_map,
             scratch_data,
