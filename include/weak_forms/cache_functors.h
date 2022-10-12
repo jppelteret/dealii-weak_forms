@@ -317,13 +317,38 @@ namespace WeakForms
  * A macro that performs a conversion of the functor to a symbolic
  * expression type.
  */
-#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()            \
-    value_type<dealii::Differentiation::SD::Expression> as_expression(    \
-      const SymbolicDecorations &decorator = SymbolicDecorations()) const \
-    {                                                                     \
-      return WeakForms::Operators::internal::make_symbolic<               \
-        value_type<dealii::Differentiation::SD::Expression>>(             \
-        this->as_ascii(decorator));                                       \
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(         \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const      \
+    {                                                                          \
+      return WeakForms::Operators::internal::make_symbolic<                    \
+        value_type<dealii::Differentiation::SD::Expression>>(                  \
+        this->as_ascii(decorator));                                            \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::make_symbol_map(this->as_expression());      \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_substitution_map(         \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,              \
+      const std::vector<SolutionExtractionData<dim, spacedim>>                 \
+        &                solution_extraction_data,                             \
+      const unsigned int q_point) const                                        \
+    {                                                                          \
+      (void)q_point;                                                           \
+      return Differentiation::SD::make_substitution_map(                       \
+        this->as_expression(),                                                 \
+        this->template operator()<ScalarType>(scratch_data,                    \
+                                              solution_extraction_data));      \
     }
 
 #else // DEAL_II_WITH_SYMENGINE

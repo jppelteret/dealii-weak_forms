@@ -197,7 +197,7 @@ create_energy_functional_form_from_energy(
         // able to return an intermediate substitution value.
 
         // return {Differentiation::SD::make_symbol_map(coefficient)};
-        return substitution_map_type{};
+        return functor_op.get_intermediate_substitution_map();
       },
       [functor_op](
         const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
@@ -212,10 +212,13 @@ create_energy_functional_form_from_energy(
         // the substitution map by the framework.
 
         // return Differentiation::SD::make_substitution_map(coefficient, c);
-        return substitution_map_type{};
+        return functor_op.get_substitution_map(scratch_data,
+                                               solution_extraction_data,
+                                               q_point);
       },
       Differentiation::SD::OptimizerType::llvm,
-      Differentiation::SD::OptimizationFlags::optimize_default);
+      Differentiation::SD::OptimizationFlags::optimize_default,
+      functor_op.get_update_flags());
 
   return dealiiWF::energy_functional_form(energy);
 }
