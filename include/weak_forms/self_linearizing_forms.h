@@ -30,6 +30,7 @@
 #include <weak_forms/residual_functor.h>
 // #include <weak_forms/functors.h> // Needed?
 #include <weak_forms/linear_forms.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/subspace_extractors.h>
 #include <weak_forms/subspace_views.h>
@@ -1629,6 +1630,165 @@ namespace WeakForms
   {
     return SelfLinearization::ResidualViewForm<ResidualViewFunctor>(functor_op);
   }
+
+
+#  ifdef DEAL_II_WITH_SYMENGINE
+
+
+  namespace internal
+  {
+    template <typename... SymbolicOpsSubSpaceFieldSolution>
+    auto
+    create_energy_functor_from_tuple(
+      const std::string &symbol_ascii,
+      const std::string &symbol_latex,
+      const std::tuple<SymbolicOpsSubSpaceFieldSolution...>
+        &subspace_field_solution_ops)
+    {
+      return EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>(
+        symbol_ascii, symbol_latex, subspace_field_solution_ops);
+    }
+
+
+    template <int dim,
+              int spacedim = dim,
+              typename CompositeSymbolicOp,
+              typename... SymbolicOpsSubSpaceFieldSolution>
+    auto
+    create_energy_functional_form_from_energy(
+      const EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...> &energy_functor,
+      const CompositeSymbolicOp &                               functor_op,
+      const enum dealii::Differentiation::SD::OptimizerType
+        optimization_method = dealii::Differentiation::SD::OptimizerType::llvm,
+      const enum dealii::Differentiation::SD::OptimizationFlags
+        optimization_flags =
+          dealii::Differentiation::SD::OptimizationFlags::optimize_default)
+    {
+      static_assert(
+        CompositeSymbolicOp::rank == 0,
+        "Expect functor for energy functional form to return a scalar upon evaluation.");
+
+      using SDNumberType = dealii::Differentiation::SD::Expression;
+      using EnergyFunctorType =
+        EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>;
+      using substitution_map_type =
+        typename EnergyFunctorType::substitution_map_type;
+
+      const auto energy =
+        energy_functor.template value<SDNumberType, dim, spacedim>(
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            // The expression is filled with the full scalar expression as is
+            // returned by the user-defined functor. The symbols used for the
+            // field solution operations are consistent with that which fills
+            // the argument list, and we therefore can be assured that they will
+            // be given the correct value upon later substitution.
+            return functor_op.as_expression();
+          },
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            // Get the symbols that are expected to be found in the expression.
+            return functor_op.get_symbol_registration_map();
+          },
+          [functor_op](
+            const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                solution_extraction_data,
+            const unsigned int q_point)
+          {
+            // Extract from functor_op...
+            // Here we get the point-specific values from all of the variables
+            // used in the expression tree (i.e. the functor). The exception to
+            // this are the field solution variables, which have their values
+            // written into the substitution map by the framework.
+            return functor_op.get_substitution_map(scratch_data,
+                                                   solution_extraction_data,
+                                                   q_point);
+          },
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            // We really only expect user-defined symbolic variables to be
+            // able to return an intermediate substitution value.
+            return functor_op.get_intermediate_substitution_map();
+          },
+          optimization_method,
+          optimization_flags,
+          functor_op.get_update_flags());
+
+      return energy_functional_form(energy);
+    }
+  } // namespace internal
+
+
+
+  /**
+   * @brief A convenience function that generates a self-linearizing energy
+   * functional form from a (composite) symbolic operation.
+   *
+   * This variant extracts a symbolic (in the sense of being symbolically
+   * differentiable) representation from the input functor, which is later
+   * differentiated and converted into linear and bilinear forms.
+   *
+   * For more information about the self-linearizing form that is created,
+   * please refer to the documentation of the
+   * SelfLinearization::EnergyFunctionalForm class.
+   *
+   * @tparam dim The dimension in which the energy is being evaluated.
+   * @tparam spacedim The spatial dimension in which the energy is being evaluated.
+   * @param symbol_ascii The ASCII representation of the value.
+   * @param symbol_latex  The LaTeX representation of the value.
+   * @param functor_op A composite symbolic function, representing an energy,
+   * that is to be linearized.
+   * @param optimization_method The optimization method that is to be employed.
+   * By default, the LLVM optimizer is chosen.
+   * @param optimization_flags  The optimization flags that indicate which
+   * expression manipulation mechanisms are to be employed. By default, no
+   * further optimizations are to be performed.
+   * @return SelfLinearization::EnergyFunctionalForm<EnergyFunctor> backed by
+   * local symbolic differentiation.
+   *
+   * \ingroup forms convenience_functions
+   */
+  template <int dim, int spacedim = dim, typename CompositeSymbolicOp>
+  auto
+  energy_functional_form(
+    const std::string &                                   symbol_ascii,
+    const std::string &                                   symbol_latex,
+    const CompositeSymbolicOp &                           functor_op,
+    const enum dealii::Differentiation::SD::OptimizerType optimization_method =
+      dealii::Differentiation::SD::OptimizerType::llvm,
+    const enum dealii::Differentiation::SD::OptimizationFlags
+      optimization_flags =
+        dealii::Differentiation::SD::OptimizationFlags::optimize_default)
+  {
+    // A tuple of all field solution operations that appear in the symbolic
+    // expression tree. Some of these are duplicated: that's fine, as they'll
+    // be a no-op when producing the symbolic substitution maps.
+    const auto subspace_field_solution_ops =
+      Operators::internal::CompositeOpHelper<
+        CompositeSymbolicOp>::get_subspace_field_solution_ops(functor_op);
+
+    // Create the energy functor, separately from the energy functional form.
+    // We do this because we need to explicitly know the template parameters
+    // that are passed to both the energy functor and the energy functional form
+    // creation methods.
+    const auto energy_func =
+      internal::create_energy_functor_from_tuple(symbol_ascii,
+                                                 symbol_latex,
+                                                 subspace_field_solution_ops);
+
+    // Finally create the energy functional form. The original functor is needed
+    // in order to extract the substitution map for the variables other than the
+    // field solution components.
+    return internal::create_energy_functional_form_from_energy<dim, spacedim>(
+      energy_func, functor_op, optimization_method, optimization_flags);
+  }
+
+
+#  endif
 
 } // namespace WeakForms
 
