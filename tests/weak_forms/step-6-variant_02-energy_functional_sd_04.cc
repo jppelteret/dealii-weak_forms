@@ -231,7 +231,7 @@ create_energy_functional_form_from_energy(
       },
       Differentiation::SD::OptimizerType::llvm,
       Differentiation::SD::OptimizationFlags::optimize_default,
-      functor_op.get_update_flags()| UpdateFlags::update_quadrature_points);
+      functor_op.get_update_flags());
 
   return dealiiWF::energy_functional_form(energy);
 }
@@ -315,7 +315,8 @@ Step6<dim>::assemble_system()
                                  const Point<spacedim> &p =
                                    fe_values.get_quadrature_points()[q_point];
                                  return (p.square() < 0.5 * 0.5 ? 20.0 : 1.0);
-                               });
+                               },
+                               UpdateFlags::update_quadrature_points);
 
   const auto energy = 0.5 * coefficient * scalar_product(soln_grad, soln_grad);
 
