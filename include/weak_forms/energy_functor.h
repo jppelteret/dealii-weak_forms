@@ -274,7 +274,7 @@ namespace WeakForms
     as_ascii(const SymbolicDecorations &decorator) const override
     {
       return Base::as_ascii(decorator) + "(" +
-             decorator.unary_field_ops_as_ascii(get_field_args()) + ")";
+             decorator.unary_field_ops_as_ascii<true>(get_field_args()) + ")";
     }
 
     virtual std::string
@@ -291,7 +291,7 @@ namespace WeakForms
     {
       return Utilities::LaTeX::decorate_function_with_arguments(
         Base::as_latex(decorator),
-        decorator.unary_field_ops_as_latex(get_field_args()));
+        decorator.unary_field_ops_as_latex<true>(get_field_args()));
     }
 
     virtual std::string
