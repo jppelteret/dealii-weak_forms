@@ -2653,22 +2653,25 @@ private:                                                                   \
   template <typename LhsOp1,                                                 \
             typename LhsOp2,                                                 \
             enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
             typename RhsOp1,                                                 \
             typename RhsOp2,                                                 \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode>              \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
   WeakForms::Operators::BinaryOp<                                            \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>,               \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,               \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
     WeakForms::Operators::BinaryOpCodes::binary_op_code>                     \
-  operator_name(                                                             \
-    const WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode> &lhs_op, \
-    const WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode> &rhs_op) \
+  operator_name(const WeakForms::Operators::                                 \
+                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op, \
+                const WeakForms::Operators::                                 \
+                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op) \
   {                                                                          \
     using namespace WeakForms;                                               \
     using namespace WeakForms::Operators;                                    \
                                                                              \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode>;                   \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode>;                   \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
     using OpType =                                                           \
       BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;         \
                                                                              \
@@ -2715,29 +2718,33 @@ DEAL_II_BINARY_OP_OF_BINARY_OP(double_contract,
             typename LhsOp1,                                                 \
             typename LhsOp2,                                                 \
             enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
             typename RhsOp1,                                                 \
             typename RhsOp2,                                                 \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode>              \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
   WeakForms::Operators::BinaryOp<                                            \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>,               \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,               \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
     WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
     typename std::enable_if<                                                 \
       !WeakForms::is_integral_op<                                            \
-        WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>>::value && \
+        WeakForms::Operators::                                               \
+          BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>>::value &&       \
       !WeakForms::is_integral_op<                                            \
-        WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>>::value>:: \
-      type,                                                                  \
+        WeakForms::Operators::                                               \
+          BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>>::value>::type,  \
     INDEX_PACK_EXPANDED>                                                     \
-  operator_name(                                                             \
-    const WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode> &lhs_op, \
-    const WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode> &rhs_op) \
+  operator_name(const WeakForms::Operators::                                 \
+                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op, \
+                const WeakForms::Operators::                                 \
+                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op) \
   {                                                                          \
     using namespace WeakForms;                                               \
     using namespace WeakForms::Operators;                                    \
                                                                              \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode>;                   \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode>;                   \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
     using OpType    = BinaryOp<                                              \
       LhsOpType,                                                          \
       RhsOpType,                                                          \
