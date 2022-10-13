@@ -19,6 +19,7 @@
 // This test replicates step-6 exactly.
 // - Optimizer type: LLVM
 // - Optimization method: None
+// - AD/SD Cache
 
 #include <weak_forms/weak_forms.h>
 
@@ -36,6 +37,8 @@ public:
   Step6();
 
 protected:
+  WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+
   void
   assemble_system() override;
 };
@@ -87,7 +90,7 @@ Step6<dim>::assemble_system()
     [](const FEValuesBase<dim, spacedim> &, const unsigned int)
     { return 1.0; });
 
-  MatrixBasedAssembler<dim> assembler;
+  MatrixBasedAssembler<dim> assembler(ad_sd_cache);
   assembler += energy_functional_form<dim, spacedim>("e", "\\Psi", energy).dV();
   assembler -= linear_form(test_val, rhs_coeff_func).dV(); // RHS contribution
 
