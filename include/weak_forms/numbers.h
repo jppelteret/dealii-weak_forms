@@ -64,6 +64,20 @@ namespace WeakForms
     };
 
 
+    template <int rank, int dim, typename ScalarType>
+    struct UnderlyingScalar<Tensor<rank, dim, ScalarType>>
+    {
+      using type = typename UnderlyingScalar<ScalarType>::type;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct UnderlyingScalar<SymmetricTensor<rank, dim, ScalarType>>
+    {
+      using type = typename UnderlyingScalar<ScalarType>::type;
+    };
+
+
 
 #if DEAL_II_VECTORIZATION_WIDTH_IN_BITS > 0
     template <typename ScalarType>

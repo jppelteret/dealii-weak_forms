@@ -619,39 +619,44 @@ namespace WeakForms
       return Differentiation::SD::types::substitution_map{};                   \
     }
 
-#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL()        \
-    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()               \
-                                                                       \
-    Differentiation::SD::types::substitution_map get_substitution_map( \
-      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,      \
-      const std::vector<SolutionExtractionData<dim, spacedim>>         \
-        &                solution_extraction_data,                     \
-      const unsigned int q_point) const                                \
-    {                                                                  \
-      (void)solution_extraction_data;                                  \
-      const auto &fe_values = scratch_data.get_current_fe_values();    \
-      using Result_t        = decltype(function(fe_values, q_point));  \
-      return Differentiation::SD::make_substitution_map(               \
-        this->as_expression(),                                         \
-        this->template operator()<Result_t>(fe_values, q_point));      \
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL()         \
+    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                \
+                                                                        \
+    Differentiation::SD::types::substitution_map get_substitution_map(  \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,       \
+      const std::vector<SolutionExtractionData<dim, spacedim>>          \
+        &                solution_extraction_data,                      \
+      const unsigned int q_point) const                                 \
+    {                                                                   \
+      (void)solution_extraction_data;                                   \
+      const auto &fe_values = scratch_data.get_current_fe_values();     \
+      using Result_t        = decltype(function(fe_values, q_point));   \
+      using ResultScalar_t =                                            \
+        typename numbers::UnderlyingScalar<Result_t>::type;             \
+      return Differentiation::SD::make_substitution_map(                \
+        this->as_expression(),                                          \
+        this->template operator()<ResultScalar_t>(fe_values, q_point)); \
     }
 
-#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL()    \
-    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                    \
-                                                                            \
-    Differentiation::SD::types::substitution_map get_substitution_map(      \
-      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,           \
-      const std::vector<SolutionExtractionData<dim, spacedim>>              \
-        &                solution_extraction_data,                          \
-      const unsigned int q_point) const                                     \
-    {                                                                       \
-      (void)scratch_data;                                                   \
-      (void)solution_extraction_data;                                       \
-      (void)q_point;                                                        \
-      const auto &point = scratch_data.get_quadrature_points()[q_point];    \
-      using Result_t    = decltype(function->value(point));                 \
-      return Differentiation::SD::make_substitution_map(                    \
-        this->as_expression(), this->template operator()<Result_t>(point)); \
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL() \
+    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+                                                                         \
+    Differentiation::SD::types::substitution_map get_substitution_map(   \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,        \
+      const std::vector<SolutionExtractionData<dim, spacedim>>           \
+        &                solution_extraction_data,                       \
+      const unsigned int q_point) const                                  \
+    {                                                                    \
+      (void)scratch_data;                                                \
+      (void)solution_extraction_data;                                    \
+      (void)q_point;                                                     \
+      const auto &point = scratch_data.get_quadrature_points()[q_point]; \
+      using Result_t    = decltype(function->value(point));              \
+      using ResultScalar_t =                                             \
+        typename numbers::UnderlyingScalar<Result_t>::type;              \
+      return Differentiation::SD::make_substitution_map(                 \
+        this->as_expression(),                                           \
+        this->template operator()<ResultScalar_t>(point));               \
     }
 
 
