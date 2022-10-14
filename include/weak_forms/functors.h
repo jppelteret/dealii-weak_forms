@@ -632,7 +632,7 @@ namespace WeakForms
       const auto &fe_values = scratch_data.get_current_fe_values();     \
       using Result_t        = decltype(function(fe_values, q_point));   \
       using ResultScalar_t =                                            \
-        typename numbers::UnderlyingScalar<Result_t>::type;             \
+        typename numbers::UnderlyingScalar<Result_t>::scalar_type;      \
       return Differentiation::SD::make_substitution_map(                \
         this->as_expression(),                                          \
         this->template operator()<ResultScalar_t>(fe_values, q_point)); \
@@ -653,7 +653,7 @@ namespace WeakForms
       const auto &point = scratch_data.get_quadrature_points()[q_point]; \
       using Result_t    = decltype(function->value(point));              \
       using ResultScalar_t =                                             \
-        typename numbers::UnderlyingScalar<Result_t>::type;              \
+        typename numbers::UnderlyingScalar<Result_t>::scalar_type;       \
       return Differentiation::SD::make_substitution_map(                 \
         this->as_expression(),                                           \
         this->template operator()<ResultScalar_t>(point));               \
