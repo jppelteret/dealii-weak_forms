@@ -645,6 +645,8 @@ namespace WeakForms
         return UpdateFlags::update_default;
       }
 
+#  ifdef DEAL_II_WITH_SYMENGINE
+
       // Check for duplicate field solution in the tuple
       template <std::size_t J,
                 std::size_t I = 0,
@@ -666,6 +668,8 @@ namespace WeakForms
         return has_duplicate_previous_field_solution_op<J, I + 1>(
           field_solution, symbolic_op_field_solutions);
       }
+
+#  endif // DEAL_II_WITH_SYMENGINE
 
       // Get update flags from a unary op: End point
       template <std::size_t J,
@@ -699,6 +703,7 @@ namespace WeakForms
         const auto &field_solution_test =
           std::get<I>(symbolic_op_field_solutions);
 
+#  ifdef DEAL_II_WITH_SYMENGINE
         // Support energies described by fully symbolic expressions:
         // Need to check that we're not duplicating an operation that
         // has already been performed due to the presence of an earlier,
@@ -708,6 +713,7 @@ namespace WeakForms
           {
             return;
           }
+#  endif // DEAL_II_WITH_SYMENGINE
 
         const auto test_function =
           internal::ConvertTo::test_function(field_solution_test);
@@ -780,6 +786,14 @@ namespace WeakForms
         const auto &field_solution_trial =
           std::get<J>(symbolic_op_field_solutions_2);
 
+        // We only allow one solution index, namely that pertaining to
+        // the current timestep / Newton iterate and active DoFHandler
+        // to be linearized.
+        if (field_solution_trial.solution_index !=
+            numbers::linearizable_solution_index)
+          return;
+
+#  ifdef DEAL_II_WITH_SYMENGINE
         // Support energies described by fully symbolic expressions:
         // Need to check that we're not duplicating an operation that
         // has already been performed due to the presence of an earlier,
@@ -791,13 +805,7 @@ namespace WeakForms
           {
             return;
           }
-
-        // We only allow one solution index, namely that pertaining to
-        // the current timestep / Newton iterate and active DoFHandler
-        // to be linearized.
-        if (field_solution_trial.solution_index !=
-            numbers::linearizable_solution_index)
-          return;
+#  endif // DEAL_II_WITH_SYMENGINE
 
         const auto test_function =
           internal::ConvertTo::test_function(field_solution_test);
