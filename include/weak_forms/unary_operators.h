@@ -718,7 +718,7 @@ namespace WeakForms
       static const enum UnaryOpCodes op_code = UnaryOpCodes::trace;
 
       static_assert(Op::rank == 2, "Invalid operator rank");
-      static const int rank = Op::rank;
+      static const int rank = 0;
 
       template <typename ScalarType>
       using value_type = decltype(
@@ -772,7 +772,7 @@ namespace WeakForms
       static const enum UnaryOpCodes op_code = UnaryOpCodes::l1_norm;
 
       static_assert(Op::rank == 2, "Invalid operator rank");
-      static const int rank = Op::rank;
+      static const int rank = 0;
 
       template <typename ScalarType>
       using value_type = decltype(
@@ -790,7 +790,7 @@ namespace WeakForms
       static const enum UnaryOpCodes op_code = UnaryOpCodes::linfty_norm;
 
       static_assert(Op::rank == 2, "Invalid operator rank");
-      static const int rank = Op::rank;
+      static const int rank = 0;
 
       template <typename ScalarType>
       using value_type = decltype(linfty_norm(
