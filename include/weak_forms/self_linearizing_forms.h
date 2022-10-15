@@ -711,6 +711,8 @@ namespace WeakForms
         const auto &field_solution_test =
           std::get<I>(symbolic_op_field_solutions);
 
+        bool perform_assembly = true;
+
 #  ifdef DEAL_II_WITH_SYMENGINE
         // Support energies described by fully symbolic expressions:
         // Need to check that we're not duplicating an operation that
@@ -722,29 +724,33 @@ namespace WeakForms
             has_duplicate_previous_field_solution_op<I>(
               field_solution_test, symbolic_op_field_solutions))
           {
-            return;
+            perform_assembly = false;
           }
 #  endif // DEAL_II_WITH_SYMENGINE
 
-        const auto test_function =
-          internal::ConvertTo::test_function(field_solution_test);
-
-        const auto linear_form = WeakForms::linear_form(
-          test_function,
-          get_functor_first_derivative<AssemblerScalar_t, I>(
-            field_solution_test));
-        const auto integrated_linear_form =
-          integral_operation.template integrate<AssemblerScalar_t>(linear_form);
-
-        if (OpSign == WeakForms::internal::AccumulationSign::plus)
+        if (perform_assembly)
           {
-            assembler += integrated_linear_form;
-          }
-        else
-          {
-            Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
-                   ExcInternalError());
-            assembler -= integrated_linear_form;
+            const auto test_function =
+              internal::ConvertTo::test_function(field_solution_test);
+
+            const auto linear_form = WeakForms::linear_form(
+              test_function,
+              get_functor_first_derivative<AssemblerScalar_t, I>(
+                field_solution_test));
+            const auto integrated_linear_form =
+              integral_operation.template integrate<AssemblerScalar_t>(
+                linear_form);
+
+            if (OpSign == WeakForms::internal::AccumulationSign::plus)
+              {
+                assembler += integrated_linear_form;
+              }
+            else
+              {
+                Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
+                       ExcInternalError());
+                assembler -= integrated_linear_form;
+              }
           }
 
         // Move on to the next form:
@@ -797,12 +803,16 @@ namespace WeakForms
         const auto &field_solution_trial =
           std::get<J>(symbolic_op_field_solutions_2);
 
+        bool perform_assembly = true;
+
         // We only allow one solution index, namely that pertaining to
         // the current timestep / Newton iterate and active DoFHandler
         // to be linearized.
         if (field_solution_trial.solution_index !=
             numbers::linearizable_solution_index)
-          return;
+          {
+            perform_assembly = false;
+          }
 
 #  ifdef DEAL_II_WITH_SYMENGINE
         // Support energies described by fully symbolic expressions:
@@ -817,37 +827,40 @@ namespace WeakForms
              has_duplicate_previous_field_solution_op<J>(
                field_solution_trial, symbolic_op_field_solutions_2)))
           {
-            return;
+            perform_assembly = false;
           }
 #  endif // DEAL_II_WITH_SYMENGINE
 
-        const auto test_function =
-          internal::ConvertTo::test_function(field_solution_test);
-        const auto trial_solution =
-          internal::ConvertTo::trial_solution(field_solution_trial);
-
-        // Since we derive from a potential, we can expect the contributions
-        // to the linear system to be symmetric.
-        const auto bilinear_form =
-          WeakForms::bilinear_form(
-            test_function,
-            get_functor_second_derivative<AssemblerScalar_t, I, J>(
-              field_solution_test, field_solution_trial),
-            trial_solution)
-            .symmetrize();
-        const auto integrated_bilinear_form =
-          integral_operation.template integrate<AssemblerScalar_t>(
-            bilinear_form);
-
-        if (OpSign == WeakForms::internal::AccumulationSign::plus)
+        if (perform_assembly)
           {
-            assembler += integrated_bilinear_form;
-          }
-        else
-          {
-            Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
-                   ExcInternalError());
-            assembler -= integrated_bilinear_form;
+            const auto test_function =
+              internal::ConvertTo::test_function(field_solution_test);
+            const auto trial_solution =
+              internal::ConvertTo::trial_solution(field_solution_trial);
+
+            // Since we derive from a potential, we can expect the contributions
+            // to the linear system to be symmetric.
+            const auto bilinear_form =
+              WeakForms::bilinear_form(
+                test_function,
+                get_functor_second_derivative<AssemblerScalar_t, I, J>(
+                  field_solution_test, field_solution_trial),
+                trial_solution)
+                .symmetrize();
+            const auto integrated_bilinear_form =
+              integral_operation.template integrate<AssemblerScalar_t>(
+                bilinear_form);
+
+            if (OpSign == WeakForms::internal::AccumulationSign::plus)
+              {
+                assembler += integrated_bilinear_form;
+              }
+            else
+              {
+                Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
+                       ExcInternalError());
+                assembler -= integrated_bilinear_form;
+              }
           }
 
         // Move on to the next forms:
