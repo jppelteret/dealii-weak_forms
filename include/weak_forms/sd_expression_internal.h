@@ -187,12 +187,12 @@ namespace WeakForms
                                 !is_unary_op<T>::value &&
                                 !is_binary_op<T>::value>::type>
       {
-        // static void
-        // print(const T &op)
-        // {
-        //   std::cout << "op (field solution): "
-        //             << op.as_ascii(SymbolicDecorations()) << std::endl;
-        // }
+        static void
+        print(const T &op)
+        {
+          std::cout << "op (field solution): "
+                    << op.as_ascii(SymbolicDecorations()) << std::endl;
+        }
 
         static std::tuple<T>
         get_subspace_field_solution_ops(const T &op)
@@ -209,12 +209,12 @@ namespace WeakForms
                                 !is_unary_op<T>::value &&
                                 !is_binary_op<T>::value>::type>
       {
-        // static void
-        // print(const T &op)
-        // {
-        //   std::cout << "op (not field solution): "
-        //             << op.as_ascii(SymbolicDecorations()) << std::endl;
-        // }
+        static void
+        print(const T &op)
+        {
+          std::cout << "op (not field solution): "
+                    << op.as_ascii(SymbolicDecorations()) << std::endl;
+        }
 
         static std::tuple<>
         get_subspace_field_solution_ops(const T &op)
@@ -230,14 +230,14 @@ namespace WeakForms
         T,
         typename std::enable_if<is_unary_op<T>::value>::type>
       {
-        // static void
-        // print(const T &op)
-        // {
-        //   std::cout << "unary op" << std::endl;
+        static void
+        print(const T &op)
+        {
+          std::cout << "unary op" << std::endl;
 
-        //   using OpType = typename T::OpType;
-        //   CompositeOpHelper<OpType>::print(op.get_operand());
-        // }
+          using OpType = typename T::OpType;
+          CompositeOpHelper<OpType>::print(op.get_operand());
+        }
 
         static auto
         get_subspace_field_solution_ops(const T &op)
@@ -254,16 +254,16 @@ namespace WeakForms
         T,
         typename std::enable_if<is_binary_op<T>::value>::type>
       {
-        // static void
-        // print(const T &op)
-        // {
-        //   std::cout << "binary op" << std::endl;
+        static void
+        print(const T &op)
+        {
+          std::cout << "binary op" << std::endl;
 
-        //   using LhsOpType = typename T::LhsOpType;
-        //   using RhsOpType = typename T::RhsOpType;
-        //   CompositeOpHelper<LhsOpType>::print(op.get_lhs_operand());
-        //   CompositeOpHelper<RhsOpType>::print(op.get_rhs_operand());
-        // }
+          using LhsOpType = typename T::LhsOpType;
+          using RhsOpType = typename T::RhsOpType;
+          CompositeOpHelper<LhsOpType>::print(op.get_lhs_operand());
+          CompositeOpHelper<RhsOpType>::print(op.get_rhs_operand());
+        }
 
         static auto
         get_subspace_field_solution_ops(const T &op)

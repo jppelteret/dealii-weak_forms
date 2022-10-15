@@ -22,214 +22,14 @@
 
 #include "../weak_forms_tests.h"
 
-WEAK_FORMS_NAMESPACE_OPEN
-
-namespace WeakForms
-{
-  namespace Operators
-  {
-    namespace internal
-    {
-      template <typename T, typename U = void>
-      struct CompositeOpHelper;
-
-      // Symbolic op (field op)
-      template <typename T>
-      struct CompositeOpHelper<
-        T,
-        typename std::enable_if<is_subspace_field_solution_op<T>::value &&
-                                !is_unary_op<T>::value &&
-                                !is_binary_op<T>::value>::type>
-      {
-        static void
-        print(const T &op)
-        {
-          std::cout << "op (field solution): "
-                    << op.as_ascii(SymbolicDecorations()) << std::endl;
-        }
-
-        static std::tuple<T>
-        get_subspace_field_solution_ops(const T &op)
-        {
-          return std::make_tuple(op);
-        }
-      };
-
-      // Symbolic op (not a field op)
-      template <typename T>
-      struct CompositeOpHelper<
-        T,
-        typename std::enable_if<!is_subspace_field_solution_op<T>::value &&
-                                !is_unary_op<T>::value &&
-                                !is_binary_op<T>::value>::type>
-      {
-        static void
-        print(const T &op)
-        {
-          std::cout << "op (not field solution): "
-                    << op.as_ascii(SymbolicDecorations()) << std::endl;
-        }
-
-        static std::tuple<>
-        get_subspace_field_solution_ops(const T &op)
-        {
-          // An empty tuple
-          return std::make_tuple();
-        }
-      };
-
-      // Unary op
-      template <typename T>
-      struct CompositeOpHelper<
-        T,
-        typename std::enable_if<is_unary_op<T>::value>::type>
-      {
-        static void
-        print(const T &op)
-        {
-          std::cout << "unary op" << std::endl;
-
-          using OpType = typename T::OpType;
-          CompositeOpHelper<OpType>::print(op.get_operand());
-        }
-
-        static auto
-        get_subspace_field_solution_ops(const T &op)
-        {
-          using OpType = typename T::OpType;
-          return CompositeOpHelper<OpType>::get_subspace_field_solution_ops(
-            op.get_operand());
-        }
-      };
-
-      // Binary op
-      template <typename T>
-      struct CompositeOpHelper<
-        T,
-        typename std::enable_if<is_binary_op<T>::value>::type>
-      {
-        static void
-        print(const T &op)
-        {
-          std::cout << "binary op" << std::endl;
-
-          using LhsOpType = typename T::LhsOpType;
-          using RhsOpType = typename T::RhsOpType;
-          CompositeOpHelper<LhsOpType>::print(op.get_lhs_operand());
-          CompositeOpHelper<RhsOpType>::print(op.get_rhs_operand());
-        }
-
-        static auto
-        get_subspace_field_solution_ops(const T &op)
-        {
-          using LhsOpType = typename T::LhsOpType;
-          using RhsOpType = typename T::RhsOpType;
-
-          return std::tuple_cat(
-            CompositeOpHelper<LhsOpType>::get_subspace_field_solution_ops(
-              op.get_lhs_operand()),
-            CompositeOpHelper<RhsOpType>::get_subspace_field_solution_ops(
-              op.get_rhs_operand()));
-        }
-      };
-
-    } // namespace internal
-  }   // namespace Operators
-} // namespace WeakForms
-
-WEAK_FORMS_NAMESPACE_CLOSE
-
-
-namespace dealiiWF = dealiiWeakForms::WeakForms;
-
-
-template <typename... SymbolicOpsSubSpaceFieldSolution>
-auto
-create_energy_functor_from_tuple(
-  const std::tuple<SymbolicOpsSubSpaceFieldSolution...>
-    &subspace_field_solution_ops)
-{
-  return dealiiWF::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>(
-    "e", "\\Psi", subspace_field_solution_ops);
-}
-
-
-
-template <int dim,
-          int spacedim = dim,
-          typename CompositeSymbolicOp,
-          typename... SymbolicOpsSubSpaceFieldSolution>
-auto
-create_energy_functional_form_from_energy(
-  const dealiiWF::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>
-    &                        energy_functor,
-  const CompositeSymbolicOp &functor_op)
-{
-  static_assert(
-    CompositeSymbolicOp::rank == 0,
-    "Expect functor for energy functional form to return a scalar upon evaluation.");
-
-  using SDNumberType = Differentiation::SD::Expression;
-  using EnergyFunctorType =
-    dealiiWF::EnergyFunctor<SymbolicOpsSubSpaceFieldSolution...>;
-  using substitution_map_type =
-    typename EnergyFunctorType::substitution_map_type;
-
-  const auto energy =
-    energy_functor.template value<SDNumberType, dim, spacedim>(
-      [functor_op](
-        const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-          SDNumberType> &...field_solutions)
-      {
-        // The expression is filled with the full scalar expression as is
-        // returned by the user-defined functor. The symbols used for the field
-        // solution operations are consistent with that which fills the argument
-        // list, and we therefore can be assured that they will be given the
-        // correct value upon later substitution.
-        return functor_op.as_expression();
-      },
-      [functor_op](
-        const typename SymbolicOpsSubSpaceFieldSolution::template value_type<
-          SDNumberType> &...field_solutions)
-      {
-        // Extract from functor_op...
-        // We really only expect user-defined symbolic variables to be
-        // able to return an intermediate substitution value.
-
-        // return {Differentiation::SD::make_symbol_map(coefficient)};
-        return functor_op.get_intermediate_substitution_map();
-      },
-      [functor_op](
-        const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-        const std::vector<dealiiWF::SolutionExtractionData<dim, spacedim>>
-          &                solution_extraction_data,
-        const unsigned int q_point)
-      {
-        // Extract from functor_op...
-        // Here we get the point-specific values from all of the variables used
-        // in the expression tree (i.e. the functor). The exception to this are
-        // the field solution variables, which have their values written into
-        // the substitution map by the framework.
-
-        // return Differentiation::SD::make_substitution_map(coefficient, c);
-        return functor_op.get_substitution_map(scratch_data,
-                                               solution_extraction_data,
-                                               q_point);
-      },
-      Differentiation::SD::OptimizerType::llvm,
-      Differentiation::SD::OptimizationFlags::optimize_default,
-      functor_op.get_update_flags());
-
-  return dealiiWF::energy_functional_form(energy);
-}
-
-
 
 template <int dim, int spacedim = dim, typename CompositeSymbolicOp>
 void
 test(const CompositeSymbolicOp &functor_op)
 {
-  using namespace dealiiWF::Operators::internal;
+  using namespace dealiiWeakForms::WeakForms;
+  using namespace dealiiWeakForms::WeakForms::internal;
+  using namespace dealiiWeakForms::WeakForms::Operators::internal;
   CompositeOpHelper<CompositeSymbolicOp>::print(functor_op);
 
   // A tuple of all field solution operations that appear in the symbolic
@@ -244,9 +44,9 @@ test(const CompositeSymbolicOp &functor_op)
   // are passed to both the energy functor and the energy functional form
   // creation methods.
   const auto energy_func =
-    create_energy_functor_from_tuple(subspace_field_solution_ops);
-  deallog << "energy_func: "
-          << energy_func.as_ascii(dealiiWF::SymbolicDecorations()) << std::endl;
+    create_energy_functor_from_tuple("e", "\\Psi", subspace_field_solution_ops);
+  deallog << "energy_func: " << energy_func.as_ascii(SymbolicDecorations())
+          << std::endl;
 
   // Finally create the energy functional form. The original functor is needed
   // in order to extract the substitution map for the variables other than the
@@ -254,8 +54,8 @@ test(const CompositeSymbolicOp &functor_op)
   const auto energy_form =
     create_energy_functional_form_from_energy<dim, spacedim>(energy_func,
                                                              functor_op);
-  deallog << "energy_form: "
-          << energy_form.as_ascii(dealiiWF::SymbolicDecorations()) << std::endl;
+  deallog << "energy_form: " << energy_form.as_ascii(SymbolicDecorations())
+          << std::endl;
 }
 
 
