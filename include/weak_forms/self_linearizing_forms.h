@@ -652,12 +652,14 @@ namespace WeakForms
                 std::size_t I = 0,
                 typename FieldSolutionOp,
                 typename... SymbolicOpType>
-        inline typename std::enable_if <
-        I<J, bool>::type
-        has_duplicate_previous_field_solution_op(
-          const FieldSolutionOp &              field_solution,
-          const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
-          const
+      inline typename std::enable_if<
+        (I < J) &&
+          (FieldSolutionOp::rank ==
+           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
+        bool>::type
+      has_duplicate_previous_field_solution_op(
+        const FieldSolutionOp &              field_solution,
+        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
       {
         if (field_solution.as_expression() ==
             std::get<I>(symbolic_op_field_solutions).as_expression())
@@ -676,11 +678,17 @@ namespace WeakForms
                 std::size_t I = 0,
                 typename FieldSolutionOp,
                 typename... SymbolicOpType>
-      inline typename std::enable_if<I == J, bool>::type
+      inline typename std::enable_if<
+        (I == J) ||
+          (FieldSolutionOp::rank !=
+           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
+        bool>::type
       has_duplicate_previous_field_solution_op(
         const FieldSolutionOp &              field_solution,
         const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
       {
+        (void)field_solution;
+        (void)symbolic_op_field_solution;
         return false;
       }
 
@@ -708,7 +716,10 @@ namespace WeakForms
         // Need to check that we're not duplicating an operation that
         // has already been performed due to the presence of an earlier,
         // identical field-solution argument.
-        if (has_duplicate_previous_field_solution_op<I>(
+        using FunctorType =
+          typename std::decay<decltype(this->get_functor())>::type;
+        if (is_sd_functor_op<FunctorType>::value &&
+            has_duplicate_previous_field_solution_op<I>(
               field_solution_test, symbolic_op_field_solutions))
           {
             return;
@@ -798,10 +809,13 @@ namespace WeakForms
         // Need to check that we're not duplicating an operation that
         // has already been performed due to the presence of an earlier,
         // identical field-solution argument.
-        if (has_duplicate_previous_field_solution_op<I>(
-              field_solution_test, symbolic_op_field_solutions_1) ||
-            has_duplicate_previous_field_solution_op<J>(
-              field_solution_trial, symbolic_op_field_solutions_2))
+        using FunctorType =
+          typename std::decay<decltype(this->get_functor())>::type;
+        if (is_sd_functor_op<FunctorType>::value &&
+            (has_duplicate_previous_field_solution_op<I>(
+               field_solution_test, symbolic_op_field_solutions_1) ||
+             has_duplicate_previous_field_solution_op<J>(
+               field_solution_trial, symbolic_op_field_solutions_2)))
           {
             return;
           }
