@@ -838,9 +838,12 @@ namespace WeakForms
           // once during the definition of the expression. We must therefore
           // make use of the merge tool, which allows for the presence of
           // duplicate symbols in the maps that are to be concatenated.
-          return Differentiation::SD::merge_substitution_maps(
+          Differentiation::SD::types::substitution_map symbol_map;
+          Differentiation::SD::merge_substitution_maps(
+            symbol_map,
             Differentiation::SD::make_symbol_map(
               std::get<I>(symbolic_field_values))...);
+          return symbol_map;
         }
 
         template <typename SDNumberType,
