@@ -452,77 +452,88 @@ DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_SYMBOLIC_OP(double_contract,
  * Variant 2: LHS operand: Unary op ; RHS operand: Binary op
  * Variant 3: LHS operand: Binary op ; RHS operand: Unary op
  */
-#define DEAL_II_BINARY_OP_OF_UNARY_OP(operator_name, binary_op_code)           \
-  template <typename LhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,                 \
-            typename RhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes RhsOpCode>                 \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>,                           \
-    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>,                           \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code>                       \
-  operator_name(const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode> &lhs_op, \
-                const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode> &rhs_op) \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = UnaryOp<LhsOp, LhsOpCode>;                               \
-    using RhsOpType = UnaryOp<RhsOp, RhsOpCode>;                               \
-    using OpType =                                                             \
-      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;           \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
-  }                                                                            \
-                                                                               \
-  template <typename LhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,                 \
-            typename RhsOp1,                                                   \
-            typename RhsOp2,                                                   \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,                \
-            typename... RhsOpArgs>                                             \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>,                           \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>,   \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code>                       \
-  operator_name(const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode> &lhs_op, \
-                const WeakForms::Operators::                                   \
-                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op)   \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = UnaryOp<LhsOp, LhsOpCode>;                               \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;       \
-    using OpType =                                                             \
-      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;           \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
-  }                                                                            \
-                                                                               \
-  template <typename LhsOp1,                                                   \
-            typename LhsOp2,                                                   \
-            enum WeakForms::Operators::BinaryOpCodes LhsOpCode,                \
-            typename... LhsOpArgs,                                             \
-            typename RhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes RhsOpCode>                 \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>,   \
-    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>,                           \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code>                       \
-  operator_name(const WeakForms::Operators::                                   \
-                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &  lhs_op, \
-                const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode> &rhs_op) \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;       \
-    using RhsOpType = UnaryOp<RhsOp, RhsOpCode>;                               \
-    using OpType =                                                             \
-      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;           \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
+#define DEAL_II_BINARY_OP_OF_UNARY_OP(operator_name, binary_op_code)         \
+  template <typename LhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,               \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes RhsOpCode,               \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>,           \
+    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code>                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>      \
+      &lhs_op,                                                               \
+    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>      \
+      &rhs_op)                                                               \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>;               \
+    using RhsOpType = UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>;               \
+    using OpType =                                                           \
+      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;         \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
+  }                                                                          \
+                                                                             \
+  template <typename LhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,               \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp1,                                                 \
+            typename RhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code>                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>      \
+      &lhs_op,                                                               \
+    const WeakForms::Operators::                                             \
+      BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op)             \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>;               \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
+    using OpType =                                                           \
+      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;         \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
+  }                                                                          \
+                                                                             \
+  template <typename LhsOp1,                                                 \
+            typename LhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes RhsOpCode,               \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code>                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::                                             \
+      BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op,             \
+    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>      \
+      &rhs_op)                                                               \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>;               \
+    using OpType =                                                           \
+      BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;         \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
   }
 
 // Arithmetic operations
@@ -564,116 +575,131 @@ DEAL_II_BINARY_OP_OF_UNARY_OP(double_contract,
  * Variant 2: LHS operand: Unary op ; RHS operand: Binary op
  * Variant 3: LHS operand: Binary op ; RHS operand: Unary op
  */
-#define DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_UNARY_OP(operator_name,        \
-                                                         binary_op_code)       \
-  template <INDEX_PACK_TEMPLATE,                                               \
-            typename LhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,                 \
-            typename RhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes RhsOpCode>                 \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>,                           \
-    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>,                           \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code,                       \
-    typename std::enable_if<                                                   \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>>::value &&             \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>>::value>::type,        \
-    INDEX_PACK_EXPANDED>                                                       \
-  operator_name(const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode> &lhs_op, \
-                const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode> &rhs_op) \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = UnaryOp<LhsOp, LhsOpCode>;                               \
-    using RhsOpType = UnaryOp<RhsOp, RhsOpCode>;                               \
-    using OpType    = BinaryOp<                                                \
-      LhsOpType,                                                            \
-      RhsOpType,                                                            \
-      BinaryOpCodes::binary_op_code,                                        \
-      typename std::enable_if<!is_integral_op<LhsOpType>::value &&          \
-                              !is_integral_op<RhsOpType>::value>::type,     \
-      INDEX_PACK_EXPANDED>;                                                 \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
-  }                                                                            \
-                                                                               \
-  template <INDEX_PACK_TEMPLATE,                                               \
-            typename LhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,                 \
-            typename RhsOp1,                                                   \
-            typename RhsOp2,                                                   \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,                \
-            typename... RhsOpArgs>                                             \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>,                           \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,                 \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code,                       \
-    typename std::enable_if<                                                   \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>>::value &&             \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::                                                 \
-          BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>>::value>::type,    \
-    INDEX_PACK_EXPANDED>                                                       \
-  operator_name(const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode> &lhs_op, \
-                const WeakForms::Operators::                                   \
-                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op)   \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = UnaryOp<LhsOp, LhsOpCode>;                               \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;       \
-    using OpType    = BinaryOp<                                                \
-      LhsOpType,                                                            \
-      RhsOpType,                                                            \
-      BinaryOpCodes::binary_op_code,                                        \
-      typename std::enable_if<!is_integral_op<LhsOpType>::value &&          \
-                              !is_integral_op<RhsOpType>::value>::type,     \
-      INDEX_PACK_EXPANDED>;                                                 \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
-  }                                                                            \
-                                                                               \
-  template <INDEX_PACK_TEMPLATE,                                               \
-            typename LhsOp1,                                                   \
-            typename LhsOp2,                                                   \
-            enum WeakForms::Operators::BinaryOpCodes LhsOpCode,                \
-            typename... LhsOpArgs,                                             \
-            typename RhsOp,                                                    \
-            enum WeakForms::Operators::UnaryOpCodes RhsOpCode>                 \
-  WeakForms::Operators::BinaryOp<                                              \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>,   \
-    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>,                           \
-    WeakForms::Operators::BinaryOpCodes::binary_op_code,                       \
-    typename std::enable_if<                                                   \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::                                                 \
-          BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>>::value &&         \
-      !WeakForms::is_integral_op<                                              \
-        WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>>::value>::type,        \
-    INDEX_PACK_EXPANDED>                                                       \
-  operator_name(const WeakForms::Operators::                                   \
-                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &  lhs_op, \
-                const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode> &rhs_op) \
-  {                                                                            \
-    using namespace WeakForms;                                                 \
-    using namespace WeakForms::Operators;                                      \
-                                                                               \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;       \
-    using RhsOpType = UnaryOp<RhsOp, RhsOpCode>;                               \
-    using OpType    = BinaryOp<                                                \
-      LhsOpType,                                                            \
-      RhsOpType,                                                            \
-      BinaryOpCodes::binary_op_code,                                        \
-      typename std::enable_if<!is_integral_op<LhsOpType>::value &&          \
-                              !is_integral_op<RhsOpType>::value>::type,     \
-      INDEX_PACK_EXPANDED>;                                                 \
-                                                                               \
-    return OpType(lhs_op, rhs_op);                                             \
+#define DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_UNARY_OP(operator_name,      \
+                                                         binary_op_code)     \
+  template <INDEX_PACK_TEMPLATE,                                             \
+            typename LhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,               \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes RhsOpCode,               \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>,           \
+    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
+    typename std::enable_if<                                                 \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>>::     \
+        value &&                                                             \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>>::     \
+        value>::type,                                                        \
+    INDEX_PACK_EXPANDED>                                                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>      \
+      &lhs_op,                                                               \
+    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>      \
+      &rhs_op)                                                               \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>;               \
+    using RhsOpType = UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>;               \
+    using OpType    = BinaryOp<                                              \
+      LhsOpType,                                                          \
+      RhsOpType,                                                          \
+      BinaryOpCodes::binary_op_code,                                      \
+      typename std::enable_if<!is_integral_op<LhsOpType>::value &&        \
+                              !is_integral_op<RhsOpType>::value>::type,   \
+      INDEX_PACK_EXPANDED>;                                               \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
+  }                                                                          \
+                                                                             \
+  template <INDEX_PACK_TEMPLATE,                                             \
+            typename LhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes LhsOpCode,               \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp1,                                                 \
+            typename RhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
+    typename std::enable_if<                                                 \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>>::     \
+        value &&                                                             \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::                                               \
+          BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>>::value>::type,  \
+    INDEX_PACK_EXPANDED>                                                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>      \
+      &lhs_op,                                                               \
+    const WeakForms::Operators::                                             \
+      BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op)             \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>;               \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
+    using OpType    = BinaryOp<                                              \
+      LhsOpType,                                                          \
+      RhsOpType,                                                          \
+      BinaryOpCodes::binary_op_code,                                      \
+      typename std::enable_if<!is_integral_op<LhsOpType>::value &&        \
+                              !is_integral_op<RhsOpType>::value>::type,   \
+      INDEX_PACK_EXPANDED>;                                               \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
+  }                                                                          \
+                                                                             \
+  template <INDEX_PACK_TEMPLATE,                                             \
+            typename LhsOp1,                                                 \
+            typename LhsOp2,                                                 \
+            enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
+            typename RhsOp,                                                  \
+            enum WeakForms::Operators::UnaryOpCodes RhsOpCode,               \
+            typename... RhsOpArgs>                                           \
+  WeakForms::Operators::BinaryOp<                                            \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>,           \
+    WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
+    typename std::enable_if<                                                 \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::                                               \
+          BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>>::value &&       \
+      !WeakForms::is_integral_op<                                            \
+        WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>>::     \
+        value>::type,                                                        \
+    INDEX_PACK_EXPANDED>                                                     \
+  operator_name(                                                             \
+    const WeakForms::Operators::                                             \
+      BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op,             \
+    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>      \
+      &rhs_op)                                                               \
+  {                                                                          \
+    using namespace WeakForms;                                               \
+    using namespace WeakForms::Operators;                                    \
+                                                                             \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>;               \
+    using OpType    = BinaryOp<                                              \
+      LhsOpType,                                                          \
+      RhsOpType,                                                          \
+      BinaryOpCodes::binary_op_code,                                      \
+      typename std::enable_if<!is_integral_op<LhsOpType>::value &&        \
+                              !is_integral_op<RhsOpType>::value>::type,   \
+      INDEX_PACK_EXPANDED>;                                               \
+                                                                             \
+    return OpType(lhs_op, rhs_op);                                           \
   }
 
 // https://stackoverflow.com/questions/44268316/passing-a-template-type-into-a-macro
@@ -712,21 +738,23 @@ DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_UNARY_OP(double_contract,
             enum WeakForms::Operators::SymbolicOpCodes LhsOpCode,          \
             typename... LhsOpArgs,                                         \
             typename RhsOp,                                                \
-            enum WeakForms::Operators::UnaryOpCodes RhsOpCode>             \
+            enum WeakForms::Operators::UnaryOpCodes RhsOpCode,             \
+            typename... RhsOpArgs>                                         \
   WeakForms::Operators::BinaryOp<                                          \
     WeakForms::Operators::SymbolicOp<LhsOp, LhsOpCode, LhsOpArgs...>,      \
-    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode>,                       \
+    WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>,         \
     WeakForms::Operators::BinaryOpCodes::binary_op_code>                   \
   operator_name(                                                           \
     const WeakForms::Operators::SymbolicOp<LhsOp, LhsOpCode, LhsOpArgs...> \
-      &                                                    lhs_op,         \
-    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode> &rhs_op)         \
+      &lhs_op,                                                             \
+    const WeakForms::Operators::UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>    \
+      &rhs_op)                                                             \
   {                                                                        \
     using namespace WeakForms;                                             \
     using namespace WeakForms::Operators;                                  \
                                                                            \
     using LhsOpType = SymbolicOp<LhsOp, LhsOpCode, LhsOpArgs...>;          \
-    using RhsOpType = UnaryOp<RhsOp, RhsOpCode>;                           \
+    using RhsOpType = UnaryOp<RhsOp, RhsOpCode, RhsOpArgs...>;             \
     using OpType =                                                         \
       BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;       \
                                                                            \
@@ -735,22 +763,24 @@ DEAL_II_TENSOR_CONTRACTION_BINARY_OP_OF_UNARY_OP(double_contract,
                                                                            \
   template <typename LhsOp,                                                \
             enum WeakForms::Operators::UnaryOpCodes LhsOpCode,             \
+            typename... LhsOpArgs,                                         \
             typename RhsOp,                                                \
             enum WeakForms::Operators::SymbolicOpCodes RhsOpCode,          \
             typename... RhsOpArgs>                                         \
   WeakForms::Operators::BinaryOp<                                          \
-    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode>,                       \
+    WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>,         \
     WeakForms::Operators::SymbolicOp<RhsOp, RhsOpCode, RhsOpArgs...>,      \
     WeakForms::Operators::BinaryOpCodes::binary_op_code>                   \
   operator_name(                                                           \
-    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode> &lhs_op,         \
+    const WeakForms::Operators::UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>    \
+      &lhs_op,                                                             \
     const WeakForms::Operators::SymbolicOp<RhsOp, RhsOpCode, RhsOpArgs...> \
       &rhs_op)                                                             \
   {                                                                        \
     using namespace WeakForms;                                             \
     using namespace WeakForms::Operators;                                  \
                                                                            \
-    using LhsOpType = UnaryOp<LhsOp, LhsOpCode>;                           \
+    using LhsOpType = UnaryOp<LhsOp, LhsOpCode, LhsOpArgs...>;             \
     using RhsOpType = SymbolicOp<RhsOp, RhsOpCode, RhsOpArgs...>;          \
     using OpType =                                                         \
       BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;       \

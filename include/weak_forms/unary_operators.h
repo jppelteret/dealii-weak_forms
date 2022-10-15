@@ -2184,16 +2184,19 @@ private:                                                                 \
 
 
 #define DEAL_II_UNARY_OP_OF_UNARY_OP(operator_name, unary_op_code)         \
-  template <typename Op, enum WeakForms::Operators::UnaryOpCodes OpCode>   \
+  template <typename Op,                                                   \
+            enum WeakForms::Operators::UnaryOpCodes OpCode,                \
+            typename... OpArgs>                                            \
   WeakForms::Operators::UnaryOp<                                           \
-    WeakForms::Operators::UnaryOp<Op, OpCode>,                             \
+    WeakForms::Operators::UnaryOp<Op, OpCode, OpArgs...>,                  \
     WeakForms::Operators::UnaryOpCodes::unary_op_code>                     \
-  operator_name(const WeakForms::Operators::UnaryOp<Op, OpCode> &operand)  \
+  operator_name(                                                           \
+    const WeakForms::Operators::UnaryOp<Op, OpCode, OpArgs...> &operand)   \
   {                                                                        \
     using namespace WeakForms;                                             \
     using namespace WeakForms::Operators;                                  \
                                                                            \
-    using UnaryOpType = UnaryOp<Op, OpCode>;                               \
+    using UnaryOpType = UnaryOp<Op, OpCode, OpArgs...>;                    \
     using OpType      = UnaryOp<UnaryOpType, UnaryOpCodes::unary_op_code>; \
                                                                            \
     return OpType(operand);                                                \
