@@ -33,12 +33,11 @@ jobs:
       - name: Dynamic environment variables
         run: |
           cd build
+          echo "TEST_START=2" >> $GITHUB_ENV
+          echo "TEST_STRIDE=3" >> $GITHUB_ENV
           echo "N_TESTS=`ctest -N | grep "Total Tests:" | awk '{print $3}'`" >> $GITHUB_ENV
       - name: Testing
         run: |
           cd build
           echo "Test start index: ${TEST_START}, Number of tests: ${N_TESTS}, Stride between tests: ${TEST_STRIDE}"
           ctest -I [${TEST_START},${N_TESTS},${TEST_STRIDE}] --output-on-failure
-        env:
-           TEST_START:  2
-           TEST_STRIDE: 3
