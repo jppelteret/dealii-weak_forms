@@ -220,6 +220,7 @@ namespace WeakForms
         get_subspace_field_solution_ops(const T &op)
         {
           // An empty tuple
+          (void)op;
           return std::make_tuple();
         }
       };
