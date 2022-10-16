@@ -671,6 +671,23 @@ namespace WeakForms
           field_solution, symbolic_op_field_solutions);
       }
 
+      template <std::size_t J,
+                std::size_t I = 0,
+                typename FieldSolutionOp,
+                typename... SymbolicOpType>
+      inline typename std::enable_if<
+        (I < J) &&
+          (FieldSolutionOp::rank !=
+           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
+        bool>::type
+      has_duplicate_previous_field_solution_op(
+        const FieldSolutionOp &              field_solution,
+        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
+      {
+        return has_duplicate_previous_field_solution_op<J, I + 1>(
+          field_solution, symbolic_op_field_solutions);
+      }
+
 #  endif // DEAL_II_WITH_SYMENGINE
 
       // Get update flags from a unary op: End point
@@ -678,17 +695,13 @@ namespace WeakForms
                 std::size_t I = 0,
                 typename FieldSolutionOp,
                 typename... SymbolicOpType>
-      inline typename std::enable_if<
-        (I == J) ||
-          (FieldSolutionOp::rank !=
-           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
-        bool>::type
+      inline typename std::enable_if<(I == J), bool>::type
       has_duplicate_previous_field_solution_op(
         const FieldSolutionOp &              field_solution,
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
+        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
       {
         (void)field_solution;
-        (void)symbolic_op_field_solution;
+        (void)symbolic_op_field_solutions;
         return false;
       }
 
