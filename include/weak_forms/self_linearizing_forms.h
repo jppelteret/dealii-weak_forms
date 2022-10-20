@@ -661,8 +661,31 @@ namespace WeakForms
         const FieldSolutionOp &              field_solution,
         const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
       {
-        if (field_solution.as_expression() ==
-            std::get<I>(symbolic_op_field_solutions).as_expression())
+        // We cannot check the equivalence of entries like this:
+        // if (field_solution.as_expression() ==
+        //     std::get<I>(symbolic_op_field_solutions).as_expression())
+        //   {...}
+        // as the result of operator==() is actually a symbolic expression
+        // itself. In the case of equivalence, it can return something
+        // meaningful (as a boolean), but when the underlying expressions are
+        // different then it cannot be evaluated (as its actually trying to
+        // establish this equivalence of the returned values, not the symbolic
+        // expression itself). So, instead, we use substitution maps to decide
+        // if the two input expressions (or tensors of expressions) are
+        // identical, as merging a map of them should render a map of the size
+        // of one of the input maps.
+        //
+        // We also have to deal with the case where there are duplicate symbols.
+        // in the maps. This is not permitted by the make_symbol_map() function,
+        // but is by merge_substitution_maps().
+        const auto symbol_map_field =
+          Differentiation::SD::make_symbol_map(field_solution.as_expression());
+        const auto symbol_map_op = Differentiation::SD::make_symbol_map(
+          std::get<I>(symbolic_op_field_solutions).as_expression());
+        const auto symbol_map_merged =
+          Differentiation::SD::merge_substitution_maps(symbol_map_field,
+                                                       symbol_map_op);
+        if (symbol_map_merged.size() == symbol_map_field.size())
           {
             return true;
           }
