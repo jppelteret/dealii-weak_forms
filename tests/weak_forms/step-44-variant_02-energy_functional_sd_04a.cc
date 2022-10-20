@@ -41,6 +41,8 @@ namespace Step44
     {}
 
   protected:
+    WeakForms::AD_SD_Functor_Cache ad_sd_cache;
+
     void
     assemble_system(const BlockVector<double> &solution_delta) override;
   };
@@ -129,13 +131,18 @@ namespace Step44
     const double time_ramp = (this->time.current() / this->time.end());
     const double pressure  = p0 * this->parameters.p_p0 * time_ramp;
 
-    const auto external_energy = -u * (pressure * N);
+    // The pressure changes at each time step, but the Sd cache keeps the
+    // original value / symbol. So we now have to explicitly make this symbolic
+    // so that there is not a clash when its evaluated after the first timestep.
+    const auto external_energy =
+      -u *
+      (constant_scalar<spacedim>(pressure, "p_ext", "p^{\\text{ext}}") * N);
 
     // Boundary conditions
     const dealii::types::boundary_id traction_boundary_id = 6;
 
     // Assembly
-    MatrixBasedAssembler<dim> assembler;
+    MatrixBasedAssembler<dim> assembler(ad_sd_cache);
     assembler += energy_functional_form<dim, spacedim>("e^{int}",
                                                        "\\Psi^{\text{int}}",
                                                        internal_energy)
