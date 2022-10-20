@@ -1817,7 +1817,8 @@ namespace WeakForms
     // be a no-op when producing the symbolic substitution maps.
     const auto subspace_field_solution_ops =
       Operators::internal::CompositeOpHelper<
-        CompositeSymbolicOp>::get_subspace_field_solution_ops(functor_op);
+        typename std::decay<CompositeSymbolicOp>::type>::
+        get_subspace_field_solution_ops(functor_op);
 
     // Create the energy functor, separately from the energy functional form.
     // We do this because we need to explicitly know the template parameters
