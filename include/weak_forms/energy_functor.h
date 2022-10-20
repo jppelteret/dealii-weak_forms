@@ -1188,6 +1188,37 @@ namespace WeakForms
                                         q_point));
               }
 
+#    ifdef DEBUG
+            // Add a check from  BatchOptimizer<ReturnType>::substitute()
+            const Differentiation::SD::types::symbol_vector symbol_sub_vec =
+              Differentiation::SD::Utilities::extract_symbols(substitution_map);
+            const Differentiation::SD::types::symbol_vector symbol_vec =
+              batch_optimizer.get_independent_symbols();
+            Assert(symbol_sub_vec.size() == symbol_vec.size(),
+                   ExcDimensionMismatch(symbol_sub_vec.size(),
+                                        symbol_vec.size()));
+            for (unsigned int i = 0; i < symbol_sub_vec.size(); ++i)
+              {
+                if (!dealii::numbers::values_are_equal(symbol_sub_vec[i],
+                                                       symbol_vec[i]))
+                  {
+                    std::cout << "i: " << i
+                              << " ; symbol_sub_vec[i]: " << symbol_sub_vec[i]
+                              << " ; symbol_vec[i]: " << symbol_vec[i]
+                              << std::endl;
+                  }
+                Assert(
+                  dealii::numbers::values_are_equal(symbol_sub_vec[i],
+                                                    symbol_vec[i]),
+                  ExcMessage(
+                    "The input substitution map is either incomplete, or does "
+                    "not match that used in the register_symbols() call. "
+                    "If you are using an AD/SD cache, check that the cached "
+                    "symbol is a numerical value that changes over time or "
+                    "the evaluation history."));
+              }
+#    endif
+
             // Perform the value substitution at this quadrature point
             batch_optimizer.substitute(substitution_map);
 
