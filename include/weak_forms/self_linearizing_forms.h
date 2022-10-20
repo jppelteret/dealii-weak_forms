@@ -1727,6 +1727,9 @@ namespace WeakForms
           [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
                          template value_type<SDNumberType> &...field_solutions)
           {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+            
             // The expression is filled with the full scalar expression as is
             // returned by the user-defined functor. The symbols used for the
             // field solution operations are consistent with that which fills
@@ -1737,6 +1740,9 @@ namespace WeakForms
           [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
                          template value_type<SDNumberType> &...field_solutions)
           {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+
             // Get the symbols that are expected to be found in the expression.
             return functor_op.get_symbol_registration_map();
           },
@@ -1758,6 +1764,9 @@ namespace WeakForms
           [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
                          template value_type<SDNumberType> &...field_solutions)
           {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+
             // We really only expect user-defined symbolic variables to be
             // able to return an intermediate substitution value.
             return functor_op.get_intermediate_substitution_map();
