@@ -51,6 +51,97 @@ namespace WeakForms
 {
   namespace SelfLinearization
   {
+    namespace internal
+    {
+      struct DuplicatePreviousFieldSolutionOpHelper
+      {
+#  ifdef DEAL_II_WITH_SYMENGINE
+
+        // Check for duplicate field solution in the tuple
+        template <std::size_t J,
+                  std::size_t I = 0,
+                  typename FieldSolutionOp,
+                  typename... SymbolicOpType>
+        static inline typename std::enable_if<
+          (I < J) &&
+            (FieldSolutionOp::rank ==
+             std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
+          bool>::type
+        has_duplicate_previous_field_solution_op(
+          const FieldSolutionOp &              field_solution,
+          const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
+        {
+          // We cannot check the equivalence of entries like this:
+          // if (field_solution.as_expression() ==
+          //     std::get<I>(symbolic_op_field_solutions).as_expression())
+          //   {...}
+          // as the result of operator==() is actually a symbolic expression
+          // itself. In the case of equivalence, it can return something
+          // meaningful (as a boolean), but when the underlying expressions are
+          // different then it cannot be evaluated (as its actually trying to
+          // establish this equivalence of the returned values, not the symbolic
+          // expression itself). So, instead, we use substitution maps to decide
+          // if the two input expressions (or tensors of expressions) are
+          // identical, as merging a map of them should render a map of the size
+          // of one of the input maps.
+          //
+          // We also have to deal with the case where there are duplicate
+          // symbols. in the maps. This is not permitted by the
+          // make_symbol_map() function, but is by merge_substitution_maps().
+          const auto symbol_map_field = Differentiation::SD::make_symbol_map(
+            field_solution.as_expression());
+          const auto symbol_map_op = Differentiation::SD::make_symbol_map(
+            std::get<I>(symbolic_op_field_solutions).as_expression());
+          const auto symbol_map_merged =
+            Differentiation::SD::merge_substitution_maps(symbol_map_field,
+                                                         symbol_map_op);
+          if (symbol_map_merged.size() == symbol_map_field.size())
+            {
+              return true;
+            }
+
+          return has_duplicate_previous_field_solution_op<J, I + 1>(
+            field_solution, symbolic_op_field_solutions);
+        }
+
+        template <std::size_t J,
+                  std::size_t I = 0,
+                  typename FieldSolutionOp,
+                  typename... SymbolicOpType>
+        static inline typename std::enable_if<
+          (I < J) &&
+            (FieldSolutionOp::rank !=
+             std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
+          bool>::type
+        has_duplicate_previous_field_solution_op(
+          const FieldSolutionOp &              field_solution,
+          const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
+        {
+          return has_duplicate_previous_field_solution_op<J, I + 1>(
+            field_solution, symbolic_op_field_solutions);
+        }
+
+#  endif // DEAL_II_WITH_SYMENGINE
+
+        // Get update flags from a unary op: End point
+        template <std::size_t J,
+                  std::size_t I = 0,
+                  typename FieldSolutionOp,
+                  typename... SymbolicOpType>
+        static inline typename std::enable_if<(I == J), bool>::type
+        has_duplicate_previous_field_solution_op(
+          const FieldSolutionOp &              field_solution,
+          const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions)
+        {
+          (void)field_solution;
+          (void)symbolic_op_field_solutions;
+          return false;
+        }
+      };
+    } // namespace internal
+
+
+
     /**
      * @brief A class that represents a self-linearizing energy functional form.
      *
@@ -645,89 +736,6 @@ namespace WeakForms
         return UpdateFlags::update_default;
       }
 
-#  ifdef DEAL_II_WITH_SYMENGINE
-
-      // Check for duplicate field solution in the tuple
-      template <std::size_t J,
-                std::size_t I = 0,
-                typename FieldSolutionOp,
-                typename... SymbolicOpType>
-      inline typename std::enable_if<
-        (I < J) &&
-          (FieldSolutionOp::rank ==
-           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
-        bool>::type
-      has_duplicate_previous_field_solution_op(
-        const FieldSolutionOp &              field_solution,
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
-      {
-        // We cannot check the equivalence of entries like this:
-        // if (field_solution.as_expression() ==
-        //     std::get<I>(symbolic_op_field_solutions).as_expression())
-        //   {...}
-        // as the result of operator==() is actually a symbolic expression
-        // itself. In the case of equivalence, it can return something
-        // meaningful (as a boolean), but when the underlying expressions are
-        // different then it cannot be evaluated (as its actually trying to
-        // establish this equivalence of the returned values, not the symbolic
-        // expression itself). So, instead, we use substitution maps to decide
-        // if the two input expressions (or tensors of expressions) are
-        // identical, as merging a map of them should render a map of the size
-        // of one of the input maps.
-        //
-        // We also have to deal with the case where there are duplicate symbols.
-        // in the maps. This is not permitted by the make_symbol_map() function,
-        // but is by merge_substitution_maps().
-        const auto symbol_map_field =
-          Differentiation::SD::make_symbol_map(field_solution.as_expression());
-        const auto symbol_map_op = Differentiation::SD::make_symbol_map(
-          std::get<I>(symbolic_op_field_solutions).as_expression());
-        const auto symbol_map_merged =
-          Differentiation::SD::merge_substitution_maps(symbol_map_field,
-                                                       symbol_map_op);
-        if (symbol_map_merged.size() == symbol_map_field.size())
-          {
-            return true;
-          }
-
-        return has_duplicate_previous_field_solution_op<J, I + 1>(
-          field_solution, symbolic_op_field_solutions);
-      }
-
-      template <std::size_t J,
-                std::size_t I = 0,
-                typename FieldSolutionOp,
-                typename... SymbolicOpType>
-      inline typename std::enable_if<
-        (I < J) &&
-          (FieldSolutionOp::rank !=
-           std::tuple_element_t<I, std::tuple<SymbolicOpType...>>::rank),
-        bool>::type
-      has_duplicate_previous_field_solution_op(
-        const FieldSolutionOp &              field_solution,
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
-      {
-        return has_duplicate_previous_field_solution_op<J, I + 1>(
-          field_solution, symbolic_op_field_solutions);
-      }
-
-#  endif // DEAL_II_WITH_SYMENGINE
-
-      // Get update flags from a unary op: End point
-      template <std::size_t J,
-                std::size_t I = 0,
-                typename FieldSolutionOp,
-                typename... SymbolicOpType>
-      inline typename std::enable_if<(I == J), bool>::type
-      has_duplicate_previous_field_solution_op(
-        const FieldSolutionOp &              field_solution,
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
-      {
-        (void)field_solution;
-        (void)symbolic_op_field_solutions;
-        return false;
-      }
-
       // Create linear forms
       template <enum WeakForms::internal::AccumulationSign OpSign,
                 std::size_t                                I = 0,
@@ -757,8 +765,9 @@ namespace WeakForms
         using FunctorType =
           typename std::decay<decltype(this->get_functor())>::type;
         if (is_sd_functor_op<FunctorType>::value &&
-            has_duplicate_previous_field_solution_op<I>(
-              field_solution_test, symbolic_op_field_solutions))
+            internal::DuplicatePreviousFieldSolutionOpHelper::
+              has_duplicate_previous_field_solution_op<I>(
+                field_solution_test, symbolic_op_field_solutions))
           {
             perform_assembly = false;
           }
@@ -767,7 +776,8 @@ namespace WeakForms
         if (perform_assembly)
           {
             const auto test_function =
-              internal::ConvertTo::test_function(field_solution_test);
+              WeakForms::internal::ConvertTo::test_function(
+                field_solution_test);
 
             const auto linear_form = WeakForms::linear_form(
               test_function,
@@ -858,10 +868,12 @@ namespace WeakForms
         using FunctorType =
           typename std::decay<decltype(this->get_functor())>::type;
         if (is_sd_functor_op<FunctorType>::value &&
-            (has_duplicate_previous_field_solution_op<I>(
-               field_solution_test, symbolic_op_field_solutions_1) ||
-             has_duplicate_previous_field_solution_op<J>(
-               field_solution_trial, symbolic_op_field_solutions_2)))
+            (internal::DuplicatePreviousFieldSolutionOpHelper::
+               has_duplicate_previous_field_solution_op<I>(
+                 field_solution_test, symbolic_op_field_solutions_1) ||
+             internal::DuplicatePreviousFieldSolutionOpHelper::
+               has_duplicate_previous_field_solution_op<J>(
+                 field_solution_trial, symbolic_op_field_solutions_2)))
           {
             perform_assembly = false;
           }
@@ -870,9 +882,11 @@ namespace WeakForms
         if (perform_assembly)
           {
             const auto test_function =
-              internal::ConvertTo::test_function(field_solution_test);
+              WeakForms::internal::ConvertTo::test_function(
+                field_solution_test);
             const auto trial_solution =
-              internal::ConvertTo::trial_solution(field_solution_trial);
+              WeakForms::internal::ConvertTo::trial_solution(
+                field_solution_trial);
 
             // Since we derive from a potential, we can expect the contributions
             // to the linear system to be symmetric.
@@ -1578,35 +1592,59 @@ namespace WeakForms
         const auto &field_solution_trial =
           std::get<J>(symbolic_op_field_solutions);
 
+        bool perform_assembly = true;
+
         // We only allow one solution index, namely that pertaining to
         // the current timestep / Newton iterate and active DoFHandler
         // to be linearized.
         if (field_solution_trial.solution_index !=
             numbers::linearizable_solution_index)
-          return;
-
-        const auto test_function = get_test_function();
-        const auto trial_solution =
-          internal::ConvertTo::trial_solution(field_solution_trial);
-
-        const auto bilinear_form = WeakForms::bilinear_form(
-          test_function,
-          get_functor_first_derivative<AssemblerScalar_t, J>(
-            field_solution_trial),
-          trial_solution);
-        const auto integrated_bilinear_form =
-          integral_operation.template integrate<AssemblerScalar_t>(
-            bilinear_form);
-
-        if (OpSign == WeakForms::internal::AccumulationSign::plus)
           {
-            assembler += integrated_bilinear_form;
+            perform_assembly = false;
           }
-        else
+
+#  ifdef DEAL_II_WITH_SYMENGINE
+        // Support energies described by fully symbolic expressions:
+        // Need to check that we're not duplicating an operation that
+        // has already been performed due to the presence of an earlier,
+        // identical field-solution argument.
+        using FunctorType =
+          typename std::decay<decltype(this->get_functor())>::type;
+        if (is_sd_functor_op<FunctorType>::value &&
+            (internal::DuplicatePreviousFieldSolutionOpHelper::
+               has_duplicate_previous_field_solution_op<J>(
+                 field_solution_trial, symbolic_op_field_solutions)))
           {
-            Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
-                   ExcInternalError());
-            assembler -= integrated_bilinear_form;
+            perform_assembly = false;
+          }
+#  endif // DEAL_II_WITH_SYMENGINE
+
+        if (perform_assembly)
+          {
+            const auto test_function = get_test_function();
+            const auto trial_solution =
+              WeakForms::internal::ConvertTo::trial_solution(
+                field_solution_trial);
+
+            const auto bilinear_form = WeakForms::bilinear_form(
+              test_function,
+              get_functor_first_derivative<AssemblerScalar_t, J>(
+                field_solution_trial),
+              trial_solution);
+            const auto integrated_bilinear_form =
+              integral_operation.template integrate<AssemblerScalar_t>(
+                bilinear_form);
+
+            if (OpSign == WeakForms::internal::AccumulationSign::plus)
+              {
+                assembler += integrated_bilinear_form;
+              }
+            else
+              {
+                Assert(OpSign == WeakForms::internal::AccumulationSign::minus,
+                       ExcInternalError());
+                assembler -= integrated_bilinear_form;
+              }
           }
 
         // Move on to the next forms:
@@ -1752,7 +1790,7 @@ namespace WeakForms
           {
             const auto dummy = std::tie(field_solutions...);
             (void)dummy;
-            
+
             // The expression is filled with the full scalar expression as is
             // returned by the user-defined functor. The symbols used for the
             // field solution operations are consistent with that which fills
@@ -1799,6 +1837,105 @@ namespace WeakForms
           functor_op.get_update_flags());
 
       return energy_functional_form(energy);
+    }
+
+
+
+    template <typename... SymbolicOpsSubSpaceFieldSolution>
+    auto
+    create_residual_functor_from_tuple(
+      const std::string &symbol_ascii,
+      const std::string &symbol_latex,
+      const std::tuple<SymbolicOpsSubSpaceFieldSolution...>
+        &subspace_field_solution_ops)
+    {
+      return ResidualFunctor<SymbolicOpsSubSpaceFieldSolution...>(
+        symbol_ascii, symbol_latex, subspace_field_solution_ops);
+    }
+
+
+    template <int dim,
+              int spacedim = dim,
+              typename TestSpaceOp,
+              typename CompositeSymbolicOp,
+              typename... SymbolicOpsSubSpaceFieldSolution>
+    auto
+    create_residual_view_form_from_residual(
+      const ResidualFunctor<SymbolicOpsSubSpaceFieldSolution...>
+        &                        residual_functor,
+      const TestSpaceOp &        test_space_op,
+      const CompositeSymbolicOp &functor_op,
+      const enum dealii::Differentiation::SD::OptimizerType
+        optimization_method = dealii::Differentiation::SD::OptimizerType::llvm,
+      const enum dealii::Differentiation::SD::OptimizationFlags
+        optimization_flags =
+          dealii::Differentiation::SD::OptimizationFlags::optimize_default)
+    {
+      static_assert(
+        CompositeSymbolicOp::rank == TestSpaceOp::rank,
+        "Expect functor for residual view form to have the same rank as the test space operator upon evaluation.");
+
+      const auto residual_subspace = residual_functor[test_space_op];
+
+      using SDNumberType            = dealii::Differentiation::SD::Expression;
+      using ResidualViewFunctorType = decltype(residual_subspace);
+      using substitution_map_type =
+        typename ResidualViewFunctorType::substitution_map_type;
+
+      const auto residual_view =
+        residual_subspace.template value<SDNumberType, dim, spacedim>(
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+
+            // The expression is filled with the full scalar expression as is
+            // returned by the user-defined functor. The symbols used for the
+            // field solution operations are consistent with that which fills
+            // the argument list, and we therefore can be assured that they will
+            // be given the correct value upon later substitution.
+            return functor_op.as_expression();
+          },
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+
+            // Get the symbols that are expected to be found in the expression.
+            return functor_op.get_symbol_registration_map();
+          },
+          [functor_op](
+            const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+            const std::vector<SolutionExtractionData<dim, spacedim>>
+              &                solution_extraction_data,
+            const unsigned int q_point)
+          {
+            // Extract from functor_op...
+            // Here we get the point-specific values from all of the variables
+            // used in the expression tree (i.e. the functor). The exception to
+            // this are the field solution variables, which have their values
+            // written into the substitution map by the framework.
+            return functor_op.get_substitution_map(scratch_data,
+                                                   solution_extraction_data,
+                                                   q_point);
+          },
+          [functor_op](const typename SymbolicOpsSubSpaceFieldSolution::
+                         template value_type<SDNumberType> &...field_solutions)
+          {
+            const auto dummy = std::tie(field_solutions...);
+            (void)dummy;
+
+            // We really only expect user-defined symbolic variables to be
+            // able to return an intermediate substitution value.
+            return functor_op.get_intermediate_substitution_map();
+          },
+          optimization_method,
+          optimization_flags,
+          functor_op.get_update_flags());
+
+      return residual_form(residual_view);
     }
   } // namespace internal
 
@@ -1866,6 +2003,87 @@ namespace WeakForms
     // field solution components.
     return internal::create_energy_functional_form_from_energy<dim, spacedim>(
       energy_func, functor_op, optimization_method, optimization_flags);
+  }
+
+
+
+  /**
+   * @brief A convenience function that generates a self-linearizing residual view
+   * functional form from a (composite) symbolic operation.
+   *
+   * This variant extracts a symbolic (in the sense of being symbolically
+   * differentiable) representation from the input functor, which is later
+   * differentiated and converted into linear and bilinear forms.
+   *
+   * For more information about the self-linearizing form that is created,
+   * please refer to the documentation of the
+   * SelfLinearization::ResidualViewForm class.
+   *
+   * @tparam dim The dimension in which the energy is being evaluated.
+   * @tparam spacedim The spatial dimension in which the energy is being evaluated.
+   * @tparam TestSpaceOp A symbolic operator that represents a test function
+   * (test space) operation. It may exactly represent the test function or a
+   * view into a multi-component test function (or some differential operation
+   * involving either of these), or some more complex operation (e.g. a unary,
+   * binary or composite operation) that involves a test function.
+   * @param symbol_ascii The ASCII representation of the value.
+   * @param symbol_latex  The LaTeX representation of the value.
+   * @param test_space_op A symbolic operation that represents some test
+   * function (or a derivative thereof).
+   * @param functor_op A composite symbolic function, representing an energy,
+   * that is to be linearized.
+   * @param optimization_method The optimization method that is to be employed.
+   * By default, the LLVM optimizer is chosen.
+   * @param optimization_flags  The optimization flags that indicate which
+   * expression manipulation mechanisms are to be employed. By default, no
+   * further optimizations are to be performed.
+   * @return SelfLinearization::ResidualViewForm<ResidualViewFunctor> backed by
+   * local symbolic differentiation.
+   *
+   * \ingroup forms convenience_functions
+   */
+  template <int dim,
+            int spacedim = dim,
+            typename TestSpaceOp,
+            typename CompositeSymbolicOp>
+  auto
+  residual_view_form(
+    const std::string &                                   symbol_ascii,
+    const std::string &                                   symbol_latex,
+    const TestSpaceOp &                                   test_space_op,
+    const CompositeSymbolicOp &                           functor_op,
+    const enum dealii::Differentiation::SD::OptimizerType optimization_method =
+      dealii::Differentiation::SD::OptimizerType::llvm,
+    const enum dealii::Differentiation::SD::OptimizationFlags
+      optimization_flags =
+        dealii::Differentiation::SD::OptimizationFlags::optimize_default)
+  {
+    // A tuple of all field solution operations that appear in the symbolic
+    // expression tree. Some of these are duplicated: that's fine, as they'll
+    // be a no-op when producing the symbolic substitution maps.
+    const auto subspace_field_solution_ops =
+      Operators::internal::CompositeOpHelper<
+        typename std::decay<CompositeSymbolicOp>::type>::
+        get_subspace_field_solution_ops(functor_op);
+
+    // Create the residual functor, separately from the residual view form.
+    // We do this because we need to explicitly know the template parameters
+    // that are passed to both the residual functor and the residual view form
+    // creation methods.
+    const auto residual_func =
+      internal::create_residual_functor_from_tuple(symbol_ascii,
+                                                   symbol_latex,
+                                                   subspace_field_solution_ops);
+
+    // Finally create the residual view form. The original functor is needed
+    // in order to extract the substitution map for the variables other than the
+    // field solution components.
+    return internal::create_residual_view_form_from_residual<dim, spacedim>(
+      residual_func,
+      test_space_op,
+      functor_op,
+      optimization_method,
+      optimization_flags);
   }
 
 

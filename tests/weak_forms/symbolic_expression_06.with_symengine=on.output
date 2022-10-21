@@ -1,0 +1,30 @@
+
+DEAL::Dim: 2
+DEAL::Scalar
+DEAL::functor_op: 2*__DEAL_II__Field_Grad__s___0**2 + 2*__DEAL_II__Field_Grad__s___1**2 + 2*s + s*__DEAL_II__Field__s_**2
+DEAL::residual_func: <R>({s}, Grad({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[d{s}]({s}, Grad({s})))
+DEAL::Vector
+DEAL::functor_op: 2*__DEAL_II__Field_Hessian__s___00*__DEAL_II__Field_Grad__s___0 + 2*__DEAL_II__Field_Hessian__s___01*__DEAL_II__Field_Grad__s___1 + s*__DEAL_II__Field_Grad__s___0*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___10*__DEAL_II__Field_Grad__s___0 + 2*__DEAL_II__Field_Hessian__s___11*__DEAL_II__Field_Grad__s___1 + s*__DEAL_II__Field_Grad__s___1*__DEAL_II__Field__s_
+DEAL::residual_func: <R>({s}, Grad({s}), Hessian({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[Grad(d{s})]({s}, Grad({s}), Hessian({s})))
+DEAL::Tensor
+DEAL::functor_op: s*__DEAL_II__Field_Hessian__s___00*__DEAL_II__Field__s_ + (__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2)*2*__DEAL_II__Field_Hessian__s___00 s*__DEAL_II__Field_Hessian__s___01*__DEAL_II__Field__s_ + (__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2)*2*__DEAL_II__Field_Hessian__s___01 s*__DEAL_II__Field_Hessian__s___10*__DEAL_II__Field__s_ + (__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2)*2*__DEAL_II__Field_Hessian__s___10 s*__DEAL_II__Field_Hessian__s___11*__DEAL_II__Field__s_ + (__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2)*2*__DEAL_II__Field_Hessian__s___11
+DEAL::residual_func: <R>({s}, Hessian({s}), Grad({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[Hessian(d{s})]({s}, Hessian({s}), Grad({s})))
+DEAL::OK
+DEAL::Dim: 3
+DEAL::Scalar
+DEAL::functor_op: 2*__DEAL_II__Field_Grad__s___0**2 + 2*__DEAL_II__Field_Grad__s___1**2 + 2*__DEAL_II__Field_Grad__s___2**2 + 2*s + s*__DEAL_II__Field__s_**2
+DEAL::residual_func: <R>({s}, Grad({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[d{s}]({s}, Grad({s})))
+DEAL::Vector
+DEAL::functor_op: 2*__DEAL_II__Field_Hessian__s___00*__DEAL_II__Field_Grad__s___0 + 2*__DEAL_II__Field_Hessian__s___01*__DEAL_II__Field_Grad__s___1 + 2*__DEAL_II__Field_Hessian__s___02*__DEAL_II__Field_Grad__s___2 + s*__DEAL_II__Field_Grad__s___0*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___10*__DEAL_II__Field_Grad__s___0 + 2*__DEAL_II__Field_Hessian__s___11*__DEAL_II__Field_Grad__s___1 + 2*__DEAL_II__Field_Hessian__s___12*__DEAL_II__Field_Grad__s___2 + s*__DEAL_II__Field_Grad__s___1*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___20*__DEAL_II__Field_Grad__s___0 + 2*__DEAL_II__Field_Hessian__s___21*__DEAL_II__Field_Grad__s___1 + 2*__DEAL_II__Field_Hessian__s___22*__DEAL_II__Field_Grad__s___2 + s*__DEAL_II__Field_Grad__s___2*__DEAL_II__Field__s_
+DEAL::residual_func: <R>({s}, Grad({s}), Hessian({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[Grad(d{s})]({s}, Grad({s}), Hessian({s})))
+DEAL::Tensor
+DEAL::functor_op: 2*__DEAL_II__Field_Hessian__s___00*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___00*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___01*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___01*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___02*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___02*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___10*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___10*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___11*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___11*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___12*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___12*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___20*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___20*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___21*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___21*__DEAL_II__Field__s_ 2*__DEAL_II__Field_Hessian__s___22*(__DEAL_II__Field_Grad__s___0**2 + __DEAL_II__Field_Grad__s___1**2 + __DEAL_II__Field_Grad__s___2**2) + s*__DEAL_II__Field_Hessian__s___22*__DEAL_II__Field__s_
+DEAL::residual_func: <R>({s}, Hessian({s}), Grad({s}))
+DEAL::residual_view_form: SelfLinearizingResidualViewForm(<R>_[Hessian(d{s})]({s}, Hessian({s}), Grad({s})))
+DEAL::OK
+DEAL::OK
