@@ -99,80 +99,42 @@ namespace Step44
       constant_symmetric_tensor<spacedim>(unit_symmetric_tensor<spacedim>(),
                                           "I",
                                           "I");
-    const auto F = I + Grad_u;
+    const auto F     = I + Grad_u;
+    const auto F_inv = invert(F);
+    const auto det_F = determinant(F);
+    const auto b     = symmetrize(F * transpose(F));
+    const auto b_bar = pow(det_F, -2.0 / spacedim) * b;
 
     // Geometry
     const Normal<spacedim> normal{};
     const auto             N = normal.value();
 
+    // Constitutive parameters
+    const double mu    = this->parameters.mu;
+    const double nu    = this->parameters.nu;
+    const double kappa = (2.0 * mu * (1.0 + nu)) / (3.0 * (1.0 - 2.0 * nu));
+    const double c_1   = mu / 2.0;
+
+    // - Pressure
+    const auto dPsi_vol_dJ = (kappa / 2.0) * (J_tilde - 1.0 / J_tilde);
+
+    // - Stress
+    const auto dev_P =
+      constant_symmetric_tensor<spacedim>(StandardTensors<spacedim>::dev_P,
+                                          "dev_P",
+                                          "Dev");
+    const auto tau_vol = p_tilde * det_F * I;
+    const auto tau_bar = 2.0 * c_1 * b_bar;
+    const auto tau_iso = dev_P * tau_bar;
+    const auto tau     = tau_iso + tau_vol;
+    // const auto S = F_inv * tau * transpose(F_inv);
+    // const auto P = F * S;
+    const auto P = tau * transpose(F_inv);
+
     // Residual
-    const auto residual_func_u = residual_functor("R", "R", Grad_u, p_tilde);
-    // const auto residual_func_p = residual_functor("R", "R", Grad_u, J_tilde);
-    const auto residual_func_J = residual_functor("R", "R", p_tilde, J_tilde);
-    const auto residual_ss_u   = residual_func_u[Grad_test_u];
-    // const auto residual_ss_p   = residual_func_p[test_p];
-    const auto residual_ss_J = residual_func_J[test_J];
-
-    // Instead of re-rewriting the kinetic variables in full (as was done for
-    // the energy density in step-44-variant_02-energy_functional_sd_01), we'll
-    // cheat and fetch the definition from a prototypical QP.
-    const auto &cell = this->dof_handler_ref.begin_active();
-    const auto &qph  = this->quadrature_point_history;
-    const std::vector<std::shared_ptr<const PointHistory<dim>>> lqph =
-      qph.get_data(cell);
-    const auto &lqph_q_point = lqph[0];
-
-    const auto residual_u =
-      residual_ss_u.template value<SDNumber_t, dim, spacedim>(
-        [lqph_q_point, &spacedim](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
-                                  const SDNumber_t &p_tilde)
-        {
-          const Tensor<2, spacedim, SDNumber_t> F =
-            Grad_u + Physics::Elasticity::StandardTensors<dim>::I;
-          const Tensor<2, spacedim, SDNumber_t> P =
-            lqph_q_point->get_P(F, p_tilde);
-          return P;
-        },
-        [](const Tensor<2, spacedim, SDNumber_t> &Grad_u,
-           const SDNumber_t &                     p_tilde)
-        {
-          // Due to our shortcut, we've not made the constitutive
-          // parameters symbolic.
-          return Differentiation::SD::types::substitution_map{};
-        },
-        [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<SolutionExtractionData<dim, spacedim>>
-             &                solution_extraction_data,
-           const unsigned int q_point)
-        { return Differentiation::SD::types::substitution_map{}; },
-        optimizer_type,
-        optimization_flags,
-        UpdateFlags::update_default);
-
+    const auto residual_u = P;
     const auto residual_p = determinant(F) - J_tilde;
-
-    const auto residual_J =
-      residual_ss_J.template value<SDNumber_t, dim, spacedim>(
-        [lqph_q_point](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde)
-        {
-          const SDNumber_t dPsi_vol_dJ = lqph_q_point->get_dPsi_vol_dJ(J_tilde);
-          const SDNumber_t dPsi_vol_dJ_minus_p_tilde = dPsi_vol_dJ - p_tilde;
-          return dPsi_vol_dJ_minus_p_tilde;
-        },
-        [](const SDNumber_t &p_tilde, const SDNumber_t &J_tilde)
-        {
-          // Due to our shortcut, we've not made the constitutive
-          // parameters symbolic.
-          return Differentiation::SD::types::substitution_map{};
-        },
-        [](const MeshWorker::ScratchData<dim, spacedim> &scratch_data,
-           const std::vector<SolutionExtractionData<dim, spacedim>>
-             &                solution_extraction_data,
-           const unsigned int q_point)
-        { return Differentiation::SD::types::substitution_map{}; },
-        optimizer_type,
-        optimization_flags,
-        UpdateFlags::update_default);
+    const auto residual_J = dPsi_vol_dJ - p_tilde;
 
     // Field variables: External force
     static const double p0 =
@@ -189,9 +151,10 @@ namespace Step44
     // Assembly
     MatrixBasedAssembler<dim> assembler;
     assembler +=
-      residual_form(residual_u).dV() +
+      residual_view_form<dim, spacedim>("R", "R", Grad_test_u, residual_u)
+        .dV() +
       residual_view_form<dim, spacedim>("R", "R", test_p, residual_p).dV() +
-      residual_form(residual_J).dV() -
+      residual_view_form<dim, spacedim>("R", "R", test_J, residual_J).dV() -
       linear_form(test_u, force_u).dA(traction_boundary_id);
 
     // Look at what we're going to compute
