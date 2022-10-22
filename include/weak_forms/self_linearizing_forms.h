@@ -2042,10 +2042,7 @@ namespace WeakForms
    *
    * \ingroup forms convenience_functions
    */
-  template <int dim,
-            int spacedim = dim,
-            typename TestSpaceOp,
-            typename CompositeSymbolicOp>
+  template <typename TestSpaceOp, typename CompositeSymbolicOp>
   auto
   residual_view_form(
     const std::string &                                   symbol_ascii,
@@ -2074,6 +2071,15 @@ namespace WeakForms
       internal::create_residual_functor_from_tuple(symbol_ascii,
                                                    symbol_latex,
                                                    subspace_field_solution_ops);
+
+    static_assert(CompositeSymbolicOp::dimension == TestSpaceOp::dimension,
+                  "Functor and test space dimensions not equal.");
+    static_assert(CompositeSymbolicOp::space_dimension ==
+                    TestSpaceOp::space_dimension,
+                  "Functor and test space space dimensions not equal.");
+
+    constexpr int dim      = TestSpaceOp::dimension;
+    constexpr int spacedim = TestSpaceOp::space_dimension;
 
     // Finally create the residual view form. The original functor is needed
     // in order to extract the substitution map for the variables other than the

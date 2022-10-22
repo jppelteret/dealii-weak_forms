@@ -92,8 +92,7 @@ Step6<dim>::assemble_system()
     { return 1.0; });
 
   MatrixBasedAssembler<dim> assembler;
-  assembler +=
-    residual_view_form<dim, spacedim>("R", "R", test_grad, residual).dV();
+  assembler += residual_view_form("R", "R", test_grad, residual).dV();
   assembler -= linear_form(test_val, rhs_coeff_func).dV(); // RHS contribution
 
   // Look at what we're going to compute

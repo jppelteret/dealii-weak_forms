@@ -84,9 +84,8 @@ Step8<dim>::assemble_system()
   const auto residual_u = double_contract<2, 0, 3, 1>(C, grad_u);
 
   MatrixBasedAssembler<dim> assembler;
-  assembler +=
-    residual_view_form<dim, spacedim>("R", "R", test_grad, residual_u).dV() -
-    linear_form(test_val, rhs_coeff.value(rhs)).dV();
+  assembler += residual_view_form("R", "R", test_grad, residual_u).dV() -
+               linear_form(test_val, rhs_coeff.value(rhs)).dV();
 
   // Look at what we're going to compute
   const SymbolicDecorations decorator;

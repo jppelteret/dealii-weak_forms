@@ -153,12 +153,10 @@ namespace Step44
 
     // Assembly
     MatrixBasedAssembler<dim> assembler(ad_sd_cache);
-    assembler +=
-      residual_view_form<dim, spacedim>("R", "R", Grad_test_u, residual_u)
-        .dV() +
-      residual_view_form<dim, spacedim>("R", "R", test_p, residual_p).dV() +
-      residual_view_form<dim, spacedim>("R", "R", test_J, residual_J).dV() -
-      linear_form(test_u, force_u).dA(traction_boundary_id);
+    assembler += residual_view_form("R", "R", Grad_test_u, residual_u).dV() +
+                 residual_view_form("R", "R", test_p, residual_p).dV() +
+                 residual_view_form("R", "R", test_J, residual_J).dV() -
+                 linear_form(test_u, force_u).dA(traction_boundary_id);
 
     // Look at what we're going to compute
     const SymbolicDecorations decorator;
