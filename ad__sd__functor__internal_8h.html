@@ -75,8 +75,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">ad_sd_functor_internal.h File Reference</div>  </div>
 </div><!--header-->
@@ -88,8 +87,8 @@ $(function() {
 <code>#include &lt;deal.II/differentiation/sd.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="differentiation_8h_source.html">weak_forms/differentiation.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="solution__extraction__data_8h_source.html">weak_forms/solution_extraction_data.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="spaces_8h_source.html">weak_forms/spaces.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="types_8h_source.html">weak_forms/types.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="utilities_8h_source.html">weak_forms/utilities.h</a>&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -123,14 +122,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1is__tuple_3_01std_1_1tuple_3_01T_8_8_8_01_4_01_4.html">WeakForms::Operators::internal::TemplateRestrictions::is_tuple&lt; std::tuple&lt; T... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1bool__pack.html">WeakForms::Operators::internal::TemplateRestrictions::bool_pack&lt;... &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1is__subspace__field__solution__op.html">WeakForms::Operators::internal::TemplateRestrictions::is_subspace_field_solution_op&lt; T, Us &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1is__subspace__field__solutio26f6d564c674342b400e198a2b2117a5.html">WeakForms::Operators::internal::TemplateRestrictions::is_subspace_field_solution_op&lt; WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType&lt; SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1is__subspace__field__solutioa67fe58bc7ba1be8e2786db2c1db661a.html">WeakForms::Operators::internal::TemplateRestrictions::is_subspace_field_solution_op&lt; WeakForms::Operators::SymbolicOp&lt; SubSpaceViewsType&lt; rank, SpaceType &gt;, OpCode, void, WeakForms::internal::SolutionIndex&lt; solution_index &gt; &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1is__subspace__field__solution__op_3_01T_01_4.html">WeakForms::Operators::internal::TemplateRestrictions::is_subspace_field_solution_op&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions_1_1EnforceIsSymbolicOpSubspaceFieldSolution.html">WeakForms::Operators::internal::TemplateRestrictions::EnforceIsSymbolicOpSubspaceFieldSolution&lt; FieldArgs &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,23 +157,6 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a0eaf9bdf747521a48c1d97b2a4776825"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
 <tr class="memitem:a0eaf9bdf747521a48c1d97b2a4776825"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal_1_1TemplateRestrictions.html#a0eaf9bdf747521a48c1d97b2a4776825">WeakForms::Operators::internal::TemplateRestrictions::are_not_tuples</a> = all_false&lt; is_tuple&lt; Ts &gt;::value... &gt;</td></tr>
 <tr class="separator:a0eaf9bdf747521a48c1d97b2a4776825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a7b415fbf98ad5e13dba7c2db5ddc4a9c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a7b415fbf98ad5e13dba7c2db5ddc4a9c">WeakForms::Operators::internal::replace_protected_characters</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:a7b415fbf98ad5e13dba7c2db5ddc4a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
-<tr class="memitem:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, Differentiation::SD::Expression &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#ad266e7e6cc930e68927f8c1ae0d28b9b">WeakForms::Operators::internal::make_symbolic</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:ad266e7e6cc930e68927f8c1ae0d28b9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af22e6d11d826dca740c9c0cf0565aabc"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
-<tr class="memitem:af22e6d11d826dca740c9c0cf0565aabc"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, Tensor&lt; ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression &gt; &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#af22e6d11d826dca740c9c0cf0565aabc">WeakForms::Operators::internal::make_symbolic</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:af22e6d11d826dca740c9c0cf0565aabc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18be18c5ff53acc94a39708098272283"><td class="memTemplParams" colspan="2">template&lt;typename ReturnType &gt; </td></tr>
-<tr class="memitem:a18be18c5ff53acc94a39708098272283"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; ReturnType, SymmetricTensor&lt; ReturnType::rank, ReturnType::dimension, Differentiation::SD::Expression &gt; &gt;::value, ReturnType &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a18be18c5ff53acc94a39708098272283">WeakForms::Operators::internal::make_symbolic</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:a18be18c5ff53acc94a39708098272283"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6621a54649e3960af8624e83c41abef1"><td class="memTemplParams" colspan="2">template&lt;typename ExpressionType , typename SymbolicOpField &gt; </td></tr>
-<tr class="memitem:a6621a54649e3960af8624e83c41abef1"><td class="memTemplItemLeft" align="right" valign="top">SymbolicOpField::template value_type&lt; ExpressionType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators_1_1internal.html#a6621a54649e3960af8624e83c41abef1">WeakForms::Operators::internal::make_symbolic</a> (const SymbolicOpField &amp;field, const SymbolicDecorations &amp;decorator)</td></tr>
-<tr class="separator:a6621a54649e3960af8624e83c41abef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

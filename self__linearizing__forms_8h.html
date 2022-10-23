@@ -88,6 +88,7 @@ $(function() {
 <code>#include &lt;<a class="el" href="energy__functor_8h_source.html">weak_forms/energy_functor.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="residual__functor_8h_source.html">weak_forms/residual_functor.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="linear__forms_8h_source.html">weak_forms/linear_forms.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="solution__extraction__data_8h_source.html">weak_forms/solution_extraction_data.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="subspace__extractors_8h_source.html">weak_forms/subspace_extractors.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="subspace__views_8h_source.html">weak_forms/subspace_views.h</a>&gt;</code><br />
@@ -101,6 +102,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1SelfLinearization_1_1internal_1_1DuplicatePreviousFieldSolutionOpHelper.html">WeakForms::SelfLinearization::internal::DuplicatePreviousFieldSolutionOpHelper</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html">WeakForms::SelfLinearization::EnergyFunctionalForm&lt; EnergyFunctor &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that represents a self-linearizing energy functional form.  <a href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,6 +117,10 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1SelfLinearization"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1SelfLinearization.html">WeakForms::SelfLinearization</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceWeakForms_1_1SelfLinearization_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1SelfLinearization_1_1internal.html">WeakForms::SelfLinearization::internal</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceWeakForms_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html">WeakForms::internal</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -125,6 +132,26 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="memTemplItemLeft" align="right" valign="top">SelfLinearization::ResidualViewForm&lt; ResidualViewFunctor &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#gaf5b46db70926d1eb681770d8fad1cbcb">WeakForms::residual_form</a> (const ResidualViewFunctor &amp;functor_op)</td></tr>
 <tr class="memdesc:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing residual form from a residual view functor.  <a href="group__convenience__functions.html#gaf5b46db70926d1eb681770d8fad1cbcb">More...</a><br /></td></tr>
 <tr class="separator:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc7c74672bdd07085467598ec5a2ca00"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:afc7c74672bdd07085467598ec5a2ca00"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#afc7c74672bdd07085467598ec5a2ca00">WeakForms::internal::create_energy_functor_from_tuple</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;subspace_field_solution_ops)</td></tr>
+<tr class="separator:afc7c74672bdd07085467598ec5a2ca00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e2b24d8d1f9be693210a10821b10b9"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a32e2b24d8d1f9be693210a10821b10b9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a32e2b24d8d1f9be693210a10821b10b9">WeakForms::internal::create_energy_functional_form_from_energy</a> (const EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;energy_functor, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="separator:a32e2b24d8d1f9be693210a10821b10b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df7240027c14c97fd7a2ee23200762e"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a0df7240027c14c97fd7a2ee23200762e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a0df7240027c14c97fd7a2ee23200762e">WeakForms::internal::create_residual_functor_from_tuple</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;subspace_field_solution_ops)</td></tr>
+<tr class="separator:a0df7240027c14c97fd7a2ee23200762e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename TestSpaceOp , typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a63b40f69ce3b0b0be1c480ae981b1765">WeakForms::internal::create_residual_view_form_from_residual</a> (const ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;residual_functor, const TestSpaceOp &amp;test_space_op, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="separator:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga657cb46699fa5d176e4246bb74525ae9"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp &gt; </td></tr>
+<tr class="memitem:ga657cb46699fa5d176e4246bb74525ae9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#ga657cb46699fa5d176e4246bb74525ae9">WeakForms::energy_functional_form</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="memdesc:ga657cb46699fa5d176e4246bb74525ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing energy functional form from a (composite) symbolic operation.  <a href="group__convenience__functions.html#ga657cb46699fa5d176e4246bb74525ae9">More...</a><br /></td></tr>
+<tr class="separator:ga657cb46699fa5d176e4246bb74525ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga736011eb95e82e8b27d2e272f7438e85"><td class="memTemplParams" colspan="2">template&lt;typename TestSpaceOp , typename CompositeSymbolicOp &gt; </td></tr>
+<tr class="memitem:ga736011eb95e82e8b27d2e272f7438e85"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">WeakForms::residual_view_form</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="memdesc:ga736011eb95e82e8b27d2e272f7438e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing residual view functional form from a (composite) symbolic operation.  <a href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">More...</a><br /></td></tr>
+<tr class="separator:ga736011eb95e82e8b27d2e272f7438e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

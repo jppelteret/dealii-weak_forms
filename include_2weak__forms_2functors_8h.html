@@ -93,6 +93,7 @@ $(function() {
 <code>#include &lt;deal.II/fe/fe_values.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="numbers_8h_source.html">weak_forms/numbers.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__decorations_8h_source.html">weak_forms/symbolic_decorations.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__operators_8h_source.html">weak_forms/symbolic_operators.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="types_8h_source.html">weak_forms/types.h</a>&gt;</code><br />
@@ -147,6 +148,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2weak__forms_2functors_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()</td></tr>
+<tr class="separator:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac22886ac18b7555134c82f9b7900e1cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2weak__forms_2functors_8h.html#ac22886ac18b7555134c82f9b7900e1cb">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL</a>()</td></tr>
+<tr class="separator:ac22886ac18b7555134c82f9b7900e1cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba07de337402ac7d0df091110c5f62aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2weak__forms_2functors_8h.html#aba07de337402ac7d0df091110c5f62aa">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL</a>()</td></tr>
+<tr class="separator:aba07de337402ac7d0df091110c5f62aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ef252645b6ac26323ef719a1eb37bc8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2weak__forms_2functors_8h.html#a1ef252645b6ac26323ef719a1eb37bc8">DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL</a>()</td></tr>
 <tr class="separator:a1ef252645b6ac26323ef719a1eb37bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9e6ceca83fa7d9b71e32179cf489be1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="include_2weak__forms_2functors_8h.html#ae9e6ceca83fa7d9b71e32179cf489be1">DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL</a>()</td></tr>
@@ -201,6 +208,119 @@ Functions</h2></td></tr>
 <tr class="separator:ga5de8c9d6bf9ce8ab1f30f169202855e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a10787085a3fe83d64a1f5753c3d7a7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10787085a3fe83d64a1f5753c3d7a7c4">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    value_type&lt;dealii::Differentiation::SD::Expression&gt; as_expression(         \</div>
+<div class="line">      <span class="keyword">const</span> <a class="code" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator = <a class="code" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a>()) const      \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return <a class="code" href="namespaceWeakForms_1_1Operators_1_1internal.html#ad266e7e6cc930e68927f8c1ae0d28b9b">WeakForms::Operators::internal::make_symbolic</a>&lt;                    \</div>
+<div class="line">        value_type&lt;dealii::Differentiation::SD::Expression&gt;&gt;(                  \</div>
+<div class="line">        this-&gt;as_ascii(decorator));                                            \</div>
+<div class="line">    }                                                                          \</div>
+<div class="line">                                                                               \</div>
+<div class="line">    Differentiation::SD::types::substitution_map get_symbol_registration_map() \</div>
+<div class="line">      const                                                                    \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return Differentiation::SD::make_symbol_map(this-&gt;as_expression());      \</div>
+<div class="line">    }                                                                          \</div>
+<div class="line">                                                                               \</div>
+<div class="line">    Differentiation::SD::types::substitution_map                               \</div>
+<div class="line">    get_intermediate_substitution_map() const                                  \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return Differentiation::SD::types::substitution_map{};                   \</div>
+<div class="line">    }</div>
+</div><!-- fragment --><p>A macro that performs a conversion of the functor to a symbolic expression type. </p>
+
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00601">601</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+
+</div>
+</div>
+<a id="ac22886ac18b7555134c82f9b7900e1cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac22886ac18b7555134c82f9b7900e1cb">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code" href="include_2weak__forms_2functors_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()                \</div>
+<div class="line">                                                                        \</div>
+<div class="line">    Differentiation::SD::types::substitution_map get_substitution_map(  \</div>
+<div class="line">      <span class="keyword">const</span> MeshWorker::ScratchData&lt;dim, spacedim&gt; &amp;scratch_data,       \</div>
+<div class="line">      <span class="keyword">const</span> std::vector&lt;<a class="code" href="structWeakForms_1_1SolutionExtractionData.html">SolutionExtractionData&lt;dim, spacedim&gt;</a>&gt;          \</div>
+<div class="line">        &amp;                solution_extraction_data,                      \</div>
+<div class="line">      <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> q_point) <span class="keyword">const</span>                                 \</div>
+<div class="line">    {                                                                   \</div>
+<div class="line">      (void)solution_extraction_data;                                   \</div>
+<div class="line">      const <span class="keyword">auto</span> &amp;fe_values = scratch_data.get_current_fe_values();     \</div>
+<div class="line">      using Result_t        = decltype(<span class="keyword">function</span>(fe_values, q_point));   \</div>
+<div class="line">      using ResultScalar_t =                                            \</div>
+<div class="line">        typename <a class="code" href="structWeakForms_1_1numbers_1_1UnderlyingScalar.html">numbers::UnderlyingScalar&lt;Result_t&gt;::scalar_type</a>;      \</div>
+<div class="line">      return Differentiation::SD::make_substitution_map(                \</div>
+<div class="line">        this-&gt;as_expression(),                                          \</div>
+<div class="line">        this-&gt;<span class="keyword">template</span> <span class="keyword">operator</span>()&lt;ResultScalar_t&gt;(fe_values, q_point)); \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00622">622</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+
+</div>
+</div>
+<a id="aba07de337402ac7d0df091110c5f62aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba07de337402ac7d0df091110c5f62aa">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code" href="include_2weak__forms_2functors_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()                 \</div>
+<div class="line">                                                                         \</div>
+<div class="line">    Differentiation::SD::types::substitution_map get_substitution_map(   \</div>
+<div class="line">      <span class="keyword">const</span> MeshWorker::ScratchData&lt;dim, spacedim&gt; &amp;scratch_data,        \</div>
+<div class="line">      <span class="keyword">const</span> std::vector&lt;<a class="code" href="structWeakForms_1_1SolutionExtractionData.html">SolutionExtractionData&lt;dim, spacedim&gt;</a>&gt;           \</div>
+<div class="line">        &amp;                solution_extraction_data,                       \</div>
+<div class="line">      <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> q_point) <span class="keyword">const</span>                                  \</div>
+<div class="line">    {                                                                    \</div>
+<div class="line">      (void)scratch_data;                                                \</div>
+<div class="line">      (void)solution_extraction_data;                                    \</div>
+<div class="line">      (void)q_point;                                                     \</div>
+<div class="line">      const <span class="keyword">auto</span> &amp;point = scratch_data.get_quadrature_points()[q_point]; \</div>
+<div class="line">      using Result_t    = decltype(function-&gt;value(point));              \</div>
+<div class="line">      using ResultScalar_t =                                             \</div>
+<div class="line">        typename <a class="code" href="structWeakForms_1_1numbers_1_1UnderlyingScalar.html">numbers::UnderlyingScalar&lt;Result_t&gt;::scalar_type</a>;       \</div>
+<div class="line">      return Differentiation::SD::make_substitution_map(                 \</div>
+<div class="line">        this-&gt;as_expression(),                                           \</div>
+<div class="line">        this-&gt;<span class="keyword">template</span> <span class="keyword">operator</span>()&lt;ResultScalar_t&gt;(point));               \</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00641">641</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+
+</div>
+</div>
 <a id="a1ef252645b6ac26323ef719a1eb37bc8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1ef252645b6ac26323ef719a1eb37bc8">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL</h2>
 
@@ -216,7 +336,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00596">596</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00678">678</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -235,7 +355,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00867">867</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00951">951</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -254,7 +374,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00986">986</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01072">1072</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -273,11 +393,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01024">1024</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01110">1110</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
+<div class="ttc" id="astructWeakForms_1_1SolutionExtractionData_html"><div class="ttname"><a href="structWeakForms_1_1SolutionExtractionData.html">WeakForms::SolutionExtractionData</a></div><div class="ttdoc">A class that facilitates the extraction of data from the field solution.</div><div class="ttdef"><b>Definition:</b> <a href="solution__extraction__data_8h_source.html#l00040">solution_extraction_data.h:40</a></div></div>
+<div class="ttc" id="astructWeakForms_1_1SymbolicDecorations_html"><div class="ttname"><a href="structWeakForms_1_1SymbolicDecorations.html">WeakForms::SymbolicDecorations</a></div><div class="ttdoc">A class whose purpose is to construct all decorations for symbols required for ASCII and LaTeX output...</div><div class="ttdef"><b>Definition:</b> <a href="symbolic__decorations_8h_source.html#l00322">symbolic_decorations.h:322</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_1_1Operators_1_1internal_html_ad266e7e6cc930e68927f8c1ae0d28b9b"><div class="ttname"><a href="namespaceWeakForms_1_1Operators_1_1internal.html#ad266e7e6cc930e68927f8c1ae0d28b9b">WeakForms::Operators::internal::make_symbolic</a></div><div class="ttdeci">std::enable_if&lt; std::is_same&lt; ReturnType, Differentiation::SD::Expression &gt;::value, ReturnType &gt;::type make_symbolic(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> <a href="sd__expression__internal_8h_source.html#l00084">sd_expression_internal.h:84</a></div></div>
+<div class="ttc" id="astructWeakForms_1_1numbers_1_1UnderlyingScalar_html"><div class="ttname"><a href="structWeakForms_1_1numbers_1_1UnderlyingScalar.html">WeakForms::numbers::UnderlyingScalar</a></div><div class="ttdef"><b>Definition:</b> <a href="numbers_8h_source.html#l00046">numbers.h:46</a></div></div>
+<div class="ttc" id="ainclude_2weak__forms_2functors_8h_html_a10787085a3fe83d64a1f5753c3d7a7c4"><div class="ttname"><a href="include_2weak__forms_2functors_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a></div><div class="ttdeci">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()</div><div class="ttdef"><b>Definition:</b> <a href="include_2weak__forms_2functors_8h_source.html#l00601">functors.h:601</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

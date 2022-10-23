@@ -168,6 +168,14 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualViewForm.html">SelfLinearization::ResidualViewForm</a>&lt; <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#gaf5b46db70926d1eb681770d8fad1cbcb">WeakForms::residual_form</a> (const <a class="el" href="classWeakForms_1_1ResidualViewFunctor.html">ResidualViewFunctor</a> &amp;functor_op)</td></tr>
 <tr class="memdesc:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing residual form from a residual view functor.  <a href="group__convenience__functions.html#gaf5b46db70926d1eb681770d8fad1cbcb">More...</a><br /></td></tr>
 <tr class="separator:gaf5b46db70926d1eb681770d8fad1cbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga657cb46699fa5d176e4246bb74525ae9"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp &gt; </td></tr>
+<tr class="memitem:ga657cb46699fa5d176e4246bb74525ae9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#ga657cb46699fa5d176e4246bb74525ae9">WeakForms::energy_functional_form</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="memdesc:ga657cb46699fa5d176e4246bb74525ae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing energy functional form from a (composite) symbolic operation.  <a href="group__convenience__functions.html#ga657cb46699fa5d176e4246bb74525ae9">More...</a><br /></td></tr>
+<tr class="separator:ga657cb46699fa5d176e4246bb74525ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga736011eb95e82e8b27d2e272f7438e85"><td class="memTemplParams" colspan="2">template&lt;typename TestSpaceOp , typename CompositeSymbolicOp &gt; </td></tr>
+<tr class="memitem:ga736011eb95e82e8b27d2e272f7438e85"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">WeakForms::residual_view_form</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="memdesc:ga736011eb95e82e8b27d2e272f7438e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that generates a self-linearizing residual view functional form from a (composite) symbolic operation.  <a href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">More...</a><br /></td></tr>
+<tr class="separator:ga736011eb95e82e8b27d2e272f7438e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga892dd380ef93823647570cdfb03d98db"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType  = double, typename Integrand , typename IntegralType , typename  = typename std::enable_if&lt;is_valid_integration_domain&lt;              typename std::decay&lt;IntegralType&gt;::type&gt;::value&gt;::type&gt; </td></tr>
 <tr class="memitem:ga892dd380ef93823647570cdfb03d98db"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__convenience__functions.html#ga892dd380ef93823647570cdfb03d98db">WeakForms::integrate</a> (const Integrand &amp;integrand, const IntegralType &amp;integral)</td></tr>
 <tr class="memdesc:ga892dd380ef93823647570cdfb03d98db"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience function that returns an operator that represents an integral operation.  <a href="group__convenience__functions.html#ga892dd380ef93823647570cdfb03d98db">More...</a><br /></td></tr>
@@ -519,7 +527,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00466">466</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00474">474</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -579,7 +587,7 @@ template&lt;int dim, int spacedim = dim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1ScalarFunctor.html" title="A functor that returns scalar values upon evaluation.">ScalarFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01363">1363</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01453">1453</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -620,7 +628,7 @@ template&lt;int dim, int spacedim = dim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1ScalarFunctor.html" title="A functor that returns scalar values upon evaluation.">ScalarFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01400">1400</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01490">1490</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -680,7 +688,7 @@ template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1TensorFunctor.html" title="A functor that returns a tensor upon evaluation.">TensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01435">1435</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01525">1525</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -722,7 +730,7 @@ template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1TensorFunctor.html" title="A functor that returns a tensor upon evaluation.">TensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01474">1474</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01564">1564</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -781,7 +789,7 @@ template&lt;int dim, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a rank-1 <a class="el" href="classWeakForms_1_1TensorFunctor.html" title="A functor that returns a tensor upon evaluation.">TensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01509">1509</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01599">1599</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -822,7 +830,7 @@ template&lt;int dim, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a rank-1 <a class="el" href="classWeakForms_1_1TensorFunctor.html" title="A functor that returns a tensor upon evaluation.">TensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01541">1541</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01631">1631</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -883,7 +891,7 @@ template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1SymmetricTensorFunctor.html" title="A functor that returns a symmetric tensor upon evaluation.">SymmetricTensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01574">1574</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01664">1664</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -925,7 +933,7 @@ template&lt;int dim, int rank, int spacedim, typename ScalarType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>auto Returns a symbolic operator based on a <a class="el" href="classWeakForms_1_1SymmetricTensorFunctor.html" title="A functor that returns a symmetric tensor upon evaluation.">SymmetricTensorFunctor</a>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01615">1615</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l01705">1705</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -1191,7 +1199,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00647">647</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00655">655</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1269,12 +1277,12 @@ template&lt;typename TestSpaceOp , typename... SymbolicOpsSubSpaceFieldSolution&
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00697">697</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="residual__functor_8h_source.html#l00705">705</a> of file <a class="el" href="residual__functor_8h_source.html">residual_functor.h</a>.</p>
 
 </div>
 </div>
 <a id="ga2494242b5c1af1c342c90047385bb2f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2494242b5c1af1c342c90047385bb2f5">&#9670;&nbsp;</a></span>energy_functional_form()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2494242b5c1af1c342c90047385bb2f5">&#9670;&nbsp;</a></span>energy_functional_form() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1307,7 +1315,7 @@ template&lt;typename EnergyFunctor , typename  = typename std::enable_if&lt;    
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::EnergyFunctionalForm&lt;EnergyFunctor&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01541">1541</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01709">1709</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1345,7 +1353,159 @@ template&lt;typename ResidualViewFunctor , typename  = typename std::enable_if&l
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::ResidualViewForm&lt;ResidualViewFunctor&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01570">1570</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01738">1738</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ga657cb46699fa5d176e4246bb74525ae9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga657cb46699fa5d176e4246bb74525ae9">&#9670;&nbsp;</a></span>energy_functional_form() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::energy_functional_form </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_latex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CompositeSymbolicOp &amp;&#160;</td>
+          <td class="paramname"><em>functor_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizerType&#160;</td>
+          <td class="paramname"><em>optimization_method</em> = <code>dealii::Differentiation::SD::OptimizerType::llvm</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizationFlags&#160;</td>
+          <td class="paramname"><em>optimization_flags</em> = <code>dealii::Differentiation::SD::OptimizationFlags::optimize_default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A convenience function that generates a self-linearizing energy functional form from a (composite) symbolic operation. </p>
+<p>This variant extracts a symbolic (in the sense of being symbolically differentiable) representation from the input functor, which is later differentiated and converted into linear and bilinear forms.</p>
+<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html" title="A class that represents a self-linearizing energy functional form.">SelfLinearization::EnergyFunctionalForm</a> class.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the energy is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the energy is being evaluated. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">symbol_ascii</td><td>The ASCII representation of the value. </td></tr>
+    <tr><td class="paramname">symbol_latex</td><td>The LaTeX representation of the value. </td></tr>
+    <tr><td class="paramname">functor_op</td><td>A composite symbolic function, representing an energy, that is to be linearized. </td></tr>
+    <tr><td class="paramname">optimization_method</td><td>The optimization method that is to be employed. By default, the LLVM optimizer is chosen. </td></tr>
+    <tr><td class="paramname">optimization_flags</td><td>The optimization flags that indicate which expression manipulation mechanisms are to be employed. By default, no further optimizations are to be performed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>SelfLinearization::EnergyFunctionalForm&lt;EnergyFunctor&gt; backed by local symbolic differentiation. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01974">1974</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="ga736011eb95e82e8b27d2e272f7438e85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga736011eb95e82e8b27d2e272f7438e85">&#9670;&nbsp;</a></span>residual_view_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename TestSpaceOp , typename CompositeSymbolicOp &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::residual_view_form </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_latex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TestSpaceOp &amp;&#160;</td>
+          <td class="paramname"><em>test_space_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CompositeSymbolicOp &amp;&#160;</td>
+          <td class="paramname"><em>functor_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizerType&#160;</td>
+          <td class="paramname"><em>optimization_method</em> = <code>dealii::Differentiation::SD::OptimizerType::llvm</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizationFlags&#160;</td>
+          <td class="paramname"><em>optimization_flags</em> = <code>dealii::Differentiation::SD::OptimizationFlags::optimize_default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A convenience function that generates a self-linearizing residual view functional form from a (composite) symbolic operation. </p>
+<p>This variant extracts a symbolic (in the sense of being symbolically differentiable) representation from the input functor, which is later differentiated and converted into linear and bilinear forms.</p>
+<p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualViewForm.html" title="A class that represents a self-linearizing residual (view) form.">SelfLinearization::ResidualViewForm</a> class.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The dimension in which the energy is being evaluated. </td></tr>
+    <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the energy is being evaluated. </td></tr>
+    <tr><td class="paramname">TestSpaceOp</td><td>A symbolic operator that represents a test function (test space) operation. It may exactly represent the test function or a view into a multi-component test function (or some differential operation involving either of these), or some more complex operation (e.g. a unary, binary or composite operation) that involves a test function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">symbol_ascii</td><td>The ASCII representation of the value. </td></tr>
+    <tr><td class="paramname">symbol_latex</td><td>The LaTeX representation of the value. </td></tr>
+    <tr><td class="paramname">test_space_op</td><td>A symbolic operation that represents some test function (or a derivative thereof). </td></tr>
+    <tr><td class="paramname">functor_op</td><td>A composite symbolic function, representing an energy, that is to be linearized. </td></tr>
+    <tr><td class="paramname">optimization_method</td><td>The optimization method that is to be employed. By default, the LLVM optimizer is chosen. </td></tr>
+    <tr><td class="paramname">optimization_flags</td><td>The optimization flags that indicate which expression manipulation mechanisms are to be employed. By default, no further optimizations are to be performed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>SelfLinearization::ResidualViewForm&lt;ResidualViewFunctor&gt; backed by local symbolic differentiation. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l02047">2047</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1392,10 +1552,10 @@ template&lt;typename ScalarType  = double, typename Integrand , typename Integra
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="agroup__convenience__functions_html_ga7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00466">energy_functor.h:466</a></div></div>
-<div class="ttc" id="agroup__convenience__functions_html_gad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="group__convenience__functions.html#gad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00647">residual_functor.h:647</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_ga7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00474">energy_functor.h:474</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_gad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="group__convenience__functions.html#gad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00655">residual_functor.h:655</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1SubSpaceExtractors_1_1Scalar_html"><div class="ttname"><a href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a></div><div class="ttdoc">An object that can be used to extract a scalar subspace from a global finite element space.</div><div class="ttdef"><b>Definition:</b> <a href="subspace__extractors_8h_source.html#l00044">subspace_extractors.h:44</a></div></div>
-<div class="ttc" id="agroup__convenience__functions_html_gaf1d11b9bc21b0f17dac3f1b2595e135b"><div class="ttname"><a href="group__convenience__functions.html#gaf1d11b9bc21b0f17dac3f1b2595e135b">WeakForms::residual_view_functor</a></div><div class="ttdeci">ResidualViewFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_view_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualViewFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00697">residual_functor.h:697</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_gaf1d11b9bc21b0f17dac3f1b2595e135b"><div class="ttname"><a href="group__convenience__functions.html#gaf1d11b9bc21b0f17dac3f1b2595e135b">WeakForms::residual_view_functor</a></div><div class="ttdeci">ResidualViewFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_view_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualViewFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00705">residual_functor.h:705</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

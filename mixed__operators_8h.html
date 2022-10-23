@@ -302,17 +302,19 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> LhsOp,                                                  \</div>
 <div class="line">            typename RhsOp,                                                  \</div>
-<div class="line">            enum <a class="code" href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becd">WeakForms::Operators::BinaryOpCodes</a> OpCode&gt;                 \</div>
+<div class="line">            enum <a class="code" href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becd">WeakForms::Operators::BinaryOpCodes</a> OpCode,                 \</div>
+<div class="line">            typename... OpArgs&gt;                                              \</div>
 <div class="line">  WeakForms::Operators::UnaryOp&lt;                                             \</div>
-<div class="line">    WeakForms::Operators::BinaryOp&lt;LhsOp, RhsOp, OpCode&gt;,                    \</div>
+<div class="line">    WeakForms::Operators::BinaryOp&lt;LhsOp, RhsOp, OpCode, OpArgs...&gt;,         \</div>
 <div class="line">    WeakForms::Operators::UnaryOpCodes::unary_op_code&gt;                       \</div>
 <div class="line">  operator_name(                                                             \</div>
-<div class="line">    <span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Operators_1_1BinaryOp.html">WeakForms::Operators::BinaryOp&lt;LhsOp, RhsOp, OpCode&gt;</a> &amp;operand)     \</div>
+<div class="line">    <span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Operators_1_1BinaryOp.html">WeakForms::Operators::BinaryOp&lt;LhsOp, RhsOp, OpCode, OpArgs...&gt;</a>    \</div>
+<div class="line">      &amp;operand)                                                              \</div>
 <div class="line">  {                                                                          \</div>
 <div class="line">    using <span class="keyword">namespace </span><a class="code" href="namespaceWeakForms.html">WeakForms</a>;                                               \</div>
 <div class="line">    using <span class="keyword">namespace </span><a class="code" href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a>;                                    \</div>
 <div class="line">                                                                             \</div>
-<div class="line">    using BinaryOpType = BinaryOp&lt;LhsOp, RhsOp, OpCode&gt;;                     \</div>
+<div class="line">    using BinaryOpType = BinaryOp&lt;LhsOp, RhsOp, OpCode, OpArgs...&gt;;          \</div>
 <div class="line">    using OpType       = UnaryOp&lt;BinaryOpType, UnaryOpCodes::unary_op_code&gt;; \</div>
 <div class="line">                                                                             \</div>
 <div class="line">    return OpType(operand);                                                  \</div>
@@ -349,7 +351,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Variant 1: LHS operand: Symbolic op ; RHS operand: Symbolic op Variant 2: LHS operand: Symbolic op ; RHS operand: Binary op Variant 3: LHS operand: Binary op ; RHS operand: Symbolic op </p>
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00171">171</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00173">173</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -482,7 +484,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Variant 1: LHS operand: Unary op ; RHS operand: Unary op Variant 2: LHS operand: Unary op ; RHS operand: Binary op Variant 3: LHS operand: Binary op ; RHS operand: Unary op </p>
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00444">444</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00455">455</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -615,7 +617,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Variant 1: LHS operand: Symbolic op ; RHS operand: Unary op Variant 2: LHS operand: Unary op ; RHS operand: Symbolic op </p>
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00693">693</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l00735">735</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -706,7 +708,7 @@ template&lt;typename ScalarType , typename SymbolicOp , typename  = typename std
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01255">1255</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01302">1302</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -738,7 +740,7 @@ template&lt;typename ScalarType , typename SymbolicOp , typename  = typename std
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01271">1271</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01318">1318</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -770,7 +772,7 @@ template&lt;int spacedim, typename ScalarType , typename SymbolicOp , typename  
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01287">1287</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01334">1334</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
@@ -802,19 +804,19 @@ template&lt;int spacedim, typename ScalarType , typename SymbolicOp , typename  
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01304">1304</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="mixed__operators_8h_source.html#l01351">1351</a> of file <a class="el" href="mixed__operators_8h_source.html">mixed_operators.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="anamespaceWeakForms_1_1Operators_html_ac7aa0e09e52fd8dc6c825efb1ea6becd"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becd">WeakForms::Operators::BinaryOpCodes</a></div><div class="ttdeci">BinaryOpCodes</div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00055">binary_operators.h:55</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_1_1Operators_html_ac7aa0e09e52fd8dc6c825efb1ea6becd"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becd">WeakForms::Operators::BinaryOpCodes</a></div><div class="ttdeci">BinaryOpCodes</div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00056">binary_operators.h:56</a></div></div>
 <div class="ttc" id="amixed__operators_8h_html_aa2f49001be13949a16a57e6c99ab00ad"><div class="ttname"><a href="mixed__operators_8h.html#aa2f49001be13949a16a57e6c99ab00ad">COMMA</a></div><div class="ttdeci">#define COMMA</div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_html"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00046">ad_sd_functor_internal.h:46</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html"><div class="ttname"><a href="namespaceWeakForms.html">WeakForms</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__cache_8h_source.html#l00038">ad_sd_functor_cache.h:38</a></div></div>
-<div class="ttc" id="aclassWeakForms_1_1Operators_1_1BinaryOp_html"><div class="ttname"><a href="classWeakForms_1_1Operators_1_1BinaryOp.html">WeakForms::Operators::BinaryOp</a></div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00177">binary_operators.h:177</a></div></div>
+<div class="ttc" id="aclassWeakForms_1_1Operators_1_1BinaryOp_html"><div class="ttname"><a href="classWeakForms_1_1Operators_1_1BinaryOp.html">WeakForms::Operators::BinaryOp</a></div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00178">binary_operators.h:178</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1Operators_1_1SymbolicOp_html"><div class="ttname"><a href="classWeakForms_1_1Operators_1_1SymbolicOp.html">WeakForms::Operators::SymbolicOp</a></div><div class="ttdef"><b>Definition:</b> <a href="symbolic__operators_8h_source.html#l00131">symbolic_operators.h:131</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_html_aec4fa4a0321d7d1b75b1dd94ae07a48b"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48b">WeakForms::Operators::SymbolicOpCodes</a></div><div class="ttdeci">SymbolicOpCodes</div><div class="ttdef"><b>Definition:</b> <a href="symbolic__operators_8h_source.html#l00037">symbolic_operators.h:37</a></div></div>
-<div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1FourIndexPack_html"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1FourIndexPack.html">WeakForms::Operators::internal::FourIndexPack</a></div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00439">binary_operators.h:439</a></div></div>
+<div class="ttc" id="astructWeakForms_1_1Operators_1_1internal_1_1FourIndexPack_html"><div class="ttname"><a href="structWeakForms_1_1Operators_1_1internal_1_1FourIndexPack.html">WeakForms::Operators::internal::FourIndexPack</a></div><div class="ttdef"><b>Definition:</b> <a href="binary__operators_8h_source.html#l00440">binary_operators.h:440</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

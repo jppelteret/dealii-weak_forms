@@ -91,6 +91,7 @@ $(function() {
 <code>#include &lt;<a class="el" href="numbers_8h_source.html">weak_forms/numbers.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="operator__evaluators_8h_source.html">weak_forms/operator_evaluators.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="operator__utilities_8h_source.html">weak_forms/operator_utilities.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="solution__extraction__data_8h_source.html">weak_forms/solution_extraction_data.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__decorations_8h_source.html">weak_forms/symbolic_decorations.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__operators_8h_source.html">weak_forms/symbolic_operators.h</a>&gt;</code><br />
@@ -201,6 +202,8 @@ Namespaces</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a1c54166dc7865d883cc2a7a874e4fd34"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unary__operators_8h.html#a1c54166dc7865d883cc2a7a874e4fd34">DEAL_II_UNARY_OP_TYPE_TRAITS_COMMON_IMPL</a>(Op)</td></tr>
 <tr class="separator:a1c54166dc7865d883cc2a7a874e4fd34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unary__operators_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()</td></tr>
+<tr class="separator:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45531591165b3215517e9a638805f0f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unary__operators_8h.html#a45531591165b3215517e9a638805f0f3">DEAL_II_UNARY_OP_COMMON_IMPL</a>(Op,  UnaryOpCode)</td></tr>
 <tr class="separator:a45531591165b3215517e9a638805f0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c8d551727c50320006b11ce563b8a95"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unary__operators_8h.html#a9c8d551727c50320006b11ce563b8a95">DEAL_II_UNARY_OP_OF_UNARY_OP</a>(operator_name,  unary_op_code)</td></tr>
@@ -315,7 +318,56 @@ Functions</h2></td></tr>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>This should used at the very end of the class definition, as the <code>return_type</code> relies on the <code>value_type</code> to be defined. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l00389">389</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l00411">411</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
+
+</div>
+</div>
+<a id="a10787085a3fe83d64a1f5753c3d7a7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10787085a3fe83d64a1f5753c3d7a7c4">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    value_type&lt;dealii::Differentiation::SD::Expression&gt; as_expression(         \</div>
+<div class="line">      <span class="keyword">const</span> SymbolicDecorations &amp;decorator = SymbolicDecorations()) const      \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return derived                                                           \</div>
+<div class="line">        .template operator()&lt;dealii::Differentiation::SD::Expression&gt;(         \</div>
+<div class="line">          derived.get_operand().as_expression(decorator));                     \</div>
+<div class="line">    }                                                                          \</div>
+<div class="line">                                                                               \</div>
+<div class="line">    Differentiation::SD::types::substitution_map get_symbol_registration_map() \</div>
+<div class="line">      const                                                                    \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return derived.get_operand().get_symbol_registration_map();              \</div>
+<div class="line">    }                                                                          \</div>
+<div class="line">                                                                               \</div>
+<div class="line">    Differentiation::SD::types::substitution_map                               \</div>
+<div class="line">    get_intermediate_substitution_map() const                                  \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return derived.get_operand().get_intermediate_substitution_map();        \</div>
+<div class="line">    }                                                                          \</div>
+<div class="line">                                                                               \</div>
+<div class="line">    Differentiation::SD::types::substitution_map get_substitution_map(         \</div>
+<div class="line">      <span class="keyword">const</span> MeshWorker::ScratchData&lt;dimension, space_dimension&gt; &amp;scratch_data, \</div>
+<div class="line">      <span class="keyword">const</span> std::vector&lt;SolutionExtractionData&lt;dimension, space_dimension&gt;&gt;    \</div>
+<div class="line">        &amp;                solution_extraction_data,                             \</div>
+<div class="line">      <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> q_point) <span class="keyword">const</span>                                        \</div>
+<div class="line">    {                                                                          \</div>
+<div class="line">      return derived.get_operand().get_substitution_map(                       \</div>
+<div class="line">        scratch_data, solution_extraction_data, q_point);                      \</div>
+<div class="line">    }</div>
+</div><!-- fragment --><p>A macro that performs a conversion of the functor to a symbolic expression type. </p>
+
+<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l00805">805</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
 
 </div>
 </div>
@@ -352,7 +404,7 @@ Functions</h2></td></tr>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>It is intended that this should used immediately after class definition is opened. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l01130">1130</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l01201">1201</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
 
 </div>
 </div>
@@ -381,27 +433,31 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Op, enum WeakForms::Operators::UnaryOpCodes OpCode&gt;   \</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Op,                                                   \</div>
+<div class="line">            enum <a class="code" href="namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2">WeakForms::Operators::UnaryOpCodes</a> OpCode,                \</div>
+<div class="line">            typename... OpArgs&gt;                                            \</div>
 <div class="line">  WeakForms::Operators::UnaryOp&lt;                                           \</div>
-<div class="line">    WeakForms::Operators::UnaryOp&lt;Op, OpCode&gt;,                             \</div>
+<div class="line">    WeakForms::Operators::UnaryOp&lt;Op, OpCode, OpArgs...&gt;,                  \</div>
 <div class="line">    WeakForms::Operators::UnaryOpCodes::unary_op_code&gt;                     \</div>
-<div class="line">  operator_name(<span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Operators_1_1UnaryOp.html">WeakForms::Operators::UnaryOp&lt;Op, OpCode&gt;</a> &amp;operand)  \</div>
+<div class="line">  operator_name(                                                           \</div>
+<div class="line">    <span class="keyword">const</span> <a class="code" href="classWeakForms_1_1Operators_1_1UnaryOp.html">WeakForms::Operators::UnaryOp&lt;Op, OpCode, OpArgs...&gt;</a> &amp;operand)   \</div>
 <div class="line">  {                                                                        \</div>
 <div class="line">    using <span class="keyword">namespace </span><a class="code" href="namespaceWeakForms.html">WeakForms</a>;                                             \</div>
 <div class="line">    using <span class="keyword">namespace </span><a class="code" href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a>;                                  \</div>
 <div class="line">                                                                           \</div>
-<div class="line">    using UnaryOpType = UnaryOp&lt;Op, OpCode&gt;;                               \</div>
+<div class="line">    using UnaryOpType = UnaryOp&lt;Op, OpCode, OpArgs...&gt;;                    \</div>
 <div class="line">    using OpType      = UnaryOp&lt;UnaryOpType, UnaryOpCodes::unary_op_code&gt;; \</div>
 <div class="line">                                                                           \</div>
 <div class="line">    return OpType(operand);                                                \</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l02175">2175</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="unary__operators_8h_source.html#l02247">2247</a> of file <a class="el" href="unary__operators_8h_source.html">unary_operators.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="aclassWeakForms_1_1Operators_1_1UnaryOp_html"><div class="ttname"><a href="classWeakForms_1_1Operators_1_1UnaryOp.html">WeakForms::Operators::UnaryOp</a></div><div class="ttdef"><b>Definition:</b> <a href="unary__operators_8h_source.html#l00189">unary_operators.h:189</a></div></div>
+<div class="ttc" id="anamespaceWeakForms_1_1Operators_html_af21ff9d8156a07bbc628cf371222eba2"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2">WeakForms::Operators::UnaryOpCodes</a></div><div class="ttdeci">UnaryOpCodes</div><div class="ttdef"><b>Definition:</b> <a href="unary__operators_8h_source.html#l00050">unary_operators.h:50</a></div></div>
+<div class="ttc" id="aclassWeakForms_1_1Operators_1_1UnaryOp_html"><div class="ttname"><a href="classWeakForms_1_1Operators_1_1UnaryOp.html">WeakForms::Operators::UnaryOp</a></div><div class="ttdef"><b>Definition:</b> <a href="unary__operators_8h_source.html#l00190">unary_operators.h:190</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_1_1Operators_html"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__internal_8h_source.html#l00046">ad_sd_functor_internal.h:46</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html"><div class="ttname"><a href="namespaceWeakForms.html">WeakForms</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__cache_8h_source.html#l00038">ad_sd_functor_cache.h:38</a></div></div>
 <!-- start footer part -->

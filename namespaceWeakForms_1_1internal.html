@@ -350,6 +350,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a7f2fce29a62f102fa60a4b44696b1a84"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType , std::size_t width, typename FunctorType , typename FEValuesType , int dim, int spacedim&gt; </td></tr>
 <tr class="memitem:a7f2fce29a62f102fa60a4b44696b1a84"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; WeakForms::is_or_has_evaluated_with_scratch_data&lt; FunctorType &gt;::value &amp;&amp;(<a class="el" href="structWeakForms_1_1is__unary__op.html">WeakForms::is_unary_op</a>&lt; FunctorType &gt;::value||<a class="el" href="structWeakForms_1_1is__binary__op.html">WeakForms::is_binary_op</a>&lt; FunctorType &gt;::value), typename FunctorType::template vectorized_value_type&lt; ScalarType, width &gt; &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a7f2fce29a62f102fa60a4b44696b1a84">evaluate_functor</a> (const FunctorType &amp;functor, const FEValuesType &amp;fe_values, MeshWorker::ScratchData&lt; dim, spacedim &gt; &amp;scratch_data, const std::vector&lt; <a class="el" href="structWeakForms_1_1SolutionExtractionData.html">SolutionExtractionData</a>&lt; dim, spacedim &gt;&gt; &amp;solution_extraction_data, const <a class="el" href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">types::vectorized_qp_range_t</a> &amp;q_point_range)</td></tr>
 <tr class="separator:a7f2fce29a62f102fa60a4b44696b1a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc7c74672bdd07085467598ec5a2ca00"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:afc7c74672bdd07085467598ec5a2ca00"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#afc7c74672bdd07085467598ec5a2ca00">create_energy_functor_from_tuple</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;subspace_field_solution_ops)</td></tr>
+<tr class="separator:afc7c74672bdd07085467598ec5a2ca00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e2b24d8d1f9be693210a10821b10b9"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a32e2b24d8d1f9be693210a10821b10b9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a32e2b24d8d1f9be693210a10821b10b9">create_energy_functional_form_from_energy</a> (const <a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;<a class="el" href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">energy_functor</a>, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="separator:a32e2b24d8d1f9be693210a10821b10b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df7240027c14c97fd7a2ee23200762e"><td class="memTemplParams" colspan="2">template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a0df7240027c14c97fd7a2ee23200762e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a0df7240027c14c97fd7a2ee23200762e">create_residual_functor_from_tuple</a> (const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;subspace_field_solution_ops)</td></tr>
+<tr class="separator:a0df7240027c14c97fd7a2ee23200762e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memTemplParams" colspan="2">template&lt;int dim, int spacedim = dim, typename TestSpaceOp , typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </td></tr>
+<tr class="memitem:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#a63b40f69ce3b0b0be1c480ae981b1765">create_residual_view_form_from_residual</a> (const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;<a class="el" href="group__convenience__functions.html#gad1b1f385584348c61cedf4a1092de1fc">residual_functor</a>, const TestSpaceOp &amp;test_space_op, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</td></tr>
+<tr class="separator:a63b40f69ce3b0b0be1c480ae981b1765"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafec65d64f47d377fdb3c7f7115d1e1d"><td class="memTemplParams" colspan="2">template&lt;typename FEValuesType , typename DoFHandlerType , typename VectorType , typename SSDType , int dim, int spacedim&gt; </td></tr>
 <tr class="memitem:aafec65d64f47d377fdb3c7f7115d1e1d"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if&lt; std::is_same&lt; typename std::decay&lt; VectorType &gt;::type, std::nullptr_t &gt;::value &gt;::type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html#aafec65d64f47d377fdb3c7f7115d1e1d">initialize</a> (MeshWorker::ScratchData&lt; dim, spacedim &gt; &amp;scratch_data, const FEValuesType &amp;fe_values, const DoFHandlerType &amp;dof_handler, const <a class="el" href="classWeakForms_1_1SolutionStorage.html">SolutionStorage</a>&lt; VectorType, SSDType &gt; &amp;solution_storage)</td></tr>
 <tr class="separator:aafec65d64f47d377fdb3c7f7115d1e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3138,6 +3150,176 @@ template&lt;typename ScalarType , std::size_t width, typename FunctorType , type
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="operator__evaluators_8h_source.html#l01813">1813</a> of file <a class="el" href="operator__evaluators_8h_source.html">operator_evaluators.h</a>.</p>
+
+</div>
+</div>
+<a id="afc7c74672bdd07085467598ec5a2ca00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc7c74672bdd07085467598ec5a2ca00">&#9670;&nbsp;</a></span>create_energy_functor_from_tuple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::internal::create_energy_functor_from_tuple </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_latex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;&#160;</td>
+          <td class="paramname"><em>subspace_field_solution_ops</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01751">1751</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a32e2b24d8d1f9be693210a10821b10b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32e2b24d8d1f9be693210a10821b10b9">&#9670;&nbsp;</a></span>create_energy_functional_form_from_energy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::internal::create_energy_functional_form_from_energy </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;&#160;</td>
+          <td class="paramname"><em>energy_functor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CompositeSymbolicOp &amp;&#160;</td>
+          <td class="paramname"><em>functor_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizerType&#160;</td>
+          <td class="paramname"><em>optimization_method</em> = <code>dealii::Differentiation::SD::OptimizerType::llvm</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizationFlags&#160;</td>
+          <td class="paramname"><em>optimization_flags</em> = <code>dealii::Differentiation::SD::OptimizationFlags::optimize_default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01767">1767</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a0df7240027c14c97fd7a2ee23200762e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0df7240027c14c97fd7a2ee23200762e">&#9670;&nbsp;</a></span>create_residual_functor_from_tuple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::internal::create_residual_functor_from_tuple </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_latex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;&#160;</td>
+          <td class="paramname"><em>subspace_field_solution_ops</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01846">1846</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+
+</div>
+</div>
+<a id="a63b40f69ce3b0b0be1c480ae981b1765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63b40f69ce3b0b0be1c480ae981b1765">&#9670;&nbsp;</a></span>create_residual_view_form_from_residual()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, int spacedim = dim, typename TestSpaceOp , typename CompositeSymbolicOp , typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto WeakForms::internal::create_residual_view_form_from_residual </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classWeakForms_1_1ResidualFunctor.html">ResidualFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;&#160;</td>
+          <td class="paramname"><em>residual_functor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TestSpaceOp &amp;&#160;</td>
+          <td class="paramname"><em>test_space_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CompositeSymbolicOp &amp;&#160;</td>
+          <td class="paramname"><em>functor_op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizerType&#160;</td>
+          <td class="paramname"><em>optimization_method</em> = <code>dealii::Differentiation::SD::OptimizerType::llvm</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const enum dealii::Differentiation::SD::OptimizationFlags&#160;</td>
+          <td class="paramname"><em>optimization_flags</em> = <code>dealii::Differentiation::SD::OptimizationFlags::optimize_default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01863">1863</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>

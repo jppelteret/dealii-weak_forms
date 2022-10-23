@@ -344,6 +344,12 @@ $(function() {
 <li>get_subdomains()
 : <a class="el" href="classWeakForms_1_1Integral.html#abb6e0f8bada38350ca3bfdac8f3ecb2b">WeakForms::Integral&lt; SubDomainType &gt;</a>
 </li>
+<li>get_subspace_field_solution_ops()
+: <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1CompositeOpHelper_3_01T_00_01typename_01std_1_1enabl7289dba8d9506b59b6900f1cabb09e64.html#ab603fd76e59023d809f21607703c6cea">WeakForms::Operators::internal::CompositeOpHelper&lt; T, typename std::enable_if&lt; is_binary_op&lt; T &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1CompositeOpHelper_3_01T_00_01typename_01std_1_1enabl817c2b7b8c0f6cb7e9f89fa2c4ad1b6e.html#a8a07f6542e2a795584c1c86ddbb182c0">WeakForms::Operators::internal::CompositeOpHelper&lt; T, typename std::enable_if&lt; is_subspace_field_solution_op&lt; T &gt;::value &amp;&amp;!is_unary_op&lt; T &gt;::value &amp;&amp;!is_binary_op&lt; T &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1CompositeOpHelper_3_01T_00_01typename_01std_1_1enablf5ca773e48a942b1ef61412ceaeeeb41.html#a1546361014e6b33e91f02ed754e15988">WeakForms::Operators::internal::CompositeOpHelper&lt; T, typename std::enable_if&lt; is_unary_op&lt; T &gt;::value &gt;::type &gt;</a>
+, <a class="el" href="structWeakForms_1_1Operators_1_1internal_1_1CompositeOpHelper_3_01T_00_01typename_01std_1_1enabl5783e3182663b5d212225cbeca1801c8.html#aa4d7b2f4eb7472887486bedd43513713">WeakForms::Operators::internal::CompositeOpHelper&lt; T, typename std::enable_if&lt;!is_subspace_field_solution_op&lt; T &gt;::value &amp;&amp;!is_unary_op&lt; T &gt;::value &amp;&amp;!is_binary_op&lt; T &gt;::value &gt;::type &gt;</a>
+</li>
 <li>get_symbol_ascii()
 : <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#a783adb71583ac473af1d9c0630d9d66e">WeakForms::BoundaryIntegral</a>
 , <a class="el" href="classWeakForms_1_1EnergyFunctor.html#aaec37ed56407ab367c712487e4150a68">WeakForms::EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution &gt;</a>
@@ -470,9 +476,9 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01ResidualViewFunctor_3_01TestSpaceOp_00_01SymbolicO8ead37bfb9500b0000968100c9ed3780.html#acd34cfc593f6c27e119f8143615cfc15">WeakForms::Operators::SymbolicOp&lt; ResidualViewFunctor&lt; TestSpaceOp, SymbolicOpsSubSpaceFieldSolution... &gt;, SymbolicOpCodes::value, typename Differentiation::AD::ADNumberTraits&lt; ADNumberType &gt;::scalar_type, ADNumberType, WeakForms::internal::DimPack&lt; dim, spacedim &gt; &gt;</a>
 </li>
 <li>gradient()
-: <a class="el" href="classWeakForms_1_1FieldSolution.html#abb84c4f48dd828aead3b150b11461753">WeakForms::FieldSolution&lt; dim, spacedim &gt;</a>
-, <a class="el" href="classWeakForms_1_1ScalarFunctionFunctor.html#afa9d2a778e3e8ffdbafc71b9405b3229">WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</a>
-, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#a11f67c262f9c8167d3290cfbe0bf4274">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
+: <a class="el" href="classWeakForms_1_1FieldSolution.html#a3122e0897597b3e2ddec64a89c110a28">WeakForms::FieldSolution&lt; dim, spacedim &gt;</a>
+, <a class="el" href="classWeakForms_1_1ScalarFunctionFunctor.html#abd6732903419d52c3a7b77fce13e8ed9">WeakForms::ScalarFunctionFunctor&lt; spacedim &gt;</a>
+, <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Scalar.html#adfc51504285c49eca2d29e3da36a384c">WeakForms::SubSpaceViews::Scalar&lt; SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Tensor.html#a6bf806cba37501e6f9ecc16407d8eb79">WeakForms::SubSpaceViews::Tensor&lt; rank_, SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1SubSpaceViews_1_1Vector.html#a27544e84f54737908500afc6461ed263">WeakForms::SubSpaceViews::Vector&lt; SpaceType_ &gt;</a>
 , <a class="el" href="classWeakForms_1_1TensorFunctionFunctor.html#aaccaddfb9d387fb8b86d2ea6b189a0d2">WeakForms::TensorFunctionFunctor&lt; rank, spacedim &gt;</a>

@@ -125,6 +125,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad839692c8a0023b451ca6edf77532570"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1EnergyFunctor.html#ad839692c8a0023b451ca6edf77532570">EnergyFunctor</a> (const std::string &amp;<a class="el" href="classWeakForms_1_1Functor.html#aa58e6f185003558386d714adca6bb02b">symbol_ascii</a>, const std::string &amp;<a class="el" href="classWeakForms_1_1Functor.html#a28d303073a499e4dacc694c8b568a40d">symbol_latex</a>, const SymbolicOpsSubSpaceFieldSolution &amp;...<a class="el" href="classWeakForms_1_1EnergyFunctor.html#a6813d5506d07fddf4bd61baf5547d8b0">symbolic_op_field_solutions</a>)</td></tr>
 <tr class="separator:ad839692c8a0023b451ca6edf77532570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa407c3bf441ce104d5717edc5ef7534d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1EnergyFunctor.html#aa407c3bf441ce104d5717edc5ef7534d">EnergyFunctor</a> (const std::string &amp;<a class="el" href="classWeakForms_1_1Functor.html#aa58e6f185003558386d714adca6bb02b">symbol_ascii</a>, const std::string &amp;<a class="el" href="classWeakForms_1_1Functor.html#a28d303073a499e4dacc694c8b568a40d">symbol_latex</a>, const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;<a class="el" href="classWeakForms_1_1EnergyFunctor.html#a6813d5506d07fddf4bd61baf5547d8b0">symbolic_op_field_solutions</a>)</td></tr>
+<tr class="separator:aa407c3bf441ce104d5717edc5ef7534d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0735b4e866cb74bb2eb488ee51774dc1"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1EnergyFunctor.html#a0735b4e866cb74bb2eb488ee51774dc1">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const override</td></tr>
 <tr class="separator:a0735b4e866cb74bb2eb488ee51774dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaec37ed56407ab367c712487e4150a68"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1EnergyFunctor.html#aaec37ed56407ab367c712487e4150a68">get_symbol_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const override</td></tr>
@@ -486,7 +488,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad839692c8a0023b451ca6edf77532570"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad839692c8a0023b451ca6edf77532570">&#9670;&nbsp;</a></span>EnergyFunctor()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad839692c8a0023b451ca6edf77532570">&#9670;&nbsp;</a></span>EnergyFunctor() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -531,6 +533,52 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 </div>
 </div>
+<a id="aa407c3bf441ce104d5717edc5ef7534d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa407c3bf441ce104d5717edc5ef7534d">&#9670;&nbsp;</a></span>EnergyFunctor() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1EnergyFunctor.html">WeakForms::EnergyFunctor</a>&lt; SymbolicOpsSubSpaceFieldSolution &gt;::<a class="el" href="classWeakForms_1_1EnergyFunctor.html">EnergyFunctor</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>symbol_latex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::tuple&lt; SymbolicOpsSubSpaceFieldSolution... &gt; &amp;&#160;</td>
+          <td class="paramname"><em>symbolic_op_field_solutions</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00263">263</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0735b4e866cb74bb2eb488ee51774dc1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0735b4e866cb74bb2eb488ee51774dc1">&#9670;&nbsp;</a></span>as_ascii()</h2>
@@ -560,7 +608,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#ade6bab734717940a996d28b50ef9ab16">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00266">266</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00274">274</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -592,7 +640,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#ac47553c67ebe76dedc6e3dcb94561eb9">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00273">273</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00281">281</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -624,7 +672,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#adf82912b3c84928bb170ec20e4c6d708">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00282">282</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00290">290</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -656,7 +704,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 
 <p>Reimplemented from <a class="el" href="classWeakForms_1_1Functor.html#a36ba6a921dae61ed197c564ddac55ad6">WeakForms::Functor&lt; 0 &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00290">290</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00298">298</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -720,7 +768,7 @@ template&lt;typename ADNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00307">307</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00315">315</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -830,7 +878,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00334">334</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00342">342</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -896,7 +944,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00360">360</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00368">368</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -956,7 +1004,7 @@ template&lt;typename SDNumberType , int dim, int spacedim = dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00386">386</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00394">394</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -985,7 +1033,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00414">414</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00422">422</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1027,7 +1075,7 @@ template&lt;typename ADNumberType , int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l01337">1337</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l01376">1376</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1099,7 +1147,7 @@ template&lt;typename SDNumberType , int dim, int spacedim&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l01367">1367</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l01406">1406</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1126,7 +1174,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00421">421</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="energy__functor_8h_source.html#l00429">429</a> of file <a class="el" href="energy__functor_8h_source.html">energy_functor.h</a>.</p>
 
 </div>
 </div>
@@ -1151,7 +1199,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </div><div class="memdoc">
 <p>Rank of this object operates. </p>
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00088">88</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00089">89</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -1175,7 +1223,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00128">128</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00129">129</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -1199,7 +1247,7 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00129">129</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="include_2weak__forms_2functors_8h_source.html#l00130">130</a> of file <a class="el" href="include_2weak__forms_2functors_8h_source.html">functors.h</a>.</p>
 
 </div>
 </div>
@@ -1208,8 +1256,8 @@ template&lt;typename... SymbolicOpsSubSpaceFieldSolution&gt; </div>
 </ul>
 </div><!-- contents -->
 <div class="ttc" id="astructWeakForms_1_1SolutionExtractionData_html"><div class="ttname"><a href="structWeakForms_1_1SolutionExtractionData.html">WeakForms::SolutionExtractionData</a></div><div class="ttdoc">A class that facilitates the extraction of data from the field solution.</div><div class="ttdef"><b>Definition:</b> <a href="solution__extraction__data_8h_source.html#l00040">solution_extraction_data.h:40</a></div></div>
-<div class="ttc" id="agroup__convenience__functions_html_ga7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00466">energy_functor.h:466</a></div></div>
-<div class="ttc" id="agroup__convenience__functions_html_ga2494242b5c1af1c342c90047385bb2f5"><div class="ttname"><a href="group__convenience__functions.html#ga2494242b5c1af1c342c90047385bb2f5">WeakForms::energy_functional_form</a></div><div class="ttdeci">SelfLinearization::EnergyFunctionalForm&lt; EnergyFunctor &gt; energy_functional_form(const EnergyFunctor &amp;functor_op)</div><div class="ttdoc">A convenience function that generates a self-linearizing energy functional form from an energy functo...</div><div class="ttdef"><b>Definition:</b> <a href="self__linearizing__forms_8h_source.html#l01541">self_linearizing_forms.h:1541</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_ga7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00474">energy_functor.h:474</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_ga2494242b5c1af1c342c90047385bb2f5"><div class="ttname"><a href="group__convenience__functions.html#ga2494242b5c1af1c342c90047385bb2f5">WeakForms::energy_functional_form</a></div><div class="ttdeci">SelfLinearization::EnergyFunctionalForm&lt; EnergyFunctor &gt; energy_functional_form(const EnergyFunctor &amp;functor_op)</div><div class="ttdoc">A convenience function that generates a self-linearizing energy functional form from an energy functo...</div><div class="ttdef"><b>Definition:</b> <a href="self__linearizing__forms_8h_source.html#l01709">self_linearizing_forms.h:1709</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1EnergyFunctor_html_a03fc24d1dbbf4aacd60ed16f02cfb6bb"><div class="ttname"><a href="classWeakForms_1_1EnergyFunctor.html#a03fc24d1dbbf4aacd60ed16f02cfb6bb">WeakForms::EnergyFunctor::ad_type</a></div><div class="ttdeci">typename Differentiation::AD::NumberTraits&lt; ScalarType, ADNumberTypeCode &gt;::ad_type ad_type</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00209">energy_functor.h:209</a></div></div>
 <div class="ttc" id="aclassWeakForms_1_1MatrixBasedAssembler_html"><div class="ttname"><a href="classWeakForms_1_1MatrixBasedAssembler.html">WeakForms::MatrixBasedAssembler</a></div><div class="ttdoc">A matrix-based assembler of the discrete integral forms.</div><div class="ttdef"><b>Definition:</b> <a href="assembler__matrix__based_8h_source.html#l00257">assembler_matrix_based.h:257</a></div></div>
 <div class="ttc" id="anamespaceWeakForms_html"><div class="ttname"><a href="namespaceWeakForms.html">WeakForms</a></div><div class="ttdef"><b>Definition:</b> <a href="ad__sd__functor__cache_8h_source.html#l00038">ad_sd_functor_cache.h:38</a></div></div>

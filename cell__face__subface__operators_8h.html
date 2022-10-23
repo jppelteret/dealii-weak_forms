@@ -74,7 +74,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">cell_face_subface_operators.h File Reference</div>  </div>
 </div><!--header-->
@@ -82,10 +83,12 @@ $(function() {
 <div class="textblock"><code>#include &lt;deal.II/base/config.h&gt;</code><br />
 <code>#include &lt;deal.II/base/exceptions.h&gt;</code><br />
 <code>#include &lt;deal.II/base/tensor.h&gt;</code><br />
+<code>#include &lt;deal.II/differentiation/sd.h&gt;</code><br />
 <code>#include &lt;deal.II/fe/fe_interface_values.h&gt;</code><br />
 <code>#include &lt;deal.II/fe/fe_values.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="numbers_8h_source.html">weak_forms/numbers.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__decorations_8h_source.html">weak_forms/symbolic_decorations.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__operators_8h_source.html">weak_forms/symbolic_operators.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="type__traits_8h_source.html">weak_forms/type_traits.h</a>&gt;</code><br />
@@ -107,7 +110,33 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1Operators"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cell__face__subface__operators_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()</td></tr>
+<tr class="separator:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a10787085a3fe83d64a1f5753c3d7a7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10787085a3fe83d64a1f5753c3d7a7c4">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A macro that performs a conversion of the functor to a symbolic expression type. </p>
+
+<p class="definition">Definition at line <a class="el" href="cell__face__subface__operators_8h_source.html#l00178">178</a> of file <a class="el" href="cell__face__subface__operators_8h_source.html">cell_face_subface_operators.h</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

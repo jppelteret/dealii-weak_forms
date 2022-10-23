@@ -85,6 +85,7 @@ $(function() {
 <code>#include &lt;deal.II/fe/fe_values.h&gt;</code><br />
 <code>#include &lt;deal.II/meshworker/scratch_data.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="sd__expression__internal_8h_source.html">weak_forms/sd_expression_internal.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="solution__extraction__data_8h_source.html">weak_forms/solution_extraction_data.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="spaces_8h_source.html">weak_forms/spaces.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__decorations_8h_source.html">weak_forms/symbolic_decorations.h</a>&gt;</code><br />
@@ -252,6 +253,8 @@ Macros</h2></td></tr>
 <tr class="separator:af610f195ec90bb8adb8d97c6fee2bf4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab76fc2b15071c6094321e7cf67327535"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subspace__views_8h.html#ab76fc2b15071c6094321e7cf67327535">DEAL_II_SYMBOLIC_OP_TEST_TRIAL_INTERFACE_SUBSPACE_COMMON_IMPL</a>( SymbolicOpBaseType,  SubSpaceViewsType,  SymbolicOpCode)</td></tr>
 <tr class="separator:ab76fc2b15071c6094321e7cf67327535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subspace__views_8h.html#a10787085a3fe83d64a1f5753c3d7a7c4">DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</a>()</td></tr>
+<tr class="separator:a10787085a3fe83d64a1f5753c3d7a7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59cbf115798daad5f8198d32eca00e58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="subspace__views_8h.html#a59cbf115798daad5f8198d32eca00e58">DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL</a>( SymbolicOpBaseType,  SubSpaceViewsType,  solution_index,  SymbolicOpCode)</td></tr>
 <tr class="separator:a59cbf115798daad5f8198d32eca00e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -305,7 +308,7 @@ Macros</h2></td></tr>
 <dd>
 It is intended that this should used immediately after class definition is opened. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00696">696</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l00697">697</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -345,7 +348,7 @@ It is intended that this should used immediately after class definition is opene
 <p>It is expected that the unary op derives from a SymbolicOp[TYPE]Base&lt;SubSpaceViewsType&gt; .</p>
 <dl class="section note"><dt>Note</dt><dd>It is intended that this should used immediately after class definition is opened. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01680">1680</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l01681">1681</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -383,7 +386,27 @@ It is intended that this should used immediately after class definition is opene
 <p>A macro to implement the common parts of a symbolic op class for test functions and trial solution subspaces. It is expected that the unary op derives from a SymbolicOp[TYPE]Base&lt;SubSpaceViewsType&gt; .</p>
 <dl class="section note"><dt>Note</dt><dd>It is intended that this should used immediately after class definition is opened. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l02163">2163</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l02164">2164</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+
+</div>
+</div>
+<a id="a10787085a3fe83d64a1f5753c3d7a7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10787085a3fe83d64a1f5753c3d7a7c4">&#9670;&nbsp;</a></span>DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A macro that performs a conversion of the functor to a symbolic expression type. </p>
+
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l02631">2631</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
@@ -425,7 +448,7 @@ It is intended that this should used immediately after class definition is opene
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l02624">2624</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="subspace__views_8h_source.html#l02674">2674</a> of file <a class="el" href="subspace__views_8h_source.html">subspace_views.h</a>.</p>
 
 </div>
 </div>
