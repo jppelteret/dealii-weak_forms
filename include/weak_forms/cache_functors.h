@@ -25,6 +25,7 @@
 #include <weak_forms/config.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
@@ -310,6 +311,56 @@ namespace WeakForms
 {
   namespace Operators
   {
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(         \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const      \
+    {                                                                          \
+      return WeakForms::Operators::internal::make_symbolic<                    \
+        value_type<dealii::Differentiation::SD::Expression>>(                  \
+        this->as_ascii(decorator));                                            \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::make_symbol_map(this->as_expression());      \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_substitution_map(         \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,              \
+      const std::vector<SolutionExtractionData<dim, spacedim>>                 \
+        &                solution_extraction_data,                             \
+      const unsigned int q_point) const                                        \
+    {                                                                          \
+      (void)q_point;                                                           \
+      return Differentiation::SD::make_substitution_map(                       \
+        this->as_expression(),                                                 \
+        this->template operator()<ScalarType>(scratch_data,                    \
+                                              solution_extraction_data));      \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     /* ------------------------ Functors: Cached ------------------------ */
 
 
@@ -486,6 +537,8 @@ namespace WeakForms
 
         return out;
       }
+
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
 
     private:
       const Op                           operand;
@@ -670,6 +723,8 @@ namespace WeakForms
         return out;
       }
 
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
+
     private:
       const Op                           operand;
       const function_type<ScalarType>    function;
@@ -853,12 +908,16 @@ namespace WeakForms
         return out;
       }
 
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
+
     private:
       const Op                           operand;
       const function_type<ScalarType>    function;
       const qp_function_type<ScalarType> qp_function;
       const UpdateFlags                  update_flags;
     };
+
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms

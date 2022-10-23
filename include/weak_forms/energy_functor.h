@@ -260,13 +260,21 @@ namespace WeakForms
       , symbolic_op_field_solutions(symbolic_op_field_solutions...)
     {}
 
+    EnergyFunctor(const std::string &symbol_ascii,
+                  const std::string &symbol_latex,
+                  const std::tuple<SymbolicOpsSubSpaceFieldSolution...>
+                    &symbolic_op_field_solutions)
+      : Base(symbol_ascii, symbol_latex)
+      , symbolic_op_field_solutions(symbolic_op_field_solutions)
+    {}
+
     // ----  Ascii ----
 
     virtual std::string
     as_ascii(const SymbolicDecorations &decorator) const override
     {
       return Base::as_ascii(decorator) + "(" +
-             decorator.unary_field_ops_as_ascii(get_field_args()) + ")";
+             decorator.unary_field_ops_as_ascii<true>(get_field_args()) + ")";
     }
 
     virtual std::string
@@ -283,7 +291,7 @@ namespace WeakForms
     {
       return Utilities::LaTeX::decorate_function_with_arguments(
         Base::as_latex(decorator),
-        decorator.unary_field_ops_as_latex(get_field_args()));
+        decorator.unary_field_ops_as_latex<true>(get_field_args()));
     }
 
     virtual std::string
@@ -1179,6 +1187,37 @@ namespace WeakForms
                                         solution_extraction_data,
                                         q_point));
               }
+
+#    ifdef DEBUG
+            // Add a check from  BatchOptimizer<ReturnType>::substitute()
+            const Differentiation::SD::types::symbol_vector symbol_sub_vec =
+              Differentiation::SD::Utilities::extract_symbols(substitution_map);
+            const Differentiation::SD::types::symbol_vector symbol_vec =
+              batch_optimizer.get_independent_symbols();
+            Assert(symbol_sub_vec.size() == symbol_vec.size(),
+                   ExcDimensionMismatch(symbol_sub_vec.size(),
+                                        symbol_vec.size()));
+            for (unsigned int i = 0; i < symbol_sub_vec.size(); ++i)
+              {
+                if (!dealii::numbers::values_are_equal(symbol_sub_vec[i],
+                                                       symbol_vec[i]))
+                  {
+                    std::cout << "i: " << i
+                              << " ; symbol_sub_vec[i]: " << symbol_sub_vec[i]
+                              << " ; symbol_vec[i]: " << symbol_vec[i]
+                              << std::endl;
+                  }
+                Assert(
+                  dealii::numbers::values_are_equal(symbol_sub_vec[i],
+                                                    symbol_vec[i]),
+                  ExcMessage(
+                    "The input substitution map is either incomplete, or does "
+                    "not match that used in the register_symbols() call. "
+                    "If you are using an AD/SD cache, check that the cached "
+                    "symbol is a numerical value that changes over time or "
+                    "the evaluation history."));
+              }
+#    endif
 
             // Perform the value substitution at this quadrature point
             batch_optimizer.substitute(substitution_map);

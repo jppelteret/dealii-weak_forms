@@ -30,6 +30,7 @@
 
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/types.h>
@@ -591,7 +592,88 @@ namespace WeakForms
 
   namespace Operators
   {
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(         \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const      \
+    {                                                                          \
+      return WeakForms::Operators::internal::make_symbolic<                    \
+        value_type<dealii::Differentiation::SD::Expression>>(                  \
+        this->as_ascii(decorator));                                            \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::make_symbol_map(this->as_expression());      \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }
+
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL()         \
+    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                \
+                                                                        \
+    Differentiation::SD::types::substitution_map get_substitution_map(  \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,       \
+      const std::vector<SolutionExtractionData<dim, spacedim>>          \
+        &                solution_extraction_data,                      \
+      const unsigned int q_point) const                                 \
+    {                                                                   \
+      (void)solution_extraction_data;                                   \
+      const auto &fe_values = scratch_data.get_current_fe_values();     \
+      using Result_t        = decltype(function(fe_values, q_point));   \
+      using ResultScalar_t =                                            \
+        typename numbers::UnderlyingScalar<Result_t>::scalar_type;      \
+      return Differentiation::SD::make_substitution_map(                \
+        this->as_expression(),                                          \
+        this->template operator()<ResultScalar_t>(fe_values, q_point)); \
+    }
+
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL() \
+    DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+                                                                         \
+    Differentiation::SD::types::substitution_map get_substitution_map(   \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,        \
+      const std::vector<SolutionExtractionData<dim, spacedim>>           \
+        &                solution_extraction_data,                       \
+      const unsigned int q_point) const                                  \
+    {                                                                    \
+      (void)scratch_data;                                                \
+      (void)solution_extraction_data;                                    \
+      (void)q_point;                                                     \
+      const auto &point = scratch_data.get_quadrature_points()[q_point]; \
+      using Result_t    = decltype(function->value(point));              \
+      using ResultScalar_t =                                             \
+        typename numbers::UnderlyingScalar<Result_t>::scalar_type;       \
+      return Differentiation::SD::make_substitution_map(                 \
+        this->as_expression(),                                           \
+        this->template operator()<ResultScalar_t>(point));               \
+    }
+
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL() ;
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     /* ------------------------ Functors: Custom ------------------------ */
+
 
 #define DEAL_II_SYMBOLIC_OP_FUNCTOR_COMMON_IMPL()                             \
 public:                                                                       \
@@ -744,6 +826,8 @@ public:                                                                       \
                                                                               \
     return out;                                                               \
   }                                                                           \
+                                                                              \
+  DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL()                       \
                                                                               \
 private:                                                                      \
   const Op                                  operand;                          \
@@ -1008,6 +1092,8 @@ public:                                                                        \
     return out;                                                                \
   }                                                                            \
                                                                                \
+  DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL()               \
+                                                                               \
 private:                                                                       \
   const Op                                            operand;                 \
   const SmartPointer<const function_type<ScalarType>> function;                \
@@ -1209,6 +1295,10 @@ private:                                                                       \
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_GRADIENT_COMMON_IMPL
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_VALUE_COMMON_IMPL
 #undef DEAL_II_SYMBOLIC_OP_FUNCTION_FUNCTOR_COMMON_IMPL
+
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTION_FUNCTOR_IMPL
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_FUNCTOR_IMPL
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms

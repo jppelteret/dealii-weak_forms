@@ -51,7 +51,8 @@ namespace WeakForms
       ScalarType,
       typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
     {
-      using type = ScalarType;
+      using type        = ScalarType;
+      using scalar_type = ScalarType;
     };
 
 
@@ -60,7 +61,24 @@ namespace WeakForms
       std::complex<ScalarType>,
       typename std::enable_if<std::is_arithmetic<ScalarType>::value>::type>
     {
-      using type = ScalarType;
+      using type        = ScalarType;
+      using scalar_type = std::complex<ScalarType>;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct UnderlyingScalar<Tensor<rank, dim, ScalarType>>
+    {
+      using type        = typename UnderlyingScalar<ScalarType>::type;
+      using scalar_type = typename UnderlyingScalar<ScalarType>::scalar_type;
+    };
+
+
+    template <int rank, int dim, typename ScalarType>
+    struct UnderlyingScalar<SymmetricTensor<rank, dim, ScalarType>>
+    {
+      using type        = typename UnderlyingScalar<ScalarType>::type;
+      using scalar_type = typename UnderlyingScalar<ScalarType>::scalar_type;
     };
 
 

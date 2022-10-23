@@ -26,8 +26,8 @@
 
 #include <weak_forms/config.h>
 #include <weak_forms/differentiation.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
-#include <weak_forms/spaces.h>
 #include <weak_forms/types.h>
 #include <weak_forms/utilities.h>
 
@@ -141,51 +141,6 @@ namespace WeakForms
         using are_tuples = all_true<is_tuple<Ts>::value...>;
         template <typename... Ts>
         using are_not_tuples = all_false<is_tuple<Ts>::value...>;
-
-        template <typename T, typename... Us>
-        struct is_subspace_field_solution_op
-        {
-          static constexpr bool value =
-            is_subspace_field_solution_op<T>::value &&
-            is_subspace_field_solution_op<Us...>::value;
-        };
-
-        // Scalar and Vector subspaces
-        template <template <class> class SubSpaceViewsType,
-                  typename SpaceType,
-                  enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  types::solution_index                      solution_index>
-        struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
-          SubSpaceViewsType<SpaceType>,
-          OpCode,
-          void,
-          WeakForms::internal::SolutionIndex<solution_index>>>
-        {
-          static constexpr bool value =
-            is_field_solution<SubSpaceViewsType<SpaceType>>::value &&
-            is_subspace_view<SubSpaceViewsType<SpaceType>>::value;
-        };
-
-        // Tensor and SymmetricTensor subspaces
-        template <template <int, class> class SubSpaceViewsType,
-                  int rank,
-                  typename SpaceType,
-                  enum WeakForms::Operators::SymbolicOpCodes OpCode,
-                  types::solution_index                      solution_index>
-        struct is_subspace_field_solution_op<WeakForms::Operators::SymbolicOp<
-          SubSpaceViewsType<rank, SpaceType>,
-          OpCode,
-          void,
-          WeakForms::internal::SolutionIndex<solution_index>>>
-        {
-          static constexpr bool value =
-            is_field_solution<SubSpaceViewsType<rank, SpaceType>>::value &&
-            is_subspace_view<SubSpaceViewsType<rank, SpaceType>>::value;
-        };
-
-        template <typename T>
-        struct is_subspace_field_solution_op<T> : std::false_type
-        {};
 
         template <typename... FieldArgs>
         struct EnforceIsSymbolicOpSubspaceFieldSolution
@@ -586,95 +541,6 @@ namespace WeakForms
   {
     namespace internal
     {
-      // ===================
-      // SD helper functions
-      // ===================
-
-      inline std::string
-      replace_protected_characters(const std::string &name)
-      {
-        // Allow SymEngine to parse this field as a string:
-        // Required for deserialization.
-        // It gets confused when there are numbers in the string name, and
-        // we have numbers and some protected characters in the expression
-        // name.
-        std::string out = name;
-        const auto  replace_chars =
-          [&out](const char &old_char, const char &new_char)
-        { std::replace(out.begin(), out.end(), old_char, new_char); };
-        // replace_chars('0', 'A');
-        // replace_chars('1', 'B');
-        // replace_chars('2', 'C');
-        // replace_chars('3', 'D');
-        // replace_chars('4', 'E');
-        // replace_chars('5', 'F');
-        // replace_chars('6', 'G');
-        // replace_chars('7', 'H');
-        // replace_chars('8', 'I');
-        // replace_chars('9', 'J');
-        replace_chars(' ', '_');
-        replace_chars('(', '_');
-        replace_chars(')', '_');
-        replace_chars('{', '_');
-        replace_chars('}', '_');
-
-        return out;
-      }
-
-      template <typename ReturnType>
-      typename std::enable_if<
-        std::is_same<ReturnType, Differentiation::SD::Expression>::value,
-        ReturnType>::type
-      make_symbolic(const std::string &name)
-      {
-        return Differentiation::SD::make_symbol(name);
-      }
-
-      template <typename ReturnType>
-      typename std::enable_if<
-        std::is_same<ReturnType,
-                     Tensor<ReturnType::rank,
-                            ReturnType::dimension,
-                            Differentiation::SD::Expression>>::value,
-        ReturnType>::type
-      make_symbolic(const std::string &name)
-      {
-        constexpr int rank = ReturnType::rank;
-        constexpr int dim  = ReturnType::dimension;
-        return Differentiation::SD::make_tensor_of_symbols<rank, dim>(name);
-      }
-
-      template <typename ReturnType>
-      typename std::enable_if<
-        std::is_same<ReturnType,
-                     SymmetricTensor<ReturnType::rank,
-                                     ReturnType::dimension,
-                                     Differentiation::SD::Expression>>::value,
-        ReturnType>::type
-      make_symbolic(const std::string &name)
-      {
-        constexpr int rank = ReturnType::rank;
-        constexpr int dim  = ReturnType::dimension;
-        return Differentiation::SD::make_symmetric_tensor_of_symbols<rank, dim>(
-          name);
-      }
-
-      template <typename ExpressionType, typename SymbolicOpField>
-      typename SymbolicOpField::template value_type<ExpressionType>
-      make_symbolic(const SymbolicOpField &    field,
-                    const SymbolicDecorations &decorator)
-      {
-        using ReturnType =
-          typename SymbolicOpField::template value_type<ExpressionType>;
-
-        const std::string name = Utilities::get_deal_II_prefix() + "Field_" +
-                                 field.as_ascii(decorator);
-        // return make_symbolic<ReturnType>(name);
-        return make_symbolic<ReturnType>(replace_protected_characters(name));
-      }
-
-
-
       template <typename... SymbolicOpsSubSpaceFieldSolution>
       struct SymbolicOpsSubSpaceFieldSolutionSDHelper
         : SymbolicOpsSubSpaceFieldSolutionHelperBase<
@@ -964,8 +830,20 @@ namespace WeakForms
           const field_values_t<SDNumberType> &symbolic_field_values,
           const std::index_sequence<I...>)
         {
-          return Differentiation::SD::make_symbol_map(
-            std::get<I>(symbolic_field_values)...);
+          // return Differentiation::SD::make_symbol_map(
+          //   std::get<I>(symbolic_field_values)...);
+          //
+          // In order to support automatic conversion of fully symbolic
+          // expressions, we can no longer assume that a field will be used only
+          // once during the definition of the expression. We must therefore
+          // make use of the merge tool, which allows for the presence of
+          // duplicate symbols in the maps that are to be concatenated.
+          Differentiation::SD::types::substitution_map symbol_map;
+          Differentiation::SD::merge_substitution_maps(
+            symbol_map,
+            Differentiation::SD::make_symbol_map(
+              std::get<I>(symbolic_field_values))...);
+          return symbol_map;
         }
 
         template <typename SDNumberType,
@@ -1347,9 +1225,20 @@ namespace WeakForms
             std::get<I>(symbolic_field_values);
 
           // Append these to the substitution map, and recurse.
-          Differentiation::SD::add_to_substitution_map(substitution_map,
-                                                       symbolic_field_solution,
-                                                       field_solution);
+          // Differentiation::SD::add_to_substitution_map(substitution_map,
+          //                                              symbolic_field_solution,
+          //                                              field_solution);
+          //
+          // In order to support automatic conversion of fully symbolic
+          // expressions, we can no longer assume that a field will be used only
+          // once during the definition of the expression. We must therefore
+          // make use of the merge tool, which allows for the presence of
+          // duplicate symbols in the maps that are to be concatenated.
+          Differentiation::SD::merge_substitution_maps(
+            substitution_map,
+            Differentiation::SD::make_substitution_map(symbolic_field_solution,
+                                                       field_solution));
+
           unpack_sd_add_to_substitution_map<SDNumberType, ScalarType, I + 1>(
             substitution_map,
             scratch_data,

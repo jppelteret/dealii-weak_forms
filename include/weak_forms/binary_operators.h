@@ -34,6 +34,7 @@
 #include <weak_forms/numbers.h>
 #include <weak_forms/operator_evaluators.h>
 #include <weak_forms/operator_utilities.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -971,6 +972,61 @@ namespace WeakForms
 #undef DEAL_II_BINARY_OP_TYPE_TRAITS_COMMON_IMPL
 
 
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    auto as_expression(const SymbolicDecorations &decorator =                  \
+                         SymbolicDecorations()) const                          \
+    {                                                                          \
+      return derived                                                           \
+        .template operator()<dealii::Differentiation::SD::Expression>(         \
+          derived.get_lhs_operand().as_expression(decorator),                  \
+          derived.get_rhs_operand().as_expression(decorator));                 \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::merge_substitution_maps(                     \
+        derived.get_lhs_operand().get_symbol_registration_map(),               \
+        derived.get_rhs_operand().get_symbol_registration_map());              \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::merge_substitution_maps(                     \
+        derived.get_lhs_operand().get_intermediate_substitution_map(),         \
+        derived.get_rhs_operand().get_intermediate_substitution_map());        \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_substitution_map(         \
+      const MeshWorker::ScratchData<dimension, space_dimension> &scratch_data, \
+      const std::vector<SolutionExtractionData<dimension, space_dimension>>    \
+        &                solution_extraction_data,                             \
+      const unsigned int q_point) const                                        \
+    {                                                                          \
+      return Differentiation::SD::merge_substitution_maps(                     \
+        derived.get_lhs_operand().get_substitution_map(                        \
+          scratch_data, solution_extraction_data, q_point),                    \
+        derived.get_rhs_operand().get_substitution_map(                        \
+          scratch_data, solution_extraction_data, q_point));                   \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     template <typename Derived>
     class BinaryOpBase
     {
@@ -1457,6 +1513,8 @@ namespace WeakForms
                                             solution_extraction_data,
                                             q_point_range);
       }
+
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
 
     private:
       const Derived &derived;
@@ -2579,6 +2637,7 @@ private:                                                                   \
 
 #undef DEAL_II_BINARY_OP_COMMON_IMPL
 #undef DEAL_II_BINARY_OP_COMMON_IMPL_BASE_TRAITS_DEFINED
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms
@@ -2594,22 +2653,25 @@ private:                                                                   \
   template <typename LhsOp1,                                                 \
             typename LhsOp2,                                                 \
             enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
             typename RhsOp1,                                                 \
             typename RhsOp2,                                                 \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode>              \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
   WeakForms::Operators::BinaryOp<                                            \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>,               \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,               \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
     WeakForms::Operators::BinaryOpCodes::binary_op_code>                     \
-  operator_name(                                                             \
-    const WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode> &lhs_op, \
-    const WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode> &rhs_op) \
+  operator_name(const WeakForms::Operators::                                 \
+                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op, \
+                const WeakForms::Operators::                                 \
+                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op) \
   {                                                                          \
     using namespace WeakForms;                                               \
     using namespace WeakForms::Operators;                                    \
                                                                              \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode>;                   \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode>;                   \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
     using OpType =                                                           \
       BinaryOp<LhsOpType, RhsOpType, BinaryOpCodes::binary_op_code>;         \
                                                                              \
@@ -2656,29 +2718,33 @@ DEAL_II_BINARY_OP_OF_BINARY_OP(double_contract,
             typename LhsOp1,                                                 \
             typename LhsOp2,                                                 \
             enum WeakForms::Operators::BinaryOpCodes LhsOpCode,              \
+            typename... LhsOpArgs,                                           \
             typename RhsOp1,                                                 \
             typename RhsOp2,                                                 \
-            enum WeakForms::Operators::BinaryOpCodes RhsOpCode>              \
+            enum WeakForms::Operators::BinaryOpCodes RhsOpCode,              \
+            typename... RhsOpArgs>                                           \
   WeakForms::Operators::BinaryOp<                                            \
-    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>,               \
-    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>,               \
+    WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>, \
+    WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>, \
     WeakForms::Operators::BinaryOpCodes::binary_op_code,                     \
     typename std::enable_if<                                                 \
       !WeakForms::is_integral_op<                                            \
-        WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode>>::value && \
+        WeakForms::Operators::                                               \
+          BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>>::value &&       \
       !WeakForms::is_integral_op<                                            \
-        WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode>>::value>:: \
-      type,                                                                  \
+        WeakForms::Operators::                                               \
+          BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>>::value>::type,  \
     INDEX_PACK_EXPANDED>                                                     \
-  operator_name(                                                             \
-    const WeakForms::Operators::BinaryOp<LhsOp1, LhsOp2, LhsOpCode> &lhs_op, \
-    const WeakForms::Operators::BinaryOp<RhsOp1, RhsOp2, RhsOpCode> &rhs_op) \
+  operator_name(const WeakForms::Operators::                                 \
+                  BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...> &lhs_op, \
+                const WeakForms::Operators::                                 \
+                  BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...> &rhs_op) \
   {                                                                          \
     using namespace WeakForms;                                               \
     using namespace WeakForms::Operators;                                    \
                                                                              \
-    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode>;                   \
-    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode>;                   \
+    using LhsOpType = BinaryOp<LhsOp1, LhsOp2, LhsOpCode, LhsOpArgs...>;     \
+    using RhsOpType = BinaryOp<RhsOp1, RhsOp2, RhsOpCode, RhsOpArgs...>;     \
     using OpType    = BinaryOp<                                              \
       LhsOpType,                                                          \
       RhsOpType,                                                          \

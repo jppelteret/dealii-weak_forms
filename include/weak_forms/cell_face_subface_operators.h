@@ -21,11 +21,14 @@
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/tensor.h>
 
+#include <deal.II/differentiation/sd.h>
+
 #include <deal.II/fe/fe_interface_values.h>
 #include <deal.II/fe/fe_values.h>
 
 #include <weak_forms/config.h>
 #include <weak_forms/numbers.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/symbolic_decorations.h>
 #include <weak_forms/symbolic_operators.h>
 #include <weak_forms/type_traits.h>
@@ -87,7 +90,7 @@ namespace WeakForms
     static const unsigned int rank = 1;
 
     template <typename ScalarType>
-    using value_type = Tensor<rank, spacedim, double>;
+    using value_type = Tensor<rank, spacedim, ScalarType>;
 
     // Methods to promote this class to a SymbolicOp
 
@@ -166,6 +169,57 @@ namespace WeakForms
 {
   namespace Operators
   {
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(         \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const      \
+                                                                               \
+    {                                                                          \
+      return WeakForms::Operators::internal::make_symbolic<                    \
+        value_type<dealii::Differentiation::SD::Expression>>(                  \
+        this->as_ascii(decorator));                                            \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::make_symbol_map(this->as_expression());      \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_substitution_map(         \
+      const MeshWorker::ScratchData<dim, spacedim> &scratch_data,              \
+      const std::vector<SolutionExtractionData<dim, spacedim>>                 \
+        &                solution_extraction_data,                             \
+      const unsigned int q_point) const                                        \
+    {                                                                          \
+      (void)solution_extraction_data;                                          \
+      const auto &fe_values = scratch_data.get_current_fe_values();            \
+      return Differentiation::SD::make_substitution_map(                       \
+        this->as_expression(),                                                 \
+        this->template operator()<ResultScalarType>(fe_values)[q_point]);      \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
     /* --------------- Cell face and cell subface operators --------------- */
 
     /**
@@ -175,6 +229,9 @@ namespace WeakForms
     class SymbolicOp<Normal<dim, spacedim>, SymbolicOpCodes::value>
     {
       using Op = Normal<dim, spacedim>;
+
+      // Normals are always defined as a tensor of doubles.
+      using ResultScalarType = double;
 
     public:
       /**
@@ -302,9 +359,13 @@ namespace WeakForms
         return out;
       }
 
+      DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()
+
     private:
       const Op operand;
     };
+
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
   } // namespace Operators
 } // namespace WeakForms

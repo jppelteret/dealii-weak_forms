@@ -23,6 +23,10 @@
 #include <weak_forms/config.h>
 #include <weak_forms/utilities.h>
 
+#include <algorithm>
+#include <iterator>
+#include <unordered_set>
+
 
 WEAK_FORMS_NAMESPACE_OPEN
 
@@ -500,20 +504,34 @@ namespace WeakForms
         functor.get_symbol_latex(decorator), rank);
     }
 
-    template <typename... SymbolicOpType>
+    template <bool deduplicate = false, typename... SymbolicOpType>
     std::string
     unary_field_ops_as_ascii(
       const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
     {
-      return unpack_unary_field_ops_as_ascii(symbolic_op_field_solutions);
+      std::vector<std::string> field_ops_as_ascii;
+      unpack_unary_field_ops_as_ascii(field_ops_as_ascii,
+                                      symbolic_op_field_solutions);
+
+      if (deduplicate)
+        deduplicate_vector_of_strings(field_ops_as_ascii);
+
+      return concatenate_vector_of_strings(field_ops_as_ascii);
     }
 
-    template <typename... SymbolicOpType>
+    template <bool deduplicate = false, typename... SymbolicOpType>
     std::string
     unary_field_ops_as_latex(
       const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
     {
-      return unpack_unary_field_ops_as_latex(symbolic_op_field_solutions);
+      std::vector<std::string> field_ops_as_latex;
+      unpack_unary_field_ops_as_latex(field_ops_as_latex,
+                                      symbolic_op_field_solutions);
+
+      if (deduplicate)
+        deduplicate_vector_of_strings(field_ops_as_latex);
+
+      return concatenate_vector_of_strings(field_ops_as_latex);
     }
 
     template <typename... SymbolicOpType>
@@ -693,56 +711,94 @@ namespace WeakForms
     const SymbolicNamesLaTeX naming_latex;
 
   private:
+    void
+    deduplicate_vector_of_strings(std::vector<std::string> &str_vec) const
+    {
+      std::unordered_set<std::string> already_visited;
+
+      auto end = std::remove_if(str_vec.begin(),
+                                str_vec.end(),
+                                [&already_visited](const std::string &i)
+                                { return !already_visited.insert(i).second; });
+
+      str_vec.erase(end, str_vec.end());
+    }
+
+    std::string
+    concatenate_vector_of_strings(const std::vector<std::string> &str_vec,
+                                  const std::string &delimiter = ", ") const
+    {
+      std::stringstream stream;
+      std::copy(str_vec.cbegin(),
+                str_vec.cend(),
+                std::ostream_iterator<std::string>(stream, delimiter.c_str()));
+
+      // Remove trailing delimiter
+      std::string out = stream.str();
+      out.resize(out.size() - delimiter.size());
+      return out;
+    }
+
     template <std::size_t I = 0, typename... SymbolicOpType>
       inline typename std::enable_if <
-      I<sizeof...(SymbolicOpType), std::string>::type
+      I<sizeof...(SymbolicOpType), void>::type
       unpack_unary_field_ops_as_ascii(
+        std::vector<std::string> &           field_ops_as_ascii,
         const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
     {
       if (I < sizeof...(SymbolicOpType) - 1)
-        return std::get<I>(symbolic_op_field_solutions).as_ascii(*this) + ", " +
-               unpack_unary_field_ops_as_ascii<I + 1, SymbolicOpType...>(
-                 symbolic_op_field_solutions);
+        {
+          field_ops_as_ascii.push_back(
+            std::get<I>(symbolic_op_field_solutions).as_ascii(*this));
+          unpack_unary_field_ops_as_ascii<I + 1, SymbolicOpType...>(
+            field_ops_as_ascii, symbolic_op_field_solutions);
+        }
       else
-        return std::get<I>(symbolic_op_field_solutions).as_ascii(*this);
+        field_ops_as_ascii.push_back(
+          std::get<I>(symbolic_op_field_solutions).as_ascii(*this));
     }
 
     // unary_field_ops_as_ascii(): End point
     template <std::size_t I = 0, typename... SymbolicOpType>
-    inline
-      typename std::enable_if<I == sizeof...(SymbolicOpType), std::string>::type
-      unpack_unary_field_ops_as_ascii(
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
+    inline typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
+    unpack_unary_field_ops_as_ascii(
+      std::vector<std::string> &           field_ops_as_ascii,
+      const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
     {
       // Do nothing
+      (void)field_ops_as_ascii;
       (void)symbolic_op_field_solution;
-      return "";
     }
 
     template <std::size_t I = 0, typename... SymbolicOpType>
       inline typename std::enable_if <
-      I<sizeof...(SymbolicOpType), std::string>::type
+      I<sizeof...(SymbolicOpType), void>::type
       unpack_unary_field_ops_as_latex(
+        std::vector<std::string> &           field_ops_as_latex,
         const std::tuple<SymbolicOpType...> &symbolic_op_field_solutions) const
     {
       if (I < sizeof...(SymbolicOpType) - 1)
-        return std::get<I>(symbolic_op_field_solutions).as_latex(*this) + ", " +
-               unpack_unary_field_ops_as_latex<I + 1, SymbolicOpType...>(
-                 symbolic_op_field_solutions);
+        {
+          field_ops_as_latex.push_back(
+            std::get<I>(symbolic_op_field_solutions).as_latex(*this));
+          unpack_unary_field_ops_as_latex<I + 1, SymbolicOpType...>(
+            field_ops_as_latex, symbolic_op_field_solutions);
+        }
       else
-        return std::get<I>(symbolic_op_field_solutions).as_latex(*this);
+        field_ops_as_latex.push_back(
+          std::get<I>(symbolic_op_field_solutions).as_latex(*this));
     }
 
-    // unary_field_ops_as_latex(): End point
+    // unpack_unary_field_ops_as_latex(): End point
     template <std::size_t I = 0, typename... SymbolicOpType>
-    inline
-      typename std::enable_if<I == sizeof...(SymbolicOpType), std::string>::type
-      unpack_unary_field_ops_as_latex(
-        const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
+    inline typename std::enable_if<I == sizeof...(SymbolicOpType), void>::type
+    unpack_unary_field_ops_as_latex(
+      std::vector<std::string> &           field_ops_as_latex,
+      const std::tuple<SymbolicOpType...> &symbolic_op_field_solution) const
     {
       // Do nothing
+      (void)field_ops_as_latex;
       (void)symbolic_op_field_solution;
-      return "";
     }
 
 

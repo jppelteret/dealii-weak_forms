@@ -24,6 +24,7 @@
 #include <deal.II/meshworker/scratch_data.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/sd_expression_internal.h>
 #include <weak_forms/solution_extraction_data.h>
 #include <weak_forms/spaces.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -2665,6 +2666,55 @@ protected:                                                                      
     /* ------------ Finite element spaces: Solution fields ------------ */
 
 
+#ifdef DEAL_II_WITH_SYMENGINE
+
+/**
+ * A macro that performs a conversion of the functor to a symbolic
+ * expression type.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                 \
+    value_type<dealii::Differentiation::SD::Expression> as_expression(         \
+      const SymbolicDecorations &decorator = SymbolicDecorations()) const      \
+    {                                                                          \
+      return WeakForms::Operators::internal::make_symbolic<                    \
+        dealii::Differentiation::SD::Expression>(*this, decorator);            \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_symbol_registration_map() \
+      const                                                                    \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map                               \
+    get_intermediate_substitution_map() const                                  \
+    {                                                                          \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }                                                                          \
+                                                                               \
+    Differentiation::SD::types::substitution_map get_substitution_map(         \
+      const MeshWorker::ScratchData<dimension, space_dimension> &scratch_data, \
+      const std::vector<SolutionExtractionData<dimension, space_dimension>>    \
+        &                solution_extraction_data,                             \
+      const unsigned int q_point) const                                        \
+    {                                                                          \
+      /*Do nothing -- already taken care of by the self-linearising form*/     \
+      (void)scratch_data;                                                      \
+      (void)solution_extraction_data;                                          \
+      (void)q_point;                                                           \
+      return Differentiation::SD::types::substitution_map{};                   \
+    }
+
+#else // DEAL_II_WITH_SYMENGINE
+
+/**
+ * A dummy macro.
+ */
+#  define DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL() ;
+
+#endif // DEAL_II_WITH_SYMENGINE
+
+
 #define DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL(               \
   SymbolicOpBaseType, SubSpaceViewsType, solution_index, SymbolicOpCode)       \
 private:                                                                       \
@@ -2724,6 +2774,8 @@ public:                                                                        \
                                                                                \
     return out;                                                                \
   }                                                                            \
+                                                                               \
+  DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL()                         \
                                                                                \
 protected:                                                                     \
   /**                                                                          \
@@ -3640,6 +3692,7 @@ protected:                                                                     \
 
 
 #undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_SUBSPACE_COMMON_IMPL
+#undef DEAL_II_SYMBOLIC_EXPRESSION_CONVERSION_COMMON_IMPL
 
 
   } // namespace Operators
