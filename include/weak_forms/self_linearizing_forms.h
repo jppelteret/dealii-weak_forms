@@ -1953,6 +1953,34 @@ namespace WeakForms
    * please refer to the documentation of the
    * SelfLinearization::EnergyFunctionalForm class.
    *
+   * An example of usage:
+   * @code {.cpp}
+   * const TestFunction<dim>          test;
+   * const FieldSolution<dim>         solution;
+   * const SubSpaceExtractors::Vector subspace_extractor(0, "u", "\\mathbf{u}");
+   *
+   * const TensorFunctionFunctor<4, dim> mat_coeff("C", "\\mathcal{C}");
+   * const VectorFunctionFunctor<dim>    rhs_coeff("s", "\\mathbf{s}");
+
+   * const Coefficient<dim>   coefficient; // A TensorFunction<4, dim, double>
+   * const RightHandSide<dim> rhs;         // A TensorFunction<1, dim, double>
+   *
+   * const auto test_ss = test[subspace_extractor];
+   * const auto soln_ss = solution[subspace_extractor];
+   *
+   * const auto test_val  = test_ss.value();
+   * const auto grad_u    = soln_ss.gradient();
+   *
+   * const auto C = mat_coeff.value(coefficient);
+   *
+   * const auto energy =
+   *   0.5 * scalar_product(grad_u, double_contract<2, 0, 3, 1>(C, grad_u));
+   *
+   * MatrixBasedAssembler<dim> assembler;
+   * assembler += energy_functional_form<dim>("e", "\\Psi", energy).dV() -
+   *              linear_form(test_val, rhs_coeff.value(rhs)).dV();
+   * @endcode
+   *
    * @tparam dim The dimension in which the energy is being evaluated.
    * @tparam spacedim The spatial dimension in which the energy is being evaluated.
    * @param symbol_ascii The ASCII representation of the value.
@@ -2018,6 +2046,34 @@ namespace WeakForms
    * For more information about the self-linearizing form that is created,
    * please refer to the documentation of the
    * SelfLinearization::ResidualViewForm class.
+   *
+   * An example of usage:
+   * @code {.cpp}
+   * const TestFunction<dim>          test;
+   * const FieldSolution<dim>         solution;
+   * const SubSpaceExtractors::Vector subspace_extractor(0, "u", "\\mathbf{u}");
+   *
+   * const TensorFunctionFunctor<4, dim> mat_coeff("C", "\\mathcal{C}");
+   * const VectorFunctionFunctor<dim>    rhs_coeff("s", "\\mathbf{s}");
+
+   * const Coefficient<dim>   coefficient; // A TensorFunction<4, dim, double>
+   * const RightHandSide<dim> rhs;         // A TensorFunction<1, dim, double>
+   *
+   * const auto test_ss = test[subspace_extractor];
+   * const auto soln_ss = solution[subspace_extractor];
+   *
+   * const auto test_val  = test_ss.value();
+   * const auto test_grad = test_ss.gradient();
+   * const auto grad_u    = soln_ss.gradient();
+   *
+   * const auto C = mat_coeff.value(coefficient);
+   *
+   * const auto residual_u = double_contract<2, 0, 3, 1>(C, grad_u);
+   *
+   * MatrixBasedAssembler<dim> assembler;
+   * assembler += residual_view_form("R", "R", test_grad, residual_u).dV() -
+   *              linear_form(test_val, rhs_coeff.value(rhs)).dV();
+   * @endcode
    *
    * @tparam dim The dimension in which the energy is being evaluated.
    * @tparam spacedim The spatial dimension in which the energy is being evaluated.
