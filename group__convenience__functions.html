@@ -1406,7 +1406,31 @@ template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp &gt; </div
 <p>A convenience function that generates a self-linearizing energy functional form from a (composite) symbolic operation. </p>
 <p>This variant extracts a symbolic (in the sense of being symbolically differentiable) representation from the input functor, which is later differentiated and converted into linear and bilinear forms.</p>
 <p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html" title="A class that represents a self-linearizing energy functional form.">SelfLinearization::EnergyFunctionalForm</a> class.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim&gt;          test;</div>
+<div class="line"><span class="keyword">const</span> FieldSolution&lt;dim&gt;         solution;</div>
+<div class="line"><span class="keyword">const</span> SubSpaceExtractors::Vector subspace_extractor(0, <span class="stringliteral">&quot;u&quot;</span>, <span class="stringliteral">&quot;\\mathbf{u}&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> TensorFunctionFunctor&lt;4, dim&gt; mat_coeff(<span class="stringliteral">&quot;C&quot;</span>, <span class="stringliteral">&quot;\\mathcal{C}&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> VectorFunctionFunctor&lt;dim&gt;    rhs_coeff(<span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;\\mathbf{s}&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> Coefficient&lt;dim&gt;   coefficient; <span class="comment">// A TensorFunction&lt;4, dim, double&gt;</span></div>
+<div class="line"><span class="keyword">const</span> RightHandSide&lt;dim&gt; rhs;         <span class="comment">// A TensorFunction&lt;1, dim, double&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_ss = test[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_ss = solution[subspace_extractor];</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_val  = test_ss.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> grad_u    = soln_ss.gradient();</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> C = mat_coeff.value(coefficient);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> energy =</div>
+<div class="line">  0.5 * <a class="code" href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda09c9a28ea0afa2a1f2fa24b6d2a57156">scalar_product</a>(grad_u, double_contract&lt;2, 0, 3, 1&gt;(C, grad_u));</div>
+<div class="line"> </div>
+<div class="line">MatrixBasedAssembler&lt;dim&gt; assembler;</div>
+<div class="line">assembler += energy_functional_form&lt;dim&gt;(<span class="stringliteral">&quot;e&quot;</span>, <span class="stringliteral">&quot;\\Psi&quot;</span>, energy).dV() -</div>
+<div class="line">             <a class="code" href="group__convenience__functions.html#ga7b7da85d217255f157eddcd2a40ee570">linear_form</a>(test_val, rhs_coeff.value(rhs)).dV();</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">dim</td><td>The dimension in which the energy is being evaluated. </td></tr>
     <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the energy is being evaluated. </td></tr>
@@ -1425,7 +1449,7 @@ template&lt;int dim, int spacedim = dim, typename CompositeSymbolicOp &gt; </div
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::EnergyFunctionalForm&lt;EnergyFunctor&gt; backed by local symbolic differentiation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l01974">1974</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l02002">2002</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1484,7 +1508,31 @@ template&lt;typename TestSpaceOp , typename CompositeSymbolicOp &gt; </div>
 <p>A convenience function that generates a self-linearizing residual view functional form from a (composite) symbolic operation. </p>
 <p>This variant extracts a symbolic (in the sense of being symbolically differentiable) representation from the input functor, which is later differentiated and converted into linear and bilinear forms.</p>
 <p>For more information about the self-linearizing form that is created, please refer to the documentation of the <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualViewForm.html" title="A class that represents a self-linearizing residual (view) form.">SelfLinearization::ResidualViewForm</a> class.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>An example of usage: </p><div class="fragment"><div class="line"><span class="keyword">const</span> TestFunction&lt;dim&gt;          test;</div>
+<div class="line"><span class="keyword">const</span> FieldSolution&lt;dim&gt;         solution;</div>
+<div class="line"><span class="keyword">const</span> SubSpaceExtractors::Vector subspace_extractor(0, <span class="stringliteral">&quot;u&quot;</span>, <span class="stringliteral">&quot;\\mathbf{u}&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> TensorFunctionFunctor&lt;4, dim&gt; mat_coeff(<span class="stringliteral">&quot;C&quot;</span>, <span class="stringliteral">&quot;\\mathcal{C}&quot;</span>);</div>
+<div class="line"><span class="keyword">const</span> VectorFunctionFunctor&lt;dim&gt;    rhs_coeff(<span class="stringliteral">&quot;s&quot;</span>, <span class="stringliteral">&quot;\\mathbf{s}&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> Coefficient&lt;dim&gt;   coefficient; <span class="comment">// A TensorFunction&lt;4, dim, double&gt;</span></div>
+<div class="line"><span class="keyword">const</span> RightHandSide&lt;dim&gt; rhs;         <span class="comment">// A TensorFunction&lt;1, dim, double&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_ss = test[subspace_extractor];</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> soln_ss = solution[subspace_extractor];</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_val  = test_ss.value();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> test_grad = test_ss.gradient();</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> grad_u    = soln_ss.gradient();</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> C = mat_coeff.value(coefficient);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> residual_u = double_contract&lt;2, 0, 3, 1&gt;(C, grad_u);</div>
+<div class="line"> </div>
+<div class="line">MatrixBasedAssembler&lt;dim&gt; assembler;</div>
+<div class="line">assembler += <a class="code" href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">residual_view_form</a>(<span class="stringliteral">&quot;R&quot;</span>, <span class="stringliteral">&quot;R&quot;</span>, test_grad, residual_u).dV() -</div>
+<div class="line">             <a class="code" href="group__convenience__functions.html#ga7b7da85d217255f157eddcd2a40ee570">linear_form</a>(test_val, rhs_coeff.value(rhs)).dV();</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">dim</td><td>The dimension in which the energy is being evaluated. </td></tr>
     <tr><td class="paramname">spacedim</td><td>The spatial dimension in which the energy is being evaluated. </td></tr>
@@ -1505,7 +1553,7 @@ template&lt;typename TestSpaceOp , typename CompositeSymbolicOp &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>SelfLinearization::ResidualViewForm&lt;ResidualViewFunctor&gt; backed by local symbolic differentiation. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l02047">2047</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="self__linearizing__forms_8h_source.html#l02103">2103</a> of file <a class="el" href="self__linearizing__forms_8h_source.html">self_linearizing_forms.h</a>.</p>
 
 </div>
 </div>
@@ -1552,7 +1600,10 @@ template&lt;typename ScalarType  = double, typename Integrand , typename Integra
 </div>
 </div>
 </div><!-- contents -->
+<div class="ttc" id="anamespaceWeakForms_1_1Operators_html_ac7aa0e09e52fd8dc6c825efb1ea6becda09c9a28ea0afa2a1f2fa24b6d2a57156"><div class="ttname"><a href="namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda09c9a28ea0afa2a1f2fa24b6d2a57156">WeakForms::Operators::BinaryOpCodes::scalar_product</a></div><div class="ttdeci">@ scalar_product</div></div>
 <div class="ttc" id="agroup__convenience__functions_html_ga7972c9f91c2f78a33eb88106b5eab156"><div class="ttname"><a href="group__convenience__functions.html#ga7972c9f91c2f78a33eb88106b5eab156">WeakForms::energy_functor</a></div><div class="ttdeci">EnergyFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; energy_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating an EnergyFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="energy__functor_8h_source.html#l00474">energy_functor.h:474</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_ga736011eb95e82e8b27d2e272f7438e85"><div class="ttname"><a href="group__convenience__functions.html#ga736011eb95e82e8b27d2e272f7438e85">WeakForms::residual_view_form</a></div><div class="ttdeci">auto residual_view_form(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const CompositeSymbolicOp &amp;functor_op, const enum dealii::Differentiation::SD::OptimizerType optimization_method=dealii::Differentiation::SD::OptimizerType::llvm, const enum dealii::Differentiation::SD::OptimizationFlags optimization_flags=dealii::Differentiation::SD::OptimizationFlags::optimize_default)</div><div class="ttdoc">A convenience function that generates a self-linearizing residual view functional form from a (compos...</div><div class="ttdef"><b>Definition:</b> <a href="self__linearizing__forms_8h_source.html#l02103">self_linearizing_forms.h:2103</a></div></div>
+<div class="ttc" id="agroup__convenience__functions_html_ga7b7da85d217255f157eddcd2a40ee570"><div class="ttname"><a href="group__convenience__functions.html#ga7b7da85d217255f157eddcd2a40ee570">WeakForms::linear_form</a></div><div class="ttdeci">LinearForm&lt; TestSpaceOp, Functor &gt; linear_form(const TestSpaceOp &amp;test_space_op, const Functor &amp;functor_op)</div><div class="ttdoc">A convenience function that is used to create linear forms.</div><div class="ttdef"><b>Definition:</b> <a href="linear__forms_8h_source.html#l00245">linear_forms.h:245</a></div></div>
 <div class="ttc" id="agroup__convenience__functions_html_gad1b1f385584348c61cedf4a1092de1fc"><div class="ttname"><a href="group__convenience__functions.html#gad1b1f385584348c61cedf4a1092de1fc">WeakForms::residual_functor</a></div><div class="ttdeci">ResidualFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00655">residual_functor.h:655</a></div></div>
 <div class="ttc" id="astructWeakForms_1_1SubSpaceExtractors_1_1Scalar_html"><div class="ttname"><a href="structWeakForms_1_1SubSpaceExtractors_1_1Scalar.html">WeakForms::SubSpaceExtractors::Scalar</a></div><div class="ttdoc">An object that can be used to extract a scalar subspace from a global finite element space.</div><div class="ttdef"><b>Definition:</b> <a href="subspace__extractors_8h_source.html#l00044">subspace_extractors.h:44</a></div></div>
 <div class="ttc" id="agroup__convenience__functions_html_gaf1d11b9bc21b0f17dac3f1b2595e135b"><div class="ttname"><a href="group__convenience__functions.html#gaf1d11b9bc21b0f17dac3f1b2595e135b">WeakForms::residual_view_functor</a></div><div class="ttdeci">ResidualViewFunctor&lt; SymbolicOpsSubSpaceFieldSolution... &gt; residual_view_functor(const std::string &amp;symbol_ascii, const std::string &amp;symbol_latex, const TestSpaceOp &amp;test_space_op, const SymbolicOpsSubSpaceFieldSolution &amp;...symbolic_op_field_solutions)</div><div class="ttdoc">A convenience function for creating a ResidualViewFunctor.</div><div class="ttdef"><b>Definition:</b> <a href="residual__functor_8h_source.html#l00705">residual_functor.h:705</a></div></div>
