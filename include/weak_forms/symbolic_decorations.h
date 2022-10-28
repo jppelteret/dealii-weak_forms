@@ -136,6 +136,7 @@ namespace WeakForms
     {
       Geometry(const std::string position,
                const std::string normal,
+               const std::string basis,
                const std::string volume,
                const std::string boundary,
                const std::string interface);
@@ -149,6 +150,11 @@ namespace WeakForms
        * Symbol for a surface normal
        */
       const std::string normal;
+
+      /**
+       * Symbol for the basis direction
+       */
+      const std::string basis;
 
       /**
        * Symbol for a volume

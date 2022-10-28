@@ -60,11 +60,13 @@ namespace WeakForms
 
     Geometry::Geometry(const std::string position,
                        const std::string normal,
+                       const std::string basis,
                        const std::string volume,
                        const std::string boundary,
                        const std::string interface)
       : position(position)
       , normal(normal)
+      , basis(basis)
       , volume(volume)
       , boundary(boundary)
       , interface(interface)
@@ -189,11 +191,12 @@ namespace WeakForms
         {
           const std::string position  = "X";
           const std::string normal    = "N";
+          const std::string basis     = "e";
           const std::string volume    = "V";
           const std::string area      = "A";
           const std::string interface = "I";
 
-          return Geometry(position, normal, volume, area, interface);
+          return Geometry(position, normal, basis, volume, area, interface);
         }
       else
         {
@@ -201,11 +204,12 @@ namespace WeakForms
 
           const std::string position  = "\\mathbf{X}";
           const std::string normal    = "\\mathbf{N}";
+          const std::string basis     = "\\mathbf{e}";
           const std::string volume    = "\\textrm{V}";
           const std::string area      = "\\textrm{A}";
           const std::string interface = "\\textrm{I}";
 
-          return Geometry(position, normal, volume, area, interface);
+          return Geometry(position, normal, basis, volume, area, interface);
         }
     }
 

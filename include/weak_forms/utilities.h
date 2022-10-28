@@ -150,6 +150,17 @@ namespace WeakForms
         (LhsOp::rank < RhsOp::rank ? RhsOp::rank - LhsOp::rank :
                                      LhsOp::rank - RhsOp::rank);
 
+      static int
+      get_reduced_n_contracting_indices(const int lhs_reduction,
+                                        const int rhs_reduction)
+      {
+        Assert(lhs_reduction >= 0, ExcMessage("Negative index reduction"));
+        Assert(rhs_reduction >= 0, ExcMessage("Negative index reduction"));
+        const int lhs_total = LhsOp::rank - lhs_reduction;
+        const int rhs_total = RhsOp::rank - rhs_reduction;
+        return (lhs_total < rhs_total ? lhs_total : rhs_total);
+      }
+
       template <int A>
       struct NonNegative
       {
@@ -688,7 +699,9 @@ namespace WeakForms
               break;
           }
 
-        AssertThrow(false, ExcNotImplemented());
+        AssertThrow(false,
+                    ExcMessage("Index contraction not implemented. Value: " +
+                               std::to_string(n_contracting_indices)));
         return " * ";
       }
 
