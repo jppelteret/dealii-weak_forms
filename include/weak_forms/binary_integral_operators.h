@@ -284,6 +284,12 @@ namespace WeakForms
     : std::true_type
   {};
 
+  template <typename T>
+  struct operand_requires_braced_decoration<
+    T,
+    typename std::enable_if<is_integral_op<T>::value>::type> : std::false_type
+  {};
+
 } // namespace WeakForms
 
 

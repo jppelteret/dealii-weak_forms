@@ -102,16 +102,14 @@ namespace WeakForms
     std::string
     as_latex(const SymbolicDecorations &decorator) const
     {
-      const std::string lbrace = Utilities::LaTeX::l_square_brace();
-      const std::string rbrace = Utilities::LaTeX::r_square_brace();
-
       constexpr unsigned int n_contracting_indices_tf = WeakForms::Utilities::
         FullIndexContraction<TestSpaceOp, Functor>::n_contracting_indices;
       const std::string symb_mult_tf =
         Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tf);
 
-      return lbrace + test_space_op.as_latex(decorator) + symb_mult_tf +
-             functor_op.as_latex(decorator) + rbrace;
+      return decorator.brace_term_when_required_latex(test_space_op) +
+             symb_mult_tf +
+             decorator.brace_term_when_required_latex(functor_op);
     }
 
     // ===== Section: Integration =====

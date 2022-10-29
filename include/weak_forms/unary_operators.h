@@ -2330,6 +2330,12 @@ namespace WeakForms
   {};
 
   template <typename Op, typename UnderlyingType>
+  struct operand_requires_braced_decoration<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::negate, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
   struct is_unary_op<
     Operators::UnaryOp<Op, Operators::UnaryOpCodes::normalize, UnderlyingType>>
     : std::true_type
