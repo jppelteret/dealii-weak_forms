@@ -2,7 +2,7 @@
 DEAL::
 
 DEAL::Weak form (ascii):
-0 = #(Grad(d{u}), d(e(Grad({u})))/dGrad({u}))#dV + #(Grad(d{u}), d2(e(Grad({u})))/(dGrad({u}) x dGrad({u})), Grad(D{u}))#dV - #(d{u}, <s(X)>)#dV
+0 = #(Grad(d{u}), d(e(Grad({u})))/dGrad({u}))#dV + #sym(Grad(d{u}), d2(e(Grad({u})))/(dGrad({u}) x dGrad({u})), Grad(D{u}))#dV - #(d{u}, <s(X)>)#dV
 DEAL::Weak form (LaTeX):
 0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}{\Psi}\left(\nabla\left({\mathbf{u}}\right)\right)}{\mathrm{d}\nabla\left({\mathbf{u}}\right)}\right]\textrm{dV} + \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \frac{\mathrm{d}^{2}{\Psi}\left(\nabla\left({\mathbf{u}}\right)\right)}{\mathrm{d}\nabla\left({\mathbf{u}}\right) \otimes \mathrm{d}\nabla\left({\mathbf{u}}\right)} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV} - \int\left[\delta{\mathbf{u}} \cdot \mathrm{\mathbf{s}\left(\mathbf{X}\right)}\right]\textrm{dV}
 DEAL::

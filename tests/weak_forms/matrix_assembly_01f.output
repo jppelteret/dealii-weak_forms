@@ -1,14 +1,14 @@
 
 DEAL:Dim 2::Weak form assembly (bilinear form)
 DEAL:Dim 2::Weak form (ascii):
-0 = #(d{T}, 1, D{T})#dV
+0 = #(d{T}, 1, D{T})D^(IJ)#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{T}} \colon \left[{1}\,\Delta{\mathbf{T}}\right]\right]\textrm{dV}
+0 = \int\left[\delta{\mathbf{T}} \colon \left[{1}\,\Delta{\mathbf{T}}\right]\right]\delta^{IJ}\textrm{dV}
 DEAL:Dim 2::OK
 DEAL:Dim 3::Weak form assembly (bilinear form)
 DEAL:Dim 3::Weak form (ascii):
-0 = #(d{T}, 1, D{T})#dV
+0 = #(d{T}, 1, D{T})D^(IJ)#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{T}} \colon \left[{1}\,\Delta{\mathbf{T}}\right]\right]\textrm{dV}
+0 = \int\left[\delta{\mathbf{T}} \colon \left[{1}\,\Delta{\mathbf{T}}\right]\right]\delta^{IJ}\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK
