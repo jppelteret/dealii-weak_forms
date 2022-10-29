@@ -21,6 +21,7 @@
 #include <deal.II/base/exceptions.h>
 
 #include <weak_forms/config.h>
+#include <weak_forms/type_traits.h>
 #include <weak_forms/utilities.h>
 
 #include <algorithm>
@@ -482,6 +483,54 @@ namespace WeakForms
       const SymbolicDecorations &decorator = *this;
       return lbrace + operand.as_latex(decorator) + rbrace + "^{" +
              superscript_suffix + "}";
+    }
+
+    template <typename Operand>
+    std::string
+    brace_term_when_required_ascii(
+      const Operand &operand,
+      typename std::enable_if<
+        operand_requires_braced_decoration<Operand>::value>::type * =
+        nullptr) const
+    {
+      const SymbolicDecorations &decorator = *this;
+      return "[" + operand.as_ascii(decorator) + "]";
+    }
+
+    template <typename Operand>
+    std::string
+    brace_term_when_required_ascii(
+      const Operand &operand,
+      typename std::enable_if<
+        !operand_requires_braced_decoration<Operand>::value>::type * =
+        nullptr) const
+    {
+      const SymbolicDecorations &decorator = *this;
+      return operand.as_ascii(decorator);
+    }
+
+    template <typename Operand>
+    std::string
+    brace_term_when_required_latex(
+      const Operand &operand,
+      typename std::enable_if<
+        operand_requires_braced_decoration<Operand>::value>::type * =
+        nullptr) const
+    {
+      const SymbolicDecorations &decorator = *this;
+      return Utilities::LaTeX::decorate_term(operand.as_latex(decorator));
+    }
+
+    template <typename Operand>
+    std::string
+    brace_term_when_required_latex(
+      const Operand &operand,
+      typename std::enable_if<
+        !operand_requires_braced_decoration<Operand>::value>::type * =
+        nullptr) const
+    {
+      const SymbolicDecorations &decorator = *this;
+      return operand.as_latex(decorator);
     }
 
     template <typename Functor>
