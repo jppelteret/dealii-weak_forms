@@ -1946,7 +1946,7 @@ private:                                                                 \
       as_ascii(const SymbolicDecorations &decorator) const
       {
         return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
-          "symm", operand);
+          "sym", operand);
       }
 
       std::string

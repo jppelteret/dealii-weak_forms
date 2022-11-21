@@ -3,22 +3,22 @@ DEAL:Dim 2::Weak form assembly (bilinear form, scalar coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(d{S}, c, D{S})#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{S}} \colon \left[{c}\,\Delta{\mathbf{S}}\right]\right]\textrm{dV}
+0 = \int\delta{\mathbf{S}} \colon {c}\,\Delta{\mathbf{S}}\,\textrm{dV}
 DEAL:Dim 2::Weak form assembly (bilinear form, position dependent scalar coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(d{S}, <<<<C>>>>, D{S})#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{S}} \colon \mathcal{C} \colon \Delta{\mathbf{S}}\right]\textrm{dV}
+0 = \int\delta{\mathbf{S}} \colon \mathcal{C} \colon \Delta{\mathbf{S}}\,\textrm{dV}
 DEAL:Dim 2::OK
 DEAL:Dim 3::Weak form assembly (bilinear form, scalar coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(d{S}, c, D{S})#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{S}} \colon \left[{c}\,\Delta{\mathbf{S}}\right]\right]\textrm{dV}
+0 = \int\delta{\mathbf{S}} \colon {c}\,\Delta{\mathbf{S}}\,\textrm{dV}
 DEAL:Dim 3::Weak form assembly (bilinear form, position dependent scalar coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(d{S}, <<<<C>>>>, D{S})#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\delta{\mathbf{S}} \colon \mathcal{C} \colon \Delta{\mathbf{S}}\right]\textrm{dV}
+0 = \int\delta{\mathbf{S}} \colon \mathcal{C} \colon \Delta{\mathbf{S}}\,\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK

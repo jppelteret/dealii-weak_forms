@@ -56,10 +56,13 @@ DEAL:Symmetrize::has_field_solution_op()
 DEAL:Symmetrize::true
 DEAL:Symmetrize::true
 DEAL:Compound::has_test_function_op()
+DEAL:Compound::false
 DEAL:Compound::true
 DEAL:Compound::has_trial_solution_op()
+DEAL:Compound::false
 DEAL:Compound::true
 DEAL:Compound::has_field_solution_op()
+DEAL:Compound::false
 DEAL:Compound::true
 DEAL:Compound::true
 DEAL:Compound::true

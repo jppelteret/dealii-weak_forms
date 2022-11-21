@@ -3,16 +3,16 @@ DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Curl(d{u}), c, Curl(D{u}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla \times\left(\delta{\mathbf{u}}\right) \cdot \left[{c}\,\nabla \times\left(\Delta{\mathbf{u}}\right)\right]\right]\textrm{dV}
+0 = \int\nabla \times\left(\delta{\mathbf{u}}\right) \cdot {c}\,\nabla \times\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 3::Weak form assembly (bilinear form, rank-0 tensor valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Curl(d{u}), C, Curl(D{u}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla \times\left(\delta{\mathbf{u}}\right) \cdot \left[{C}\,\nabla \times\left(\Delta{\mathbf{u}}\right)\right]\right]\textrm{dV}
+0 = \int\nabla \times\left(\delta{\mathbf{u}}\right) \cdot {C}\,\nabla \times\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 3::Weak form assembly (bilinear form, rank-2 tensor valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Curl(d{u}), <<C>>, Curl(D{u}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla \times\left(\delta{\mathbf{u}}\right) \cdot \mathbf{C} \cdot \nabla \times\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV}
+0 = \int\nabla \times\left(\delta{\mathbf{u}}\right) \cdot \mathbf{C} \cdot \nabla \times\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK
