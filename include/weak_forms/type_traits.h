@@ -364,6 +364,16 @@ namespace WeakForms
 
 
   /**
+   * @brief A type trait that checks to see if a operator is a differential operator.
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
+  template <typename T, typename U = void>
+  struct is_continuous_differential_operator : std::false_type
+  {};
+
+
+  /**
    * @brief A type trait that checks to see if a operator requires bracing being parse for LaTeX output.
    *
    * @tparam T The class type to be tested for the trait.

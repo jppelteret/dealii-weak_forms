@@ -3303,6 +3303,23 @@ namespace WeakForms
   {};
 
 
+  template <typename T>
+  struct is_continuous_differential_operator<
+    T,
+    typename std::enable_if<
+      (is_test_function_op<T>::value || is_trial_solution_op<T>::value ||
+       is_field_solution_op<T>::value) &&
+      (T::op_code == Operators::SymbolicOpCodes::gradient ||
+       T::op_code == Operators::SymbolicOpCodes::symmetric_gradient ||
+       T::op_code == Operators::SymbolicOpCodes::divergence ||
+       T::op_code == Operators::SymbolicOpCodes::curl ||
+       T::op_code == Operators::SymbolicOpCodes::laplacian ||
+       T::op_code == Operators::SymbolicOpCodes::hessian ||
+       T::op_code == Operators::SymbolicOpCodes::third_derivative)>::type>
+    : std::true_type
+  {};
+
+
 
   // Interface operations
 

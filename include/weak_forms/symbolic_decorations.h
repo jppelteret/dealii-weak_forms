@@ -485,11 +485,12 @@ namespace WeakForms
              superscript_suffix + "}";
     }
 
-    template <typename Operand>
+    template <bool force_bracing = false, typename Operand>
     std::string
     brace_term_when_required_ascii(
       const Operand &operand,
       typename std::enable_if<
+        force_bracing == true ||
         operand_requires_braced_decoration<Operand>::value>::type * =
         nullptr) const
     {
@@ -497,11 +498,12 @@ namespace WeakForms
       return "[" + operand.as_ascii(decorator) + "]";
     }
 
-    template <typename Operand>
+    template <bool force_bracing = false, typename Operand>
     std::string
     brace_term_when_required_ascii(
       const Operand &operand,
       typename std::enable_if<
+        force_bracing == false &&
         !operand_requires_braced_decoration<Operand>::value>::type * =
         nullptr) const
     {
@@ -509,11 +511,12 @@ namespace WeakForms
       return operand.as_ascii(decorator);
     }
 
-    template <typename Operand>
+    template <bool force_bracing = false, typename Operand>
     std::string
     brace_term_when_required_latex(
       const Operand &operand,
       typename std::enable_if<
+        force_bracing == true ||
         operand_requires_braced_decoration<Operand>::value>::type * =
         nullptr) const
     {
@@ -521,11 +524,12 @@ namespace WeakForms
       return Utilities::LaTeX::decorate_term(operand.as_latex(decorator));
     }
 
-    template <typename Operand>
+    template <bool force_bracing = false, typename Operand>
     std::string
     brace_term_when_required_latex(
       const Operand &operand,
       typename std::enable_if<
+        force_bracing == false &&
         !operand_requires_braced_decoration<Operand>::value>::type * =
         nullptr) const
     {

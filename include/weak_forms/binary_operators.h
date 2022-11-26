@@ -1749,9 +1749,17 @@ private:                                                                   \
           FullIndexContraction<LhsOp, RhsOp>::n_contracting_indices;
         const std::string symb_mult =
           Utilities::LaTeX::get_symbol_multiply(n_contracting_indices);
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                symb_mult +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2207,9 +2215,16 @@ private:                                                                   \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                " \\times " +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2262,10 +2277,17 @@ private:                                                                   \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
         // https://math.stackexchange.com/questions/20412/element-wise-or-pointwise-operations-notation/601545#601545
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                " \\odot " +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2318,9 +2340,16 @@ private:                                                                   \
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                " \\otimes " +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2379,9 +2408,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(n_contracting_indices);
 
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                symb_contraction +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2454,9 +2490,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(1);
 
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                symb_contraction +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2542,9 +2585,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(2);
 
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                symb_contraction +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2611,9 +2661,17 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(2);
 
-        return decorator.brace_term_when_required_latex(lhs_operand) +
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
                symb_contraction +
-               decorator.brace_term_when_required_latex(rhs_operand);
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
