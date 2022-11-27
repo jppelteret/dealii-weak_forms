@@ -792,12 +792,12 @@ namespace WeakForms
         "Cross product requires that the RHS operand  has a spatial dimension of 3.");
 
       static_assert(
-        LhsOp::rank == 1,
-        "Cross product requires that the LHS operand is of rank-1 (i.e. vector valued).");
+        (LhsOp::template value_type<double>::rank == 1),
+        "Cross product requires that the LHS operand value type is of rank-1 (i.e. vector valued).");
 
       static_assert(
-        RhsOp::rank == 1,
-        "Cross product requires that the RHS operand is of rank-1 (i.e. vector valued).");
+        (RhsOp::template value_type<double>::rank == 1),
+        "Cross product requires that the RHS operand value type is of rank-1 (i.e. vector valued).");
 
       static const int rank = 1;
 
