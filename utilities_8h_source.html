@@ -711,9 +711,9 @@ $(function() {
 <div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;                        <span class="keyword">const</span> std::string &amp;limits = <span class="stringliteral">&quot;&quot;</span>)</div>
 <div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;      {</div>
 <div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;        <span class="keywordflow">if</span> (limits == <span class="stringliteral">&quot;&quot;</span>)</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;          <span class="keywordflow">return</span> <span class="stringliteral">&quot;\\int&quot;</span> + integrand + infinitesimal_symbol;</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;          <span class="keywordflow">return</span> <span class="stringliteral">&quot;\\int&quot;</span> + integrand + <span class="stringliteral">&quot;\\,&quot;</span> + infinitesimal_symbol;</div>
 <div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;          <span class="keywordflow">return</span> <span class="stringliteral">&quot;\\int\\limits_{&quot;</span> + limits + <span class="stringliteral">&quot;}&quot;</span> + integrand +</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;          <span class="keywordflow">return</span> <span class="stringliteral">&quot;\\int\\limits_{&quot;</span> + limits + <span class="stringliteral">&quot;}&quot;</span> + integrand + <span class="stringliteral">&quot;\\,&quot;</span> +</div>
 <div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;                 infinitesimal_symbol;</div>
 <div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      }</div>
 <div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160; </div>
