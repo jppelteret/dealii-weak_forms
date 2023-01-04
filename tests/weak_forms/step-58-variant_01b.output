@@ -4,17 +4,17 @@ DEAL::
 DEAL::LHS:
 
 DEAL::Weak form (ascii):
-0 = #(d{U}, -i, D{U})#dV + #(Grad(d{U}), [0.25 * dt], Grad(D{U}))#dV + #(d{U}, [[0.5 * dt] * Psi(X)], D{U})#dV
+0 = #(d{U}, -i, D{U})#dV + #(Grad(d{U}), 0.25 * dt, Grad(D{U}))#dV + #(d{U}, 0.5 * dt * Psi(X), D{U})#dV
 DEAL::Weak form (LaTeX):
-0 = \int\left[\delta{\varphi}\,\left[-{i}\,\Delta{\varphi}\right]\right]\textrm{dV} + \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[\left[{0.25}\,{\Delta t}\right]\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} + \int\left[\delta{\varphi}\,\left[\left[\left[{0.5}\,{\Delta t}\right]\,{\Psi\left(\mathbf{X}\right)}\right]\,\Delta{\varphi}\right]\right]\textrm{dV}
+0 = \int\delta{\varphi}\,\left[-{i}\right]\,\Delta{\varphi}\,\textrm{dV} + \int\nabla\left(\delta{\varphi}\right) \cdot {0.25}\,{\Delta t}\,\nabla\left(\Delta{\varphi}\right)\,\textrm{dV} + \int\delta{\varphi}\,{0.5}\,{\Delta t}\,{\Psi\left(\mathbf{X}\right)}\,\Delta{\varphi}\,\textrm{dV}
 DEAL::
 
 DEAL::RHS:
 
 DEAL::Weak form (ascii):
-0 = #(d{U}, -i, D{U})#dV - #(Grad(d{U}), [0.25 * dt], Grad(D{U}))#dV - #(d{U}, [[0.5 * dt] * Psi(X)], D{U})#dV
+0 = #(d{U}, -i, D{U})#dV - #(Grad(d{U}), 0.25 * dt, Grad(D{U}))#dV - #(d{U}, 0.5 * dt * Psi(X), D{U})#dV
 DEAL::Weak form (LaTeX):
-0 = \int\left[\delta{\varphi}\,\left[-{i}\,\Delta{\varphi}\right]\right]\textrm{dV} - \int\left[\nabla\left(\delta{\varphi}\right) \cdot \left[\left[{0.25}\,{\Delta t}\right]\,\nabla\left(\Delta{\varphi}\right)\right]\right]\textrm{dV} - \int\left[\delta{\varphi}\,\left[\left[\left[{0.5}\,{\Delta t}\right]\,{\Psi\left(\mathbf{X}\right)}\right]\,\Delta{\varphi}\right]\right]\textrm{dV}
+0 = \int\delta{\varphi}\,\left[-{i}\right]\,\Delta{\varphi}\,\textrm{dV} - \int\nabla\left(\delta{\varphi}\right) \cdot {0.25}\,{\Delta t}\,\nabla\left(\Delta{\varphi}\right)\,\textrm{dV} - \int\delta{\varphi}\,{0.5}\,{\Delta t}\,{\Psi\left(\mathbf{X}\right)}\,\Delta{\varphi}\,\textrm{dV}
 DEAL::
 
 DEAL::Time step 1 at t=0.00000000  ;  Solution at origin: (2.78615852,1.43205575)

@@ -3,22 +3,22 @@ DEAL:Dim 2::Weak form assembly (bilinear form, scalar valued coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(Grad(d{u}), c, Grad(D{u}))#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \left[{c}\,\nabla\left(\Delta{\mathbf{u}}\right)\right]\right]\textrm{dV}
+0 = \int\nabla\left(\delta{\mathbf{u}}\right) \colon {c}\,\nabla\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 2::Weak form assembly (bilinear form, tensor valued coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(Grad(d{u}), <<<<C>>>>, Grad(D{u}))#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{C} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV}
+0 = \int\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{C} \colon \nabla\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 2::OK
 DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Grad(d{u}), c, Grad(D{u}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \left[{c}\,\nabla\left(\Delta{\mathbf{u}}\right)\right]\right]\textrm{dV}
+0 = \int\nabla\left(\delta{\mathbf{u}}\right) \colon {c}\,\nabla\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 3::Weak form assembly (bilinear form, tensor valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Grad(d{u}), <<<<C>>>>, Grad(D{u}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{C} \colon \nabla\left(\Delta{\mathbf{u}}\right)\right]\textrm{dV}
+0 = \int\nabla\left(\delta{\mathbf{u}}\right) \colon \mathcal{C} \colon \nabla\left(\Delta{\mathbf{u}}\right)\,\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK

@@ -3,12 +3,12 @@ DEAL::Dim: 2
 DEAL:Scalar::Weak form (ascii):
 0 = #(Grad(d{s}), 1, Grad(D{s}))#dV + #(d{s}, 1)#dA
 DEAL:Scalar::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{s}\right) \cdot \left[{1}\,\nabla\left(\Delta{s}\right)\right]\right]\textrm{dV} + \int\left[\delta{s}\,{1}\right]\textrm{dA}
+0 = \int\nabla\left(\delta{s}\right) \cdot {1}\,\nabla\left(\Delta{s}\right)\,\textrm{dV} + \int\delta{s}\,{1}\,\textrm{dA}
 DEAL:Scalar::OK
 DEAL:Vector::Weak form (ascii):
 0 = #(Grad(d{s}), <[0,0]>, Hessian(D{s}))#dV + #(Grad(d{s}), <[0,0]>)#dA
 DEAL:Vector::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\end{pmatrix}} \cdot \nabla\nabla\left(\Delta{s}\right)\right]\textrm{dV} + \int\left[\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\end{pmatrix}}\right]\textrm{dA}
+0 = \int\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\end{pmatrix}} \cdot \nabla\nabla\left(\Delta{s}\right)\,\textrm{dV} + \int\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\end{pmatrix}}\,\textrm{dA}
 DEAL:Vector::OK
 DEAL::OK
 DEAL::
@@ -16,12 +16,12 @@ DEAL::Dim: 3
 DEAL:Scalar::Weak form (ascii):
 0 = #(Grad(d{s}), 1, Grad(D{s}))#dV + #(d{s}, 1)#dA
 DEAL:Scalar::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{s}\right) \cdot \left[{1}\,\nabla\left(\Delta{s}\right)\right]\right]\textrm{dV} + \int\left[\delta{s}\,{1}\right]\textrm{dA}
+0 = \int\nabla\left(\delta{s}\right) \cdot {1}\,\nabla\left(\Delta{s}\right)\,\textrm{dV} + \int\delta{s}\,{1}\,\textrm{dA}
 DEAL:Scalar::OK
 DEAL:Vector::Weak form (ascii):
 0 = #(Grad(d{s}), <[0,0,0]>, Hessian(D{s}))#dV + #(Grad(d{s}), <[0,0,0]>)#dA
 DEAL:Vector::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\\0\end{pmatrix}} \cdot \nabla\nabla\left(\Delta{s}\right)\right]\textrm{dV} + \int\left[\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\\0\end{pmatrix}}\right]\textrm{dA}
+0 = \int\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\\0\end{pmatrix}} \cdot \nabla\nabla\left(\Delta{s}\right)\,\textrm{dV} + \int\nabla\left(\delta{s}\right) \cdot \mathrm{\begin{pmatrix}0\\0\\0\end{pmatrix}}\,\textrm{dA}
 DEAL:Vector::OK
 DEAL::OK
 DEAL::

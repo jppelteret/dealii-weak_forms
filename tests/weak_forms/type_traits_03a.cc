@@ -230,6 +230,8 @@ main()
     deallog << "has_test_function_op()" << std::endl;
     deallog << has_test_function_op<decltype(-(-test_s_val))>::value
             << std::endl;
+    deallog << is_test_function_op<decltype(-(-test_s_val))>::value
+            << std::endl;
     //     deallog <<
     //     has_test_function_op<decltype(determinant(-test_s_hess))>::value
     //             << std::endl;
@@ -242,6 +244,8 @@ main()
 
     deallog << "has_trial_solution_op()" << std::endl;
     deallog << has_trial_solution_op<decltype(-(-trial_s_val))>::value
+            << std::endl;
+    deallog << is_trial_solution_op<decltype(-(-trial_s_val))>::value
             << std::endl;
     //     deallog
     //       <<
@@ -256,6 +260,8 @@ main()
 
     deallog << "has_field_solution_op()" << std::endl;
     deallog << has_field_solution_op<decltype(-(-soln_s_val))>::value
+            << std::endl;
+    deallog << is_field_solution_op<decltype(-(-soln_s_val))>::value
             << std::endl;
     deallog << has_field_solution_op<decltype(determinant(-soln_s_hess))>::value
             << std::endl;

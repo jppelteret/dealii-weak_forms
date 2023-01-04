@@ -640,9 +640,9 @@ namespace WeakForms
                         const std::string &limits = "")
       {
         if (limits == "")
-          return "\\int" + integrand + infinitesimal_symbol;
+          return "\\int" + integrand + "\\," + infinitesimal_symbol;
         else
-          return "\\int\\limits_{" + limits + "}" + integrand +
+          return "\\int\\limits_{" + limits + "}" + integrand + "\\," +
                  infinitesimal_symbol;
       }
 

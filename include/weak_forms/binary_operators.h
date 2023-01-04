@@ -792,12 +792,12 @@ namespace WeakForms
         "Cross product requires that the RHS operand  has a spatial dimension of 3.");
 
       static_assert(
-        LhsOp::rank == 1,
-        "Cross product requires that the LHS operand is of rank-1 (i.e. vector valued).");
+        (LhsOp::template value_type<double>::rank == 1),
+        "Cross product requires that the LHS operand value type is of rank-1 (i.e. vector valued).");
 
       static_assert(
-        RhsOp::rank == 1,
-        "Cross product requires that the RHS operand is of rank-1 (i.e. vector valued).");
+        (RhsOp::template value_type<double>::rank == 1),
+        "Cross product requires that the RHS operand value type is of rank-1 (i.e. vector valued).");
 
       static const int rank = 1;
 
@@ -1631,16 +1631,15 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "[" + lhs_operand.as_ascii(decorator) + " + " +
-               rhs_operand.as_ascii(decorator) + "]";
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " + " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return Utilities::LaTeX::decorate_term(lhs_operand.as_latex(decorator) +
-                                               " + " +
-                                               rhs_operand.as_latex(decorator));
+        return decorator.brace_term_when_required_latex(lhs_operand) + " + " +
+               decorator.brace_term_when_required_latex(rhs_operand);
       }
 
       template <typename ScalarType>
@@ -1688,16 +1687,15 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "[" + lhs_operand.as_ascii(decorator) + " - " +
-               rhs_operand.as_ascii(decorator) + "]";
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " * " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return Utilities::LaTeX::decorate_term(lhs_operand.as_latex(decorator) +
-                                               " - " +
-                                               rhs_operand.as_latex(decorator));
+        return decorator.brace_term_when_required_latex(lhs_operand) + " - " +
+               decorator.brace_term_when_required_latex(rhs_operand);
       }
 
       template <typename ScalarType>
@@ -1740,8 +1738,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "[" + lhs_operand.as_ascii(decorator) + " * " +
-               rhs_operand.as_ascii(decorator) + "]";
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " * " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -1751,9 +1749,17 @@ private:                                                                   \
           FullIndexContraction<LhsOp, RhsOp>::n_contracting_indices;
         const std::string symb_mult =
           Utilities::LaTeX::get_symbol_multiply(n_contracting_indices);
-        return Utilities::LaTeX::decorate_term(lhs_operand.as_latex(decorator) +
-                                               symb_mult +
-                                               rhs_operand.as_latex(decorator));
+
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               symb_mult +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -1896,8 +1902,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "[" + lhs_operand.as_ascii(decorator) + " / " +
-               rhs_operand.as_ascii(decorator) + "]";
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " - " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2038,8 +2044,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "[" + lhs_operand.as_ascii(decorator) + "]^[" +
-               rhs_operand.as_ascii(decorator) + "]";
+        return decorator.brace_term_when_required_ascii(lhs_operand) + "^" +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2202,15 +2208,23 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " x " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " x " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_latex(decorator) + " \\times " +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               " \\times " +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2256,16 +2270,24 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " .o " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " .o " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
         // https://math.stackexchange.com/questions/20412/element-wise-or-pointwise-operations-notation/601545#601545
-        return lhs_operand.as_latex(decorator) + " \\odot " +
-               rhs_operand.as_latex(decorator);
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               " \\odot " +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2311,15 +2333,23 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " ox " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " ox " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_latex(decorator) + " \\otimes " +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               " \\otimes " +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2365,8 +2395,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " . " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " . " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2378,8 +2408,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(n_contracting_indices);
 
-        return lhs_operand.as_latex(decorator) + symb_contraction +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               symb_contraction +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2442,8 +2480,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " . " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " . " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2452,8 +2490,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(1);
 
-        return lhs_operand.as_latex(decorator) + symb_contraction +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               symb_contraction +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2529,8 +2575,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " : " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " : " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2539,8 +2585,16 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(2);
 
-        return lhs_operand.as_latex(decorator) + symb_contraction +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               symb_contraction +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2597,8 +2651,8 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return lhs_operand.as_ascii(decorator) + " : " +
-               rhs_operand.as_ascii(decorator);
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " : " +
+               decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
       std::string
@@ -2607,8 +2661,17 @@ private:                                                                   \
         const std::string symb_contraction =
           Utilities::LaTeX::get_symbol_multiply(2);
 
-        return lhs_operand.as_latex(decorator) + symb_contraction +
-               rhs_operand.as_latex(decorator);
+        constexpr bool force_bracing_lhs =
+          is_continuous_differential_operator<LhsOp>::value;
+        constexpr bool force_bracing_rhs =
+          is_continuous_differential_operator<RhsOp>::value;
+
+
+        return decorator.brace_term_when_required_latex<force_bracing_lhs>(
+                 lhs_operand) +
+               symb_contraction +
+               decorator.brace_term_when_required_latex<force_bracing_rhs>(
+                 rhs_operand);
       }
 
       template <typename ScalarType>
@@ -2804,10 +2867,25 @@ namespace WeakForms
   {};
 
   template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct operand_requires_braced_decoration<
+    Operators::
+      BinaryOp<LhsOp, RhsOp, Operators::BinaryOpCodes::add, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
   struct is_binary_op<Operators::BinaryOp<LhsOp,
                                           RhsOp,
                                           Operators::BinaryOpCodes::subtract,
                                           UnderlyingType>> : std::true_type
+  {};
+
+  template <typename LhsOp, typename RhsOp, typename UnderlyingType>
+  struct operand_requires_braced_decoration<
+    Operators::BinaryOp<LhsOp,
+                        RhsOp,
+                        Operators::BinaryOpCodes::subtract,
+                        UnderlyingType>> : std::true_type
   {};
 
   template <typename LhsOp, typename RhsOp, typename UnderlyingType>

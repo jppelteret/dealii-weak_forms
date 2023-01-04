@@ -3,22 +3,22 @@ DEAL:Dim 2::Weak form assembly (bilinear form, scalar valued coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(Laplacian(d{s}), c, Laplacian(D{s}))#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\nabla^{2}\left(\delta{s}\right)\,\left[{c}\,\nabla^{2}\left(\Delta{s}\right)\right]\right]\textrm{dV}
+0 = \int\nabla^{2}\left(\delta{s}\right)\,{c}\,\nabla^{2}\left(\Delta{s}\right)\,\textrm{dV}
 DEAL:Dim 2::Weak form assembly (bilinear form, tensor valued coefficient)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(Laplacian(d{s}), C, Laplacian(D{s}))#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\nabla^{2}\left(\delta{s}\right)\,\left[{C}\,\nabla^{2}\left(\Delta{s}\right)\right]\right]\textrm{dV}
+0 = \int\nabla^{2}\left(\delta{s}\right)\,{C}\,\nabla^{2}\left(\Delta{s}\right)\,\textrm{dV}
 DEAL:Dim 2::OK
 DEAL:Dim 3::Weak form assembly (bilinear form, scalar valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Laplacian(d{s}), c, Laplacian(D{s}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla^{2}\left(\delta{s}\right)\,\left[{c}\,\nabla^{2}\left(\Delta{s}\right)\right]\right]\textrm{dV}
+0 = \int\nabla^{2}\left(\delta{s}\right)\,{c}\,\nabla^{2}\left(\Delta{s}\right)\,\textrm{dV}
 DEAL:Dim 3::Weak form assembly (bilinear form, tensor valued coefficient)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Laplacian(d{s}), C, Laplacian(D{s}))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla^{2}\left(\delta{s}\right)\,\left[{C}\,\nabla^{2}\left(\Delta{s}\right)\right]\right]\textrm{dV}
+0 = \int\nabla^{2}\left(\delta{s}\right)\,{C}\,\nabla^{2}\left(\Delta{s}\right)\,\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK

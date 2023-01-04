@@ -1,0 +1,22 @@
+
+DEAL::Dim: 3
+DEAL:string::
+DEAL:string::Expr 1: -{u}
+DEAL:string::Expr 2: -[{u} + [-{u}]]
+DEAL:string::Expr 3: -[[-{u}] + {u}]
+DEAL:string::Expr 4: {u} * Curl({u})
+DEAL:string::Expr 5: Curl({u}) * {u}
+DEAL:string::Expr 6: Div({T}) x Curl({u})
+DEAL:string::Expr 7: Curl({u}) x Div({T})
+DEAL:string::
+DEAL:LaTeX::
+DEAL:LaTeX::Expr 1: -{\mathbf{u}}
+DEAL:LaTeX::Expr 2: -\left[{\mathbf{u}} + \left[-{\mathbf{u}}\right]\right]
+DEAL:LaTeX::Expr 3: -\left[\left[-{\mathbf{u}}\right] + {\mathbf{u}}\right]
+DEAL:LaTeX::Expr 4: {\mathbf{u}} \cdot \left[\nabla \times\left({\mathbf{u}}\right)\right]
+DEAL:LaTeX::Expr 5: \left[\nabla \times\left({\mathbf{u}}\right)\right] \cdot {\mathbf{u}}
+DEAL:LaTeX::Expr 6: \left[\nabla \cdot\left({\mathbf{T}}\right)\right] \times \left[\nabla \times\left({\mathbf{u}}\right)\right]
+DEAL:LaTeX::Expr 7: \left[\nabla \times\left({\mathbf{u}}\right)\right] \times \left[\nabla \cdot\left({\mathbf{T}}\right)\right]
+DEAL::OK
+DEAL::
+DEAL::OK

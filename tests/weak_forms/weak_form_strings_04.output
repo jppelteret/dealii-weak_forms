@@ -3,8 +3,8 @@ DEAL::Dim: 2
 DEAL:string::Linear form: (d{U}, U)
 DEAL:string::Bilinear form: (d{U}, U, D{U})
 DEAL:string::
-DEAL:LaTeX::Linear form: \left[\delta{\varphi}\,\varphi\right]
-DEAL:LaTeX::Bilinear form: \left[\delta{\varphi}\,\left[\varphi\,\Delta{\varphi}\right]\right]
+DEAL:LaTeX::Linear form: \delta{\varphi}\,\varphi
+DEAL:LaTeX::Bilinear form: \delta{\varphi}\,\varphi\,\Delta{\varphi}
 DEAL:LaTeX::
 DEAL::OK
 DEAL::
@@ -12,8 +12,8 @@ DEAL::Dim: 3
 DEAL:string::Linear form: (d{U}, U)
 DEAL:string::Bilinear form: (d{U}, U, D{U})
 DEAL:string::
-DEAL:LaTeX::Linear form: \left[\delta{\varphi}\,\varphi\right]
-DEAL:LaTeX::Bilinear form: \left[\delta{\varphi}\,\left[\varphi\,\Delta{\varphi}\right]\right]
+DEAL:LaTeX::Linear form: \delta{\varphi}\,\varphi
+DEAL:LaTeX::Bilinear form: \delta{\varphi}\,\varphi\,\Delta{\varphi}
 DEAL:LaTeX::
 DEAL::OK
 DEAL::

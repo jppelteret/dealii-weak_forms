@@ -40,4 +40,4 @@ jobs:
         run: |
           cd build
           echo "Test start index: ${TEST_START}, Number of tests: ${N_TESTS}, Stride between tests: ${TEST_STRIDE}"
-          ctest -I [${TEST_START},${N_TESTS},${TEST_STRIDE}] --output-on-failure
+          ctest -I ${TEST_START},${N_TESTS},${TEST_STRIDE} --output-on-failure

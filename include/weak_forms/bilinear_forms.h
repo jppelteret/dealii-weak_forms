@@ -412,7 +412,8 @@ namespace WeakForms
       // From the assembly point of view, the order of the test/trial
       // function manipulations is important!
       // See extract_test_shape_component() in assembler_base.h
-      std::string test_op = test_space_op.as_ascii(decorator);
+      std::string test_op =
+        decorator.brace_term_when_required_ascii(test_space_op);
       if (ComponentFilterFlags & BilinearFormComponentFilter::multiplicity_I)
         test_op += contract_with_basis("I", true);
       if (ComponentFilterFlags & BilinearFormComponentFilter::dof_I_component_i)
@@ -420,7 +421,8 @@ namespace WeakForms
       if (ComponentFilterFlags & BilinearFormComponentFilter::dof_I_component_j)
         test_op += contract_with_basis("j");
 
-      std::string trial_op = trial_space_op.as_ascii(decorator);
+      std::string trial_op =
+        decorator.brace_term_when_required_ascii(trial_space_op);
       if (ComponentFilterFlags & BilinearFormComponentFilter::multiplicity_J)
         trial_op += contract_with_basis("J", true);
       if (ComponentFilterFlags & BilinearFormComponentFilter::dof_J_component_i)
@@ -437,11 +439,6 @@ namespace WeakForms
     {
       const std::string lbrace = Utilities::LaTeX::l_square_brace();
       const std::string rbrace = Utilities::LaTeX::r_square_brace();
-
-      const std::string sym = (is_symmetric() ? "^{S}" : "");
-      const std::string k_delta =
-        (has_kronecker_delta_property(ComponentFilterFlags) ? "\\delta^{IJ}" :
-                                                              "");
 
       const auto contract_with_basis =
         [&decorator](const std::string &component,
@@ -464,7 +461,8 @@ namespace WeakForms
       // From the assembly point of view, the order of the test/trial
       // function manipulations is important!
       // See extract_test_shape_component() in assembler_base.h
-      std::string  test_op              = test_space_op.as_latex(decorator);
+      std::string test_op =
+        decorator.brace_term_when_required_latex(test_space_op);
       unsigned int n_reduced_indices_tf = 0;
       if (ComponentFilterFlags & BilinearFormComponentFilter::multiplicity_I)
         test_op += contract_with_basis("I", n_reduced_indices_tf, true);
@@ -472,8 +470,11 @@ namespace WeakForms
         test_op += contract_with_basis("i", n_reduced_indices_tf);
       if (ComponentFilterFlags & BilinearFormComponentFilter::dof_I_component_j)
         test_op += contract_with_basis("j", n_reduced_indices_tf);
+      if (n_reduced_indices_tf > 0)
+        test_op = lbrace + test_op + rbrace;
 
-      std::string  trial_op             = trial_space_op.as_latex(decorator);
+      std::string trial_op =
+        decorator.brace_term_when_required_latex(trial_space_op);
       unsigned int n_reduced_indices_ts = 0;
       if (ComponentFilterFlags & BilinearFormComponentFilter::multiplicity_J)
         trial_op += contract_with_basis("J", n_reduced_indices_ts, true);
@@ -481,9 +482,12 @@ namespace WeakForms
         trial_op += contract_with_basis("i", n_reduced_indices_ts);
       if (ComponentFilterFlags & BilinearFormComponentFilter::dof_J_component_j)
         trial_op += contract_with_basis("j", n_reduced_indices_ts);
+      if (n_reduced_indices_ts > 0)
+        trial_op = lbrace + trial_op + rbrace;
 
       // If the functor is scalar valued, then we need to be a bit careful about
       // what the test and trial space ops are (e.g. rank > 0)
+      std::string standard_bilinear_form;
       if (Functor::rank == 0)
         {
           const int n_contracting_indices_tt =
@@ -501,9 +505,10 @@ namespace WeakForms
           const std::string symb_mult_sclr =
             Utilities::LaTeX::get_symbol_multiply(Functor::rank);
 
-          return lbrace + test_op + symb_mult_tt + lbrace +
-                 functor_op.as_latex(decorator) + symb_mult_sclr + trial_op +
-                 rbrace + rbrace + sym + k_delta;
+          standard_bilinear_form =
+            test_op + symb_mult_tt +
+            decorator.brace_term_when_required_latex(functor_op) +
+            symb_mult_sclr + trial_op;
         }
       else
         {
@@ -526,10 +531,24 @@ namespace WeakForms
           const std::string symb_mult_ft =
             Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_ft);
 
-          return lbrace + test_op + symb_mult_tf +
-                 functor_op.as_latex(decorator) + symb_mult_ft + trial_op +
-                 rbrace;
+          standard_bilinear_form =
+            test_op + symb_mult_tf +
+            decorator.brace_term_when_required_latex(functor_op) +
+            symb_mult_ft + trial_op;
         }
+
+      if (is_symmetric() || has_kronecker_delta_property(ComponentFilterFlags))
+        {
+          const std::string sym = (is_symmetric() ? "^{S}" : "");
+          const std::string k_delta =
+            (has_kronecker_delta_property(ComponentFilterFlags) ?
+               "\\delta^{IJ}" :
+               "");
+
+          return lbrace + standard_bilinear_form + rbrace + sym + k_delta;
+        }
+      else
+        return standard_bilinear_form;
     }
 
     // ===== Filters =====

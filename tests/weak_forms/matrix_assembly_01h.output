@@ -3,12 +3,12 @@ DEAL:Dim 2::Weak form assembly (bilinear form)
 DEAL:Dim 2::Weak form (ascii):
 0 = #(Grad(d{v}) . <e>^(I) . <e>_(j), 1, Grad(D{v}) . <e>^(J) . <e>_(i))#dV
 DEAL:Dim 2::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{v}}\right) \cdot \mathbf{e}^{I} \cdot \mathbf{e}_{j}\,\left[{1}\,\nabla\left(\Delta{\mathbf{v}}\right) \cdot \mathbf{e}^{J} \cdot \mathbf{e}_{i}\right]\right]\textrm{dV}
+0 = \int\left[\nabla\left(\delta{\mathbf{v}}\right) \cdot \mathbf{e}^{I} \cdot \mathbf{e}_{j}\right]\,{1}\,\left[\nabla\left(\Delta{\mathbf{v}}\right) \cdot \mathbf{e}^{J} \cdot \mathbf{e}_{i}\right]\,\textrm{dV}
 DEAL:Dim 2::OK
 DEAL:Dim 3::Weak form assembly (bilinear form)
 DEAL:Dim 3::Weak form (ascii):
 0 = #(Grad(d{v}) . <e>^(I) . <e>_(j), 1, Grad(D{v}) . <e>^(J) . <e>_(i))#dV
 DEAL:Dim 3::Weak form (LaTeX):
-0 = \int\left[\nabla\left(\delta{\mathbf{v}}\right) \cdot \mathbf{e}^{I} \cdot \mathbf{e}_{j}\,\left[{1}\,\nabla\left(\Delta{\mathbf{v}}\right) \cdot \mathbf{e}^{J} \cdot \mathbf{e}_{i}\right]\right]\textrm{dV}
+0 = \int\left[\nabla\left(\delta{\mathbf{v}}\right) \cdot \mathbf{e}^{I} \cdot \mathbf{e}_{j}\right]\,{1}\,\left[\nabla\left(\Delta{\mathbf{v}}\right) \cdot \mathbf{e}^{J} \cdot \mathbf{e}_{i}\right]\,\textrm{dV}
 DEAL:Dim 3::OK
 DEAL::OK

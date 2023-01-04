@@ -1,48 +1,48 @@
 
 DEAL::Dim: 2
-DEAL:string::Addition: [d{U} + d{U}]
-DEAL:string::Subtraction: [d{U} - d{U}]
-DEAL:string::Addition: [U + U]
-DEAL:string::Multiplication 1: [d{U} * U]
-DEAL:string::Multiplication 2: [U * D{U}]
-DEAL:string::Multiplication 3: [d{U} * Grad(U)]
-DEAL:string::Multiplication 4: [Grad(U) * Grad(U)]
-DEAL:string::Compound 1: [[d{U} * [U - U]] * D{U}]
-DEAL:string::Compound 2: [[[d{U} + d{U}] * [U + U]] * [D{U} + D{U}]]
+DEAL:string::Addition: d{U} + d{U}
+DEAL:string::Subtraction: d{U} * d{U}
+DEAL:string::Addition: U + U
+DEAL:string::Multiplication 1: d{U} * U
+DEAL:string::Multiplication 2: U * D{U}
+DEAL:string::Multiplication 3: d{U} * Grad(U)
+DEAL:string::Multiplication 4: Grad(U) * Grad(U)
+DEAL:string::Compound 1: d{U} * [U * U] * D{U}
+DEAL:string::Compound 2: [d{U} + d{U}] * [U + U] * [D{U} + D{U}]
 DEAL:string::
 DEAL:LaTeX::
-DEAL:LaTeX::Addition: \left[\delta{\varphi} + \delta{\varphi}\right]
-DEAL:LaTeX::Subtraction: \left[\delta{\varphi} - \delta{\varphi}\right]
-DEAL:LaTeX::Addition: \left[\varphi + \varphi\right]
-DEAL:LaTeX::Multiplication 1: \left[\delta{\varphi}\,\varphi\right]
-DEAL:LaTeX::Multiplication 2: \left[\varphi\,\Delta{\varphi}\right]
-DEAL:LaTeX::Multiplication 3: \left[\delta{\varphi}\,\nabla\left(\varphi\right)\right]
-DEAL:LaTeX::Multiplication 4: \left[\nabla\left(\varphi\right) \cdot \nabla\left(\varphi\right)\right]
-DEAL:LaTeX::Compound 1: \left[\left[\delta{\varphi}\,\left[\varphi - \varphi\right]\right]\,\Delta{\varphi}\right]
-DEAL:LaTeX::Compound 2: \left[\left[\left[\delta{\varphi} + \delta{\varphi}\right]\,\left[\varphi + \varphi\right]\right]\,\left[\Delta{\varphi} + \Delta{\varphi}\right]\right]
+DEAL:LaTeX::Addition: \delta{\varphi} + \delta{\varphi}
+DEAL:LaTeX::Subtraction: \delta{\varphi} - \delta{\varphi}
+DEAL:LaTeX::Addition: \varphi + \varphi
+DEAL:LaTeX::Multiplication 1: \delta{\varphi}\,\varphi
+DEAL:LaTeX::Multiplication 2: \varphi\,\Delta{\varphi}
+DEAL:LaTeX::Multiplication 3: \delta{\varphi}\,\left[\nabla\left(\varphi\right)\right]
+DEAL:LaTeX::Multiplication 4: \left[\nabla\left(\varphi\right)\right] \cdot \left[\nabla\left(\varphi\right)\right]
+DEAL:LaTeX::Compound 1: \delta{\varphi}\,\left[\varphi - \varphi\right]\,\Delta{\varphi}
+DEAL:LaTeX::Compound 2: \left[\delta{\varphi} + \delta{\varphi}\right]\,\left[\varphi + \varphi\right]\,\left[\Delta{\varphi} + \Delta{\varphi}\right]
 DEAL::OK
 DEAL::
 DEAL::Dim: 3
-DEAL:string::Addition: [d{U} + d{U}]
-DEAL:string::Subtraction: [d{U} - d{U}]
-DEAL:string::Addition: [U + U]
-DEAL:string::Multiplication 1: [d{U} * U]
-DEAL:string::Multiplication 2: [U * D{U}]
-DEAL:string::Multiplication 3: [d{U} * Grad(U)]
-DEAL:string::Multiplication 4: [Grad(U) * Grad(U)]
-DEAL:string::Compound 1: [[d{U} * [U - U]] * D{U}]
-DEAL:string::Compound 2: [[[d{U} + d{U}] * [U + U]] * [D{U} + D{U}]]
+DEAL:string::Addition: d{U} + d{U}
+DEAL:string::Subtraction: d{U} * d{U}
+DEAL:string::Addition: U + U
+DEAL:string::Multiplication 1: d{U} * U
+DEAL:string::Multiplication 2: U * D{U}
+DEAL:string::Multiplication 3: d{U} * Grad(U)
+DEAL:string::Multiplication 4: Grad(U) * Grad(U)
+DEAL:string::Compound 1: d{U} * [U * U] * D{U}
+DEAL:string::Compound 2: [d{U} + d{U}] * [U + U] * [D{U} + D{U}]
 DEAL:string::
 DEAL:LaTeX::
-DEAL:LaTeX::Addition: \left[\delta{\varphi} + \delta{\varphi}\right]
-DEAL:LaTeX::Subtraction: \left[\delta{\varphi} - \delta{\varphi}\right]
-DEAL:LaTeX::Addition: \left[\varphi + \varphi\right]
-DEAL:LaTeX::Multiplication 1: \left[\delta{\varphi}\,\varphi\right]
-DEAL:LaTeX::Multiplication 2: \left[\varphi\,\Delta{\varphi}\right]
-DEAL:LaTeX::Multiplication 3: \left[\delta{\varphi}\,\nabla\left(\varphi\right)\right]
-DEAL:LaTeX::Multiplication 4: \left[\nabla\left(\varphi\right) \cdot \nabla\left(\varphi\right)\right]
-DEAL:LaTeX::Compound 1: \left[\left[\delta{\varphi}\,\left[\varphi - \varphi\right]\right]\,\Delta{\varphi}\right]
-DEAL:LaTeX::Compound 2: \left[\left[\left[\delta{\varphi} + \delta{\varphi}\right]\,\left[\varphi + \varphi\right]\right]\,\left[\Delta{\varphi} + \Delta{\varphi}\right]\right]
+DEAL:LaTeX::Addition: \delta{\varphi} + \delta{\varphi}
+DEAL:LaTeX::Subtraction: \delta{\varphi} - \delta{\varphi}
+DEAL:LaTeX::Addition: \varphi + \varphi
+DEAL:LaTeX::Multiplication 1: \delta{\varphi}\,\varphi
+DEAL:LaTeX::Multiplication 2: \varphi\,\Delta{\varphi}
+DEAL:LaTeX::Multiplication 3: \delta{\varphi}\,\left[\nabla\left(\varphi\right)\right]
+DEAL:LaTeX::Multiplication 4: \left[\nabla\left(\varphi\right)\right] \cdot \left[\nabla\left(\varphi\right)\right]
+DEAL:LaTeX::Compound 1: \delta{\varphi}\,\left[\varphi - \varphi\right]\,\Delta{\varphi}
+DEAL:LaTeX::Compound 2: \left[\delta{\varphi} + \delta{\varphi}\right]\,\left[\varphi + \varphi\right]\,\left[\Delta{\varphi} + \Delta{\varphi}\right]
 DEAL::OK
 DEAL::
 DEAL::OK

@@ -1276,13 +1276,13 @@ private:                                                                 \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return "-" + operand.as_ascii(decorator);
+        return "-" + decorator.brace_term_when_required_ascii(operand);
       }
 
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return "-" + operand.as_latex(decorator);
+        return "-" + decorator.brace_term_when_required_latex(operand);
       }
 
       template <typename ScalarType>
@@ -1946,7 +1946,7 @@ private:                                                                 \
       as_ascii(const SymbolicDecorations &decorator) const
       {
         return decorator.prefixed_parenthesized_symbolic_op_operand_as_ascii(
-          "symm", operand);
+          "sym", operand);
       }
 
       std::string
@@ -2282,6 +2282,18 @@ namespace WeakForms
   namespace Operators
   {
     DEAL_II_UNARY_OP_OF_UNARY_OP(operator-, negate)
+
+    // Specialisation: Negation of a negation
+    // Just return the underlying value rather than performing these operations.
+    template <typename Op, typename... OpArgs>
+    auto
+    operator-(
+      const WeakForms::Operators::UnaryOp<Op, UnaryOpCodes::negate, OpArgs...>
+        &operand)
+    {
+      return operand.get_operand();
+    }
+
   } // namespace Operators
 } // namespace WeakForms
 
@@ -2325,6 +2337,12 @@ namespace WeakForms
 
   template <typename Op, typename UnderlyingType>
   struct is_unary_op<
+    Operators::UnaryOp<Op, Operators::UnaryOpCodes::negate, UnderlyingType>>
+    : std::true_type
+  {};
+
+  template <typename Op, typename UnderlyingType>
+  struct operand_requires_braced_decoration<
     Operators::UnaryOp<Op, Operators::UnaryOpCodes::negate, UnderlyingType>>
     : std::true_type
   {};
