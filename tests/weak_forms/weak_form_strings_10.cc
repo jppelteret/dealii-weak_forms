@@ -56,11 +56,11 @@ run()
             << std::endl;
     deallog << "Trial solution: " << trial.jump_in_values().as_ascii(decorator)
             << std::endl;
-    //     deallog << "Solution: " << jump_in_values(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_values<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_values().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_values<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -69,12 +69,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.jump_in_gradients().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_gradients(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_gradients<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_gradients().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_gradients<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -83,11 +82,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.jump_in_hessians().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " << jump_in_hessians(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_hessians<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_hessians().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_hessians<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -98,12 +97,12 @@ run()
     deallog << "Trial solution: "
             << trial.jump_in_third_derivatives().as_ascii(decorator)
             << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_third_derivatives(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_third_derivatives<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln.jump_in_third_derivatives().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_third_derivatives<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -112,12 +111,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_values().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_values(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_values<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_values().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_values<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -126,12 +124,11 @@ run()
             << test.average_of_gradients().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_gradients().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_gradients(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_gradients<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_gradients().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_gradients<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -140,12 +137,11 @@ run()
             << test.average_of_hessians().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_hessians().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_hessians(soln).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_hessians<1>(soln).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_hessians().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_hessians<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }
@@ -166,11 +162,11 @@ run()
             << std::endl;
     deallog << "Trial solution: " << trial.jump_in_values().as_latex(decorator)
             << std::endl;
-    //     deallog << "Solution: " << jump_in_values(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_values<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_values().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_values<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -179,12 +175,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.jump_in_gradients().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_gradients(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_gradients<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_gradients().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_gradients<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -193,11 +188,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.jump_in_hessians().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " << jump_in_hessians(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_hessians<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.jump_in_hessians().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_hessians<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -208,12 +203,12 @@ run()
     deallog << "Trial solution: "
             << trial.jump_in_third_derivatives().as_latex(decorator)
             << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_third_derivatives(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_third_derivatives<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln.jump_in_third_derivatives().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template jump_in_third_derivatives<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -222,12 +217,11 @@ run()
             << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_values().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_values(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_values<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_values().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_values<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -236,12 +230,11 @@ run()
             << test.average_of_gradients().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_gradients().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_gradients(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_gradients<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_gradients().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_gradients<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -250,12 +243,11 @@ run()
             << test.average_of_hessians().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial.average_of_hessians().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_hessians(soln).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_hessians<1>(soln).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln.average_of_hessians().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln.template average_of_hessians<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }
