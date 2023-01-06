@@ -65,12 +65,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_values().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_values(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_values<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_values().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_values<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -79,12 +78,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.jump_in_gradients().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_gradients().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_gradients(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_gradients<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_gradients().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_gradients<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -93,12 +91,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.jump_in_hessians().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_hessians().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_hessians(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_hessians<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_hessians().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_hessians<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -109,12 +106,13 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << "Trial solution: "
             << trial_ss.jump_in_third_derivatives().as_ascii(decorator)
             << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_third_derivatives(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_third_derivatives<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln_ss.jump_in_third_derivatives().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_third_derivatives<1>().as_ascii(
+                 decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -123,12 +121,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_values().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_values().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_values(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_values<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.average_of_values().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_values<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -137,12 +134,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_gradients().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_gradients().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_gradients(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_gradients<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln_ss.average_of_gradients().as_ascii(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_gradients<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -151,12 +147,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_hessians().as_ascii(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_hessians().as_ascii(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_hessians(soln_ss).as_ascii(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_hessians<1>(soln_ss).as_ascii(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.average_of_hessians().as_ascii(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_hessians<1>().as_ascii(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }
@@ -177,12 +172,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_values().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_values(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_values<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_values().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_values<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -191,12 +185,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.jump_in_gradients().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_gradients().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_gradients(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_gradients<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_gradients().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_gradients<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -205,12 +198,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.jump_in_hessians().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.jump_in_hessians().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_hessians(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_hessians<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.jump_in_hessians().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_hessians<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -221,12 +213,13 @@ run(const SubSpaceExtractorType &subspace_extractor)
     deallog << "Trial solution: "
             << trial_ss.jump_in_third_derivatives().as_latex(decorator)
             << std::endl;
-    //     deallog << "Solution: " <<
-    //     jump_in_third_derivatives(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     jump_in_third_derivatives<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln_ss.jump_in_third_derivatives().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template jump_in_third_derivatives<1>().as_latex(
+                 decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -235,12 +228,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_values().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_values().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_values(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_values<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.average_of_values().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_values<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -249,12 +241,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_gradients().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_gradients().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_gradients(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_gradients<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: "
+            << soln_ss.average_of_gradients().as_latex(decorator) << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_gradients<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
 
@@ -263,12 +254,11 @@ run(const SubSpaceExtractorType &subspace_extractor)
             << test_ss.average_of_hessians().as_latex(decorator) << std::endl;
     deallog << "Trial solution: "
             << trial_ss.average_of_hessians().as_latex(decorator) << std::endl;
-    //     deallog << "Solution: " <<
-    //     average_of_hessians(soln_ss).as_latex(decorator)
-    //             << std::endl;
-    //     deallog << "Solution (t1): " <<
-    //     average_of_hessians<1>(soln_ss).as_latex(decorator)
-    //             << std::endl;
+    deallog << "Solution: " << soln_ss.average_of_hessians().as_latex(decorator)
+            << std::endl;
+    deallog << "Solution (t1): "
+            << soln_ss.template average_of_hessians<1>().as_latex(decorator)
+            << std::endl;
 
     deallog << std::endl;
   }

@@ -750,6 +750,41 @@ namespace WeakForms
 
     // Methods to promote this class to a SymbolicOp: Interface
 
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    jump_in_values() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    jump_in_gradients() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    jump_in_hessians() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    jump_in_third_derivatives() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    average_of_values() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    average_of_gradients() const;
+
+    template <types::solution_index solution_index =
+                numbers::linearizable_solution_index>
+    auto
+    average_of_hessians() const;
+
   protected:
     // Subspace
     FieldSolution(const types::field_index field_index,
@@ -2736,6 +2771,308 @@ public:                                                                    \
       }
     };
 
+
+    /**
+     * Extract the solution jump in value from the discretized solution field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::jump_in_values,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpValueBase<FieldSolution<dim, spacedim>,
+                                       solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpJumpValueBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field jump in value extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its jump in value."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution jump in gradient from the discretized solution
+     * field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::jump_in_gradients,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpGradientBase<FieldSolution<dim, spacedim>,
+                                          solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpJumpGradientBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field jump in gradient extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its jump in gradient."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution jump in Hessian from the discretized solution field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::jump_in_hessians,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpHessianBase<FieldSolution<dim, spacedim>,
+                                         solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpJumpHessianBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field jump in Hessian extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its jump in Hessian."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution jump in third derivative from the discretized
+     * solution field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::jump_in_third_derivatives,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpJumpThirdDerivativeBase<FieldSolution<dim, spacedim>,
+                                                 solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(
+        SymbolicOpJumpThirdDerivativeBase,
+        dim,
+        spacedim,
+        solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field jump in third derivative extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its jump in third derivative."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution average of values from the discretized solution
+     * field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::average_of_values,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageValueBase<FieldSolution<dim, spacedim>,
+                                          solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(SymbolicOpAverageValueBase,
+                                                     dim,
+                                                     spacedim,
+                                                     solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field average of values extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its average of values."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution average of gradients from the discretized solution
+     * field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::average_of_gradients,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageGradientBase<FieldSolution<dim, spacedim>,
+                                             solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(
+        SymbolicOpAverageGradientBase,
+        dim,
+        spacedim,
+        solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field average of gradients extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its average of gradients."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
+
+    /**
+     * Extract the solution average of Hessians from the discretized solution
+     * field.
+     *
+     * @tparam dim
+     * @tparam spacedim
+     */
+    template <types::solution_index solution_index, int dim, int spacedim>
+    class SymbolicOp<FieldSolution<dim, spacedim>,
+                     SymbolicOpCodes::average_of_hessians,
+                     void,
+                     WeakForms::internal::SolutionIndex<solution_index>>
+      : public SymbolicOpAverageHessianBase<FieldSolution<dim, spacedim>,
+                                            solution_index>
+    {
+      DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL(
+        SymbolicOpAverageHessianBase,
+        dim,
+        spacedim,
+        solution_index)
+
+    public:
+      // Return solution values at all quadrature points
+      template <typename ScalarType>
+      return_type<ScalarType>
+      operator()(MeshWorker::ScratchData<dim, spacedim> &scratch_data,
+                 const std::vector<SolutionExtractionData<dim, spacedim>>
+                   &solution_extraction_data) const
+      {
+        (void)scratch_data;
+        (void)solution_extraction_data;
+
+        AssertThrow(
+          false,
+          ExcMessage(
+            "Solution field average of Hessians extraction for has not been implemented for the global solution space. "
+            "Use a weak form subspace extractor to isolate a component of the field solution before trying "
+            "to retrieve its average of Hessians."));
+
+        return return_type<ScalarType>();
+      }
+    };
+
 #undef DEAL_II_SYMBOLIC_OP_FIELD_SOLUTION_COMMON_IMPL
 
   } // namespace Operators
@@ -3241,6 +3578,153 @@ namespace WeakForms
     using OpType =
       SymbolicOp<Op,
                  SymbolicOpCodes::third_derivative,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::jump_in_values() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_values,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::jump_in_gradients() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_gradients,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::jump_in_hessians() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_hessians,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::jump_in_third_derivatives() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::jump_in_third_derivatives,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::average_of_values() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_values,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::average_of_gradients() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_gradients,
+                 void,
+                 WeakForms::internal::SolutionIndex<solution_index>>;
+
+    const auto &operand = *this;
+    return OpType(operand);
+  }
+
+
+
+  template <int dim, int spacedim>
+  template <types::solution_index solution_index>
+  DEAL_II_ALWAYS_INLINE inline auto
+  WeakForms::FieldSolution<dim, spacedim>::average_of_hessians() const
+  {
+    using namespace WeakForms;
+    using namespace WeakForms::Operators;
+
+    using Op = FieldSolution<dim, spacedim>;
+    using OpType =
+      SymbolicOp<Op,
+                 SymbolicOpCodes::average_of_hessians,
                  void,
                  WeakForms::internal::SolutionIndex<solution_index>>;
 

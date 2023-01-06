@@ -8,30 +8,44 @@ DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Jump in values
 DEAL:string::Test function: [[d{u}]]
 DEAL:string::Trial solution: [[D{u}]]
+DEAL:string::Solution: [[{u}]]
+DEAL:string::Solution (t1): [[{u}_1]]
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Jump in gradients
 DEAL:string::Test function: [[Grad(d{u})]]
 DEAL:string::Trial solution: [[Grad(D{u})]]
+DEAL:string::Solution: [[Grad({u})]]
+DEAL:string::Solution (t1): [[Grad({u}_1)]]
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Jump in hessians
 DEAL:string::Test function: [[Hessian(d{u})]]
 DEAL:string::Trial solution: [[Hessian(D{u})]]
+DEAL:string::Solution: [[Hessian({u})]]
+DEAL:string::Solution (t1): [[Hessian({u}_1)]]
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Jump in third derivatives
 DEAL:string::Test function: [[3rd_Derivative(d{u})]]
 DEAL:string::Trial solution: [[3rd_Derivative(D{u})]]
+DEAL:string::Solution: [[3rd_Derivative({u})]]
+DEAL:string::Solution (t1): [[3rd_Derivative({u}_1)]]
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Average of values
 DEAL:string::Test function: {{d{u}}}
 DEAL:string::Trial solution: {{D{u}}}
+DEAL:string::Solution: {{{u}}}
+DEAL:string::Solution (t1): {{{u}_1}}
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Average of gradients
 DEAL:string::Test function: {{Grad(d{u})}}
 DEAL:string::Trial solution: {{Grad(D{u})}}
+DEAL:string::Solution: {{Grad({u})}}
+DEAL:string::Solution (t1): {{Grad({u}_1)}}
 DEAL:string::
 DEAL:string::SPACE FUNCTIONS: Average of hessians
 DEAL:string::Test function: {{Hessian(d{u})}}
 DEAL:string::Trial solution: {{Hessian(D{u})}}
+DEAL:string::Solution: {{Hessian({u})}}
+DEAL:string::Solution (t1): {{Hessian({u}_1)}}
 DEAL:string::
 DEAL:LaTeX::SPACE CREATION
 DEAL:LaTeX::Test function: \delta{\mathbf{u}}
@@ -41,30 +55,44 @@ DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Jump in values
 DEAL:LaTeX::Test function: \left[\!\left[\delta{\mathbf{u}}\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\Delta{\mathbf{u}}\right]\!\right]
+DEAL:LaTeX::Solution: \left[\!\left[{\mathbf{u}}\right]\!\right]
+DEAL:LaTeX::Solution (t1): \left[\!\left[{\mathbf{u}}_{t-1}\right]\!\right]
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Jump in gradients
 DEAL:LaTeX::Test function: \left[\!\left[\nabla\left(\delta{\mathbf{u}}\right)\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\left(\Delta{\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution: \left[\!\left[\nabla\left({\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution (t1): \left[\!\left[\nabla\left({\mathbf{u}}_{t-1}\right)\right]\!\right]
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Jump in hessians
 DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\left(\delta{\mathbf{u}}\right)\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\left(\Delta{\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution: \left[\!\left[\nabla\nabla\left({\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution (t1): \left[\!\left[\nabla\nabla\left({\mathbf{u}}_{t-1}\right)\right]\!\right]
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Jump in third derivatives
 DEAL:LaTeX::Test function: \left[\!\left[\nabla\nabla\nabla\left(\delta{\mathbf{u}}\right)\right]\!\right]
 DEAL:LaTeX::Trial solution: \left[\!\left[\nabla\nabla\nabla\left(\Delta{\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution: \left[\!\left[\nabla\nabla\nabla\left({\mathbf{u}}\right)\right]\!\right]
+DEAL:LaTeX::Solution (t1): \left[\!\left[\nabla\nabla\nabla\left({\mathbf{u}}_{t-1}\right)\right]\!\right]
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Average of values
 DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\delta{\mathbf{u}}\right\rbrace\!\right\rbrace
 DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\Delta{\mathbf{u}}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution: \left\lbrace\!\left\lbrace{\mathbf{u}}\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution (t1): \left\lbrace\!\left\lbrace{\mathbf{u}}_{t-1}\right\rbrace\!\right\rbrace
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Average of gradients
 DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\left(\delta{\mathbf{u}}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\left(\Delta{\mathbf{u}}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution: \left\lbrace\!\left\lbrace\nabla\left({\mathbf{u}}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution (t1): \left\lbrace\!\left\lbrace\nabla\left({\mathbf{u}}_{t-1}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::
 DEAL:LaTeX::SPACE FUNCTIONS: Average of hessians
 DEAL:LaTeX::Test function: \left\lbrace\!\left\lbrace\nabla\nabla\left(\delta{\mathbf{u}}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::Trial solution: \left\lbrace\!\left\lbrace\nabla\nabla\left(\Delta{\mathbf{u}}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution: \left\lbrace\!\left\lbrace\nabla\nabla\left({\mathbf{u}}\right)\right\rbrace\!\right\rbrace
+DEAL:LaTeX::Solution (t1): \left\lbrace\!\left\lbrace\nabla\nabla\left({\mathbf{u}}_{t-1}\right)\right\rbrace\!\right\rbrace
 DEAL:LaTeX::
 DEAL::OK
 DEAL::
