@@ -323,11 +323,20 @@ namespace WeakForms
 
 
 
+  FormattingLaTeX::FormattingLaTeX(
+    const FormattingLaTeX::IntegralFormat &integral_format)
+    : integral_format(integral_format)
+  {}
+
+
+
   SymbolicDecorations::SymbolicDecorations(
     const SymbolicNamesAscii &naming_ascii,
-    const SymbolicNamesLaTeX &naming_latex)
+    const SymbolicNamesLaTeX &naming_latex,
+    const FormattingLaTeX &   formatting_latex)
     : naming_ascii(naming_ascii)
     , naming_latex(naming_latex)
+    , formatting_latex(formatting_latex)
   {}
 
 } // namespace WeakForms

@@ -1,0 +1,90 @@
+
+DEAL::Dim: 2
+DEAL:string::Volume integral: dV
+DEAL:string::Boundary integral: dA
+DEAL:string::Interface integral: dI
+DEAL:string::
+DEAL:string::Volume integral: dV
+DEAL:string::Boundary integral: dA
+DEAL:string::Interface integral: dI
+DEAL:string::
+DEAL:LaTeX::Volume integral: \textrm{dV}
+DEAL:LaTeX::Boundary integral: \textrm{dA}
+DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::
+DEAL:LaTeX::Volume integral: \textrm{dV}
+DEAL:LaTeX::Boundary integral: \textrm{dA}
+DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::
+DEAL:values::Volume integral: \left({s}\right)
+DEAL:values::Boundary integral: \left\langle\mathbf{T\left(\mathbf{X}\right)}\right\rangle)
+DEAL:values::Interface integral: \left\lbrace{s\left(\mathbf{X}\right)}\right\rbrace
+DEAL:values::Integrate function: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace
+DEAL:values::Form integral: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace
+DEAL:values::Form integral with subregions: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)_{1,2,3}
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)_{4,5,6}
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace_{7,8,9}
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)_{1,2,3}
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)_{4,5,6}
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace_{7,8,9}
+DEAL:values::
+DEAL::OK
+DEAL::
+DEAL::Dim: 3
+DEAL:string::Volume integral: dV
+DEAL:string::Boundary integral: dA
+DEAL:string::Interface integral: dI
+DEAL:string::
+DEAL:string::Volume integral: dV
+DEAL:string::Boundary integral: dA
+DEAL:string::Interface integral: dI
+DEAL:string::
+DEAL:LaTeX::Volume integral: \textrm{dV}
+DEAL:LaTeX::Boundary integral: \textrm{dA}
+DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::
+DEAL:LaTeX::Volume integral: \textrm{dV}
+DEAL:LaTeX::Boundary integral: \textrm{dA}
+DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::
+DEAL:values::Volume integral: \left({s}\right)
+DEAL:values::Boundary integral: \left\langle\mathbf{T\left(\mathbf{X}\right)}\right\rangle)
+DEAL:values::Interface integral: \left\lbrace{s\left(\mathbf{X}\right)}\right\rbrace
+DEAL:values::Integrate function: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace
+DEAL:values::Form integral: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace
+DEAL:values::Form integral with subregions: 
+DEAL:values::Bilinear form (Volume integral): \left(\delta{\varphi}, \varphi\,\Delta{\varphi}\right)_{1,2,3}
+DEAL:values::Bilinear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rangle)_{4,5,6}
+DEAL:values::Bilinear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\,\Delta{\varphi}\right\rbrace_{7,8,9}
+DEAL:values::Linear form (Volume integral): \left(\delta{\varphi}, \varphi\right)_{1,2,3}
+DEAL:values::Linear form (Boundary integral): \left\langle\delta{\varphi}, \varphi\right\rangle)_{4,5,6}
+DEAL:values::Linear form (Interface integral): \left\lbrace\delta{\varphi}, \varphi\right\rbrace_{7,8,9}
+DEAL:values::
+DEAL::OK
+DEAL::
+DEAL::OK

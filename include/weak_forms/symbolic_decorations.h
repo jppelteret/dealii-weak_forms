@@ -322,6 +322,68 @@ namespace WeakForms
   }; // struct SymbolicNamesLaTeX
 
 
+  /**
+   * @brief A data structure that helps define how some LaTeX output is to be formatted.
+   */
+  struct FormattingLaTeX
+  {
+    /**
+     * Notation for integration.
+     */
+    enum class IntegralFormat
+    {
+      /**
+       * Standard integral notation, using the integral symbol @f$ \int @f$
+       * and some surrounding notation to denote the integration limits.
+       */
+      standard_notation,
+      /**
+       * Bilinear form notation, in the spirit of that defined by
+       * T.J.R. Hughes "The Finite Element Method: Linear  Static and Dynamic
+       * Finite Element Analysis", 2000 for symmetric, bilinear forms.
+       *
+       * Therein, a quantity @f$ a \left( \bullet, \bullet \right) @f$ is one
+       * that contributes the linear system matrix, while @f$ \left( \bullet,
+       * \bullet \right) @f$ contributes to the right-hand side vector. We make
+       * a slight deviation from this, using different notation to indicate
+       * symmetric forms, while volume and surface integrals are differentiated
+       * using different parentheses.
+       */
+      bilinear_form_notation
+    };
+
+    /**
+     * An enumeration that indicates the type of integral.
+     */
+    enum class IntegralType
+    {
+      /**
+       * A volume integral.
+       */
+      volume_integral,
+      /**
+       * A boundary integral.
+       */
+      boundary_integral,
+      /**
+       * An interface integral.
+       */
+      interface_integral
+    };
+
+    FormattingLaTeX(const IntegralFormat &integral_format =
+                      IntegralFormat::standard_notation);
+
+    const IntegralFormat &
+    get_integral_format() const
+    {
+      return integral_format;
+    }
+
+    const IntegralFormat integral_format;
+  }; // struct FormattingLaTeX
+
+
 
   /**
    * @brief A class whose purpose is to construct all decorations for symbols required for ASCII and LaTeX output.
@@ -329,8 +391,9 @@ namespace WeakForms
   struct SymbolicDecorations
   {
     SymbolicDecorations(
-      const SymbolicNamesAscii &naming_ascii = SymbolicNamesAscii(),
-      const SymbolicNamesLaTeX &naming_latex = SymbolicNamesLaTeX());
+      const SymbolicNamesAscii &naming_ascii     = SymbolicNamesAscii(),
+      const SymbolicNamesLaTeX &naming_latex     = SymbolicNamesLaTeX(),
+      const FormattingLaTeX &   formatting_latex = FormattingLaTeX());
 
     const SymbolicNamesAscii &
     get_naming_ascii() const
@@ -342,6 +405,12 @@ namespace WeakForms
     get_naming_latex() const
     {
       return naming_latex;
+    }
+
+    const FormattingLaTeX &
+    get_formatting_latex() const
+    {
+      return formatting_latex;
     }
 
     std::string
@@ -699,21 +768,17 @@ namespace WeakForms
     }
 
 
-    // template <typename Functor, typename SubDomainType, template<typename>
-    // class Infinitesimal> std::string symbolic_op_integral_as_latex(const
-    // Functor &      functor,
-    //                            const Infinitesimal<SubDomainType>
-    //                            &infinitesimal_element) const
     template <typename Functor, typename Infinitesimal>
     std::string
-    symbolic_op_integral_as_latex(
+    symbolic_op_standard_integral_as_latex(
       const Functor &      functor,
       const Infinitesimal &infinitesimal_element) const
     {
       const SymbolicDecorations &decorator = *this;
+
       if (infinitesimal_element.integrate_over_entire_domain())
         {
-          return Utilities::LaTeX::decorate_integral(
+          return Utilities::LaTeX::decorate_standard_notation_generic_integral(
             functor.as_latex(decorator),
             infinitesimal_element.get_infinitesimal_symbol_latex(decorator));
         }
@@ -722,11 +787,59 @@ namespace WeakForms
           const std::string str_subdomains =
             infinitesimal_element.get_subdomain_as_latex(decorator);
 
-          return Utilities::LaTeX::decorate_integral(
+          return Utilities::LaTeX::decorate_standard_notation_generic_integral(
             functor.as_latex(decorator),
             infinitesimal_element.get_infinitesimal_symbol_latex(decorator),
             infinitesimal_element.get_symbol_ascii(decorator) + "=" +
               str_subdomains);
+        }
+    }
+
+
+    template <typename Functor, typename Infinitesimal>
+    std::string
+    symbolic_op_bilinear_form_integral_as_latex(
+      const Functor &                      functor,
+      const Infinitesimal &                infinitesimal_element,
+      const FormattingLaTeX::IntegralType &integral_type) const
+    {
+      const SymbolicDecorations &decorator  = *this;
+      const std::string          str_limits = [&]() -> std::string
+      {
+        if (infinitesimal_element.integrate_over_entire_domain())
+          {
+            return "";
+          }
+        else
+          {
+            const std::string str_subdomains =
+              infinitesimal_element.get_subdomain_as_latex(decorator);
+            return str_subdomains;
+          }
+      }();
+
+      if (integral_type == FormattingLaTeX::IntegralType::volume_integral)
+        {
+          return Utilities::LaTeX::decorate_bilinear_notation_volume_integral(
+            functor.as_latex(decorator), str_limits);
+        }
+      else if (integral_type ==
+               FormattingLaTeX::IntegralType::boundary_integral)
+        {
+          return Utilities::LaTeX::decorate_bilinear_notation_surface_integral(
+            functor.as_latex(decorator), str_limits);
+        }
+      else if (integral_type ==
+               FormattingLaTeX::IntegralType::interface_integral)
+        {
+          return Utilities::LaTeX::
+            decorate_bilinear_notation_interface_integral(
+              functor.as_latex(decorator), str_limits);
+        }
+      else
+        {
+          AssertThrow(false, ExcNotImplemented());
+          return "";
         }
     }
 
@@ -768,6 +881,7 @@ namespace WeakForms
 
     const SymbolicNamesAscii naming_ascii;
     const SymbolicNamesLaTeX naming_latex;
+    const FormattingLaTeX    formatting_latex;
 
   private:
     void
