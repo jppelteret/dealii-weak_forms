@@ -104,8 +104,15 @@ namespace WeakForms
     {
       constexpr unsigned int n_contracting_indices_tf = WeakForms::Utilities::
         FullIndexContraction<TestSpaceOp, Functor>::n_contracting_indices;
+
+      const bool use_bilinear_form_notation =
+        (decorator.get_formatting_latex().get_integral_format() ==
+         FormattingLaTeX::IntegralFormat::bilinear_form_notation);
+
       const std::string symb_mult_tf =
-        Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tf);
+        (use_bilinear_form_notation ?
+           ", " :
+           Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tf));
 
       return decorator.brace_term_when_required_latex(test_space_op) +
              symb_mult_tf +

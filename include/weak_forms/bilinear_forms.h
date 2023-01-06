@@ -485,6 +485,10 @@ namespace WeakForms
       if (n_reduced_indices_ts > 0)
         trial_op = lbrace + trial_op + rbrace;
 
+      const bool use_bilinear_form_notation =
+        (decorator.get_formatting_latex().get_integral_format() ==
+         FormattingLaTeX::IntegralFormat::bilinear_form_notation);
+
       // If the functor is scalar valued, then we need to be a bit careful about
       // what the test and trial space ops are (e.g. rank > 0)
       std::string standard_bilinear_form;
@@ -501,7 +505,9 @@ namespace WeakForms
           // Incorporate the extra indices already contracted out as a part of
           // the bilinear form component filter operations
           const std::string symb_mult_tt =
-            Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tt);
+            (use_bilinear_form_notation ?
+               ", " :
+               Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tt));
           const std::string symb_mult_sclr =
             Utilities::LaTeX::get_symbol_multiply(Functor::rank);
 
@@ -527,7 +533,9 @@ namespace WeakForms
           // Incorporate the extra indices already contracted out as a part of
           // the bilinear form component filter operations
           const std::string symb_mult_tf =
-            Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tf);
+            (use_bilinear_form_notation ?
+               ", " :
+               Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_tf));
           const std::string symb_mult_ft =
             Utilities::LaTeX::get_symbol_multiply(n_contracting_indices_ft);
 

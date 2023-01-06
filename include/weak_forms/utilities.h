@@ -635,15 +635,62 @@ namespace WeakForms
       }
 
       static std::string
-      decorate_integral(const std::string &integrand,
-                        const std::string &infinitesimal_symbol,
-                        const std::string &limits = "")
+      decorate_standard_notation_generic_integral(
+        const std::string &integrand,
+        const std::string &infinitesimal_symbol,
+        const std::string &limits = "")
       {
         if (limits == "")
           return "\\int" + integrand + "\\," + infinitesimal_symbol;
         else
           return "\\int\\limits_{" + limits + "}" + integrand + "\\," +
                  infinitesimal_symbol;
+      }
+
+      static std::string
+      decorate_bilinear_notation_generic_integral(
+        const std::string &integrand,
+        const std::string &open_parenthesis,
+        const std::string &close_parenthesis,
+        const std::string &limits = "")
+      {
+        if (limits == "")
+          return open_parenthesis + integrand + close_parenthesis;
+        else
+          return open_parenthesis + integrand + close_parenthesis + "_{" +
+                 limits + "}";
+      }
+
+      static std::string
+      decorate_bilinear_notation_volume_integral(const std::string &integrand,
+                                                 const std::string &limits = "")
+      {
+        return decorate_bilinear_notation_generic_integral(integrand,
+                                                           "\\left(",
+                                                           "\\right)",
+                                                           limits);
+      }
+
+      static std::string
+      decorate_bilinear_notation_surface_integral(
+        const std::string &integrand,
+        const std::string &limits = "")
+      {
+        return decorate_bilinear_notation_generic_integral(integrand,
+                                                           "\\left\\langle",
+                                                           "\\right\\rangle)",
+                                                           limits);
+      }
+
+      static std::string
+      decorate_bilinear_notation_interface_integral(
+        const std::string &integrand,
+        const std::string &limits = "")
+      {
+        return decorate_bilinear_notation_generic_integral(integrand,
+                                                           "\\left\\lbrace",
+                                                           "\\right\\rbrace",
+                                                           limits);
       }
 
       static std::string

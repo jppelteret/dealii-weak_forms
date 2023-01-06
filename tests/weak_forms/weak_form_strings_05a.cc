@@ -39,7 +39,10 @@ run()
   using namespace WeakForms;
 
   // Customise the naming convensions, if we wish to.
-  const SymbolicDecorations decorator;
+  const SymbolicDecorations decorator(
+    SymbolicNamesAscii(),
+    SymbolicNamesLaTeX(),
+    FormattingLaTeX(FormattingLaTeX::IntegralFormat::bilinear_form_notation));
 
   const ScalarFunctor                 scalar("s", "s");
   const ScalarFunctionFunctor<dim>    scalar_func("sf", "s");

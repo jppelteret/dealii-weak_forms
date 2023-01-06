@@ -477,8 +477,44 @@ namespace WeakForms
       std::string
       as_latex(const SymbolicDecorations &decorator) const
       {
-        return decorator.symbolic_op_integral_as_latex(integrand,
-                                                       integral_operation);
+        const bool use_integral_notation =
+          (decorator.get_formatting_latex().get_integral_format() ==
+           FormattingLaTeX::IntegralFormat::standard_notation);
+
+        if (use_integral_notation)
+          {
+            return decorator.symbolic_op_standard_integral_as_latex(
+              integrand, integral_operation);
+          }
+        else
+          {
+            if (std::is_same<IntegralType, VolumeIntegral>::value)
+              {
+                return decorator.symbolic_op_bilinear_form_integral_as_latex(
+                  integrand,
+                  integral_operation,
+                  FormattingLaTeX::IntegralType::volume_integral);
+              }
+            else if (std::is_same<IntegralType, BoundaryIntegral>::value)
+              {
+                return decorator.symbolic_op_bilinear_form_integral_as_latex(
+                  integrand,
+                  integral_operation,
+                  FormattingLaTeX::IntegralType::boundary_integral);
+              }
+            else if (std::is_same<IntegralType, InterfaceIntegral>::value)
+              {
+                return decorator.symbolic_op_bilinear_form_integral_as_latex(
+                  integrand,
+                  integral_operation,
+                  FormattingLaTeX::IntegralType::interface_integral);
+              }
+            else
+              {
+                AssertThrow(false, ExcNotImplemented());
+                return "";
+              }
+          }
       }
 
       std::string
