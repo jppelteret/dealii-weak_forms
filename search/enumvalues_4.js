@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['form_5fcomponents_5fdefault_2326',['form_components_default',['../namespaceWeakForms.html#acaa0a4172ad5893b342da4aae68fb3a4a34c4dedca0d31e298e5fb97dd7f47a96',1,'WeakForms']]]
+  ['exponential_2352',['exponential',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2aab3b1598e0b02155373807025b067f9a',1,'WeakForms::Operators']]]
 ];

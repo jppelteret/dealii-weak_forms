@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['unaryopcodes_2304',['UnaryOpCodes',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2',1,'WeakForms::Operators']]]
+  ['symbolicnametype_2327',['SymbolicNameType',['../namespaceWeakForms_1_1Decorations.html#a52d037a3fac96c35fbe4040c2d94d7f1',1,'WeakForms::Decorations']]],
+  ['symbolicopcodes_2328',['SymbolicOpCodes',['../namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48b',1,'WeakForms::Operators']]]
 ];

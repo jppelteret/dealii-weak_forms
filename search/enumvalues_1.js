@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['cofactor_2312',['cofactor',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2af89ed0d19f58f16823e8327af09c2be5',1,'WeakForms::Operators']]],
-  ['contract_2313',['contract',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda800c327aefb3f9241513cbf551abbfda',1,'WeakForms::Operators']]],
-  ['cosine_2314',['cosine',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2aa31d2f0d9cd723824073d28d35e038da',1,'WeakForms::Operators']]],
-  ['cross_5fproduct_2315',['cross_product',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becda90b07c7d1d0fdb1e5e25885d3e46104b',1,'WeakForms::Operators']]],
-  ['curl_2316',['curl',['../namespaceWeakForms_1_1Operators.html#aec4fa4a0321d7d1b75b1dd94ae07a48baf6e57c9de709e45feb0d955351f53548',1,'WeakForms::Operators']]]
+  ['bilinear_5fform_5fnotation_2337',['bilinear_form_notation',['../structWeakForms_1_1FormattingLaTeX.html#aa238323d1a8e1228e652e93c34d84829aede63d346cfd3fef10e7a4b2fe17a148',1,'WeakForms::FormattingLaTeX']]],
+  ['boundary_5fintegral_2338',['boundary_integral',['../structWeakForms_1_1FormattingLaTeX.html#a1b6c824fb452c287ae4321e2817e9f84a98a549ab1bc43336ccacae7b212056f6',1,'WeakForms::FormattingLaTeX']]]
 ];

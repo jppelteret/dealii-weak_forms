@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['outer_5fproduct_2348',['outer_product',['../namespaceWeakForms_1_1Operators.html#ac7aa0e09e52fd8dc6c825efb1ea6becdaa81d70556cb81ebdb51ab34f59d6f4eb',1,'WeakForms::Operators']]]
+  ['negate_2374',['negate',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a2d11beba811e6ec7b47d7a801cf8173f',1,'WeakForms::Operators']]],
+  ['normalize_2375',['normalize',['../namespaceWeakForms_1_1Operators.html#af21ff9d8156a07bbc628cf371222eba2a730bfa378b905ab806a3e0a03a170835',1,'WeakForms::Operators']]]
 ];

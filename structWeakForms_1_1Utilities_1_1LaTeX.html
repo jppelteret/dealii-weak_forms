@@ -130,8 +130,16 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:acfab34261b416724353d24e749f14310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ef7510158e21d0e5e5d85551cdf31bb"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a0ef7510158e21d0e5e5d85551cdf31bb">decorate_power</a> (const std::string &amp;base, const std::string &amp;exponent)</td></tr>
 <tr class="separator:a0ef7510158e21d0e5e5d85551cdf31bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5448b57f5199006058d09e601efa6d26"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a5448b57f5199006058d09e601efa6d26">decorate_integral</a> (const std::string &amp;integrand, const std::string &amp;infinitesimal_symbol, const std::string &amp;limits=&quot;&quot;)</td></tr>
-<tr class="separator:a5448b57f5199006058d09e601efa6d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce6caa6e31a3dd79ed2ef094c5addb5"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#afce6caa6e31a3dd79ed2ef094c5addb5">decorate_standard_notation_generic_integral</a> (const std::string &amp;integrand, const std::string &amp;infinitesimal_symbol, const std::string &amp;limits=&quot;&quot;)</td></tr>
+<tr class="separator:afce6caa6e31a3dd79ed2ef094c5addb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85b9136b75b2ccbeb212732050934a2a"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a85b9136b75b2ccbeb212732050934a2a">decorate_bilinear_notation_generic_integral</a> (const std::string &amp;integrand, const std::string &amp;open_parenthesis, const std::string &amp;close_parenthesis, const std::string &amp;limits=&quot;&quot;)</td></tr>
+<tr class="separator:a85b9136b75b2ccbeb212732050934a2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0ede3ed86479d2b9029e6045f630d4e"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#ad0ede3ed86479d2b9029e6045f630d4e">decorate_bilinear_notation_volume_integral</a> (const std::string &amp;integrand, const std::string &amp;limits=&quot;&quot;)</td></tr>
+<tr class="separator:ad0ede3ed86479d2b9029e6045f630d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c024335faf7ffef2a13a1010b9de8f2"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a3c024335faf7ffef2a13a1010b9de8f2">decorate_bilinear_notation_surface_integral</a> (const std::string &amp;integrand, const std::string &amp;limits=&quot;&quot;)</td></tr>
+<tr class="separator:a3c024335faf7ffef2a13a1010b9de8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f1ef58e79cda7aa73c67c598fc7c12d"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a0f1ef58e79cda7aa73c67c598fc7c12d">decorate_bilinear_notation_interface_integral</a> (const std::string &amp;integrand, const std::string &amp;limits=&quot;&quot;)</td></tr>
+<tr class="separator:a0f1ef58e79cda7aa73c67c598fc7c12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c02b1d837e52cfb1e665f7261f06334"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a9c02b1d837e52cfb1e665f7261f06334">decorate_differential</a> (const std::string &amp;symbol, const unsigned int n_derivatives=1, const std::string &amp;diff_symbol=&quot;\\mathrm{d}&quot;)</td></tr>
 <tr class="separator:a9c02b1d837e52cfb1e665f7261f06334"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa523968e0a143f8724a109738d4aa99d"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#aa523968e0a143f8724a109738d4aa99d">get_symbol_diff</a> (const unsigned int n_derivatives=1, const std::string &amp;diff_symbol=&quot;\\mathrm{d}&quot;)</td></tr>
@@ -848,8 +856,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5448b57f5199006058d09e601efa6d26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5448b57f5199006058d09e601efa6d26">&#9670;&nbsp;</a></span>decorate_integral()</h2>
+<a id="afce6caa6e31a3dd79ed2ef094c5addb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afce6caa6e31a3dd79ed2ef094c5addb5">&#9670;&nbsp;</a></span>decorate_standard_notation_generic_integral()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -858,7 +866,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_integral </td>
+          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_standard_notation_generic_integral </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>integrand</em>, </td>
@@ -889,6 +897,170 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00638">638</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+
+</div>
+</div>
+<a id="a85b9136b75b2ccbeb212732050934a2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85b9136b75b2ccbeb212732050934a2a">&#9670;&nbsp;</a></span>decorate_bilinear_notation_generic_integral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_bilinear_notation_generic_integral </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>integrand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>open_parenthesis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>close_parenthesis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>limits</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00651">651</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+
+</div>
+</div>
+<a id="ad0ede3ed86479d2b9029e6045f630d4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0ede3ed86479d2b9029e6045f630d4e">&#9670;&nbsp;</a></span>decorate_bilinear_notation_volume_integral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_bilinear_notation_volume_integral </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>integrand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>limits</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00665">665</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+
+</div>
+</div>
+<a id="a3c024335faf7ffef2a13a1010b9de8f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c024335faf7ffef2a13a1010b9de8f2">&#9670;&nbsp;</a></span>decorate_bilinear_notation_surface_integral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_bilinear_notation_surface_integral </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>integrand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>limits</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00675">675</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+
+</div>
+</div>
+<a id="a0f1ef58e79cda7aa73c67c598fc7c12d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f1ef58e79cda7aa73c67c598fc7c12d">&#9670;&nbsp;</a></span>decorate_bilinear_notation_interface_integral()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string WeakForms::Utilities::LaTeX::decorate_bilinear_notation_interface_integral </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>integrand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>limits</em> = <code>&quot;&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00686">686</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
 
 </div>
 </div>
@@ -932,7 +1104,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00650">650</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00697">697</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
 
 </div>
 </div>
@@ -970,7 +1142,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00658">658</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00705">705</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
 
 </div>
 </div>
@@ -998,7 +1170,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00673">673</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00720">720</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1208,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00709">709</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="utilities_8h_source.html#l00756">756</a> of file <a class="el" href="utilities_8h_source.html">utilities.h</a>.</p>
 
 </div>
 </div>

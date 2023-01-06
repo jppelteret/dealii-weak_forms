@@ -115,6 +115,18 @@ $(function() {
 <li>decorate_average()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a09af7de3432bb9a19e9273929bd5ce49">WeakForms::Utilities::LaTeX</a>
 </li>
+<li>decorate_bilinear_notation_generic_integral()
+: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a85b9136b75b2ccbeb212732050934a2a">WeakForms::Utilities::LaTeX</a>
+</li>
+<li>decorate_bilinear_notation_interface_integral()
+: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a0f1ef58e79cda7aa73c67c598fc7c12d">WeakForms::Utilities::LaTeX</a>
+</li>
+<li>decorate_bilinear_notation_surface_integral()
+: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a3c024335faf7ffef2a13a1010b9de8f2">WeakForms::Utilities::LaTeX</a>
+</li>
+<li>decorate_bilinear_notation_volume_integral()
+: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#ad0ede3ed86479d2b9029e6045f630d4e">WeakForms::Utilities::LaTeX</a>
+</li>
 <li>decorate_differential()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a9c02b1d837e52cfb1e665f7261f06334">WeakForms::Utilities::LaTeX</a>
 </li>
@@ -123,9 +135,6 @@ $(function() {
 </li>
 <li>decorate_function_with_arguments()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#ad751183bc46450674d7d65cf7aaa0158">WeakForms::Utilities::LaTeX</a>
-</li>
-<li>decorate_integral()
-: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a5448b57f5199006058d09e601efa6d26">WeakForms::Utilities::LaTeX</a>
 </li>
 <li>decorate_jump()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a56e91d0d0280b77cb7d3499258511778">WeakForms::Utilities::LaTeX</a>
@@ -138,6 +147,9 @@ $(function() {
 </li>
 <li>decorate_power()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#a0ef7510158e21d0e5e5d85551cdf31bb">WeakForms::Utilities::LaTeX</a>
+</li>
+<li>decorate_standard_notation_generic_integral()
+: <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#afce6caa6e31a3dd79ed2ef094c5addb5">WeakForms::Utilities::LaTeX</a>
 </li>
 <li>decorate_subscript()
 : <a class="el" href="structWeakForms_1_1Utilities_1_1LaTeX.html#acfab34261b416724353d24e749f14310">WeakForms::Utilities::LaTeX</a>
@@ -224,13 +236,13 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1AssemblerBase.html#a6763ecc6b2854a7c94ddde1cd21b873b">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_cell_operation()
-: <a class="el" href="classWeakForms_1_1AssemblerBase.html#a40cf562db24628337882fbd1fdeef128">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1AssemblerBase.html#aa032fb3a33f509029c196ef9d5e9f82d">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_add_interface_face_operation()
 : <a class="el" href="classWeakForms_1_1AssemblerBase.html#ab215c5a0666eba87a5155a113de140e5">WeakForms::AssemblerBase&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_assemble_system()
-: <a class="el" href="classWeakForms_1_1MatrixBasedAssembler.html#aed707b3b4e9bff37e5660529d604405c">WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
+: <a class="el" href="classWeakForms_1_1MatrixBasedAssembler.html#a41ae802d49d3fe1ab7b3d6ccb797ac6a">WeakForms::MatrixBasedAssembler&lt; dim, spacedim, ScalarType, use_vectorization, width &gt;</a>
 </li>
 <li>do_dA()
 : <a class="el" href="classWeakForms_1_1Integrator.html#ad0aa0256568ba3b074628a4582bdb950">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
@@ -248,11 +260,11 @@ $(function() {
 : <a class="el" href="classWeakForms_1_1SolutionStorage.html#aed307cbdb5a18642f86328fda3f72138">WeakForms::SolutionStorage&lt; VectorType, DoFHandlerType &gt;</a>
 </li>
 <li>dV()
-: <a class="el" href="classWeakForms_1_1BilinearForm.html#af61e62cd0aa4fa3d900f2918b9ff5d73">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
-, <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#a5310ce3149e92fb9a940eafce3ff4025">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
-, <a class="el" href="classWeakForms_1_1Integrator.html#a688a36d29469c2b074559bc613e53e6d">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
-, <a class="el" href="classWeakForms_1_1LinearForm.html#a2a97bc0d115354686c9162468e15efb7">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
-, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html#ae171163010c021981d7638fcd31c9af7">WeakForms::SelfLinearization::EnergyFunctionalForm&lt; EnergyFunctor &gt;</a>
+: <a class="el" href="classWeakForms_1_1BilinearForm.html#a5633b704a3d8b93959358bdd4bafbc19">WeakForms::BilinearForm&lt; TestSpaceOp_, Functor_, TrialSpaceOp_, ComponentFilterFlags &gt;</a>
+, <a class="el" href="classWeakForms_1_1FunctionIntegrator.html#ac07f81f4b6f69041b936201a3a484faf">WeakForms::FunctionIntegrator&lt; spacedim, ReturnType &gt;</a>
+, <a class="el" href="classWeakForms_1_1Integrator.html#ae94d9d2367d1953c4ab78b38baebc981">WeakForms::Integrator&lt; spacedim, Functor, typename &gt;</a>
+, <a class="el" href="classWeakForms_1_1LinearForm.html#af358192fd5297f60913da874a3dd3600">WeakForms::LinearForm&lt; TestSpaceOp_, Functor_ &gt;</a>
+, <a class="el" href="classWeakForms_1_1SelfLinearization_1_1EnergyFunctionalForm.html#a175b329c0ff60f640edab69269f7d6d4">WeakForms::SelfLinearization::EnergyFunctionalForm&lt; EnergyFunctor &gt;</a>
 , <a class="el" href="classWeakForms_1_1SelfLinearization_1_1ResidualViewForm.html#a2158298aa24beadbe742a97d9de49680">WeakForms::SelfLinearization::ResidualViewForm&lt; ResidualViewFunctor &gt;</a>
 </li>
 </ul>
