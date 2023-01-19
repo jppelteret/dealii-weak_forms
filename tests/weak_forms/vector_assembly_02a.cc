@@ -391,17 +391,17 @@ main(int argc, char *argv[])
   // faces contributing to the local vector.
   deallog.push("Divisions = 1");
   {
-    const unsigned int n_subsivisions = 1;
-    run<2>(n_subsivisions);
-    run<3>(n_subsivisions);
+    const unsigned int n_subdivisions = 1;
+    run<2>(n_subdivisions);
+    run<3>(n_subdivisions);
   }
   deallog.pop();
 
   deallog.push("Divisions = 4");
   {
-    const unsigned int n_subsivisions = 4;
-    run<2>(n_subsivisions);
-    run<3>(n_subsivisions);
+    const unsigned int n_subdivisions = 4;
+    run<2>(n_subdivisions);
+    run<3>(n_subdivisions);
   }
   deallog.pop();
 

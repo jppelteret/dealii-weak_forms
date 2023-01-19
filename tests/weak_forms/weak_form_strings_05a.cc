@@ -56,13 +56,13 @@ run()
   const auto trial_val = trial.value();
   const auto soln_val  = soln.value();
 
-  const VolumeIntegral    integral_dV;
-  const BoundaryIntegral  integral_dA;
-  const InterfaceIntegral integral_dI;
+  const VolumeIntegral<>    integral_dV;
+  const BoundaryIntegral<>  integral_dA;
+  const InterfaceIntegral<> integral_dI;
 
-  const VolumeIntegral    integral_sub_dV({1, 2, 3});
-  const BoundaryIntegral  integral_sub_dA({4, 5, 6});
-  const InterfaceIntegral integral_sub_dI({7, 8, 9});
+  const VolumeIntegral<>    integral_sub_dV({1, 2, 3});
+  const BoundaryIntegral<>  integral_sub_dA({4, 5, 6});
+  const InterfaceIntegral<> integral_sub_dI({7, 8, 9});
 
   // Test strings
   {

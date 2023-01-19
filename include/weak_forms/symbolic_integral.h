@@ -21,7 +21,11 @@
 #include <weak_forms/config.h>
 
 // TODO: Move FeValuesViews::[Scalar/Vector/...]::Output<> into another header??
+// #include <deal.II/dofs/dof_handler.h>
+
 #include <deal.II/fe/fe_values.h>
+
+#include <deal.II/grid/tria.h>
 
 #include <weak_forms/numbers.h>
 #include <weak_forms/symbolic_decorations.h>
@@ -29,35 +33,267 @@
 #include <weak_forms/type_traits.h>
 #include <weak_forms/types.h>
 
+#include <functional>
+#include <memory>
+
 
 WEAK_FORMS_NAMESPACE_OPEN
 
 
 namespace WeakForms
 {
+  namespace internal
+  {
+    // It looks like the only way to implement a general predicate that
+    // inevitably has some templates associated with it is through type erasure.
+    // https://stackoverflow.com/a/34815953
+    // https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Type_Erasure
+    // https://davekilian.com/cpp-type-erasure.html
+
+    template <bool isCellPredicate>
+    struct PredicateKeeper
+    {
+      template <int dim, int spacedim>
+      using tria_iterator = typename std::conditional<
+        isCellPredicate,
+        typename Triangulation<dim, spacedim>::cell_iterator,
+        typename Triangulation<dim, spacedim>::face_iterator>::type;
+
+      template <int dim, int spacedim>
+      using dofhandler_iterator = typename std::conditional<
+        isCellPredicate,
+        typename DoFHandler<dim, spacedim>::cell_iterator,
+        typename DoFHandler<dim, spacedim>::face_iterator>::type;
+
+      template <int dim, int spacedim>
+      using TriangulationPredicateFunctionType =
+        std::function<bool(const tria_iterator<dim, spacedim> &)>;
+
+      template <int dim, int spacedim>
+      using DoFHandlerPredicateFunctionType =
+        std::function<bool(const dofhandler_iterator<dim, spacedim> &)>;
+
+      template <class PredicateType>
+      PredicateKeeper(const PredicateType &predicate)
+        : tria_predicate_11([predicate](const tria_iterator<1, 1> &it)
+                            { return predicate(it); })
+        , tria_predicate_12([predicate](const tria_iterator<1, 2> &it)
+                            { return predicate(it); })
+        , tria_predicate_13([predicate](const tria_iterator<1, 3> &it)
+                            { return predicate(it); })
+        , tria_predicate_22([predicate](const tria_iterator<2, 2> &it)
+                            { return predicate(it); })
+        , tria_predicate_23([predicate](const tria_iterator<2, 2> &it)
+                            { return predicate(it); })
+        , tria_predicate_33([predicate](const tria_iterator<3, 3> &it)
+                            { return predicate(it); })
+        , dofhandler_predicate_11(
+            [predicate](const dofhandler_iterator<1, 1> &it)
+            { return predicate(it); })
+        , dofhandler_predicate_12(
+            [predicate](const dofhandler_iterator<1, 2> &it)
+            { return predicate(it); })
+        , dofhandler_predicate_13(
+            [predicate](const dofhandler_iterator<1, 3> &it)
+            { return predicate(it); })
+        , dofhandler_predicate_22(
+            [predicate](const dofhandler_iterator<2, 2> &it)
+            { return predicate(it); })
+        , dofhandler_predicate_23(
+            [predicate](const dofhandler_iterator<2, 3> &it)
+            { return predicate(it); })
+        , dofhandler_predicate_33(
+            [predicate](const dofhandler_iterator<3, 3> &it)
+            { return predicate(it); })
+      {}
+
+      template <class Iterator>
+      bool
+      operator()(const Iterator &iterator) const
+      {
+        return apply(iterator);
+      }
+
+    private:
+      const TriangulationPredicateFunctionType<1, 1> tria_predicate_11;
+      const TriangulationPredicateFunctionType<1, 2> tria_predicate_12;
+      const TriangulationPredicateFunctionType<1, 3> tria_predicate_13;
+      const TriangulationPredicateFunctionType<2, 2> tria_predicate_22;
+      const TriangulationPredicateFunctionType<2, 3> tria_predicate_23;
+      const TriangulationPredicateFunctionType<3, 3> tria_predicate_33;
+      const DoFHandlerPredicateFunctionType<1, 1>    dofhandler_predicate_11;
+      const DoFHandlerPredicateFunctionType<1, 2>    dofhandler_predicate_12;
+      const DoFHandlerPredicateFunctionType<1, 3>    dofhandler_predicate_13;
+      const DoFHandlerPredicateFunctionType<2, 2>    dofhandler_predicate_22;
+      const DoFHandlerPredicateFunctionType<2, 3>    dofhandler_predicate_23;
+      const DoFHandlerPredicateFunctionType<3, 3>    dofhandler_predicate_33;
+
+      bool
+      apply(const tria_iterator<1, 1> &iterator) const
+      {
+        return tria_predicate_11(iterator);
+      }
+
+      bool
+      apply(const tria_iterator<1, 2> &iterator) const
+      {
+        return tria_predicate_12(iterator);
+      }
+
+      bool
+      apply(const tria_iterator<1, 3> &iterator) const
+      {
+        return tria_predicate_13(iterator);
+      }
+
+      bool
+      apply(const tria_iterator<2, 2> &iterator) const
+      {
+        return tria_predicate_22(iterator);
+      }
+
+      bool
+      apply(const tria_iterator<2, 3> &iterator) const
+      {
+        return tria_predicate_23(iterator);
+      }
+
+      bool
+      apply(const tria_iterator<3, 3> &iterator) const
+      {
+        return tria_predicate_33(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<1, 1> &iterator) const
+      {
+        return dofhandler_predicate_11(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<1, 2> &iterator) const
+      {
+        return dofhandler_predicate_12(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<1, 3> &iterator) const
+      {
+        return dofhandler_predicate_13(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<2, 2> &iterator) const
+      {
+        return dofhandler_predicate_22(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<2, 3> &iterator) const
+      {
+        return dofhandler_predicate_23(iterator);
+      }
+
+      bool
+      apply(const dofhandler_iterator<3, 3> &iterator) const
+      {
+        return dofhandler_predicate_33(iterator);
+      }
+    };
+
+
+    template <bool isCellPredicate>
+    class PredicateHolder
+    {
+      // TODO: Store this in a vector, so that it can act like a
+      // FilteredIterator.
+      std::unique_ptr<PredicateKeeper<isCellPredicate>> predicates;
+
+    public:
+      template <class PredicateType>
+      PredicateHolder(const PredicateType &predicate)
+        : predicates(new PredicateKeeper<isCellPredicate>(predicate))
+      {}
+
+      template <class Iterator>
+      bool
+      operator()(const Iterator &iterator) const
+      {
+        Assert(predicates, ExcNotInitialized());
+        return (*predicates)(iterator);
+      }
+    };
+
+  } // namespace internal
+
+
   /**
    * @brief A base class for other objects that represent (sub)domains of integration.
    *
    * @tparam SubDomainType The value type for the subdomain to be considered as
    * a part of the set of finite elements for integration.
    */
-  template <typename SubDomainType>
+  template <typename PredicateType,
+            bool isCellPredicate,
+            typename SubDomainType>
   class Integral
   {
   public:
     template <typename ScalarType>
     using value_type = double;
 
-    Integral(const std::set<SubDomainType> &subdomains)
-      : subdomains(subdomains)
+    using subdomain_t = SubDomainType;
+    using PrintFunctionType =
+      std::function<std::string(const SymbolicDecorations &decorator)>;
+
+    Integral(const PredicateType &    predicate,
+             const PrintFunctionType &subdomain_as_ascii,
+             const PrintFunctionType &subdomain_as_latex)
+      : predicate(std::make_shared<internal::PredicateHolder<isCellPredicate>>(
+          predicate))
+      , subdomain_as_ascii(subdomain_as_ascii)
+      , subdomain_as_latex(subdomain_as_latex)
     {}
+
+    Integral(const PredicateType &predicate,
+             const std::string &  subdomain_as_ascii,
+             const std::string &  subdomain_as_latex)
+      : Integral(
+          predicate,
+          [subdomain_as_ascii](const SymbolicDecorations &)
+          { return subdomain_as_ascii; },
+          [subdomain_as_latex](const SymbolicDecorations &)
+          { return subdomain_as_latex; })
+    {}
+
+    Integral(const std::set<SubDomainType> &subdomains)
+    {
+      if (!subdomains.empty())
+        {
+          predicate =
+            std::make_shared<internal::PredicateHolder<isCellPredicate>>(
+              PredicateType(subdomains));
+
+          subdomain_as_ascii = PrintFunctionType(
+            [subdomains](const SymbolicDecorations &)
+            {
+              // Expand the set of subdomains as a comma separated list
+              return Utilities::get_comma_separated_string_from(subdomains);
+            });
+
+          subdomain_as_latex = PrintFunctionType(
+            [subdomains](const SymbolicDecorations &)
+            {
+              // Expand the set of subdomains as a comma separated list
+              return Utilities::get_comma_separated_string_from(subdomains);
+            });
+        }
+    }
 
     bool
     integrate_over_entire_domain() const
     {
-      constexpr SubDomainType invalid_index = -1;
-      return subdomains.empty() ||
-             (subdomains.size() == 1 && *subdomains.begin() == invalid_index);
+      return !predicate;
     }
 
     // ----  Ascii ----
@@ -72,10 +308,10 @@ namespace WeakForms
     std::string
     get_subdomain_as_ascii(const SymbolicDecorations &decorator) const
     {
-      (void)decorator;
+      if (!subdomain_as_ascii)
+        return "";
 
-      // Expand the set of subdomains as a comma separated list
-      return Utilities::get_comma_separated_string_from(get_subdomains());
+      return subdomain_as_ascii(decorator);
     }
 
     virtual std::string
@@ -96,10 +332,10 @@ namespace WeakForms
     std::string
     get_subdomain_as_latex(const SymbolicDecorations &decorator) const
     {
-      (void)decorator;
+      if (!subdomain_as_latex)
+        return "";
 
-      // Expand the set of subdomains as a comma separated list
-      return Utilities::get_comma_separated_string_from(get_subdomains());
+      return subdomain_as_latex(decorator);
     }
 
     virtual std::string
@@ -110,26 +346,21 @@ namespace WeakForms
       const SymbolicDecorations &decorator) const = 0;
 
   protected:
-    // Dictate whether to integrate over the whole
-    // volume / boundary / interface, or just a
-    // part of it. The invalid index SubDomainType(-1)
-    // also indicates that the entire domain is to be
-    // integrated over.
-    const std::set<SubDomainType> subdomains;
+    std::shared_ptr<internal::PredicateHolder<isCellPredicate>> predicate;
 
+    PrintFunctionType subdomain_as_ascii;
+    PrintFunctionType subdomain_as_latex;
+
+    template <typename IteratorType>
     bool
-    integrate_on_subdomain(const SubDomainType &idx) const
+    integrate_on_subdomain(const IteratorType &iterator) const
     {
       if (integrate_over_entire_domain())
         return true;
 
-      return subdomains.find(idx) != subdomains.end();
-    }
+      Assert(predicate, ExcNotInitialized());
 
-    const std::set<SubDomainType> &
-    get_subdomains() const
-    {
-      return subdomains;
+      return (*predicate)(iterator);
     }
   };
 
@@ -141,13 +372,34 @@ namespace WeakForms
    * This class is not typically created directly by a user, but rather would be
    * automatically generated by a form or function integrator.
    */
-  class VolumeIntegral : public Integral<dealii::types::material_id>
+  template <typename PredicateType = types::default_volume_integral_predicate_t>
+  class VolumeIntegral
+    : public Integral<PredicateType, true, dealii::types::material_id>
   {
+    using Base = Integral<PredicateType, true, dealii::types::material_id>;
+
   public:
-    using subdomain_t = dealii::types::material_id;
+    using subdomain_t       = typename Base::subdomain_t;
+    using PrintFunctionType = typename Base::PrintFunctionType;
+
+    VolumeIntegral(const PredicateType &    predicate,
+                   const PrintFunctionType &subdomain_as_ascii,
+                   const PrintFunctionType &subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
+
+    VolumeIntegral(const PredicateType &predicate,
+                   const std::string &  subdomain_as_ascii,
+                   const std::string &  subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
 
     VolumeIntegral(const std::set<subdomain_t> &subregions)
-      : Integral<subdomain_t>(subregions)
+      : Base(subregions)
+    {}
+
+    VolumeIntegral(const subdomain_t &subregion)
+      : VolumeIntegral(std::set<subdomain_t>{subregion})
     {}
 
     VolumeIntegral()
@@ -188,7 +440,7 @@ namespace WeakForms
     bool
     integrate_on_cell(const CellIteratorType &cell) const
     {
-      return integrate_on_subdomain(cell->material_id());
+      return this->integrate_on_subdomain(cell);
     }
 
     // Methods to promote this class to a SymbolicOp
@@ -206,13 +458,35 @@ namespace WeakForms
    * This class is not typically created directly by a user, but rather would be
    * automatically generated by a form or function integrator.
    */
-  class BoundaryIntegral : public Integral<dealii::types::boundary_id>
+  template <typename PredicateType =
+              types::default_boundary_integral_predicate_t>
+  class BoundaryIntegral
+    : public Integral<PredicateType, false, dealii::types::boundary_id>
   {
+    using Base = Integral<PredicateType, false, dealii::types::boundary_id>;
+
   public:
-    using subdomain_t = dealii::types::boundary_id;
+    using subdomain_t       = typename Base::subdomain_t;
+    using PrintFunctionType = typename Base::PrintFunctionType;
+
+    BoundaryIntegral(const PredicateType &    predicate,
+                     const PrintFunctionType &subdomain_as_ascii,
+                     const PrintFunctionType &subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
+
+    BoundaryIntegral(const PredicateType &predicate,
+                     const std::string &  subdomain_as_ascii,
+                     const std::string &  subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
 
     BoundaryIntegral(const std::set<subdomain_t> &boundaries)
-      : Integral<subdomain_t>(boundaries)
+      : Base(boundaries)
+    {}
+
+    BoundaryIntegral(const subdomain_t &boundary)
+      : BoundaryIntegral(std::set<subdomain_t>{boundary})
     {}
 
     BoundaryIntegral()
@@ -257,7 +531,7 @@ namespace WeakForms
       if (!cell->face(face)->at_boundary())
         return false;
 
-      return integrate_on_subdomain(cell->face(face)->boundary_id());
+      return this->integrate_on_subdomain(cell->face(face));
     }
 
     // Methods to promote this class to a SymbolicOp
@@ -275,13 +549,35 @@ namespace WeakForms
    * This class is not typically created directly by a user, but rather would be
    * automatically generated by a form or function integrator.
    */
-  class InterfaceIntegral : public Integral<dealii::types::manifold_id>
+  template <typename PredicateType =
+              types::default_interface_integral_predicate_t>
+  class InterfaceIntegral
+    : public Integral<PredicateType, false, dealii::types::manifold_id>
   {
+    using Base = Integral<PredicateType, false, dealii::types::manifold_id>;
+
   public:
-    using subdomain_t = dealii::types::manifold_id;
+    using subdomain_t       = typename Base::subdomain_t;
+    using PrintFunctionType = typename Base::PrintFunctionType;
+
+    InterfaceIntegral(const PredicateType &    predicate,
+                      const PrintFunctionType &subdomain_as_ascii,
+                      const PrintFunctionType &subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
+
+    InterfaceIntegral(const PredicateType &predicate,
+                      const std::string &  subdomain_as_ascii,
+                      const std::string &  subdomain_as_latex)
+      : Base(predicate, subdomain_as_ascii, subdomain_as_latex)
+    {}
 
     InterfaceIntegral(const std::set<subdomain_t> interfaces)
-      : Integral<subdomain_t>(interfaces)
+      : Base(interfaces)
+    {}
+
+    InterfaceIntegral(const subdomain_t &interface)
+      : InterfaceIntegral(std::set<subdomain_t>{interface})
     {}
 
     InterfaceIntegral()
@@ -328,7 +624,7 @@ namespace WeakForms
       if (cell->face(face)->at_boundary())
         return false;
 
-      return integrate_on_subdomain(cell->face(face)->manifold_id());
+      return this->integrate_on_subdomain(cell->face(face));
     }
 
     // Methods to promote this class to a SymbolicOp
@@ -488,21 +784,21 @@ namespace WeakForms
           }
         else
           {
-            if (std::is_same<IntegralType, VolumeIntegral>::value)
+            if (is_volume_integral<IntegralType>::value)
               {
                 return decorator.symbolic_op_bilinear_form_integral_as_latex(
                   integrand,
                   integral_operation,
                   FormattingLaTeX::IntegralType::volume_integral);
               }
-            else if (std::is_same<IntegralType, BoundaryIntegral>::value)
+            else if (is_boundary_integral<IntegralType>::value)
               {
                 return decorator.symbolic_op_bilinear_form_integral_as_latex(
                   integrand,
                   integral_operation,
                   FormattingLaTeX::IntegralType::boundary_integral);
               }
-            else if (std::is_same<IntegralType, InterfaceIntegral>::value)
+            else if (is_interface_integral<IntegralType>::value)
               {
                 return decorator.symbolic_op_bilinear_form_integral_as_latex(
                   integrand,
@@ -646,14 +942,16 @@ namespace WeakForms
 
 namespace WeakForms
 {
+  template <typename PredicateType>
   template <typename ScalarType, typename Integrand>
   DEAL_II_ALWAYS_INLINE inline auto
-  WeakForms::VolumeIntegral::integrate(const Integrand &integrand) const
+  WeakForms::VolumeIntegral<PredicateType>::integrate(
+    const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
 
-    using Op = VolumeIntegral;
+    using Op = VolumeIntegral<PredicateType>;
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
@@ -662,14 +960,16 @@ namespace WeakForms
   }
 
 
+  template <typename PredicateType>
   template <typename ScalarType, typename Integrand>
   DEAL_II_ALWAYS_INLINE inline auto
-  WeakForms::BoundaryIntegral::integrate(const Integrand &integrand) const
+  WeakForms::BoundaryIntegral<PredicateType>::integrate(
+    const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
 
-    using Op = BoundaryIntegral;
+    using Op = BoundaryIntegral<PredicateType>;
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
@@ -678,15 +978,16 @@ namespace WeakForms
   }
 
 
-
+  template <typename PredicateType>
   template <typename ScalarType, typename Integrand>
   DEAL_II_ALWAYS_INLINE inline auto
-  WeakForms::InterfaceIntegral::integrate(const Integrand &integrand) const
+  WeakForms::InterfaceIntegral<PredicateType>::integrate(
+    const Integrand &integrand) const
   {
     using namespace WeakForms;
     using namespace WeakForms::Operators;
 
-    using Op = InterfaceIntegral;
+    using Op = InterfaceIntegral<PredicateType>;
     using OpType =
       SymbolicOp<Op, SymbolicOpCodes::value, ScalarType, Integrand>;
 
@@ -721,55 +1022,65 @@ namespace WeakForms
 
 namespace WeakForms
 {
-  template <>
-  struct is_valid_integration_domain<VolumeIntegral> : std::true_type
+  template <typename Predicate>
+  struct is_valid_integration_domain<VolumeIntegral<Predicate>> : std::true_type
   {};
 
-  template <>
-  struct is_valid_integration_domain<BoundaryIntegral> : std::true_type
+  template <typename Predicate>
+  struct is_valid_integration_domain<BoundaryIntegral<Predicate>>
+    : std::true_type
   {};
 
-  template <>
-  struct is_valid_integration_domain<InterfaceIntegral> : std::true_type
+  template <typename Predicate>
+  struct is_valid_integration_domain<InterfaceIntegral<Predicate>>
+    : std::true_type
   {};
+
 
   // Decorator classes
 
-  // template <>
-  // struct is_volume_integral_op<VolumeIntegral> : std::true_type
-  // {};
+  template <typename Predicate>
+  struct is_volume_integral<VolumeIntegral<Predicate>> : std::true_type
+  {};
 
-  // template <>
-  // struct is_boundary_integral_op<BoundaryIntegral> : std::true_type
-  // {};
+  template <typename Predicate>
+  struct is_boundary_integral<BoundaryIntegral<Predicate>> : std::true_type
+  {};
 
-  // template <>
-  // struct is_interface_integral_op<InterfaceIntegral> : std::true_type
-  // {};
+  template <typename Predicate>
+  struct is_interface_integral<InterfaceIntegral<Predicate>> : std::true_type
+  {};
+
 
   // Unary operators
 
   template <typename ScalarType,
+            typename Predicate,
             typename Integrand,
             enum Operators::SymbolicOpCodes OpCode>
   struct is_volume_integral_op<
-    Operators::SymbolicOp<VolumeIntegral, OpCode, ScalarType, Integrand>>
+    Operators::
+      SymbolicOp<VolumeIntegral<Predicate>, OpCode, ScalarType, Integrand>>
     : std::true_type
   {};
 
   template <typename ScalarType,
+            typename Predicate,
             typename Integrand,
             enum Operators::SymbolicOpCodes OpCode>
   struct is_boundary_integral_op<
-    Operators::SymbolicOp<BoundaryIntegral, OpCode, ScalarType, Integrand>>
+    Operators::
+      SymbolicOp<BoundaryIntegral<Predicate>, OpCode, ScalarType, Integrand>>
     : std::true_type
   {};
 
   template <typename ScalarType,
+            typename Predicate,
             typename Integrand,
             enum Operators::SymbolicOpCodes OpCode>
   struct is_interface_integral_op<
-    Operators::SymbolicOp<InterfaceIntegral, OpCode, ScalarType, Integrand>>
+    Operators::
+      SymbolicOp<InterfaceIntegral<Predicate>, OpCode, ScalarType, Integrand>>
     : std::true_type
   {};
 

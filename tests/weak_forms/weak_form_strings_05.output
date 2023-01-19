@@ -7,6 +7,9 @@ DEAL:string::
 DEAL:string::Volume integral: dV
 DEAL:string::Boundary integral: dA
 DEAL:string::Interface integral: dI
+DEAL:string::Volume integral with predicate: dV
+DEAL:string::Boundary integral with predicate: dA
+DEAL:string::Interface integral with predicate: dI
 DEAL:string::
 DEAL:LaTeX::Volume integral: \textrm{dV}
 DEAL:LaTeX::Boundary integral: \textrm{dA}
@@ -15,6 +18,9 @@ DEAL:LaTeX::
 DEAL:LaTeX::Volume integral: \textrm{dV}
 DEAL:LaTeX::Boundary integral: \textrm{dA}
 DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::Volume integral with predicate: \textrm{dV}
+DEAL:LaTeX::Boundary integral with predicate: \textrm{dA}
+DEAL:LaTeX::Interface integral with predicate: \textrm{dI}
 DEAL:LaTeX::
 DEAL:values::Volume integral: \int{s}\,\textrm{dV}
 DEAL:values::Boundary integral: \int\mathbf{T\left(\mathbf{X}\right)}\,\textrm{dA}
@@ -51,6 +57,9 @@ DEAL:string::
 DEAL:string::Volume integral: dV
 DEAL:string::Boundary integral: dA
 DEAL:string::Interface integral: dI
+DEAL:string::Volume integral with predicate: dV
+DEAL:string::Boundary integral with predicate: dA
+DEAL:string::Interface integral with predicate: dI
 DEAL:string::
 DEAL:LaTeX::Volume integral: \textrm{dV}
 DEAL:LaTeX::Boundary integral: \textrm{dA}
@@ -59,6 +68,9 @@ DEAL:LaTeX::
 DEAL:LaTeX::Volume integral: \textrm{dV}
 DEAL:LaTeX::Boundary integral: \textrm{dA}
 DEAL:LaTeX::Interface integral: \textrm{dI}
+DEAL:LaTeX::Volume integral with predicate: \textrm{dV}
+DEAL:LaTeX::Boundary integral with predicate: \textrm{dA}
+DEAL:LaTeX::Interface integral with predicate: \textrm{dI}
 DEAL:LaTeX::
 DEAL:values::Volume integral: \int{s}\,\textrm{dV}
 DEAL:values::Boundary integral: \int\mathbf{T\left(\mathbf{X}\right)}\,\textrm{dA}

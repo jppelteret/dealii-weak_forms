@@ -239,73 +239,104 @@ namespace WeakForms
 
       // ===== Section: Integration =====
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
       auto
       dV() const
       {
-        return VolumeIntegral().template integrate<ScalarType>(*this);
+        return VolumeIntegral<PredicateType>().template integrate<ScalarType>(
+          *this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
       auto
-      dV(const typename VolumeIntegral::subdomain_t subdomain) const
-      {
-        return dV<ScalarType>(
-          std::set<typename VolumeIntegral::subdomain_t>{subdomain});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dV(const std::set<typename VolumeIntegral::subdomain_t> &subdomains) const
-      {
-        return VolumeIntegral(subdomains).template integrate<ScalarType>(*this);
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA() const
-      {
-        return BoundaryIntegral().template integrate<ScalarType>(*this);
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA(const typename BoundaryIntegral::subdomain_t boundary) const
-      {
-        return dA<ScalarType>(
-          std::set<typename BoundaryIntegral::subdomain_t>{boundary});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA(const std::set<typename BoundaryIntegral::subdomain_t> &boundaries)
+      dV(const typename VolumeIntegral<PredicateType>::subdomain_t subdomain)
         const
       {
-        return BoundaryIntegral(boundaries)
+        return dV<ScalarType>(
+          std::set<typename VolumeIntegral<PredicateType>::subdomain_t>{
+            subdomain});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
+      auto
+      dV(const std::set<typename VolumeIntegral<PredicateType>::subdomain_t>
+           &subdomains) const
+      {
+        return VolumeIntegral<PredicateType>(subdomains)
           .template integrate<ScalarType>(*this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA() const
+      {
+        return BoundaryIntegral<PredicateType>().template integrate<ScalarType>(
+          *this);
+        // return integrate<ScalarType>(*this,
+        // BoundaryIntegral<PredicateType>());
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA(const typename BoundaryIntegral<PredicateType>::subdomain_t boundary)
+        const
+      {
+        return dA<ScalarType>(
+          std::set<typename BoundaryIntegral<PredicateType>::subdomain_t>{
+            boundary});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA(const std::set<typename BoundaryIntegral<PredicateType>::subdomain_t>
+           &boundaries) const
+      {
+        return BoundaryIntegral<PredicateType>(boundaries)
+          .template integrate<ScalarType>(*this);
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
       auto
       dI() const
       {
-        return InterfaceIntegral().template integrate<ScalarType>(*this);
+        return InterfaceIntegral<PredicateType>()
+          .template integrate<ScalarType>(*this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
       auto
-      dI(const typename InterfaceIntegral::subdomain_t interface) const
-      {
-        return dI<ScalarType>(
-          std::set<typename InterfaceIntegral::subdomain_t>{interface});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dI(const std::set<typename InterfaceIntegral::subdomain_t> &interfaces)
+      dI(const typename InterfaceIntegral<PredicateType>::subdomain_t interface)
         const
       {
-        return InterfaceIntegral(interfaces)
+        return dI<ScalarType>(
+          std::set<typename InterfaceIntegral<PredicateType>::subdomain_t>{
+            interface});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
+      auto
+      dI(const std::set<typename InterfaceIntegral<PredicateType>::subdomain_t>
+           &interfaces) const
+      {
+        return InterfaceIntegral<PredicateType>(interfaces)
           .template integrate<ScalarType>(*this);
       }
 
@@ -1066,73 +1097,104 @@ namespace WeakForms
 
       // ===== Section: Integration =====
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
       auto
       dV() const
       {
-        return VolumeIntegral().template integrate<ScalarType>(*this);
+        return VolumeIntegral<PredicateType>().template integrate<ScalarType>(
+          *this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
       auto
-      dV(const typename VolumeIntegral::subdomain_t subdomain) const
-      {
-        return dV<ScalarType>(
-          std::set<typename VolumeIntegral::subdomain_t>{subdomain});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dV(const std::set<typename VolumeIntegral::subdomain_t> &subdomains) const
-      {
-        return VolumeIntegral(subdomains).template integrate<ScalarType>(*this);
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA() const
-      {
-        return BoundaryIntegral().template integrate<ScalarType>(*this);
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA(const typename BoundaryIntegral::subdomain_t boundary) const
-      {
-        return dA<ScalarType>(
-          std::set<typename BoundaryIntegral::subdomain_t>{boundary});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dA(const std::set<typename BoundaryIntegral::subdomain_t> &boundaries)
+      dV(const typename VolumeIntegral<PredicateType>::subdomain_t subdomain)
         const
       {
-        return BoundaryIntegral(boundaries)
+        return dV<ScalarType>(
+          std::set<typename VolumeIntegral<PredicateType>::subdomain_t>{
+            subdomain});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_volume_integral_predicate_t>
+      auto
+      dV(const std::set<typename VolumeIntegral<PredicateType>::subdomain_t>
+           &subdomains) const
+      {
+        return VolumeIntegral<PredicateType>(subdomains)
           .template integrate<ScalarType>(*this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA() const
+      {
+        return BoundaryIntegral<PredicateType>().template integrate<ScalarType>(
+          *this);
+        // return integrate<ScalarType>(*this,
+        // BoundaryIntegral<PredicateType>());
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA(const typename BoundaryIntegral<PredicateType>::subdomain_t boundary)
+        const
+      {
+        return dA<ScalarType>(
+          std::set<typename BoundaryIntegral<PredicateType>::subdomain_t>{
+            boundary});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_boundary_integral_predicate_t>
+      auto
+      dA(const std::set<typename BoundaryIntegral<PredicateType>::subdomain_t>
+           &boundaries) const
+      {
+        return BoundaryIntegral<PredicateType>(boundaries)
+          .template integrate<ScalarType>(*this);
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
       auto
       dI() const
       {
-        return InterfaceIntegral().template integrate<ScalarType>(*this);
+        return InterfaceIntegral<PredicateType>()
+          .template integrate<ScalarType>(*this);
       }
 
-      template <typename ScalarType = double>
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
       auto
-      dI(const typename InterfaceIntegral::subdomain_t interface) const
-      {
-        return dI<ScalarType>(
-          std::set<typename InterfaceIntegral::subdomain_t>{interface});
-      }
-
-      template <typename ScalarType = double>
-      auto
-      dI(const std::set<typename InterfaceIntegral::subdomain_t> &interfaces)
+      dI(const typename InterfaceIntegral<PredicateType>::subdomain_t interface)
         const
       {
-        return InterfaceIntegral(interfaces)
+        return dI<ScalarType>(
+          std::set<typename InterfaceIntegral<PredicateType>::subdomain_t>{
+            interface});
+      }
+
+      template <
+        typename ScalarType    = double,
+        typename PredicateType = types::default_interface_integral_predicate_t>
+      auto
+      dI(const std::set<typename InterfaceIntegral<PredicateType>::subdomain_t>
+           &interfaces) const
+      {
+        return InterfaceIntegral<PredicateType>(interfaces)
           .template integrate<ScalarType>(*this);
       }
 

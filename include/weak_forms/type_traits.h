@@ -264,6 +264,36 @@ namespace WeakForms
 
 
   /**
+   * @brief A type trait that checks to see if a class represents a volume integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
+  template <typename T>
+  struct is_volume_integral : std::false_type
+  {};
+
+
+  /**
+   * @brief A type trait that checks to see if a class represents boundary integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
+  template <typename T>
+  struct is_boundary_integral : std::false_type
+  {};
+
+
+  /**
+   * @brief A type trait that checks to see if a class represents an interface integral (domain).
+   *
+   * @tparam T The class type to be tested for the trait.
+   */
+  template <typename T>
+  struct is_interface_integral : std::false_type
+  {};
+
+
+  /**
    * @brief A type trait that checks to see if a class is a symbolic operator that represents a volume integral (domain).
    *
    * @tparam T The class type to be tested for the trait.

@@ -44,9 +44,9 @@ main()
   const auto bl_form =
     bilinear_form(test.gradient(), soln.hessian(), trial.gradient());
 
-  const VolumeIntegral    integral_dV;
-  const BoundaryIntegral  integral_dA;
-  const InterfaceIntegral integral_dI;
+  const VolumeIntegral<>    integral_dV;
+  const BoundaryIntegral<>  integral_dA;
+  const InterfaceIntegral<> integral_dI;
 
   const auto blf_dV = integrate(bl_form, integral_dV);
   const auto blf_dA = integrate(bl_form, integral_dA);
