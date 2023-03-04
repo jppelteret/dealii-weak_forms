@@ -1902,7 +1902,7 @@ private:                                                                   \
       std::string
       as_ascii(const SymbolicDecorations &decorator) const
       {
-        return decorator.brace_term_when_required_ascii(lhs_operand) + " - " +
+        return decorator.brace_term_when_required_ascii(lhs_operand) + " / " +
                decorator.brace_term_when_required_ascii(rhs_operand);
       }
 
