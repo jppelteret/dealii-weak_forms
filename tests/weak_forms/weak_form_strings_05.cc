@@ -20,6 +20,8 @@
 #include <deal.II/base/function_lib.h>
 #include <deal.II/base/tensor_function.h>
 
+#include <deal.II/grid/filtered_iterator.h>
+
 #include <weak_forms/bilinear_forms.h>
 #include <weak_forms/functors.h>
 #include <weak_forms/linear_forms.h>
@@ -53,13 +55,40 @@ run()
   const auto trial_val = trial.value();
   const auto soln_val  = soln.value();
 
-  const VolumeIntegral    integral_dV;
-  const BoundaryIntegral  integral_dA;
-  const InterfaceIntegral integral_dI;
+  const VolumeIntegral<>    integral_dV;
+  const BoundaryIntegral<>  integral_dA;
+  const InterfaceIntegral<> integral_dI;
 
-  const VolumeIntegral    integral_sub_dV({1, 2, 3});
-  const BoundaryIntegral  integral_sub_dA({4, 5, 6});
-  const InterfaceIntegral integral_sub_dI({7, 8, 9});
+  const VolumeIntegral<>    integral_sub_dV({1, 2, 3});
+  const BoundaryIntegral<>  integral_sub_dA({4, 5, 6});
+  const InterfaceIntegral<> integral_sub_dI({7, 8, 9});
+
+  const VolumeIntegral<> integral_pred_sub_dV(
+    IteratorFilters::MaterialIdEqualTo({1, 2, 3}),
+    "pred (1, 2, 3)",
+    "pred(1, 2, 3)");
+  const BoundaryIntegral<> integral_pred_sub_dA(
+    IteratorFilters::BoundaryIdEqualTo({4, 5, 6}),
+    "pred (4, 5, 6)",
+    "pred (4, 5, 6)");
+  const InterfaceIntegral<> integral_pred_sub_dI(
+    IteratorFilters::ManifoldIdEqualTo({7, 8, 9}),
+    "pred (7, 8, 9)",
+    "pred (7, 8, 9)");
+
+  //   const VolumeIntegral<> integral_fi_pred_sub_dV(
+  //   IteratorFilters::LocallyOwnedCell() |
+  //     IteratorFilters::MaterialIdEqualTo({1, 2, 3}) , "fi(1, 2, 3)", "fi(1,
+  //     2, 3)");
+  //   const BoundaryIntegral<> integral_fi_pred_sub_dA(
+  //   IteratorFilters::LocallyOwnedCell() |
+  //       IteratorFilters::BoundaryIdEqualTo({4, 5, 6}), "fi(4, 5, 6)", "fi(4,
+  //       5, 6)");
+  //   const InterfaceIntegral<> integral_fi_pred_sub_dI(
+  //   IteratorFilters::LocallyOwnedCell() |
+  //     IteratorFilters::ManifoldIdEqualTo({7, 8, 9}), "fi(7, 8, 9)", "fi(7, 8,
+  //     9)");
+
 
   // Test strings
   {
@@ -80,6 +109,21 @@ run()
             << std::endl;
     deallog << "Interface integral: " << integral_sub_dI.as_ascii(decorator)
             << std::endl;
+
+    deallog << "Volume integral with predicate: "
+            << integral_pred_sub_dV.as_ascii(decorator) << std::endl;
+    deallog << "Boundary integral with predicate: "
+            << integral_pred_sub_dA.as_ascii(decorator) << std::endl;
+    deallog << "Interface integral with predicate: "
+            << integral_pred_sub_dI.as_ascii(decorator) << std::endl;
+
+    //     deallog << "Volume integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dV.as_ascii(decorator) << std::endl;
+    //     deallog << "Boundary integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dA.as_ascii(decorator) << std::endl;
+    //     deallog << "Interface integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dI.as_ascii(decorator) << std::endl;
+
 
     deallog << std::endl;
   }
@@ -103,6 +147,21 @@ run()
             << std::endl;
     deallog << "Interface integral: " << integral_sub_dI.as_latex(decorator)
             << std::endl;
+
+    deallog << "Volume integral with predicate: "
+            << integral_pred_sub_dV.as_latex(decorator) << std::endl;
+    deallog << "Boundary integral with predicate: "
+            << integral_pred_sub_dA.as_latex(decorator) << std::endl;
+    deallog << "Interface integral with predicate: "
+            << integral_pred_sub_dI.as_latex(decorator) << std::endl;
+
+    //     deallog << "Volume integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dV.as_latex(decorator) << std::endl;
+    //     deallog << "Boundary integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dA.as_latex(decorator) << std::endl;
+    //     deallog << "Interface integral with filtered iterator predicate: "
+    //             << integral_fi_pred_sub_dI.as_latex(decorator) << std::endl;
+
 
     deallog << std::endl;
   }

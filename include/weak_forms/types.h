@@ -18,7 +18,10 @@
 
 #include <deal.II/base/std_cxx20/iota_view.h>
 
+#include <deal.II/grid/filtered_iterator.h>
+
 #include <weak_forms/config.h>
+
 
 
 WEAK_FORMS_NAMESPACE_OPEN
@@ -56,6 +59,27 @@ namespace WeakForms
      */
     using vectorized_qp_range_t =
       std_cxx20::ranges::iota_view<unsigned int, unsigned int>;
+
+
+    /**
+     * @brief A type that defines the default predicate for volume integration.
+     */
+    using default_volume_integral_predicate_t =
+      dealii::IteratorFilters::MaterialIdEqualTo;
+
+
+    /**
+     * @brief A type that defines the default predicate for boundary integration.
+     */
+    using default_boundary_integral_predicate_t =
+      dealii::IteratorFilters::BoundaryIdEqualTo;
+
+
+    /**
+     * @brief A type that defines the default predicate for interface integration.
+     */
+    using default_interface_integral_predicate_t =
+      dealii::IteratorFilters::ManifoldIdEqualTo;
   } // namespace types
 } // namespace WeakForms
 
