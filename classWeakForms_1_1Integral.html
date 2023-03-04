@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Weak forms for deal.II: WeakForms::Integral&lt; SubDomainType &gt; Class Template Reference</title>
+<title>Weak forms for deal.II: WeakForms::Integral&lt; PredicateType, isCellPredicate, SubDomainType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -79,7 +79,7 @@ $(function() {
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classWeakForms_1_1Integral-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">WeakForms::Integral&lt; SubDomainType &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">WeakForms::Integral&lt; PredicateType, isCellPredicate, SubDomainType &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -90,48 +90,59 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a5beb4d8a48fc47170321d8de61976a1f"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
-<tr class="memitem:a5beb4d8a48fc47170321d8de61976a1f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a5beb4d8a48fc47170321d8de61976a1f">value_type</a> = double</td></tr>
-<tr class="separator:a5beb4d8a48fc47170321d8de61976a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8119ded2b7240d3b6d8224a1b5b94e06"><td class="memTemplParams" colspan="2">template&lt;typename ScalarType &gt; </td></tr>
+<tr class="memitem:a8119ded2b7240d3b6d8224a1b5b94e06"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a8119ded2b7240d3b6d8224a1b5b94e06">value_type</a> = double</td></tr>
+<tr class="separator:a8119ded2b7240d3b6d8224a1b5b94e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa50d1fbfc2c0d131d9ba308eb382319"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#afa50d1fbfc2c0d131d9ba308eb382319">subdomain_t</a> = SubDomainType</td></tr>
+<tr class="separator:afa50d1fbfc2c0d131d9ba308eb382319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06777f31374a1fcf25c22cdc8609fc21"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> = std::function&lt; std::string(const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator)&gt;</td></tr>
+<tr class="separator:a06777f31374a1fcf25c22cdc8609fc21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a58bd6e9b446ac36345b70ea9f223d578"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a58bd6e9b446ac36345b70ea9f223d578">Integral</a> (const std::set&lt; SubDomainType &gt; &amp;<a class="el" href="classWeakForms_1_1Integral.html#a0074b951a500bca9b49aae94743df955">subdomains</a>)</td></tr>
-<tr class="separator:a58bd6e9b446ac36345b70ea9f223d578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc0b9078d727fb63e31eaaf0f7554f06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#afc0b9078d727fb63e31eaaf0f7554f06">integrate_over_entire_domain</a> () const</td></tr>
-<tr class="separator:afc0b9078d727fb63e31eaaf0f7554f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88096e2f238461f0606b4c0bc1c8d8ee"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a88096e2f238461f0606b4c0bc1c8d8ee">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:a88096e2f238461f0606b4c0bc1c8d8ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad86000842336d5c29c865eab8a466636"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#ad86000842336d5c29c865eab8a466636">get_subdomain_as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:ad86000842336d5c29c865eab8a466636"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8b1e94d3af62ecb583c6f2642bbc573"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#aa8b1e94d3af62ecb583c6f2642bbc573">get_symbol_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
-<tr class="separator:aa8b1e94d3af62ecb583c6f2642bbc573"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61c1b01adef296dda1a4a2f5eb9ea5b4"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a61c1b01adef296dda1a4a2f5eb9ea5b4">get_infinitesimal_symbol_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
-<tr class="separator:a61c1b01adef296dda1a4a2f5eb9ea5b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a7b5f5e5da987b8637aca6655b0a0b8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a6a7b5f5e5da987b8637aca6655b0a0b8">as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:a6a7b5f5e5da987b8637aca6655b0a0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab875d301f6c34f2532513830a7aaa018"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#ab875d301f6c34f2532513830a7aaa018">get_subdomain_as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
-<tr class="separator:ab875d301f6c34f2532513830a7aaa018"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab936a257ee65ac8e02dea295d2aa49bb"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#ab936a257ee65ac8e02dea295d2aa49bb">get_symbol_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
-<tr class="separator:ab936a257ee65ac8e02dea295d2aa49bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e2a61dfd0b35f45e855dd514f8146d2"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a6e2a61dfd0b35f45e855dd514f8146d2">get_infinitesimal_symbol_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
-<tr class="separator:a6e2a61dfd0b35f45e855dd514f8146d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b262b6c64d46ec0cc2625c15deedb07"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a0b262b6c64d46ec0cc2625c15deedb07">Integral</a> (const PredicateType &amp;<a class="el" href="classWeakForms_1_1Integral.html#a5f02f8948cc1b966cdf3b8473eef393a">predicate</a>, const <a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> &amp;<a class="el" href="classWeakForms_1_1Integral.html#a291a2973b9cd75233337fbe0ae817a04">subdomain_as_ascii</a>, const <a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> &amp;<a class="el" href="classWeakForms_1_1Integral.html#a4621ad28cd459158363ae9e36707b66c">subdomain_as_latex</a>)</td></tr>
+<tr class="separator:a0b262b6c64d46ec0cc2625c15deedb07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b9fc793ddba5d343ce1dbdc8ef7c4c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#af4b9fc793ddba5d343ce1dbdc8ef7c4c">Integral</a> (const PredicateType &amp;<a class="el" href="classWeakForms_1_1Integral.html#a5f02f8948cc1b966cdf3b8473eef393a">predicate</a>, const std::string &amp;<a class="el" href="classWeakForms_1_1Integral.html#a291a2973b9cd75233337fbe0ae817a04">subdomain_as_ascii</a>, const std::string &amp;<a class="el" href="classWeakForms_1_1Integral.html#a4621ad28cd459158363ae9e36707b66c">subdomain_as_latex</a>)</td></tr>
+<tr class="separator:af4b9fc793ddba5d343ce1dbdc8ef7c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa85603d5d47ffa9e09698c9767df5013"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#aa85603d5d47ffa9e09698c9767df5013">Integral</a> (const std::set&lt; SubDomainType &gt; &amp;subdomains)</td></tr>
+<tr class="separator:aa85603d5d47ffa9e09698c9767df5013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0775e520240123ef76783cc9fc65567"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#af0775e520240123ef76783cc9fc65567">integrate_over_entire_domain</a> () const</td></tr>
+<tr class="separator:af0775e520240123ef76783cc9fc65567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59abc36371d07980e89de2339d58c970"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a59abc36371d07980e89de2339d58c970">as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:a59abc36371d07980e89de2339d58c970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf836134a037656a92384f04e67b6ba0"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#adf836134a037656a92384f04e67b6ba0">get_subdomain_as_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:adf836134a037656a92384f04e67b6ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a855c733a0a7a4f45ee190645b30104e9"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a855c733a0a7a4f45ee190645b30104e9">get_symbol_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
+<tr class="separator:a855c733a0a7a4f45ee190645b30104e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe6b613780cb92fe8a97930918850c73"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#afe6b613780cb92fe8a97930918850c73">get_infinitesimal_symbol_ascii</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
+<tr class="separator:afe6b613780cb92fe8a97930918850c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa014f7ce625d037412e2e3a9b39bf054"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#aa014f7ce625d037412e2e3a9b39bf054">as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:aa014f7ce625d037412e2e3a9b39bf054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ff5b2040a85be87f737aeae3913dd0a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a7ff5b2040a85be87f737aeae3913dd0a">get_subdomain_as_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const</td></tr>
+<tr class="separator:a7ff5b2040a85be87f737aeae3913dd0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3895416febc5c4342065e3d60eefc213"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a3895416febc5c4342065e3d60eefc213">get_symbol_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
+<tr class="separator:a3895416febc5c4342065e3d60eefc213"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3f93f3be100190d811f30c3e16c6891"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#ae3f93f3be100190d811f30c3e16c6891">get_infinitesimal_symbol_latex</a> (const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator) const =0</td></tr>
+<tr class="separator:ae3f93f3be100190d811f30c3e16c6891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a0d05c130c60616782f2e93d2a6a8008a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a0d05c130c60616782f2e93d2a6a8008a">integrate_on_subdomain</a> (const SubDomainType &amp;idx) const</td></tr>
-<tr class="separator:a0d05c130c60616782f2e93d2a6a8008a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb6e0f8bada38350ca3bfdac8f3ecb2b"><td class="memItemLeft" align="right" valign="top">const std::set&lt; SubDomainType &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#abb6e0f8bada38350ca3bfdac8f3ecb2b">get_subdomains</a> () const</td></tr>
-<tr class="separator:abb6e0f8bada38350ca3bfdac8f3ecb2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca281f15d82589a9eec11e8a48306e10"><td class="memTemplParams" colspan="2">template&lt;typename IteratorType &gt; </td></tr>
+<tr class="memitem:aca281f15d82589a9eec11e8a48306e10"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#aca281f15d82589a9eec11e8a48306e10">integrate_on_subdomain</a> (const IteratorType &amp;iterator) const</td></tr>
+<tr class="separator:aca281f15d82589a9eec11e8a48306e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a0074b951a500bca9b49aae94743df955"><td class="memItemLeft" align="right" valign="top">const std::set&lt; SubDomainType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a0074b951a500bca9b49aae94743df955">subdomains</a></td></tr>
-<tr class="separator:a0074b951a500bca9b49aae94743df955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f02f8948cc1b966cdf3b8473eef393a"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classWeakForms_1_1internal_1_1PredicateHolder.html">internal::PredicateHolder</a>&lt; isCellPredicate &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a5f02f8948cc1b966cdf3b8473eef393a">predicate</a></td></tr>
+<tr class="separator:a5f02f8948cc1b966cdf3b8473eef393a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a291a2973b9cd75233337fbe0ae817a04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a291a2973b9cd75233337fbe0ae817a04">subdomain_as_ascii</a></td></tr>
+<tr class="separator:a291a2973b9cd75233337fbe0ae817a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4621ad28cd459158363ae9e36707b66c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html#a4621ad28cd459158363ae9e36707b66c">subdomain_as_latex</a></td></tr>
+<tr class="separator:a4621ad28cd459158363ae9e36707b66c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename SubDomainType&gt;<br />
-class WeakForms::Integral&lt; SubDomainType &gt;</h3>
+<div class="textblock"><h3>template&lt;typename PredicateType, bool isCellPredicate, typename SubDomainType&gt;<br />
+class WeakForms::Integral&lt; PredicateType, isCellPredicate, SubDomainType &gt;</h3>
 
 <p>A base class for other objects that represent (sub)domains of integration. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -141,42 +152,170 @@ class WeakForms::Integral&lt; SubDomainType &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00045">45</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00239">239</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a5beb4d8a48fc47170321d8de61976a1f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5beb4d8a48fc47170321d8de61976a1f">&#9670;&nbsp;</a></span>value_type</h2>
+<a id="a8119ded2b7240d3b6d8224a1b5b94e06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8119ded2b7240d3b6d8224a1b5b94e06">&#9670;&nbsp;</a></span>value_type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <div class="memtemplate">
 template&lt;typename ScalarType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html#a5beb4d8a48fc47170321d8de61976a1f">value_type</a> =  double</td>
+          <td class="memname">using <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html#a8119ded2b7240d3b6d8224a1b5b94e06">value_type</a> =  double</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00049">49</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00243">243</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a58bd6e9b446ac36345b70ea9f223d578"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58bd6e9b446ac36345b70ea9f223d578">&#9670;&nbsp;</a></span>Integral()</h2>
+<a id="afa50d1fbfc2c0d131d9ba308eb382319"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa50d1fbfc2c0d131d9ba308eb382319">&#9670;&nbsp;</a></span>subdomain_t</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html#afa50d1fbfc2c0d131d9ba308eb382319">subdomain_t</a> =  SubDomainType</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00245">245</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<a id="a06777f31374a1fcf25c22cdc8609fc21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06777f31374a1fcf25c22cdc8609fc21">&#9670;&nbsp;</a></span>PrintFunctionType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> =  std::function&lt;std::string(const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;decorator)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00247">247</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a0b262b6c64d46ec0cc2625c15deedb07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b262b6c64d46ec0cc2625c15deedb07">&#9670;&nbsp;</a></span>Integral() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html">Integral</a> </td>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html">Integral</a> </td>
+          <td>(</td>
+          <td class="paramtype">const PredicateType &amp;&#160;</td>
+          <td class="paramname"><em>predicate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> &amp;&#160;</td>
+          <td class="paramname"><em>subdomain_as_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> &amp;&#160;</td>
+          <td class="paramname"><em>subdomain_as_latex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00249">249</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<a id="af4b9fc793ddba5d343ce1dbdc8ef7c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4b9fc793ddba5d343ce1dbdc8ef7c4c">&#9670;&nbsp;</a></span>Integral() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html">Integral</a> </td>
+          <td>(</td>
+          <td class="paramtype">const PredicateType &amp;&#160;</td>
+          <td class="paramname"><em>predicate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>subdomain_as_ascii</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>subdomain_as_latex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00258">258</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<a id="aa85603d5d47ffa9e09698c9767df5013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa85603d5d47ffa9e09698c9767df5013">&#9670;&nbsp;</a></span>Integral() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::<a class="el" href="classWeakForms_1_1Integral.html">Integral</a> </td>
           <td>(</td>
           <td class="paramtype">const std::set&lt; SubDomainType &gt; &amp;&#160;</td>
           <td class="paramname"><em>subdomains</em></td><td>)</td>
@@ -190,24 +329,24 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00051">51</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00269">269</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afc0b9078d727fb63e31eaaf0f7554f06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc0b9078d727fb63e31eaaf0f7554f06">&#9670;&nbsp;</a></span>integrate_over_entire_domain()</h2>
+<a id="af0775e520240123ef76783cc9fc65567"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0775e520240123ef76783cc9fc65567">&#9670;&nbsp;</a></span>integrate_over_entire_domain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::integrate_over_entire_domain </td>
+          <td class="memname">bool <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::integrate_over_entire_domain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -220,23 +359,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00056">56</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00294">294</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<a id="a88096e2f238461f0606b4c0bc1c8d8ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88096e2f238461f0606b4c0bc1c8d8ee">&#9670;&nbsp;</a></span>as_ascii()</h2>
+<a id="a59abc36371d07980e89de2339d58c970"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59abc36371d07980e89de2339d58c970">&#9670;&nbsp;</a></span>as_ascii()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::as_ascii </td>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::as_ascii </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -250,23 +389,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00066">66</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00302">302</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<a id="ad86000842336d5c29c865eab8a466636"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad86000842336d5c29c865eab8a466636">&#9670;&nbsp;</a></span>get_subdomain_as_ascii()</h2>
+<a id="adf836134a037656a92384f04e67b6ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf836134a037656a92384f04e67b6ba0">&#9670;&nbsp;</a></span>get_subdomain_as_ascii()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_subdomain_as_ascii </td>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_subdomain_as_ascii </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -280,23 +419,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00073">73</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00309">309</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<a id="aa8b1e94d3af62ecb583c6f2642bbc573"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8b1e94d3af62ecb583c6f2642bbc573">&#9670;&nbsp;</a></span>get_symbol_ascii()</h2>
+<a id="a855c733a0a7a4f45ee190645b30104e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a855c733a0a7a4f45ee190645b30104e9">&#9670;&nbsp;</a></span>get_symbol_ascii()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_symbol_ascii </td>
+          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_symbol_ascii </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -310,23 +449,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a5870c734c2c13f11dd4a2e4217cd7f45">WeakForms::InterfaceIntegral</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#a783adb71583ac473af1d9c0630d9d66e">WeakForms::BoundaryIntegral</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a0ddb851b8d5f45b030dace5e73c32a56">WeakForms::VolumeIntegral</a>.</p>
+<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#ae958dde4a1fbc9dd07308bc882fd8f7e">WeakForms::InterfaceIntegral&lt; PredicateType &gt;</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#ac1c015ff70a81d42a0b8bab9dc0b1f50">WeakForms::BoundaryIntegral&lt; PredicateType &gt;</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a90a40eb219874b44cd9f9db87a904c1f">WeakForms::VolumeIntegral&lt; PredicateType &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a61c1b01adef296dda1a4a2f5eb9ea5b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61c1b01adef296dda1a4a2f5eb9ea5b4">&#9670;&nbsp;</a></span>get_infinitesimal_symbol_ascii()</h2>
+<a id="afe6b613780cb92fe8a97930918850c73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe6b613780cb92fe8a97930918850c73">&#9670;&nbsp;</a></span>get_infinitesimal_symbol_ascii()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_infinitesimal_symbol_ascii </td>
+          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_infinitesimal_symbol_ascii </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -340,23 +479,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#afc091cb92fe9bd2c52fae8c700eb70d0">WeakForms::InterfaceIntegral</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#aa7a51c9d7a498edca2b04bd757456bc7">WeakForms::BoundaryIntegral</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a89f288b2b75e1867d0f3353aeb51c718">WeakForms::VolumeIntegral</a>.</p>
+<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#abdeec8a9ba8274f782ccee97bdec8718">WeakForms::InterfaceIntegral&lt; PredicateType &gt;</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#af47a4075b718739186c8258c12990756">WeakForms::BoundaryIntegral&lt; PredicateType &gt;</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a71334049a8833159664c04b6ded19d7f">WeakForms::VolumeIntegral&lt; PredicateType &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a6a7b5f5e5da987b8637aca6655b0a0b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a7b5f5e5da987b8637aca6655b0a0b8">&#9670;&nbsp;</a></span>as_latex()</h2>
+<a id="aa014f7ce625d037412e2e3a9b39bf054"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa014f7ce625d037412e2e3a9b39bf054">&#9670;&nbsp;</a></span>as_latex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::as_latex </td>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::as_latex </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -370,23 +509,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00091">91</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00327">327</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<a id="ab875d301f6c34f2532513830a7aaa018"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab875d301f6c34f2532513830a7aaa018">&#9670;&nbsp;</a></span>get_subdomain_as_latex()</h2>
+<a id="a7ff5b2040a85be87f737aeae3913dd0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ff5b2040a85be87f737aeae3913dd0a">&#9670;&nbsp;</a></span>get_subdomain_as_latex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_subdomain_as_latex </td>
+          <td class="memname">std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_subdomain_as_latex </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -400,23 +539,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00097">97</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00333">333</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
-<a id="ab936a257ee65ac8e02dea295d2aa49bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab936a257ee65ac8e02dea295d2aa49bb">&#9670;&nbsp;</a></span>get_symbol_latex()</h2>
+<a id="a3895416febc5c4342065e3d60eefc213"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3895416febc5c4342065e3d60eefc213">&#9670;&nbsp;</a></span>get_symbol_latex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_symbol_latex </td>
+          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_symbol_latex </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -430,23 +569,23 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a139e3a4b61b83a467ca128968ddc2a1e">WeakForms::InterfaceIntegral</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#af30bf32b3b329252c6e981626f358216">WeakForms::BoundaryIntegral</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#ae130d83ba6253c700a71d24a35f57519">WeakForms::VolumeIntegral</a>.</p>
+<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#adfdade60eba83e6b1daa55861b82387b">WeakForms::InterfaceIntegral&lt; PredicateType &gt;</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#a2119fbbe69424f08fbc0c768f1aecd0c">WeakForms::BoundaryIntegral&lt; PredicateType &gt;</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#ab8484856aaed49427cfb57ef521dc476">WeakForms::VolumeIntegral&lt; PredicateType &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a6e2a61dfd0b35f45e855dd514f8146d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e2a61dfd0b35f45e855dd514f8146d2">&#9670;&nbsp;</a></span>get_infinitesimal_symbol_latex()</h2>
+<a id="ae3f93f3be100190d811f30c3e16c6891"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3f93f3be100190d811f30c3e16c6891">&#9670;&nbsp;</a></span>get_infinitesimal_symbol_latex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_infinitesimal_symbol_latex </td>
+          <td class="memname">virtual std::string <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::get_infinitesimal_symbol_latex </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structWeakForms_1_1SymbolicDecorations.html">SymbolicDecorations</a> &amp;&#160;</td>
           <td class="paramname"><em>decorator</em></td><td>)</td>
@@ -460,26 +599,28 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a610b14ccbc74642c06da3aaa720c0727">WeakForms::InterfaceIntegral</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#a9310acf8591b6cef134ee97d7d4734d6">WeakForms::BoundaryIntegral</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#aa01e6fbe9d96b8ca4d80ca581ccc252f">WeakForms::VolumeIntegral</a>.</p>
+<p>Implemented in <a class="el" href="classWeakForms_1_1InterfaceIntegral.html#a4ce1dff04eb11baf5980557ae3107e92">WeakForms::InterfaceIntegral&lt; PredicateType &gt;</a>, <a class="el" href="classWeakForms_1_1BoundaryIntegral.html#a41ee89972706369e5407dfe0cd47b9e8">WeakForms::BoundaryIntegral&lt; PredicateType &gt;</a>, and <a class="el" href="classWeakForms_1_1VolumeIntegral.html#a701d0aff4057b17aefbb7f8c4b713ec2">WeakForms::VolumeIntegral&lt; PredicateType &gt;</a>.</p>
 
 </div>
 </div>
-<a id="a0d05c130c60616782f2e93d2a6a8008a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d05c130c60616782f2e93d2a6a8008a">&#9670;&nbsp;</a></span>integrate_on_subdomain()</h2>
+<a id="aca281f15d82589a9eec11e8a48306e10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca281f15d82589a9eec11e8a48306e10">&#9670;&nbsp;</a></span>integrate_on_subdomain()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+<div class="memtemplate">
+template&lt;typename IteratorType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::integrate_on_subdomain </td>
+          <td class="memname">bool <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::integrate_on_subdomain </td>
           <td>(</td>
-          <td class="paramtype">const SubDomainType &amp;&#160;</td>
-          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td class="paramtype">const IteratorType &amp;&#160;</td>
+          <td class="paramname"><em>iterator</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -490,53 +631,24 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00121">121</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
-
-</div>
-</div>
-<a id="abb6e0f8bada38350ca3bfdac8f3ecb2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb6e0f8bada38350ca3bfdac8f3ecb2b">&#9670;&nbsp;</a></span>get_subdomains()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::set&lt;SubDomainType&gt;&amp; <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::get_subdomains </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00130">130</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00356">356</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a0074b951a500bca9b49aae94743df955"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0074b951a500bca9b49aae94743df955">&#9670;&nbsp;</a></span>subdomains</h2>
+<a id="a5f02f8948cc1b966cdf3b8473eef393a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f02f8948cc1b966cdf3b8473eef393a">&#9670;&nbsp;</a></span>predicate</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename SubDomainType &gt; </div>
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::set&lt;SubDomainType&gt; <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; SubDomainType &gt;::subdomains</td>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classWeakForms_1_1internal_1_1PredicateHolder.html">internal::PredicateHolder</a>&lt;isCellPredicate&gt; &gt; <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::predicate</td>
         </tr>
       </table>
   </td>
@@ -546,7 +658,59 @@ template&lt;typename SubDomainType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00118">118</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00349">349</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<a id="a291a2973b9cd75233337fbe0ae817a04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a291a2973b9cd75233337fbe0ae817a04">&#9670;&nbsp;</a></span>subdomain_as_ascii</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::subdomain_as_ascii</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00351">351</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
+
+</div>
+</div>
+<a id="a4621ad28cd459158363ae9e36707b66c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4621ad28cd459158363ae9e36707b66c">&#9670;&nbsp;</a></span>subdomain_as_latex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PredicateType , bool isCellPredicate, typename SubDomainType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classWeakForms_1_1Integral.html#a06777f31374a1fcf25c22cdc8609fc21">PrintFunctionType</a> <a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral</a>&lt; PredicateType, isCellPredicate, SubDomainType &gt;::subdomain_as_latex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="symbolic__integral_8h_source.html#l00352">352</a> of file <a class="el" href="symbolic__integral_8h_source.html">symbolic_integral.h</a>.</p>
 
 </div>
 </div>

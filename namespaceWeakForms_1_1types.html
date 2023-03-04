@@ -90,6 +90,15 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">vectorized_qp_range_t</a> = std_cxx20::ranges::iota_view&lt; unsigned int, unsigned int &gt;</td></tr>
 <tr class="memdesc:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that holds the quadrature point indices upon which some vectorized operation must be performed.  <a href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">More...</a><br /></td></tr>
 <tr class="separator:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#a6bdb04c6c2f9cb8664f30c707df0f0e0">default_volume_integral_predicate_t</a> = dealii::IteratorFilters::MaterialIdEqualTo</td></tr>
+<tr class="memdesc:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for volume integration.  <a href="namespaceWeakForms_1_1types.html#a6bdb04c6c2f9cb8664f30c707df0f0e0">More...</a><br /></td></tr>
+<tr class="separator:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#a7faa31ade850b1d23bcc0aa4cdd71145">default_boundary_integral_predicate_t</a> = dealii::IteratorFilters::BoundaryIdEqualTo</td></tr>
+<tr class="memdesc:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for boundary integration.  <a href="namespaceWeakForms_1_1types.html#a7faa31ade850b1d23bcc0aa4cdd71145">More...</a><br /></td></tr>
+<tr class="separator:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1bbc7c05cd8c869b349325996d0698"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#aab1bbc7c05cd8c869b349325996d0698">default_interface_integral_predicate_t</a> = dealii::IteratorFilters::ManifoldIdEqualTo</td></tr>
+<tr class="memdesc:aab1bbc7c05cd8c869b349325996d0698"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for interface integration.  <a href="namespaceWeakForms_1_1types.html#aab1bbc7c05cd8c869b349325996d0698">More...</a><br /></td></tr>
+<tr class="separator:aab1bbc7c05cd8c869b349325996d0698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="af006ef14802d739da8d38bee98eea946"></a>
@@ -107,7 +116,7 @@ Typedefs</h2></td></tr>
 <p>A type that represents the starting index of a finite element field. </p>
 <p>This makes the most sense in the context problems involving multiple solution fields captured within the same finite element system. </p>
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00036">36</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00039">39</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>
@@ -126,7 +135,7 @@ Typedefs</h2></td></tr>
 <p>A type that represents a user-defined index associated with a solution vector. </p>
 <p>A field solution operation becomes associated with a solution vector through this index. In the context of time-dependent problems, the <code>solution_index</code> could be used to reference multiple solution histories such that the rate of change of the solution can be reconstructed. </p>
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00047">47</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00050">50</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>
@@ -145,7 +154,61 @@ Typedefs</h2></td></tr>
 <p>A type that holds the quadrature point indices upon which some vectorized operation must be performed. </p>
 <p>It is, effectively, a mask for the indices of interest when an operator or fields is to be evaluated using some mechanism that is compatible with the SIMD parallel processing paradigm. </p>
 
-<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00058">58</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00061">61</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+
+</div>
+</div>
+<a id="a6bdb04c6c2f9cb8664f30c707df0f0e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bdb04c6c2f9cb8664f30c707df0f0e0">&#9670;&nbsp;</a></span>default_volume_integral_predicate_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceWeakForms_1_1types.html#a6bdb04c6c2f9cb8664f30c707df0f0e0">WeakForms::types::default_volume_integral_predicate_t</a> = typedef dealii::IteratorFilters::MaterialIdEqualTo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A type that defines the default predicate for volume integration. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00068">68</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+
+</div>
+</div>
+<a id="a7faa31ade850b1d23bcc0aa4cdd71145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7faa31ade850b1d23bcc0aa4cdd71145">&#9670;&nbsp;</a></span>default_boundary_integral_predicate_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceWeakForms_1_1types.html#a7faa31ade850b1d23bcc0aa4cdd71145">WeakForms::types::default_boundary_integral_predicate_t</a> = typedef dealii::IteratorFilters::BoundaryIdEqualTo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A type that defines the default predicate for boundary integration. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00075">75</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
+
+</div>
+</div>
+<a id="aab1bbc7c05cd8c869b349325996d0698"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab1bbc7c05cd8c869b349325996d0698">&#9670;&nbsp;</a></span>default_interface_integral_predicate_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespaceWeakForms_1_1types.html#aab1bbc7c05cd8c869b349325996d0698">WeakForms::types::default_interface_integral_predicate_t</a> = typedef dealii::IteratorFilters::ManifoldIdEqualTo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A type that defines the default predicate for interface integration. </p>
+
+<p class="definition">Definition at line <a class="el" href="types_8h_source.html#l00082">82</a> of file <a class="el" href="types_8h_source.html">types.h</a>.</p>
 
 </div>
 </div>

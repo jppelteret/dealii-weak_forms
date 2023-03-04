@@ -80,6 +80,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;deal.II/base/std_cxx20/iota_view.h&gt;</code><br />
+<code>#include &lt;deal.II/grid/filtered_iterator.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
 </div>
 <p><a href="types_8h_source.html">Go to the source code of this file.</a></p>
@@ -102,6 +103,15 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">WeakForms::types::vectorized_qp_range_t</a> = std_cxx20::ranges::iota_view&lt; unsigned int, unsigned int &gt;</td></tr>
 <tr class="memdesc:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that holds the quadrature point indices upon which some vectorized operation must be performed.  <a href="namespaceWeakForms_1_1types.html#ab6e4c4a760908ac54bbec13bf19ae9d3">More...</a><br /></td></tr>
 <tr class="separator:ab6e4c4a760908ac54bbec13bf19ae9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#a6bdb04c6c2f9cb8664f30c707df0f0e0">WeakForms::types::default_volume_integral_predicate_t</a> = dealii::IteratorFilters::MaterialIdEqualTo</td></tr>
+<tr class="memdesc:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for volume integration.  <a href="namespaceWeakForms_1_1types.html#a6bdb04c6c2f9cb8664f30c707df0f0e0">More...</a><br /></td></tr>
+<tr class="separator:a6bdb04c6c2f9cb8664f30c707df0f0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#a7faa31ade850b1d23bcc0aa4cdd71145">WeakForms::types::default_boundary_integral_predicate_t</a> = dealii::IteratorFilters::BoundaryIdEqualTo</td></tr>
+<tr class="memdesc:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for boundary integration.  <a href="namespaceWeakForms_1_1types.html#a7faa31ade850b1d23bcc0aa4cdd71145">More...</a><br /></td></tr>
+<tr class="separator:a7faa31ade850b1d23bcc0aa4cdd71145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1bbc7c05cd8c869b349325996d0698"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1types.html#aab1bbc7c05cd8c869b349325996d0698">WeakForms::types::default_interface_integral_predicate_t</a> = dealii::IteratorFilters::ManifoldIdEqualTo</td></tr>
+<tr class="memdesc:aab1bbc7c05cd8c869b349325996d0698"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type that defines the default predicate for interface integration.  <a href="namespaceWeakForms_1_1types.html#aab1bbc7c05cd8c869b349325996d0698">More...</a><br /></td></tr>
+<tr class="separator:aab1bbc7c05cd8c869b349325996d0698"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -83,26 +83,33 @@ $(function() {
 <div class="textblock"><code>#include &lt;deal.II/base/config.h&gt;</code><br />
 <code>#include &lt;weak_forms/config.h&gt;</code><br />
 <code>#include &lt;deal.II/fe/fe_values.h&gt;</code><br />
+<code>#include &lt;deal.II/grid/tria.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="numbers_8h_source.html">weak_forms/numbers.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__decorations_8h_source.html">weak_forms/symbolic_decorations.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="symbolic__operators_8h_source.html">weak_forms/symbolic_operators.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="type__traits_8h_source.html">weak_forms/type_traits.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="types_8h_source.html">weak_forms/types.h</a>&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 </div>
 <p><a href="symbolic__integral_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral&lt; SubDomainType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structWeakForms_1_1internal_1_1PredicateKeeper.html">WeakForms::internal::PredicateKeeper&lt; isCellPredicate &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1internal_1_1PredicateHolder.html">WeakForms::internal::PredicateHolder&lt; isCellPredicate &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Integral.html">WeakForms::Integral&lt; PredicateType, isCellPredicate, SubDomainType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A base class for other objects that represent (sub)domains of integration.  <a href="classWeakForms_1_1Integral.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1VolumeIntegral.html">WeakForms::VolumeIntegral</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1VolumeIntegral.html">WeakForms::VolumeIntegral&lt; PredicateType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that encapsulates the subset of elements that are to be considered as part of a volume integral.  <a href="classWeakForms_1_1VolumeIntegral.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1BoundaryIntegral.html">WeakForms::BoundaryIntegral</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1BoundaryIntegral.html">WeakForms::BoundaryIntegral&lt; PredicateType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that encapsulates the subset of elements that are to be considered as part of a boundary integral.  <a href="classWeakForms_1_1BoundaryIntegral.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1InterfaceIntegral.html">WeakForms::InterfaceIntegral</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1InterfaceIntegral.html">WeakForms::InterfaceIntegral&lt; PredicateType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class that encapsulates the subset of elements that are to be considered as part of an interface integral.  <a href="classWeakForms_1_1InterfaceIntegral.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWeakForms_1_1Operators_1_1SymbolicOp_3_01IntegralType___00_01SymbolicOpCodes_1_1value_00_01b5dd922ccaf92ff61d346ba9d66b3428.html">WeakForms::Operators::SymbolicOp&lt; IntegralType_, SymbolicOpCodes::value, ScalarType_, IntegrandType_ &gt;</a></td></tr>
@@ -111,6 +118,8 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceWeakForms"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms.html">WeakForms</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceWeakForms_1_1internal"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1internal.html">WeakForms::internal</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceWeakForms_1_1Operators"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceWeakForms_1_1Operators.html">WeakForms::Operators</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
